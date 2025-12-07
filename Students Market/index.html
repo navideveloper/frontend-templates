@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple-Inspired Navigation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="column">
+            <p class="bold-600">Andijon Davlat Universiteti</p>
+            <span class="bold-400">Qudratillo Salohiddinov</span>
+        </div>
+        <div class="row">
+            <a class="icon-button" data-target="explore-page">
+                <i class="far fa-bell"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Home Page (default) -->
+        <div id="page-tasks" class="page-content fade-in">
+            <div class="page-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h1 class="page-title">Topshiriqlar bo'limi</h1>
+            <p class="page-subtitle">Hozircha yuklangan topshiriqlar mavjud emas.</p>
+            <p class="page-subtitle">Bu bolimda siz topshiriq bajartirishingiz yoki ularni bajarib pul ishlashingiz mummkin</p>
+        </div>
+
+        <!-- Explore Page -->
+        <div id="explore-page" class="page-content" style="display: none;">
+            <div class="page-icon">
+                <i class="fas fa-compass"></i>
+            </div>
+            <h1 class="page-title">Explore</h1>
+            <p class="page-subtitle">Discover new features and content. The interface uses subtle gradients and precise layouts to create a cinematic visual experience.</p>
+        </div>
+
+        <!-- Favorites Page -->
+        <div id="favorites-page" class="page-content" style="display: none;">
+            <div class="page-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h1 class="page-title">Favorites</h1>
+            <p class="page-subtitle">Your saved items appear here. Notice the soft color palette and consistent iconography that matches iOS design principles.</p>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings-page" class="page-content" style="display: none;">
+            <div class="page-icon">
+                <i class="fas fa-cog"></i>
+            </div>
+            <h1 class="page-title">Settings</h1>
+            <p class="page-subtitle">Adjust your preferences. The design emphasizes clarity and readability with a focus on user experience and intuitive interaction.</p>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a class="nav-item " data-target="page-tasks">
+            <i class="fas fa-check nav-icon"></i>
+            <span class="nav-label">Topshiriqlar</span>
+        </a>
+        <a class="nav-item" data-target="explore-page">
+            <i class="fas fa-briefcase nav-icon"></i>
+            <span class="nav-label">Xizmatlar</span>
+        </a>
+        <a class="nav-item" data-target="favorites-page">
+            <i class="fas fa-wallet nav-icon"></i>
+            <span class="nav-label">Hamyon</span>
+        </a>
+        <a class="nav-item" data-target="settings-page">
+            <i class="fas fa-cog nav-icon"></i>
+            <span class="nav-label">Sozlamalar</span>
+        </a>
+    </div>
+
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Get target page ID
+                const targetPage = this.getAttribute('data-target');
+                
+                // Update active state in navigation
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Hide all pages
+                document.querySelectorAll('.page-content').forEach(page => {
+                    page.style.display = 'none';
+                });
+                
+                // Show target page with animation
+                const targetElement = document.getElementById(targetPage);
+                targetElement.style.display = 'block';
+                targetElement.classList.remove('fade-in');
+                void targetElement.offsetWidth; // Trigger reflow
+                targetElement.classList.add('fade-in');
+            });
+        });
+
+        // Add subtle hover effect to navigation icons
+        document.querySelectorAll('.nav-icon').forEach(icon => {
+            icon.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            icon.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

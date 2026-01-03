@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App-like Website with Ionic Icons</title>
+    <!-- Ionicons CSS -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: #333333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow-y: auto;
+        }
+        
+        .main-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        
+        .main-content p {
+            font-size: 0.8rem;
+            color: #666;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            background: white;
+            z-index: 100;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: rgb(50,50,50);
+            transition: all 0.3s ease;
+            flex: 1;
+            padding: 8px 0;
+        }
+        
+        .nav-item ion-icon {
+            font-size: 1.4rem;
+            margin-bottom: 0.35rem;
+            transition: all 0 ease;
+        }
+        
+        .nav-item span {
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: black;
+        }
+        
+        .nav-item.active ion-icon {
+            color: #10b981;
+        }
+        
+        /* Ionic icons: Outlined for inactive, Filled for active */
+        .nav-item ion-icon {
+            --ionicon-stroke-width: 32px; /* Outlined style */
+        }
+        
+        .nav-item.active ion-icon {
+            --ionicon-stroke-width: 0px; /* Filled style */
+        }
+        
+        .content-area {
+            margin-bottom: 70px;
+            width: 100%;
+        }
+        
+        .page {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #222;
+        }
+        
+        .page-content {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 10px;
+            color: #555;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .nav-item ion-icon {
+                font-size: 1.8rem;
+            }
+            
+            .nav-item span {
+                font-size: 0.8rem;
+            }
+            
+            .main-content h1 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content-area">
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <div class="main-content">
+                <h1>Welcome to AppSite</h1>
+                <p>This is a clean, app-like website with bottom navigation using Ionic icons. Click on the icons below to navigate between sections. The active icon will turn green and become filled.</p>
+                <div class="page-content">
+                    <p>Each navigation item has outlined icons by default. When you select an item, the icon becomes filled and changes to green color.</p>
+                    <p>Try clicking on different icons to see the effect!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Explore Page -->
+        <div id="explore-page" class="page">
+            <h1 class="page-title">Explore</h1>
+            <div class="page-content">
+                <p>Discover new content and features. This section is for exploring what the app has to offer.</p>
+                <p>You might find interesting items, recommendations, or trending topics here.</p>
+            </div>
+        </div>
+        
+        <!-- Add Page -->
+        <div id="add-page" class="page">
+            <h1 class="page-title">Create</h1>
+            <div class="page-content">
+                <p>Create new content, upload files, or start a new project. This is where you can add new items to your workspace.</p>
+                <p>Use this section to bring your ideas to life.</p>
+            </div>
+        </div>
+        
+        <!-- Messages Page -->
+        <div id="messages-page" class="page">
+            <h1 class="page-title">Messages</h1>
+            <div class="page-content">
+                <p>Check your conversations and messages. Stay connected with your contacts and never miss an important update.</p>
+                <p>All your conversations will appear in this section.</p>
+            </div>
+        </div>
+        
+        <!-- Profile Page -->
+        <div id="profile-page"class="page">
+            <h1 class="page-title">Profile</h1>
+            <div class="page-content">
+                <p>Manage your account settings, view your profile, and customize your preferences.</p>
+                <p>This is your personal space where you can control how you interact with the app.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation with Ionic Icons -->
+    <nav class="bottom-navigation">
+        <a class="nav-item active" data-page="home-page">
+            <ion-icon name="home-outline"></ion-icon>
+            <span>Asosiy</span>
+        </a>
+        <a class="nav-item" data-page="explore-page">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <span>Topshiriqlar</span>
+        </a>
+        <a class="nav-item" data-page="services-page">
+            <ion-icon name="briefcase-outline"></ion-icon>
+            <span>Xizmatlar</span>
+        </a>
+        <a class="nav-item" data-page="messages-page">
+            <ion-icon name="chatbubbles-outline"></ion-icon>
+            <span>Xabarlar</span>
+        </a>
+        <a class="nav-item" data-page="profile-page">
+            <ion-icon name="person-outline"></ion-icon>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all navigation items
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            
+            // Function to activate a page and its corresponding nav item
+            function activatePage(pageId) {
+                // Deactivate all pages and nav items
+                pages.forEach(page => page.classList.remove('active'));
+                navItems.forEach(item => item.classList.remove('active'));
+                
+                // Activate the selected page and nav item
+                const activePage = document.getElementById(pageId);
+                if (activePage) {
+                    activePage.classList.add('active');
+                }
+                
+                const activeNavItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+                if (activeNavItem) {
+                    activeNavItem.classList.add('active');
+                    
+                    // Update the icon from outline to filled
+                    const icon = activeNavItem.querySelector('ion-icon');
+                    if (icon) {
+                        const iconName = icon.getAttribute('name');
+                        // Replace -outline with -filled for active state
+                        const filledIconName = iconName.replace('-outline', '');
+                        icon.setAttribute('name', filledIconName);
+                    }
+                }
+                
+                // Update inactive icons back to outline
+                navItems.forEach(item => {
+                    if (!item.classList.contains('active')) {
+                        const icon = item.querySelector('ion-icon');
+                        if (icon) {
+                            const iconName = icon.getAttribute('name');
+                            // Ensure it has -outline suffix for inactive state
+                            if (!iconName.includes('-outline')) {
+                                icon.setAttribute('name', `${iconName}-outline`);
+                            }
+                        }
+                    }
+                });
+                
+                // Store the active page in localStorage for persistence
+                localStorage.setItem('activePage', pageId);
+            }
+            
+            // Add click event listeners to nav items
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    activatePage(pageId);
+                });
+            });
+            
+            // Check if there's a previously active page in localStorage
+            const savedPage = localStorage.getItem('activePage');
+            if (savedPage && document.getElementById(savedPage)) {
+                activatePage(savedPage);
+            } else {
+                // Default to home page
+                activatePage('home-page');
+            }
+            
+            // Add some interactive elements to the home page
+            const homeContent = document.querySelector('#home-page .page-content');
+            if (homeContent) {
+                const interactiveNote = document.createElement('div');
+                interactiveNote.innerHTML = `
+                    <p style="margin-top: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 8px; color: #2e7d32;">
+                        <ion-icon name="information-circle" style="margin-right: 8px; vertical-align: middle;"></ion-icon>
+                        <strong>Tip:</strong> The active page is saved in your browser, so when you refresh, you'll stay on the same page.
+                    </p>
+                `;
+                homeContent.appendChild(interactiveNote);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App-like Website with Ionic Icons</title>
+    <!-- Ionicons CSS -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: #333333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .main-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        
+        .main-content p {
+            font-size: 0.8rem;
+            color: #666;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            background: white;
+            z-index: 100;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: rgb(50,50,50);
+            transition: all 0.3s ease;
+            flex: 1;
+            padding: 8px 0;
+        }
+        
+        .nav-item ion-icon {
+            font-size: 1.4rem;
+            margin-bottom: 0.35rem;
+            transition: all 0 ease;
+        }
+        
+        .nav-item span {
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: black;
+        }
+        
+        .nav-item.active ion-icon {
+            color: #10b981;
+        }
+        
+        /* Ionic icons: Outlined for inactive, Filled for active */
+        .nav-item ion-icon {
+            --ionicon-stroke-width: 32px; /* Outlined style */
+        }
+        
+        .nav-item.active ion-icon {
+            --ionicon-stroke-width: 0px; /* Filled style */
+        }
+        
+        .content-area {
+            flex: 1;
+            margin-bottom: 70px;
+            width: 100%;
+        }
+        
+        .page {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.4s ease;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #222;
+        }
+        
+        .page-content {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 10px;
+            color: #555;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* TASKS PAGE SPECIFIC STYLES */
+        .tasks-header {
+            margin-bottom: 20px;
+        }
+        
+        .tasks-header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            color: #1e293b;
+        }
+        
+        .tasks-header p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        /* Category filter button - MINIMAL */
+        .category-filter-minimal {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-filter-minimal:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        
+        .category-filter-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-filter-text ion-icon {
+            color: #10b981;
+            font-size: 1rem;
+        }
+        
+        .category-filter-text span {
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 0.9rem;
+        }
+        
+        .selected-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: #d1fae5;
+            color: #065f46;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .category-filter-arrow {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-filter-minimal.open .category-filter-arrow {
+            transform: rotate(180deg);
+        }
+        
+        /* Scroll uchun maxsus container */
+        .tasks-scroll-container {
+            height: calc(100vh - 220px);
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        /* Scrollbar styling */
+        .tasks-scroll-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .tasks-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .tasks-scroll-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        .tasks-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* YANGI TAB DIZAYNI - Kompakt */
+        .tabs-container {
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px 5px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            background-color: white;
+        }
+        
+        .tab:hover {
+            background-color: #f8fafc;
+        }
+        
+        .tab.active {
+            color: #10b981;
+            background-color: #f0fdf9;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background-color: #10b981;
+            border-radius: 2px 2px 0 0;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* YANGI KOMPAKT TASK CARD DIZAYNI */
+        .task-card {
+            background: white;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+            border: 1px solid #f1f5f9;
+            position: relative;
+        }
+        
+        .task-card:hover {
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            border-color: #e2e8f0;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .task-title-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            min-width: 0; /* Important for text truncation */
+        }
+        
+        .task-icon {
+            margin-right: 8px;
+            color: #10b981;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1e293b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .task-status {
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 6px;
+            flex-shrink: 0;
+        }
+        
+        .status-new {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-in-progress {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-cancelled {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-waiting {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        .task-description {
+            color: #64748b;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .task-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            padding-top: 8px;
+            border-top: 1px solid #f1f5f9;
+        }
+        
+        .task-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .task-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .task-price {
+            font-weight: 700;
+            color: #10b981;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+        
+        .task-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .task-btn.accept {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .task-btn.accept:hover {
+            background-color: #0da271;
+            transform: translateY(-1px);
+        }
+        
+        .task-btn.view {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+        
+        .task-btn.view:hover {
+            background-color: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        .task-btn.edit {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .task-btn.edit:hover {
+            background-color: #d97706;
+            transform: translateY(-1px);
+        }
+        
+        .no-tasks {
+            text-align: center;
+            padding: 25px 15px;
+            color: #94a3b8;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px dashed #e2e8f0;
+            margin-top: 15px;
+        }
+        
+        .no-tasks ion-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+        
+        .no-tasks p {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        
+        .task-category {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #f8fafc;
+            color: #475569;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            margin-bottom: 6px;
+        }
+        
+        /* MINIMAL CATEGORY MODAL STYLES */
+        .category-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .category-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .category-modal {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 70vh;
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.2s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-modal-overlay.active .category-modal {
+            transform: translateY(0);
+        }
+        
+        .category-modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .category-modal-header h3 {
+            font-size: 1rem;
+            color: #1e293b;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #64748b;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .close-modal:hover {
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+        
+        .category-modal-content {
+            padding: 15px 20px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .category-item {
+            padding: 12px 16px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .category-item:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        
+        .category-item.selected {
+            background-color: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        
+        .category-item-name {
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 0.9rem;
+        }
+        
+        .category-item.selected .category-item-name {
+            color: #065f46;
+            font-weight: 600;
+        }
+        
+        .category-item-count {
+            font-size: 0.75rem;
+            color: #64748b;
+            background-color: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .category-item.selected .category-item-count {
+            background-color: #a7f3d0;
+            color: #065f46;
+        }
+        
+        .category-modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        
+        .modal-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-btn.cancel {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+        
+        .modal-btn.cancel:hover {
+            background-color: #e2e8f0;
+        }
+        
+        .modal-btn.apply {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .modal-btn.apply:hover {
+            background-color: #0da271;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .nav-item ion-icon {
+                font-size: 1.8rem;
+            }
+            
+            .nav-item span {
+                font-size: 0.8rem;
+            }
+            
+            .main-content h1 {
+                font-size: 1rem;
+            }
+            
+            .tasks-header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .tab {
+                font-size: 0.75rem;
+                padding: 10px 3px;
+            }
+            
+            .task-card {
+                padding: 12px;
+            }
+            
+            .task-title {
+                font-size: 0.85rem;
+            }
+            
+            .task-meta {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .task-actions {
+                flex-wrap: wrap;
+            }
+            
+            .task-btn {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+            
+            .tasks-scroll-container {
+                height: calc(100vh - 200px);
+            }
+            
+            .category-modal {
+                width: 95%;
+            }
+        }
+        
+        @media (max-width: 350px) {
+            .tab {
+                font-size: 0.7rem;
+            }
+            
+            .task-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            
+            .task-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .category-modal-header,
+            .category-modal-content,
+            .category-modal-footer {
+                padding: 12px 15px;
+            }
+        }
+        
+        /* Scroll to top button */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 6rem;
+            right: 15px;
+            background-color: #10b981;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            z-index: 99;
+            border: none;
+            font-size: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            visibility: hidden;
+        }
+        
+        .scroll-top-btn.show {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+        
+        .scroll-top-btn:hover {
+            background-color: #0da271;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="content-area">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="main-content">
+                    <h1>Welcome to AppSite</h1>
+                    <p>This is a clean, app-like website with bottom navigation using Ionic icons. Click on the icons below to navigate between sections. The active icon will turn green and become filled.</p>
+                    <div class="page-content">
+                        <p>Each navigation item has outlined icons by default. When you select an item, the icon becomes filled and changes to green color.</p>
+                        <p>Try clicking on different icons to see the effect!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Explore/Tasks Page -->
+            <div id="explore-page" class="page">
+                
+                <div class="tabs-container">
+                    <a class="tab active" data-tab="available-tasks">Topshiriqlar</a>
+                    <a class="tab" data-tab="given-tasks">Men bergan</a>
+                    <a class="tab" data-tab="my-tasks">Mening olgan</a>
+                </div>
+                
+                <!-- Minimal category filter -->
+                <div class="category-filter-minimal" id="categoryFilter">
+                    <div class="category-filter-text">
+                        <ion-icon name="filter-outline"></ion-icon>
+                        <span>Kategoriya</span>
+                        <span class="selected-category" id="selectedCategory">Barchasi</span>
+                    </div>
+                    <ion-icon name="chevron-down-outline" class="category-filter-arrow"></ion-icon>
+                </div>
+                
+                <!-- Scroll container for tasks -->
+                <div class="tasks-scroll-container">
+                    <!-- Tasks will be loaded here dynamically -->
+                </div>
+            </div>
+            
+            <!-- Add Page -->
+            <div id="add-page" class="page">
+                <h1 class="page-title">Create</h1>
+                <div class="page-content">
+                    <p>Create new content, upload files, or start a new project. This is where you can add new items to your workspace.</p>
+                    <p>Use this section to bring your ideas to life.</p>
+                </div>
+            </div>
+            
+            <!-- Messages Page -->
+            <div id="messages-page" class="page">
+                <h1 class="page-title">Messages</h1>
+                <div class="page-content">
+                    <p>Check your conversations and messages. Stay connected with your contacts and never miss an important update.</p>
+                    <p>All your conversations will appear in this section.</p>
+                </div>
+            </div>
+            
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <h1 class="page-title">Profile</h1>
+                <div class="page-content">
+                    <p>Manage your account settings, view your profile, and customize your preferences.</p>
+                    <p>This is your personal space where you can control how you interact with the app.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Minimal Category Modal -->
+        <div class="category-modal-overlay" id="categoryModal">
+            <div class="category-modal">
+                <div class="category-modal-header">
+                    <h3>Kategoriyani tanlang</h3>
+                    <button class="close-modal" id="closeModal">
+                        <ion-icon name="close-outline"></ion-icon>
+                    </button>
+                </div>
+                <div class="category-modal-content">
+                    <div class="category-list" id="categoryList">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                </div>
+                <div class="category-modal-footer">
+                    <button class="modal-btn cancel" id="cancelModal">Bekor qilish</button>
+                    <button class="modal-btn apply" id="applyCategory">Tanlash</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll to top button -->
+        <button class="scroll-top-btn" id="scrollTopBtn">
+            <ion-icon name="chevron-up-outline"></ion-icon>
+        </button>
+        
+        <!-- Bottom Navigation with Ionic Icons -->
+        <nav class="bottom-navigation">
+            <a class="nav-item active" data-page="home-page">
+                <ion-icon name="home-outline"></ion-icon>
+                <span>Asosiy</span>
+            </a>
+            <a class="nav-item" data-page="explore-page">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <span>Topshiriqlar</span>
+            </a>
+            <a class="nav-item" data-page="services-page">
+                <ion-icon name="briefcase-outline"></ion-icon>
+                <span>Xizmatlar</span>
+            </a>
+            <a class="nav-item" data-page="messages-page">
+                <ion-icon name="chatbubbles-outline"></ion-icon>
+                <span>Xabarlar</span>
+            </a>
+            <a class="nav-item" data-page="profile-page">
+                <ion-icon name="person-outline"></ion-icon>
+                <span>Profil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Task data structure
+        const allTasks = {
+            "available-tasks": [
+                {id: 1, title: "Veb-sayt dizaynini yaratish", category: "dizayn", description: "Kichik biznes uchun veb-sayt dizaynini Figma yoki Adobe XD da yaratish kerak.", deadline: "3 kun", difficulty: "O'rta", price: "500,000 so'm", status: "new", icon: "color-palette-outline"},
+                {id: 2, title: "Maqolani tarjima qilish", category: "tarjima", description: "1500 so'zli inglizcha maqolani o'zbek tiliga tarjima qilish.", deadline: "1 kun", difficulty: "Oson", price: "200,000 so'm", status: "in-progress", icon: "language-outline"},
+                {id: 3, title: "Mobil ilova testlash", category: "testlash", description: "Android va iOS uchun rivojlantirilgan mobil ilovani test qilish.", deadline: "5 kun", difficulty: "Qiyin", price: "350,000 so'm", status: "new", icon: "bug-outline"},
+                {id: 4, title: "Video montaj qilish", category: "video", description: "10 daqiqalik video materialni qisqartirib, sarlavha va effektlar qo'shish.", deadline: "2 kun", difficulty: "O'rta", price: "250,000 so'm", status: "new", icon: "videocam-outline"},
+                {id: 5, title: "SEO maqola yozish", category: "yozuv", description: "'Raqamli marketing' mavzusida 2000 so'zli SEO maqola yozish.", deadline: "4 kun", difficulty: "Qiyin", price: "320,000 so'm", status: "new", icon: "create-outline"},
+                {id: 6, title: "Veb-sayt yaratish", category: "dasturlash", description: "HTML, CSS va JavaScript yordamida korporativ veb-sayt yaratish.", deadline: "7 kun", difficulty: "Qiyin", price: "800,000 so'm", status: "new", icon: "code-outline"},
+                {id: 7, title: "Audio montaj qilish", category: "audio", description: "Podcast yoki musiqiy treklarni tahrirlash va sifatini yaxshilash.", deadline: "2 kun", difficulty: "Oson", price: "180,000 so'm", status: "new", icon: "musical-notes-outline"},
+                {id: 8, title: "Banner dizayn", category: "grafik", description: "Reklama kampaniyasi uchun 5 ta banner dizaynini yaratish.", deadline: "3 kun", difficulty: "O'rta", price: "300,000 so'm", status: "new", icon: "image-outline"}
+            ],
+            "given-tasks": [
+                {id: 9, title: "Logo dizayn ishlab chiqish", category: "dizayn", description: "TechSolutions kompaniyasi uchun zamonaviy logo dizayni.", deadline: "Yakunlangan", person: "Aliyev A.", price: "300,000 so'm", status: "completed", icon: "color-palette-outline"},
+                {id: 10, title: "Video montaj qilish", category: "video", description: "10 daqiqalik tadbir videosini qisqartirib, sarlavha va effektlar qo'shish.", deadline: "2 kun qoldi", person: "Hasanov S.", price: "450,000 so'm", status: "in-progress", icon: "videocam-outline"},
+                {id: 11, title: "Ijtimoiy tarmoq postlari", category: "smm", description: "Instagram va Telegram kanali uchun haftalik post kontenti yaratish.", deadline: "7 kun", person: "Ijrochi izlanmoqda", price: "280,000 so'm", status: "waiting", icon: "share-social-outline"}
+            ],
+            "my-tasks": [
+                {id: 12, title: "Maqolani tarjima qilish", category: "tarjima", description: "1500 so'zli inglizcha maqolani o'zbek tiliga tarjima qilish.", deadline: "1 kun qoldi", progress: "75% bajarildi", price: "200,000 so'm", status: "in-progress", icon: "language-outline"},
+                {id: 13, title: "Dasturiy ta'minotni testlash", category: "testlash", description: "Veb-ilovani 50 ta test holati bo'yicha sinovdan o'tkazish.", deadline: "Yakunlangan", rating: "4.8 baho", price: "400,000 so'm", status: "completed", icon: "bug-outline"},
+                {id: 14, title: "Fotosuratni tahrirlash", category: "grafik", description: "50 ta fotosuratni rang va kontrastni tahrirlash.", deadline: "Bekor qilingan", reason: "Mijoz bekor qildi", price: "150,000 so'm", status: "cancelled", icon: "camera-outline"},
+                {id: 15, title: "SEO maqola yozish", category: "yozuv", description: "'Raqamli marketing' mavzusida 2000 so'zli SEO maqola yozish.", deadline: "4 kun qoldi", progress: "30% bajarildi", price: "320,000 so'm", status: "in-progress", icon: "create-outline"}
+            ]
+        };
+
+        // Categories with counts
+        const categories = {
+            'barchasi': { name: 'Barchasi', count: 15 },
+            'dizayn': { name: 'Dizayn', count: 3 },
+            'tarjima': { name: 'Tarjima', count: 2 },
+            'testlash': { name: 'Testlash', count: 2 },
+            'video': { name: 'Video', count: 2 },
+            'yozuv': { name: 'Yozuv', count: 2 },
+            'dasturlash': { name: 'Dasturlash', count: 1 },
+            'audio': { name: 'Audio', count: 1 },
+            'grafik': { name: 'Grafik', count: 2 },
+            'smm': { name: 'SMM', count: 1 }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all navigation items
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            
+            // Category modal elements
+            const categoryFilter = document.getElementById('categoryFilter');
+            const categoryModal = document.getElementById('categoryModal');
+            const closeModal = document.getElementById('closeModal');
+            const cancelModal = document.getElementById('cancelModal');
+            const applyCategory = document.getElementById('applyCategory');
+            const categoryList = document.getElementById('categoryList');
+            const selectedCategoryElement = document.getElementById('selectedCategory');
+            
+            // Current state
+            let currentCategory = 'barchasi';
+            let selectedModalCategory = 'barchasi';
+            
+            // Initialize categories in modal
+            function initializeCategories() {
+                categoryList.innerHTML = '';
+                
+                for (const [key, category] of Object.entries(categories)) {
+                    const categoryItem = document.createElement('div');
+                    categoryItem.className = `category-item ${key === currentCategory ? 'selected' : ''}`;
+                    categoryItem.setAttribute('data-category', key);
+                    
+                    categoryItem.innerHTML = `
+                        <div class="category-item-name">${category.name}</div>
+                        <div class="category-item-count">${category.count}</div>
+                    `;
+                    
+                    categoryItem.addEventListener('click', function() {
+                        selectedModalCategory = key;
+                        updateCategorySelectionInModal();
+                    });
+                    
+                    categoryList.appendChild(categoryItem);
+                }
+            }
+            
+            // Function to activate a page and its corresponding nav item
+            function activatePage(pageId) {
+                // Deactivate all pages and nav items
+                pages.forEach(page => page.classList.remove('active'));
+                navItems.forEach(item => item.classList.remove('active'));
+                
+                // Activate the selected page and nav item
+                const activePage = document.getElementById(pageId);
+                if (activePage) {
+                    activePage.classList.add('active');
+                }
+                
+                const activeNavItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+                if (activeNavItem) {
+                    activeNavItem.classList.add('active');
+                    
+                    // Update the icon from outline to filled
+                    const icon = activeNavItem.querySelector('ion-icon');
+                    if (icon) {
+                        const iconName = icon.getAttribute('name');
+                        // Replace -outline with filled for active state
+                        const filledIconName = iconName.replace('-outline', '');
+                        icon.setAttribute('name', filledIconName);
+                    }
+                }
+                
+                // Update inactive icons back to outline
+                navItems.forEach(item => {
+                    if (!item.classList.contains('active')) {
+                        const icon = item.querySelector('ion-icon');
+                        if (icon) {
+                            const iconName = icon.getAttribute('name');
+                            // Ensure it has -outline suffix for inactive state
+                            if (!iconName.includes('-outline')) {
+                                icon.setAttribute('name', `${iconName}-outline`);
+                            }
+                        }
+                    }
+                });
+                
+                // Store the active page in localStorage for persistence
+                localStorage.setItem('activePage', pageId);
+                
+                // Render tasks if on tasks page
+                if (pageId === 'explore-page') {
+                    renderTasks();
+                }
+            }
+            
+            // Add click event listeners to nav items
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    activatePage(pageId);
+                });
+            });
+            
+            // Tab switching functionality for tasks page
+            const tabs = document.querySelectorAll('.tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Deactivate all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Activate clicked tab
+                    this.classList.add('active');
+                    
+                    // Store active tab for tasks page
+                    if (document.getElementById('explore-page').classList.contains('active')) {
+                        localStorage.setItem('activeTaskTab', tabId);
+                    }
+                    
+                    // Render tasks for the active tab
+                    renderTasks();
+                    
+                    // Scroll to top when switching tabs
+                    const scrollContainer = document.querySelector('.tasks-scroll-container');
+                    if (scrollContainer) {
+                        scrollContainer.scrollTop = 0;
+                    }
+                });
+            });
+            
+            // Category filter modal functionality
+            categoryFilter.addEventListener('click', function() {
+                categoryModal.classList.add('active');
+                categoryFilter.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close modal functions
+            function closeCategoryModal() {
+                categoryModal.classList.remove('active');
+                categoryFilter.classList.remove('open');
+                document.body.style.overflow = '';
+                
+                // Reset modal selection to current category
+                selectedModalCategory = currentCategory;
+                updateCategorySelectionInModal();
+            }
+            
+            closeModal.addEventListener('click', closeCategoryModal);
+            cancelModal.addEventListener('click', closeCategoryModal);
+            
+            // Apply category selection
+            applyCategory.addEventListener('click', function() {
+                currentCategory = selectedModalCategory;
+                updateSelectedCategoryDisplay();
+                closeCategoryModal();
+                renderTasks();
+            });
+            
+            // Update category selection in modal
+            function updateCategorySelectionInModal() {
+                const categoryItems = document.querySelectorAll('.category-item');
+                categoryItems.forEach(item => {
+                    item.classList.remove('selected');
+                    if (item.getAttribute('data-category') === selectedModalCategory) {
+                        item.classList.add('selected');
+                    }
+                });
+            }
+            
+            // Update selected category display
+            function updateSelectedCategoryDisplay() {
+                selectedCategoryElement.textContent = categories[currentCategory].name;
+            }
+            
+            // Render tasks based on selected category and tab
+            function renderTasks() {
+                const activeTab = document.querySelector('.tab.active');
+                if (!activeTab) return;
+                
+                const tabId = activeTab.getAttribute('data-tab');
+                const tasksContainer = document.querySelector('.tasks-scroll-container');
+                
+                if (!tasksContainer) return;
+                
+                // Clear existing tasks
+                tasksContainer.innerHTML = '';
+                
+                // Get tasks for current tab
+                const tasks = allTasks[tabId] || [];
+                
+                // Filter tasks by category
+                const filteredTasks = currentCategory === 'barchasi' 
+                    ? tasks 
+                    : tasks.filter(task => task.category === currentCategory);
+                
+                // If no tasks
+                if (filteredTasks.length === 0) {
+                    tasksContainer.innerHTML = `
+                        <div class="no-tasks">
+                            <ion-icon name="file-tray-outline"></ion-icon>
+                            <p>Tanlangan kategoriyada topshiriqlar topilmadi</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Render each task
+                filteredTasks.forEach(task => {
+                    const taskCard = createTaskCard(task, tabId);
+                    tasksContainer.appendChild(taskCard);
+                });
+                
+                // Add event listeners to new task buttons
+                addTaskButtonListeners();
+            }
+            
+            // Create task card HTML
+            function createTaskCard(task, tabId) {
+                const statusClasses = {
+                    'new': 'status-new',
+                    'in-progress': 'status-in-progress',
+                    'completed': 'status-completed',
+                    'cancelled': 'status-cancelled',
+                    'waiting': 'status-waiting'
+                };
+                
+                const statusTexts = {
+                    'new': 'Yangi',
+                    'in-progress': 'Jarayonda',
+                    'completed': 'Yakunlangan',
+                    'cancelled': 'Bekor qilingan',
+                    'waiting': 'Kutmoqda'
+                };
+                
+                let taskDetails = '';
+                let taskActions = '';
+                
+                if (tabId === 'available-tasks') {
+                    taskDetails = `
+                        <div class="task-meta">
+                            <div class="task-meta-item">
+                                <ion-icon name="calendar-outline" style="font-size: 12px;"></ion-icon>
+                                <span>${task.deadline}</span>
+                            </div>
+                            <div class="task-meta-item">
+                                <ion-icon name="time-outline" style="font-size: 12px;"></ion-icon>
+                                <span>${task.difficulty}</span>
+                            </div>
+                        </div>
+                    `;
+                    taskActions = `
+                        <div class="task-price">${task.price}</div>
+                        <button class="task-btn ${task.status === 'in-progress' ? 'view' : 'accept'}">
+                            ${task.status === 'in-progress' ? 'Batafsil' : 'Qabul qilish'}
+                        </button>
+                    `;
+                } else if (tabId === 'given-tasks') {
+                    taskDetails = `
+                        <div class="task-meta">
+                            <div class="task-meta-item">
+                                <ion-icon name="${task.status === 'completed' ? 'checkmark-circle-outline' : 'calendar-outline'}" 
+                                         style="font-size: 12px; ${task.status === 'completed' ? 'color: #10b981;' : ''}"></ion-icon>
+                                <span>${task.deadline}</span>
+                            </div>
+                            <div class="task-meta-item">
+                                <ion-icon name="person-outline" style="font-size: 12px;"></ion-icon>
+                                <span>${task.person}</span>
+                            </div>
+                        </div>
+                    `;
+                    taskActions = `
+                        <div class="task-price">${task.price}</div>
+                        <button class="task-btn ${task.status === 'waiting' ? 'edit' : 'view'}">
+                            ${task.status === 'waiting' ? 'Tahrirlash' : 'Ko\'rish'}
+                        </button>
+                    `;
+                } else if (tabId === 'my-tasks') {
+                    const extraInfo = task.status === 'completed' ? task.rating : 
+                                     task.status === 'cancelled' ? task.reason : 
+                                     task.progress;
+                    const extraIcon = task.status === 'completed' ? 'star-outline' :
+                                     task.status === 'cancelled' ? 'information-circle-outline' :
+                                     'trending-up-outline';
+                                     
+                    taskDetails = `
+                        <div class="task-meta">
+                            <div class="task-meta-item">
+                                <ion-icon name="${task.status === 'completed' ? 'checkmark-circle-outline' : 
+                                               task.status === 'cancelled' ? 'close-circle-outline' : 'calendar-outline'}" 
+                                         style="font-size: 12px; ${task.status === 'completed' ? 'color: #10b981;' : 
+                                                task.status === 'cancelled' ? 'color: #ef4444;' : ''}"></ion-icon>
+                                <span>${task.deadline}</span>
+                            </div>
+                            <div class="task-meta-item">
+                                <ion-icon name="${extraIcon}" style="font-size: 12px;"></ion-icon>
+                                <span>${extraInfo}</span>
+                            </div>
+                        </div>
+                    `;
+                    taskActions = `
+                        <div class="task-price">${task.price}</div>
+                        <button class="task-btn view">
+                            ${task.status === 'completed' ? 'Natijalar' : 
+                             task.status === 'cancelled' ? 'Batafsil' : 'Davom etish'}
+                        </button>
+                    `;
+                }
+                
+                const taskCard = document.createElement('div');
+                taskCard.className = 'task-card';
+                taskCard.setAttribute('data-task-id', task.id);
+                
+                taskCard.innerHTML = `
+                    <div class="task-category">${categories[task.category]?.name || task.category}</div>
+                    <div class="task-header">
+                        <div class="task-title-wrapper">
+                            <ion-icon name="${task.icon}" class="task-icon"></ion-icon>
+                            <div class="task-title">${task.title}</div>
+                        </div>
+                        <div class="task-status ${statusClasses[task.status]}">
+                            ${statusTexts[task.status]}
+                        </div>
+                    </div>
+                    <div class="task-description">
+                        ${task.description}
+                    </div>
+                    <div class="task-details">
+                        ${taskDetails}
+                        <div class="task-actions">
+                            ${taskActions}
+                        </div>
+                    </div>
+                `;
+                
+                return taskCard;
+            }
+            
+            // Add event listeners to task buttons
+            function addTaskButtonListeners() {
+                const taskButtons = document.querySelectorAll('.task-btn');
+                taskButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const taskCard = this.closest('.task-card');
+                        const taskTitle = taskCard.querySelector('.task-title').textContent;
+                        const buttonText = this.textContent;
+                        
+                        // Simple animation feedback
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                        
+                        console.log(`${buttonText} tugmasi bosildi: ${taskTitle}`);
+                        // Here you can add your actual button logic
+                    });
+                });
+                
+                // Add hover effects to task cards
+                const taskCards = document.querySelectorAll('.task-card');
+                taskCards.forEach(card => {
+                    card.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translateY(-2px)';
+                    });
+                    
+                    card.addEventListener('mouseleave', function() {
+                        this.style.transform = '';
+                    });
+                });
+            }
+            
+            // Check if there's a previously active page in localStorage
+            const savedPage = localStorage.getItem('activePage');
+            if (savedPage && document.getElementById(savedPage)) {
+                activatePage(savedPage);
+                
+                // If tasks page is active, restore the active tab
+                if (savedPage === 'explore-page') {
+                    const savedTab = localStorage.getItem('activeTaskTab') || 'available-tasks';
+                    const tabToActivate = document.querySelector(`.tab[data-tab="${savedTab}"]`);
+                    
+                    if (tabToActivate) {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tabToActivate.classList.add('active');
+                    }
+                }
+            } else {
+                // Default to home page
+                activatePage('home-page');
+            }
+            
+            // Initialize categories and display
+            initializeCategories();
+            updateSelectedCategoryDisplay();
+            
+            // Scroll to top functionality
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            const tasksScrollContainer = document.querySelector('.tasks-scroll-container');
+            
+            if (tasksScrollContainer) {
+                tasksScrollContainer.addEventListener('scroll', function() {
+                    if (this.scrollTop > 300) {
+                        scrollTopBtn.classList.add('show');
+                    } else {
+                        scrollTopBtn.classList.remove('show');
+                    }
+                });
+            }
+            
+            scrollTopBtn.addEventListener('click', function() {
+                if (tasksScrollContainer) {
+                    tasksScrollContainer.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+            
+            // Show scroll button when tasks page is active
+            function checkScrollButtonVisibility() {
+                const tasksPage = document.getElementById('explore-page');
+                if (tasksPage && tasksPage.classList.contains('active')) {
+                    if (tasksScrollContainer && tasksScrollContainer.scrollTop > 300) {
+                        scrollTopBtn.classList.add('show');
+                    } else {
+                        scrollTopBtn.classList.remove('show');
+                    }
+                } else {
+                    scrollTopBtn.classList.remove('show');
+                }
+            }
+            
+            // Monitor page changes to update scroll button
+            const observer = new MutationObserver(checkScrollButtonVisibility);
+            pages.forEach(page => {
+                observer.observe(page, { attributes: true, attributeFilter: ['class'] });
+            });
+            
+            // Close modal when clicking outside
+            categoryModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeCategoryModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && categoryModal.classList.contains('active')) {
+                    closeCategoryModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

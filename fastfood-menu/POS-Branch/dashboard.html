@@ -1,232 +1,914 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <title>Chopar Pizza - Admin Dashboard</title>
-    <link rel="stylesheet" href="../assets/css/POS/admin.css">
-    <link rel="stylesheet" href="../assets/css/POS/dashboard.css">
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brew & Bean Cafe - POS Boshqaruv Paneli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        :root {
+            --ios-gray-light: #F2F2F7;
+            --ios-gray: #8E8E93;
+            --ios-gray-dark: #1C1C1E;
+            --ios-blue: #007AFF;
+            --ios-green: #34C759;
+            --ios-red: #FF3B30;
+            --ios-orange: #FF9500;
+            --ios-purple: #AF52DE;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --card-radius: 18px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --nav-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--ios-gray-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 6rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Sarlavha */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .header-left h1 {
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            color: var(--ios-gray);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .time-display {
+            background-color: white;
+            padding: 10px 18px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+            font-weight: 600;
+            color: var(--ios-gray-dark);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--ios-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        /* Kartalar */
+        .card {
+            background-color: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--ios-gray-dark);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+        }
+
+        .sales .card-icon {
+            background-color: var(--ios-blue);
+        }
+
+        .orders .card-icon {
+            background-color: var(--ios-green);
+        }
+
+        .popular .card-icon {
+            background-color: var(--ios-orange);
+        }
+
+        .staff .card-icon {
+            background-color: var(--ios-purple);
+        }
+
+        /* Sotuvlar kartasi */
+        .sales-total {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--ios-gray-dark);
+            margin-bottom: 10px;
+        }
+
+        .sales-change {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .positive {
+            color: var(--ios-green);
+        }
+
+        .negative {
+            color: var(--ios-red);
+        }
+
+        .sales-chart {
+            height: 100px;
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background-color: var(--ios-blue);
+            border-radius: 8px 8px 0 0;
+            min-height: 5px;
+            position: relative;
+        }
+
+        .chart-bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--ios-gray);
+            font-weight: 500;
+        }
+
+        /* Buyurtmalar kartasi */
+        .orders-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 14px;
+            background-color: var(--ios-gray-light);
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--ios-gray);
+            font-weight: 500;
+        }
+
+        /* Mashhur mahsulotlar kartasi */
+        .popular-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .popular-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .popular-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .item-sales {
+            color: var(--ios-gray);
+            font-size: 14px;
+        }
+
+        /* Xodimlar kartasi */
+        .staff-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .staff-member {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .staff-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .staff-info h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .staff-info p {
+            font-size: 14px;
+            color: var(--ios-gray);
+        }
+
+        .staff-status {
+            margin-left: auto;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-online {
+            background-color: var(--ios-green);
+        }
+
+        .status-break {
+            background-color: var(--ios-orange);
+        }
+
+        /* Tezkor harakatlar */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .action-button {
+            flex: 1;
+            min-width: 200px;
+            background-color: white;
+            border: none;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            text-align: left;
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .action-icon {
+            padding: 1rem;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .action-new-order .action-icon {
+            background-color: var(--ios-green);
+        }
+
+        .action-inventory .action-icon {
+            background-color: var(--ios-orange);
+        }
+
+        .action-reports .action-icon {
+            background-color: var(--ios-blue);
+        }
+
+        .action-settings .action-icon {
+            background-color: var(--ios-gray);
+        }
+
+        .action-content h3 {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .action-content p {
+            color: var(--ios-gray);
+            font-size: 14px;
+        }
+
+        /* iOS segmentli boshqaruv */
+        .ios-segmented-control {
+            display: inline-flex;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 4px;
+            margin-top: 10px;
+        }
+
+        .ios-segment {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: var(--ios-gray);
+        }
+
+        .ios-segment.active {
+            background-color: white;
+            color: var(--ios-blue);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* BOTTOM NAVIGATION - YANGI QISIM */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            border-top-right-radius: 1rem;
+            border-top-left-radius: 1rem;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background-color: rgba(240, 250, 255, 0.7);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bottom-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-items-container {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            min-width: min-content;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            color: rgb(126, 127, 127);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .nav-item.active {
+            color: var(--ios-blue);
+        }
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-text {
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Desktop uchun */
+        @media (min-width: 768px) {
+            .nav-items-container {
+                justify-content: space-around;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .bottom-nav {
+                border-radius: 1rem;
+                right: unset;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            .nav-item {
+                min-width: 100px;
+            }
+        }
+
+        /* Mobil uchun */
+        @media (max-width: 767px) {
+            .bottom-nav {
+                padding: 0 5px;
+            }
+            
+            .nav-item {
+                min-width: 70px;
+                padding: 8px 10px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-button {
+                min-width: 100%;
+            }
+        }
+
+        /* Asosiy kontentni navigatsiyadan ajratish */
+        @media (max-width: 480px) {
+            body {
+                padding-bottom: calc(var(--nav-height) + 10px);
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <div class="app-container">
-        <div class="blur-background"></div>
-
-        <div class="ios-app-wrapper">
-            <!-- Admin Header -->
-            <header class="ios-app-header">
-                <div class="header-content">
-                    <div class="brand-info">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGcPqHMcNLmnj7fnztINLAhs1zk2lHqaUx2A&s" draggable="false" alt="Chopar Pizza" class="brand-logo">
-                        <div class="branch-info">
-                            <h1 class="brand-name">LesAiles</h1>
-                            <span>Toshkent, Qoratosh ko'chasi, 5A</span>
-                        </div>
-                    </div>
-                    <div class="admin-controls">
-                        <button class="ios-button" id="theme-toggle">
-                            <ion-icon name="contrast-outline"></ion-icon>
-                        </button>
-                        <button class="ios-button" id="logout-btn">
-                            <ion-icon name="log-out-outline"></ion-icon>
-                        </button>
+    <div class="container">
+        <!-- Sarlavha -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Tojimahal</h1>
+                <p>kuyganyor filiali boshqaruv paneli</p>
+            </div>
+            <div class="header-right">
+                <div class="time-display" id="current-time">10:45 AM</div>
+                <div class="user-profile">
+                    <div class="user-avatar">OA</div>
+                    <div>
+                        <div style="font-weight: 600;">Orifjonov Alijon</div>
+                        <div style="font-size: 12px; color: var(--ios-gray);">Menejer</div>
                     </div>
                 </div>
-            </header>
+            </div>
+        </header>
 
-            <!-- Admin Navigation -->
-            <nav class="admin-nav">
-                <a href="dashboard.html" class="admin-nav-btn active" data-section="dashboard">
-                    <ion-icon name="grid-outline"></ion-icon>
-                    <span>Dashboard</span>
-                </a>
-                <a href="products.html" class="admin-nav-btn" data-section="products">
-                    <ion-icon name="fast-food-outline"></ion-icon>
-                    <span>Products</span>
-                </a>
-                <a href="categories.html" class="admin-nav-btn" data-section="categories">
-                    <ion-icon name="layers-outline"></ion-icon>
-                    <span>Categories</span>
-                </a>
-                <a class="admin-nav-btn" data-section="orders">
-                    <ion-icon name="receipt-outline"></ion-icon>
-                    <span>Orders</span>
-                </a>
-                <a class="admin-nav-btn" data-section="analytics">
-                    <ion-icon name="stats-chart-outline"></ion-icon>
-                    <span>Analytics</span>
-                </a>
-                <a class="admin-nav-btn" data-section="settings">
-                    <ion-icon name="settings-outline"></ion-icon>
-                    <span>Settings</span>
-                </a>
-            </nav>
-
-            <!-- Main Content Area -->
-            <main class="admin-main">
-                <!-- Dashboard Section -->
-                <section class="admin-section active" id="dashboard-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Dashboard Overview</h2>
-                        <div class="date-filter">
-                            <div class="select-wrapper">
-                              <select class="ios-select" id="time-period">
-                                <option value="today">Today</option>
-                                <option value="week">This Week</option>
-                                <option value="month" selected>This Month</option>
-                                <option value="quarter">This Quarter</option>
-                                <option value="year">This Year</option>
-                              </select>
-                              <ion-icon name="chevron-down-outline"></ion-icon>
-                            </div>
-                        </div>
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Sotuvlar kartasi -->
+            <div class="card sales">
+                <div class="card-header">
+                    <h2 class="card-title">Bugungi Sotuvlar</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-dollar-sign"></i>
                     </div>
-
-                    <!-- Stats Cards -->
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon revenue">
-                                <ion-icon name="cash-outline"></ion-icon>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Total Revenue</h3>
-                                <div class="stat-value">12,450,000 so'm</div>
-                                <div class="stat-change positive">
-                                    <ion-icon name="arrow-up-outline"></ion-icon>
-                                    <span>12.5% from last month</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-icon orders">
-                                <ion-icon name="cart-outline"></ion-icon>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Total Orders</h3>
-                                <div class="stat-value">342</div>
-                                <div class="stat-change positive">
-                                    <ion-icon name="arrow-up-outline"></ion-icon>
-                                    <span>8.3% from last month</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-icon customers">
-                                <ion-icon name="people-outline"></ion-icon>
-                            </div>
-                            <div class="stat-info">
-                                <h3>New Customers</h3>
-                                <div class="stat-value">78</div>
-                                <div class="stat-change positive">
-                                    <ion-icon name="arrow-up-outline"></ion-icon>
-                                    <span>5.2% from last month</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-icon avg-order">
-                                <ion-icon name="pricetag-outline"></ion-icon>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Avg. Order Value</h3>
-                                <div class="stat-value">36,400 so'm</div>
-                                <div class="stat-change positive">
-                                    <ion-icon name="arrow-up-outline"></ion-icon>
-                                    <span>3.7% from last month</span>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div class="sales-total">$1,842.50</div>
+                <div class="sales-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Kechagiga nisbatan 12.5% o'sish</span>
+                </div>
+                
+                <!-- Vaqt oralig'ini tanlash -->
+                <div class="ios-segmented-control">
+                    <div class="ios-segment active">Bugun</div>
+                    <div class="ios-segment">Hafta</div>
+                    <div class="ios-segment">Oy</div>
+                </div>
+                
+                <!-- Sotuvlar grafigi -->
+                <div class="sales-chart">
+                    <div class="chart-bar" style="height: 70%;">
+                        <div class="chart-bar-label">Dush</div>
                     </div>
-
-                    <!-- Top Products -->
-                    <div class="top-products-section">
-                        <div class="section-header">
-                            <h2 class="section-title">Top Selling Products</h2>
-                            <button class="ios-button" id="view-all-products">
-                                <span>View All</span>
-                                <ion-icon name="arrow-forward-outline"></ion-icon>
-                            </button>
-                        </div>
-
-                        <div class="products-grid">
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <img src="../assets/images/burger.avif" alt="GamBurger">
-                                    <div class="product-rank">1</div>
-                                </div>
-                                <div class="product-details">
-                                    <h4>GamBurger</h4>
-                                    <p class="product-category">Burgerlar</p>
-                                    <div class="product-stats">
-                                        <div class="stat">
-                                            <span class="value">142</span>
-                                            <span class="label">Sold</span>
-                                        </div>
-                                        <div class="stat">
-                                            <span class="value">3,976,000</span>
-                                            <span class="label">Revenue</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <img src="../assets/images/pizza.jpg" alt="Milliy Pizza">
-                                    <div class="product-rank">2</div>
-                                </div>
-                                <div class="product-details">
-                                    <h4>Milliy Pizza</h4>
-                                    <p class="product-category">Pizza</p>
-                                    <div class="product-stats">
-                                        <div class="stat">
-                                            <span class="value">98</span>
-                                            <span class="label">Sold</span>
-                                        </div>
-                                        <div class="stat">
-                                            <span class="value">3,920,000</span>
-                                            <span class="label">Revenue</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <img src="../assets/images/bigburger.avif" alt="Big Burger">
-                                    <div class="product-rank">3</div>
-                                </div>
-                                <div class="product-details">
-                                    <h4>Big Burger</h4>
-                                    <p class="product-category">Burgerlar</p>
-                                    <div class="product-stats">
-                                        <div class="stat">
-                                            <span class="value">87</span>
-                                            <span class="label">Sold</span>
-                                        </div>
-                                        <div class="stat">
-                                            <span class="value">2,784,000</span>
-                                            <span class="label">Revenue</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="chart-bar" style="height: 40%;">
+                        <div class="chart-bar-label">Sesh</div>
                     </div>
-                </section>
-            </main>
+                    <div class="chart-bar" style="height: 90%;">
+                        <div class="chart-bar-label">Chor</div>
+                    </div>
+                    <div class="chart-bar" style="height: 60%;">
+                        <div class="chart-bar-label">Pay</div>
+                    </div>
+                    <div class="chart-bar" style="height: 100%;">
+                        <div class="chart-bar-label">Jum</div>
+                    </div>
+                    <div class="chart-bar" style="height: 80%;">
+                        <div class="chart-bar-label">Shan</div>
+                    </div>
+                    <div class="chart-bar" style="height: 75%;">
+                        <div class="chart-bar-label">Yak</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buyurtmalar kartasi -->
+            <div class="card orders">
+                <div class="card-header">
+                    <h2 class="card-title">Buyurtmalar</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                </div>
+                <div class="orders-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Bugungi buyurtmalar</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Ochiq buyurtmalar</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">$43.87</div>
+                        <div class="stat-label">O'rtacha buyurtma</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">8.2 daq</div>
+                        <div class="stat-label">O'rtacha tayyorlash vaqti</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mashhur mahsulotlar kartasi -->
+            <div class="card popular">
+                <div class="card-header">
+                    <h2 class="card-title">Mashhur Mahsulotlar</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="popular-list">
+                    <div class="popular-item">
+                        <div class="item-name">Karamel Makkiato</div>
+                        <div class="item-sales">48 dona sotildi</div>
+                    </div>
+                    <div class="popular-item">
+                        <div class="item-name">Avakado Tost</div>
+                        <div class="item-sales">36 dona sotildi</div>
+                    </div>
+                    <div class="popular-item">
+                        <div class="item-name">Ko'k anjir Muffin</div>
+                        <div class="item-sales">29 dona sotildi</div>
+                    </div>
+                    <div class="popular-item">
+                        <div class="item-name">Muzlatilgan Matcha Latte</div>
+                        <div class="item-sales">24 dona sotildi</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Xodimlar kartasi -->
+            <div class="card staff">
+                <div class="card-header">
+                    <h2 class="card-title">Nobatdagi Xodimlar</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="staff-list">
+                    <div class="staff-member">
+                        <div class="staff-avatar" style="background-color: var(--ios-blue);">JD</div>
+                        <div class="staff-info">
+                            <h4>John Doe</h4>
+                            <p>Menejer</p>
+                        </div>
+                        <div class="staff-status status-online"></div>
+                    </div>
+                    <div class="staff-member">
+                        <div class="staff-avatar" style="background-color: var(--ios-green);">AS</div>
+                        <div class="staff-info">
+                            <h4>Alex Smith</h4>
+                            <p>Barista</p>
+                        </div>
+                        <div class="staff-status status-online"></div>
+                    </div>
+                    <div class="staff-member">
+                        <div class="staff-avatar" style="background-color: var(--ios-orange);">MJ</div>
+                        <div class="staff-info">
+                            <h4>Maria Johnson</h4>
+                            <p>Barista</p>
+                        </div>
+                        <div class="staff-status status-break"></div>
+                    </div>
+                    <div class="staff-member">
+                        <div class="staff-avatar" style="background-color: var(--ios-purple);">TW</div>
+                        <div class="staff-info">
+                            <h4>Tom Wilson</h4>
+                            <p>Kassir</p>
+                        </div>
+                        <div class="staff-status status-online"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tezkor harakatlar -->
+        <div class="quick-actions">
+            <button class="action-button action-new-order">
+                <div class="action-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Yangi Buyurtma</h3>
+                    <p>Yangi mijoz buyurtmasini yarating</p>
+                </div>
+            </button>
+            
+            <button class="action-button action-inventory">
+                <div class="action-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Inventarizatsiya</h3>
+                    <p>Zaxira darajalarini tekshiring va boshqaring</p>
+                </div>
+            </button>
+            
+            <button class="action-button action-reports">
+                <div class="action-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Hisobotlar</h3>
+                    <p>Sotuv va ishlash hisobotlarini ko'ring</p>
+                </div>
+            </button>
+            
+            <button class="action-button action-settings">
+                <div class="action-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Sozlamalar</h3>
+                    <p>Tizim sozlamalarini o'zgartiring</p>
+                </div>
+            </button>
         </div>
     </div>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../assets/js/POS/dashboard.js"></script>
-</body>
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+        <div class="nav-items-container">
+            <a class="nav-item active" data-page="dashboard">
+                <div class="nav-icon">
+                    <ion-icon name="home-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Asosiy</div>
+            </a>
+            
+            <a class="nav-item" data-page="orders">
+                <div class="nav-icon">
+                    <ion-icon name="person-add-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Xodimlar</div>
+            </a>
+            
+            <a class="nav-item" data-page="menu">
+                <div class="nav-icon">
+                    <ion-icon name="file-tray-stacked-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Taomlar</div>
+            </a>
+            
+            <a class="nav-item" data-page="customers">
+                <div class="nav-icon">
+                    <ion-icon name="people-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Mijozlar</div>
+            </a>
+            
+            <a class="nav-item" data-page="analytics">
+                <div class="nav-icon">
+                    <ion-icon name="receipt-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Kategoriya</div>
+            </a>
+            
+            <a class="nav-item" data-page="inventory">
+                <div class="nav-icon">
+                    <ion-icon name="storefront-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Ombor</div>
+            </a>
+            
+            <a class="nav-item" data-page="staff">
+                <div class="nav-icon">
+                    <ion-icon name="fast-food-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Kombolar</div>
+            </a>
+            
+            <a class="nav-item" data-page="settings">
+                <div class="nav-icon">
+                    <ion-icon name="settings-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Sozlamalar</div>
+            </a>
+        </div>
+    </nav>
 
+    <script>
+        // Vaqtni yangilash
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            document.getElementById('current-time').textContent = timeString;
+        }
+        
+        // Vaqtni boshlash va har minutda yangilash
+        updateTime();
+        setInterval(updateTime, 60000);
+        
+        // Segmentli boshqaruv funksionalligi
+        document.querySelectorAll('.ios-segment').forEach(segment => {
+            segment.addEventListener('click', function() {
+                // Barcha segmentlardan active klassini olib tashlash
+                document.querySelectorAll('.ios-segment').forEach(s => {
+                    s.classList.remove('active');
+                });
+                
+                // Bosilgan segmentga active klassini qo'shish
+                this.classList.add('active');
+            });
+        });
+        
+        // Tugmalarga bosilganda
+        document.querySelectorAll('.action-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.querySelector('h3').textContent;
+                alert(`${action} moduli ochilmoqda...`);
+            });
+        });
+        
+        // Kartalarga bosilganda
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Agar interaktiv elementlarga bosilsa, ishlamasin
+                if (e.target.closest('button') || e.target.closest('.ios-segment')) return;
+                
+                const title = this.querySelector('.card-title').textContent;
+                console.log(`"${title}" kartasiga bosildi`);
+            });
+        });
+        
+        // Bottom navigatsiya funksionalligi
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Barcha elementlardan active klassini olib tashlash
+                navItems.forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                
+                // Bosilgan elementga active klassini qo'shish
+                this.classList.add('active');
+                
+                // Sahifa nomini olish
+                const page = this.getAttribute('data-page');
+                
+                // Konsolga chiqarish (aslida bu yerda sahifa o'zgartirish logikasi bo'ladi)
+                console.log(`${page.charAt(0).toUpperCase() + page.slice(1)} sahifasiga o'tildi`);
+                
+                // Mobil qurilmalarda navigatsiyani markazlashtirish
+                if (window.innerWidth < 768) {
+                    this.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+                }
+            });
+        });
+        
+        // Scrollable navigatsiya uchun avtomatik markazlashtirish
+        const bottomNav = document.getElementById('bottomNav');
+        const navContainer = bottomNav.querySelector('.nav-items-container');
+        
+        // Agar navigatsiya elementlari sig'masa, scroll qilish imkonini berish
+        function checkNavOverflow() {
+            const containerWidth = bottomNav.clientWidth;
+            const contentWidth = navContainer.scrollWidth;
+            
+            if (contentWidth > containerWidth) {
+                navContainer.style.justifyContent = 'flex-start';
+            } else {
+                navContainer.style.justifyContent = 'center';
+            }
+        }
+        
+        // O'lcham o'zgarganda tekshirish
+        window.addEventListener('resize', checkNavOverflow);
+        
+        // Dastlabki tekshirish
+        setTimeout(checkNavOverflow, 100);
+    </script>
+</body>
 </html>

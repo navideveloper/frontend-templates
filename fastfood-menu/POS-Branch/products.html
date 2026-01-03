@@ -1,313 +1,1058 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <title>Chopar Pizza - Admin Dashboard</title>
-    <link rel="stylesheet" href="../assets/css/POS/admin.css">
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
-
-<body>
-    <div class="app-container">
-        <div class="blur-background"></div>
-        <div class="ios-app-wrapper">
-            <!-- Admin Header -->
-            <header class="ios-app-header">
-                <div class="header-content">
-                    <div class="brand-info">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGcPqHMcNLmnj7fnztINLAhs1zk2lHqaUx2A&s" draggable="false" alt="Chopar Pizza" class="brand-logo">
-                        <div class="branch-info">
-                            <h1 class="brand-name">LesAiles</h1>
-                            <span>Toshkent, Qoratosh ko'chasi, 5A</span>
-                        </div>
-                    </div>
-                    <div class="admin-controls">
-                        <button class="ios-button" id="theme-toggle">
-                            <ion-icon name="contrast-outline"></ion-icon>
-                        </button>
-                        <button class="ios-button" id="logout-btn">
-                            <ion-icon name="log-out-outline"></ion-icon>
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Admin Navigation -->
-            <nav class="admin-nav">
-                <a href="dashboard.html" class="admin-nav-btn" data-section="dashboard">
-                    <ion-icon name="grid-outline"></ion-icon>
-                    <span>Dashboard</span>
-                </a>
-                <a href="products.html" class="admin-nav-btn active" data-section="products">
-                    <ion-icon name="fast-food-outline"></ion-icon>
-                    <span>Products</span>
-                </a>
-                <a href="categories.html" class="admin-nav-btn" data-section="categories">
-                    <ion-icon name="layers-outline"></ion-icon>
-                    <span>Categories</span>
-                </a>
-                <a class="admin-nav-btn" data-section="orders">
-                    <ion-icon name="receipt-outline"></ion-icon>
-                    <span>Orders</span>
-                </a>
-                <a class="admin-nav-btn" data-section="analytics">
-                    <ion-icon name="stats-chart-outline"></ion-icon>
-                    <span>Analytics</span>
-                </a>
-                <a class="admin-nav-btn" data-section="settings">
-                    <ion-icon name="settings-outline"></ion-icon>
-                    <span>Settings</span>
-                </a>
-            </nav>
-
-            <!-- Main Content Area -->
-            <main class="admin-main">
-                <!-- Products Section -->
-                <section class="admin-section active" id="products-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Product Management</h2>
-                        <div class="header-actions">
-                            <button class="ios-button primary" data-modal-id="modal-add-new" id="add-product-btn">
-                                <ion-icon name="add-outline"></ion-icon>
-                                <span>Add Product</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="product-management">
-                        <div class="search-filter-bar">
-                            <div class="ios-search">
-                                <ion-icon name="search-outline"></ion-icon>
-                                <input type="text" placeholder="Search products..." id="product-search">
-                            </div>
-                            <div class="filter-group">
-                                <select class="ios-select" id="category-filter">
-                                    <option value="">All Categories</option>
-                                    <option>Burgerlar</option>
-                                    <option>Pizza</option>
-                                    <option>Ichimliklar</option>
-                                    <option>Shirinliklar</option>
-                                </select>
-                                <select class="ios-select" id="status-filter">
-                                    <option value="">All Statuses</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="ios-table-container">
-                            <table class="ios-table">
-                                <thead>
-                                    <tr>
-                                        <th class="product-image-col">Image</th>
-                                        <th class="product-name-col">Product</th>
-                                        <th class="product-category-col">Category</th>
-                                        <th class="product-price-col">Price</th>
-                                        <th class="product-stock-col">Stock</th>
-                                        <th class="product-status-col">Status</th>
-                                        <th class="product-actions-col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="products-table-body">
-                                    <!-- Product rows will be inserted here by JavaScript -->
-                                    <tr>
-                                        <td>
-                                            <img src="../assets/images/burger.avif" class="table-product-img">
-                                        </td>
-                                        <td>
-                                            <div class="product-info">
-                                                <h4>GamBurger</h4>
-                                                <p class="product-description">Juicy beef patty with cheese and vegetables</p>
-                                            </div>
-                                        </td>
-                                        <td>Burgerlar</td>
-                                        <td>28,000 so'm</td>
-                                        <td>
-                                            <div class="stock-indicator">
-                                                <span class="stock-value">15</span>
-                                                <div class="stock-bar" style="--stock-level: 75%;"></div>
-                                            </div>
-                                        </td>
-                                        <td><span class="status-badge active">Active</span></td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <button class="ios-table-btn" title="Edit">
-                                                    <ion-icon name="create-outline"></ion-icon>
-                                                </button>
-                                                <button class="ios-table-btn" title="Toggle Status">
-                                                    <ion-icon name="power-outline"></ion-icon>
-                                                </button>
-                                                <button class="ios-table-btn danger" title="Delete">
-                                                    <ion-icon name="trash-outline"></ion-icon>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="../assets/images/bigburger.avif" class="table-product-img">
-                                        </td>
-                                        <td>
-                                            <div class="product-info">
-                                                <h4>Big Burger</h4>
-                                                <p class="product-description">Double patty with special sauce</p>
-                                            </div>
-                                        </td>
-                                        <td>Burgerlar</td>
-                                        <td>32,000 so'm</td>
-                                        <td>
-                                            <div class="stock-indicator">
-                                                <span class="stock-value">8</span>
-                                                <div class="stock-bar" style="--stock-level: 40%;"></div>
-                                            </div>
-                                        </td>
-                                        <td><span class="status-badge active">Active</span></td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <button class="ios-table-btn" title="Edit">
-                                                    <ion-icon name="create-outline"></ion-icon>
-                                                </button>
-                                                <button class="ios-table-btn" title="Toggle Status">
-                                                    <ion-icon name="power-outline"></ion-icon>
-                                                </button>
-                                                <button class="ios-table-btn danger" title="Delete">
-                                                    <ion-icon name="trash-outline"></ion-icon>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="../assets/images/pizza.jpg" class="table-product-img">
-                                        </td>
-                                        <td>
-                                            <div class="product-info">
-                                                <h4>Milliy Pizza</h4>
-                                                <p class="product-description">Traditional Uzbek style pizza</p>
-                                            </div>
-                                        </td>
-                                        <td>Pizza</td>
-                                        <td>40,000 so'm</td>
-                                        <td>
-                                            <div class="stock-indicator">
-                                                <span class="stock-value">0</span>
-                                                <div class="stock-bar" style="--stock-level: 0%;"></div>
-                                            </div>
-                                        </td>
-                                        <td><span class="status-badge inactive">Out of Stock</span></td>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <button class="ios-table-btn" title="Edit">
-                                                    <ion-icon name="create-outline"></ion-icon>
-                                                </button>
-                                                <button class="ios-table-btn" title="Toggle Status">
-                                                    <ion-icon name="power-outline"></ion-icon>
-                                                </button>
-                                                <button class="ios-table-btn danger" title="Delete">
-                                                    <ion-icon name="trash-outline"></ion-icon>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="table-footer">
-                            <div class="table-info">
-                                Showing <span id="showing-count">3</span> of <span id="total-count">15</span> products
-                            </div>
-                            <div class="pagination">
-                                <button class="ios-button" disabled>
-                                    <ion-icon name="chevron-back-outline"></ion-icon>
-                                </button>
-                                <span class="page-info">Page 1 of 3</span>
-                                <button class="ios-button">
-                                    <ion-icon name="chevron-forward-outline"></ion-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </main>
-        </div>
-    </div>
-
-    <!-- Add Product Modal -->
-    <div class="ios-modal" id="modal-add-new">
-        <div class="modal-overlay"></div>
-        <div class="modal-dialog">
-            <div class="modal-header">
-                <h3>Add New Product</h3>
-                <button class="modal-close-btn">
-                    <ion-icon name="close-outline"></ion-icon>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Product Name</label>
-                        <input type="text" class="form-input" placeholder="Cheeseburger Deluxe">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Category</label>
-                        <div class="custom-select">
-                            <select>
-                                <option value="">Select category</option>
-                                <option>Burgerlar</option>
-                                <option>Pizza</option>
-                                <option>Ichimliklar</option>
-                                <option>Shirinliklar</option>
-                            </select>
-                            <div class="select-arrow">
-                                <ion-icon name="chevron-down-outline"></ion-icon>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Price</label>
-                        <div class="input-group">
-                            <span class="input-prefix">so'm</span>
-                            <input type="number" class="form-input" placeholder="28,000">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Stock Quantity</label>
-                        <input type="number" class="form-input" placeholder="50">
-                    </div>
-                    <div class="form-group full-width">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-textarea" placeholder="Describe the product..."></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label class="form-label">Product Image</label>
-                        <div class="image-upload-container">
-                            <div class="upload-preview">
-                                <ion-icon name="image-outline"></ion-icon>
-                                <span>No image selected</span>
-                            </div>
-                            <label class="upload-btn">
-                                <input type="file" accept="image/*">
-                                <span>Choose Image</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary modal-cancel-btn">Cancel</button>
-                <button class="btn btn-primary">Add Product</button>
-            </div>
-        </div>
-    </div>
-
+    <title>Tojimahal - Mahsulotlar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="../assets/js/POS/products.js"></script>
-    <script src="../assets/js/POS/dashboard.js"></script>
+    <style>
+        :root {
+            --ios-gray-light: #F2F2F7;
+            --ios-gray: #8E8E93;
+            --ios-gray-dark: #1C1C1E;
+            --ios-blue: #007AFF;
+            --ios-green: #34C759;
+            --ios-red: #FF3B30;
+            --ios-orange: #FF9500;
+            --ios-purple: #AF52DE;
+            --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --card-radius: 14px;
+            --transition: all 0.2s ease;
+            --nav-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--ios-gray-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 6rem;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Sarlavha */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header-left h1 {
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 4px;
+        }
+
+        .header-left p {
+            color: var(--ios-gray);
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .time-display {
+            background-color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ios-gray-dark);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--ios-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Qidiruv paneli */
+        .search-panel {
+            background-color: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--ios-blue);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .search-btn {
+            background-color: var(--ios-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        /* Jadval */
+        .table-card {
+            background-color: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-header h2 {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--ios-gray-dark);
+        }
+
+        .add-btn {
+            background-color: var(--ios-green);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .products-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ios-gray);
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .products-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .products-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Rasm */
+        .product-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ios-gray);
+        }
+
+        /* Mahsulot ma'lumotlari */
+        .product-name {
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .product-description {
+            font-size: 13px;
+            color: var(--ios-gray);
+        }
+
+        /* Kategoriya tegi */
+        .category-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            background-color: rgba(0, 122, 255, 0.08);
+            color: var(--ios-blue);
+        }
+
+        .category-tag.hot-drinks {
+            background-color: rgba(255, 59, 48, 0.08);
+            color: var(--ios-red);
+        }
+
+        .category-tag.cold-drinks {
+            background-color: rgba(0, 122, 255, 0.08);
+            color: var(--ios-blue);
+        }
+
+        .category-tag.food {
+            background-color: rgba(52, 199, 89, 0.08);
+            color: var(--ios-green);
+        }
+
+        .category-tag.desserts {
+            background-color: rgba(175, 82, 222, 0.08);
+            color: var(--ios-purple);
+        }
+
+        /* Narx */
+        .product-price {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--ios-gray-dark);
+        }
+
+        /* Holat tegi */
+        .status-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-tag.active {
+            background-color: rgba(52, 199, 89, 0.08);
+            color: var(--ios-green);
+        }
+
+        .status-tag.inactive {
+            background-color: rgba(142, 142, 147, 0.08);
+            color: var(--ios-gray);
+        }
+
+        .status-tag.out-of-stock {
+            background-color: rgba(255, 149, 0, 0.08);
+            color: var(--ios-orange);
+        }
+
+        /* Harakatlar */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: none;
+            color: var(--ios-gray);
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .edit-btn:hover {
+            color: var(--ios-blue);
+        }
+
+        .delete-btn:hover {
+            color: var(--ios-red);
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 20px;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--ios-gray-dark);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #f0f0f0;
+            padding: 20px;
+        }
+
+        /* Form */
+        .form-label {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--ios-blue);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        /* Custom select dropdown */
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background-color: white;
+            font-size: 15px;
+            color: var(--ios-gray-dark);
+            appearance: none;
+            cursor: pointer;
+            padding-right: 40px;
+            transition: var(--transition);
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: var(--ios-blue);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .custom-select-wrapper::after {
+            content: "";
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid var(--ios-gray);
+            border-bottom: 2px solid var(--ios-gray);
+            transform: translateY(-50%) rotate(45deg);
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .custom-select:focus + .custom-select-wrapper::after {
+            border-color: var(--ios-blue);
+        }
+
+        /* Rasm yuklash */
+        .image-upload {
+            border: 2px dashed #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .image-upload:hover {
+            border-color: var(--ios-blue);
+        }
+
+        .upload-icon {
+            font-size: 28px;
+            color: var(--ios-gray);
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            font-size: 14px;
+            color: var(--ios-gray);
+            margin-bottom: 4px;
+        }
+
+        .upload-subtext {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin: 0 auto 10px;
+            display: none;
+        }
+
+        /* BOTTOM NAVIGATION */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            border-top-right-radius: 1rem;
+            border-top-left-radius: 1rem;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background-color: rgba(240, 250, 255, 0.7);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bottom-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-items-container {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            min-width: min-content;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            color: rgb(126, 127, 127);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .nav-item.active {
+            color: var(--ios-blue);
+        }
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-text {
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .add-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .bottom-nav {
+                padding: 0 5px;
+            }
+            
+            .nav-item {
+                min-width: 70px;
+            }
+        }
+        /* Desktop uchun */
+        @media (min-width: 768px) {
+            .nav-items-container {
+                justify-content: space-around;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .bottom-nav {
+                border-radius: 1rem;
+                right: unset;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            .nav-item {
+                min-width: 100px;
+            }
+        }
+
+        /* Mobil uchun */
+        @media (max-width: 767px) {
+            .bottom-nav {
+                padding: 0 5px;
+            }
+            
+            .nav-item {
+                min-width: 70px;
+                padding: 8px 10px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-button {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-bottom: calc(var(--nav-height) + 10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sarlavha -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Tojimahal</h1>
+                <p>Mahsulotlar boshqaruvi</p>
+            </div>
+            <div class="header-right">
+                <div class="time-display" id="current-time">10:45 AM</div>
+                <div class="user-profile">
+                    <div class="user-avatar">OA</div>
+                    <div>
+                        <div style="font-weight: 500;">Orifjonov Alijon</div>
+                        <div style="font-size: 12px; color: var(--ios-gray);">Menejer</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Qidiruv paneli -->
+        <div class="search-panel">
+            <form class="search-form">
+                <input type="text" class="search-input" placeholder="Mahsulot nomi bo'yicha qidirish...">
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i>
+                    Qidirish
+                </button>
+            </form>
+        </div>
+
+        <!-- Mahsulotlar jadvali -->
+        <div class="table-card">
+            <div class="table-header">
+                <h2>Mahsulotlar ro'yxati</h2>
+                <button class="add-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                    <i class="fas fa-plus"></i>
+                    Yangi mahsulot
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Rasm</th>
+                            <th>Mahsulot</th>
+                            <th>Kategoriya</th>
+                            <th>Narxi</th>
+                            <th>Holati</th>
+                            <th style="width: 90px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 1-mahsulot -->
+                        <tr>
+                            <td>
+                                <div class="product-image">
+                                    <i class="fas fa-coffee"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="product-name">Karamel Makkiato</div>
+                                <div class="product-description">Mazali karamel makkiato</div>
+                            </td>
+                            <td>
+                                <span class="category-tag hot-drinks">Issiq ichimliklar</span>
+                            </td>
+                            <td>
+                                <div class="product-price">18,000 UZS</div>
+                            </td>
+                            <td>
+                                <span class="status-tag active">Faol</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- 2-mahsulot -->
+                        <tr>
+                            <td>
+                                <div class="product-image">
+                                    <i class="fas fa-bread-slice"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="product-name">Avakado Tost</div>
+                                <div class="product-description">Avakado va tuxumli tost</div>
+                            </td>
+                            <td>
+                                <span class="category-tag food">Taomlar</span>
+                            </td>
+                            <td>
+                                <div class="product-price">25,000 UZS</div>
+                            </td>
+                            <td>
+                                <span class="status-tag active">Faol</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- 3-mahsulot -->
+                        <tr>
+                            <td>
+                                <div class="product-image">
+                                    <i class="fas fa-cookie-bite"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="product-name">Ko'k anjir Muffin</div>
+                                <div class="product-description">Tabiiy ko'k anjirli muffin</div>
+                            </td>
+                            <td>
+                                <span class="category-tag desserts">Shirinliklar</span>
+                            </td>
+                            <td>
+                                <div class="product-price">12,000 UZS</div>
+                            </td>
+                            <td>
+                                <span class="status-tag active">Faol</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- 4-mahsulot -->
+                        <tr>
+                            <td>
+                                <div class="product-image">
+                                    <i class="fas fa-glass-whiskey"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="product-name">Muzlatilgan Matcha Latte</div>
+                                <div class="product-description">Sovuq matcha latte, muz bilan</div>
+                            </td>
+                            <td>
+                                <span class="category-tag cold-drinks">Sovuq ichimliklar</span>
+                            </td>
+                            <td>
+                                <div class="product-price">20,000 UZS</div>
+                            </td>
+                            <td>
+                                <span class="status-tag out-of-stock">Zaxira tugagan</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- 5-mahsulot -->
+                        <tr>
+                            <td>
+                                <div class="product-image">
+                                    <i class="fas fa-mug-hot"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="product-name">Amerikano</div>
+                                <div class="product-description">Klassik americano</div>
+                            </td>
+                            <td>
+                                <span class="category-tag hot-drinks">Issiq ichimliklar</span>
+                            </td>
+                            <td>
+                                <div class="product-price">15,000 UZS</div>
+                            </td>
+                            <td>
+                                <span class="status-tag active">Faol</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mahsulot modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Yangi mahsulot qo'shish</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="productForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Mahsulot nomi *</label>
+                            <input type="text" class="form-input" id="productName" name="name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Tavsif</label>
+                            <textarea class="form-input" id="productDescription" name="description" rows="2"></textarea>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="productCategory" class="form-label">Kategoriya *</label>
+                                <div class="custom-select-wrapper">
+                                    <select class="custom-select" id="productCategory" name="category" required>
+                                        <option value="">Tanlang</option>
+                                        <option value="hot-drinks">Issiq ichimliklar</option>
+                                        <option value="cold-drinks">Sovuq ichimliklar</option>
+                                        <option value="food">Taomlar</option>
+                                        <option value="desserts">Shirinliklar</option>
+                                        <option value="breakfast">Nonushta</option>
+                                        <option value="salads">Salatlar</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="productStatus" class="form-label">Holati *</label>
+                                <div class="custom-select-wrapper">
+                                    <select class="custom-select" id="productStatus" name="status" required>
+                                        <option value="">Tanlang</option>
+                                        <option value="active">Faol</option>
+                                        <option value="inactive">Faol emas</option>
+                                        <option value="out-of-stock">Zaxira tugagan</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 mt-3">
+                            <label for="productPrice" class="form-label">Narxi (UZS) *</label>
+                            <input type="number" class="form-input" id="productPrice" name="price" min="0" step="100" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Rasm</label>
+                            <div class="image-upload" id="imageUpload">
+                                <img class="image-preview" id="imagePreview" alt="Rasm">
+                                <div id="uploadContent">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="upload-text">Rasm yuklash</div>
+                                    <div class="upload-subtext">PNG, JPG yoki WEBP</div>
+                                </div>
+                                <input type="file" id="imageInput" name="image" accept="image/*" class="d-none">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Bekor qilish</button>
+                        <button type="submit" class="btn btn-success">Saqlash</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- O'chirish modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">O'chirish</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 48px;"></i>
+                    </div>
+                    <p class="mb-0">Mahsulotni o'chirishni tasdiqlaysizmi?</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="button" class="btn btn-danger">O'chirish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-items-container">
+            <a class="nav-item" href="dashboard.html">
+                <div class="nav-icon">
+                    <ion-icon name="home-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Asosiy</div>
+            </a>
+            
+            <a class="nav-item" href="#">
+                <div class="nav-icon">
+                    <ion-icon name="person-add-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Xodimlar</div>
+            </a>
+            
+            <a class="nav-item active" href="products.html">
+                <div class="nav-icon">
+                    <ion-icon name="file-tray-stacked-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Taomlar</div>
+            </a>
+            
+            <a class="nav-item" href="#">
+                <div class="nav-icon">
+                    <ion-icon name="people-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Mijozlar</div>
+            </a>
+            
+            <a class="nav-item" href="#">
+                <div class="nav-icon">
+                    <ion-icon name="settings-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Sozlamalar</div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Vaqtni yangilash
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            document.getElementById('current-time').textContent = timeString;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 60000);
+        
+        // Rasm yuklash
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageUpload = document.getElementById('imageUpload');
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const uploadContent = document.getElementById('uploadContent');
+            
+            if (imageUpload && imageInput) {
+                imageUpload.addEventListener('click', function() {
+                    imageInput.click();
+                });
+                
+                imageInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            imagePreview.src = e.target.result;
+                            imagePreview.style.display = 'block';
+                            uploadContent.style.display = 'none';
+                        }
+                        
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                });
+            }
+            
+            // Form submit
+            const productForm = document.getElementById('productForm');
+            if (productForm) {
+                productForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Django POST qilish
+                    console.log('Form submitted');
+                    
+                    // Modalni yopish
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                    modal.hide();
+                });
+            }
+            
+            // Search form
+            const searchForm = document.querySelector('.search-form');
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Django GET qilish
+                    console.log('Search submitted');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

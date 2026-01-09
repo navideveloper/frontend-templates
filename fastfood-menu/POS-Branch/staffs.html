@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tojimahal - Mahsulotlar</title>
+    <title>Tojimahal - Xodimlar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <!-- Bootstrap 5 -->
@@ -20,8 +20,8 @@
             --ios-red: #FF3B30;
             --ios-orange: #FF9500;
             --ios-purple: #AF52DE;
-            --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            --card-radius: 14px;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --card-radius: 12px;
             --transition: all 0.2s ease;
             --nav-height: 70px;
         }
@@ -105,64 +105,15 @@
             font-weight: 600;
         }
 
-        /* Qidiruv paneli */
-        .search-panel {
-            background-color: white;
-            border-radius: var(--card-radius);
-            box-shadow: var(--card-shadow);
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .search-form {
-            display: flex;
-            gap: 12px;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 10px 16px;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 15px;
-            transition: var(--transition);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--ios-blue);
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-        }
-
-        .search-btn {
-            background-color: var(--ios-blue);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-
-        /* Jadval */
-        .table-card {
-            background-color: white;
-            border-radius: var(--card-radius);
-            box-shadow: var(--card-shadow);
-            padding: 20px;
-        }
-
-        .table-header {
+        /* Sarlavha va qo'shish tugmasi */
+        .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .table-header h2 {
+        .page-title {
             font-weight: 600;
             font-size: 18px;
             color: var(--ios-gray-dark);
@@ -181,20 +132,29 @@
             cursor: pointer;
         }
 
-        .table-container {
-            overflow-x: auto;
-            border-radius: 10px;
+        /* Jadval kartasi */
+        .table-card {
+            background-color: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 20px;
             border: 1px solid #f0f0f0;
         }
 
-        .products-table {
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #f5f5f5;
+        }
+
+        .staff-table {
             width: 100%;
             border-collapse: collapse;
             min-width: 800px;
         }
 
-        .products-table th {
-            padding: 14px 16px;
+        .staff-table th {
+            padding: 16px;
             text-align: left;
             font-weight: 600;
             font-size: 14px;
@@ -203,75 +163,87 @@
             border-bottom: 1px solid #f0f0f0;
         }
 
-        .products-table td {
-            padding: 14px 16px;
+        .staff-table td {
+            padding: 16px;
             border-bottom: 1px solid #f0f0f0;
             vertical-align: middle;
         }
 
-        .products-table tbody tr:last-child td {
+        .staff-table tbody tr:last-child td {
             border-bottom: none;
         }
 
-        /* Rasm */
-        .product-image {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            background-color: #f5f5f5;
+        /* Xodim ma'lumotlari */
+        .staff-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .staff-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--ios-blue);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--ios-gray);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
         }
 
-        /* Mahsulot ma'lumotlari */
-        .product-name {
-            font-weight: 500;
+        .staff-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .staff-name {
+            font-weight: 600;
             font-size: 15px;
-            margin-bottom: 4px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 2px;
         }
 
-        .product-description {
-            font-size: 13px;
+        .staff-id {
+            font-size: 12px;
             color: var(--ios-gray);
         }
 
-        /* Kategoriya tegi */
-        .category-tag {
+        /* Lavozim tegi */
+        .position-tag {
             display: inline-block;
             padding: 4px 10px;
             border-radius: 6px;
             font-size: 13px;
             font-weight: 500;
+        }
+
+        .position-cashier {
             background-color: rgba(0, 122, 255, 0.08);
             color: var(--ios-blue);
         }
 
-        .category-tag.hot-drinks {
-            background-color: rgba(255, 59, 48, 0.08);
-            color: var(--ios-red);
-        }
-
-        .category-tag.cold-drinks {
-            background-color: rgba(0, 122, 255, 0.08);
-            color: var(--ios-blue);
-        }
-
-        .category-tag.food {
+        .position-waiter {
             background-color: rgba(52, 199, 89, 0.08);
             color: var(--ios-green);
         }
 
-        .category-tag.desserts {
+        .position-manager {
             background-color: rgba(175, 82, 222, 0.08);
             color: var(--ios-purple);
         }
 
-        /* Narx */
-        .product-price {
-            font-weight: 600;
-            font-size: 16px;
+        .position-barista {
+            background-color: rgba(255, 149, 0, 0.08);
+            color: var(--ios-orange);
+        }
+
+        /* Yoshi */
+        .age-value {
+            font-weight: 500;
+            font-size: 15px;
             color: var(--ios-gray-dark);
         }
 
@@ -284,22 +256,22 @@
             font-weight: 500;
         }
 
-        .status-tag.active {
+        .status-active {
             background-color: rgba(52, 199, 89, 0.08);
             color: var(--ios-green);
         }
 
-        .status-tag.inactive {
+        .status-inactive {
             background-color: rgba(142, 142, 147, 0.08);
             color: var(--ios-gray);
         }
 
-        .status-tag.out-of-stock {
+        .status-vacation {
             background-color: rgba(255, 149, 0, 0.08);
             color: var(--ios-orange);
         }
 
-        /* Harakatlar */
+        /* Harakatlar tugmalari */
         .action-buttons {
             display: flex;
             gap: 8px;
@@ -426,44 +398,21 @@
             border-color: var(--ios-blue);
         }
 
-        /* Rasm yuklash */
-        .image-upload {
-            border: 2px dashed #e9ecef;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
+        /* Parol ko'rinishi */
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--ios-gray);
             cursor: pointer;
-            transition: var(--transition);
+            z-index: 10;
         }
 
-        .image-upload:hover {
-            border-color: var(--ios-blue);
-        }
-
-        .upload-icon {
-            font-size: 28px;
-            color: var(--ios-gray);
-            margin-bottom: 10px;
-        }
-
-        .upload-text {
-            font-size: 14px;
-            color: var(--ios-gray);
-            margin-bottom: 4px;
-        }
-
-        .upload-subtext {
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        .image-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            object-fit: cover;
-            margin: 0 auto 10px;
-            display: none;
+        .password-input-wrapper {
+            position: relative;
         }
 
         /* BOTTOM NAVIGATION */
@@ -550,11 +499,7 @@
                 justify-content: space-between;
             }
             
-            .search-form {
-                flex-direction: column;
-            }
-            
-            .table-header {
+            .page-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 12px;
@@ -565,6 +510,10 @@
                 justify-content: center;
             }
             
+            .staff-table th, .staff-table td {
+                padding: 12px 8px;
+            }
+            
             .bottom-nav {
                 padding: 0 5px;
             }
@@ -573,6 +522,7 @@
                 min-width: 70px;
             }
         }
+        
         /* Desktop uchun */
         @media (min-width: 768px) {
             .nav-items-container {
@@ -609,12 +559,13 @@
                 gap: 20px;
             }
             
-            .dashboard-grid {
-                grid-template-columns: 1fr;
+            .action-buttons {
+                flex-direction: column;
             }
             
-            .action-button {
-                min-width: 100%;
+            .icon-btn {
+                width: 28px;
+                height: 28px;
             }
         }
 
@@ -631,7 +582,7 @@
         <header class="header">
             <div class="header-left">
                 <h1>Tojimahal</h1>
-                <p>Mahsulotlar boshqaruvi</p>
+                <p>Xodimlar boshqaruvi</p>
             </div>
             <div class="header-right">
                 <div class="time-display" id="current-time">10:45 AM</div>
@@ -645,63 +596,52 @@
             </div>
         </header>
 
-        <!-- Qidiruv paneli -->
-        <div class="search-panel">
-            <form class="search-form">
-                <input type="text" class="search-input" placeholder="Mahsulot nomi bo'yicha qidirish...">
-                <button type="submit" class="search-btn">
-                    <i class="fas fa-search"></i>
-                    Qidirish
-                </button>
-            </form>
+        <!-- Sahifa sarlavhasi va qo'shish tugmasi -->
+        <div class="page-header">
+            <div class="page-title">Barcha xodimlar</div>
+            <button class="add-btn" data-bs-toggle="modal" data-bs-target="#staffModal">
+                <i class="fas fa-plus"></i>
+                Yangi xodim
+            </button>
         </div>
 
-        <!-- Mahsulotlar jadvali -->
+        <!-- Xodimlar jadvali -->
         <div class="table-card">
-            <div class="table-header">
-                <h2>Mahsulotlar ro'yxati</h2>
-                <button class="add-btn" data-bs-toggle="modal" data-bs-target="#productModal">
-                    <i class="fas fa-plus"></i>
-                    Yangi mahsulot
-                </button>
-            </div>
-
             <div class="table-container">
-                <table class="products-table">
+                <table class="staff-table">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">Rasm</th>
-                            <th>Mahsulot</th>
-                            <th>Kategoriya</th>
-                            <th>Narxi</th>
+                            <th>Xodim</th>
+                            <th>Lavozimi</th>
+                            <th>Yoshi</th>
                             <th>Holati</th>
                             <th style="width: 90px;"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- 1-mahsulot -->
+                        <!-- 1-xodim -->
                         <tr>
                             <td>
-                                <div class="product-image">
-                                    <i class="fas fa-coffee"></i>
+                                <div class="staff-info">
+                                    <div class="staff-avatar" style="background-color: var(--ios-blue);">JD</div>
+                                    <div class="staff-details">
+                                        <div class="staff-name">John Doe</div>
+                                        <div class="staff-id">ID: X001</div>
+                                    </div>
                                 </div>
                             </td>
                             <td>
-                                <div class="product-name">Karamel Makkiato</div>
-                                <div class="product-description">Mazali karamel makkiato</div>
+                                <span class="position-tag position-manager">Menejer</span>
                             </td>
                             <td>
-                                <span class="category-tag hot-drinks">Issiq ichimliklar</span>
+                                <div class="age-value">28</div>
                             </td>
                             <td>
-                                <div class="product-price">18,000 UZS</div>
-                            </td>
-                            <td>
-                                <span class="status-tag active">Faol</span>
+                                <span class="status-tag status-active">Faol</span>
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#staffModal">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -711,29 +651,29 @@
                             </td>
                         </tr>
                         
-                        <!-- 2-mahsulot -->
+                        <!-- 2-xodim -->
                         <tr>
                             <td>
-                                <div class="product-image">
-                                    <i class="fas fa-bread-slice"></i>
+                                <div class="staff-info">
+                                    <div class="staff-avatar" style="background-color: var(--ios-green);">AS</div>
+                                    <div class="staff-details">
+                                        <div class="staff-name">Alex Smith</div>
+                                        <div class="staff-id">ID: X002</div>
+                                    </div>
                                 </div>
                             </td>
                             <td>
-                                <div class="product-name">Avakado Tost</div>
-                                <div class="product-description">Avakado va tuxumli tost</div>
+                                <span class="position-tag position-barista">Barista</span>
                             </td>
                             <td>
-                                <span class="category-tag food">Taomlar</span>
+                                <div class="age-value">24</div>
                             </td>
                             <td>
-                                <div class="product-price">25,000 UZS</div>
-                            </td>
-                            <td>
-                                <span class="status-tag active">Faol</span>
+                                <span class="status-tag status-active">Faol</span>
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#staffModal">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -743,29 +683,29 @@
                             </td>
                         </tr>
                         
-                        <!-- 3-mahsulot -->
+                        <!-- 3-xodim -->
                         <tr>
                             <td>
-                                <div class="product-image">
-                                    <i class="fas fa-cookie-bite"></i>
+                                <div class="staff-info">
+                                    <div class="staff-avatar" style="background-color: var(--ios-orange);">MJ</div>
+                                    <div class="staff-details">
+                                        <div class="staff-name">Maria Johnson</div>
+                                        <div class="staff-id">ID: X003</div>
+                                    </div>
                                 </div>
                             </td>
                             <td>
-                                <div class="product-name">Ko'k anjir Muffin</div>
-                                <div class="product-description">Tabiiy ko'k anjirli muffin</div>
+                                <span class="position-tag position-waiter">Ofitsiant</span>
                             </td>
                             <td>
-                                <span class="category-tag desserts">Shirinliklar</span>
+                                <div class="age-value">26</div>
                             </td>
                             <td>
-                                <div class="product-price">12,000 UZS</div>
-                            </td>
-                            <td>
-                                <span class="status-tag active">Faol</span>
+                                <span class="status-tag status-vacation">Ta'tilda</span>
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#staffModal">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -775,29 +715,29 @@
                             </td>
                         </tr>
                         
-                        <!-- 4-mahsulot -->
+                        <!-- 4-xodim -->
                         <tr>
                             <td>
-                                <div class="product-image">
-                                    <i class="fas fa-glass-whiskey"></i>
+                                <div class="staff-info">
+                                    <div class="staff-avatar" style="background-color: var(--ios-purple);">TW</div>
+                                    <div class="staff-details">
+                                        <div class="staff-name">Tom Wilson</div>
+                                        <div class="staff-id">ID: X004</div>
+                                    </div>
                                 </div>
                             </td>
                             <td>
-                                <div class="product-name">Muzlatilgan Matcha Latte</div>
-                                <div class="product-description">Sovuq matcha latte, muz bilan</div>
+                                <span class="position-tag position-cashier">Kassir</span>
                             </td>
                             <td>
-                                <span class="category-tag cold-drinks">Sovuq ichimliklar</span>
+                                <div class="age-value">30</div>
                             </td>
                             <td>
-                                <div class="product-price">20,000 UZS</div>
-                            </td>
-                            <td>
-                                <span class="status-tag out-of-stock">Zaxira tugagan</span>
+                                <span class="status-tag status-active">Faol</span>
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#staffModal">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -807,29 +747,61 @@
                             </td>
                         </tr>
                         
-                        <!-- 5-mahsulot -->
+                        <!-- 5-xodim -->
                         <tr>
                             <td>
-                                <div class="product-image">
-                                    <i class="fas fa-mug-hot"></i>
+                                <div class="staff-info">
+                                    <div class="staff-avatar" style="background-color: var(--ios-red);">SR</div>
+                                    <div class="staff-details">
+                                        <div class="staff-name">Sarah Roberts</div>
+                                        <div class="staff-id">ID: X005</div>
+                                    </div>
                                 </div>
                             </td>
                             <td>
-                                <div class="product-name">Amerikano</div>
-                                <div class="product-description">Klassik americano</div>
+                                <span class="position-tag position-waiter">Ofitsiant</span>
                             </td>
                             <td>
-                                <span class="category-tag hot-drinks">Issiq ichimliklar</span>
+                                <div class="age-value">22</div>
                             </td>
                             <td>
-                                <div class="product-price">15,000 UZS</div>
-                            </td>
-                            <td>
-                                <span class="status-tag active">Faol</span>
+                                <span class="status-tag status-active">Faol</span>
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#productModal">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#staffModal">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- 6-xodim -->
+                        <tr>
+                            <td>
+                                <div class="staff-info">
+                                    <div class="staff-avatar" style="background-color: #5856d6;">MB</div>
+                                    <div class="staff-details">
+                                        <div class="staff-name">Michael Brown</div>
+                                        <div class="staff-id">ID: X006</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="position-tag position-barista">Barista</span>
+                            </td>
+                            <td>
+                                <div class="age-value">25</div>
+                            </td>
+                            <td>
+                                <span class="status-tag status-inactive">Faol emas</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="icon-btn edit-btn" data-bs-toggle="modal" data-bs-target="#staffModal">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="icon-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -844,72 +816,96 @@
         </div>
     </div>
 
-    <!-- Mahsulot modal -->
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <!-- Xodim modal -->
+    <div class="modal fade" id="staffModal" tabindex="-1" aria-labelledby="staffModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel">Yangi mahsulot qo'shish</h5>
+                    <h5 class="modal-title" id="staffModalLabel">Yangi xodim qo'shish</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="productForm">
+                <form id="staffForm">
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">Mahsulot nomi *</label>
-                            <input type="text" class="form-input" id="productName" name="name" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="productDescription" class="form-label">Tavsif</label>
-                            <textarea class="form-input" id="productDescription" name="description" rows="2"></textarea>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="staffFirstName" class="form-label">Ism *</label>
+                                    <input type="text" class="form-input" id="staffFirstName" name="first_name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="staffLastName" class="form-label">Familiya *</label>
+                                    <input type="text" class="form-input" id="staffLastName" name="last_name" required>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="productCategory" class="form-label">Kategoriya *</label>
-                                <div class="custom-select-wrapper">
-                                    <select class="custom-select" id="productCategory" name="category" required>
-                                        <option value="">Tanlang</option>
-                                        <option value="hot-drinks">Issiq ichimliklar</option>
-                                        <option value="cold-drinks">Sovuq ichimliklar</option>
-                                        <option value="food">Taomlar</option>
-                                        <option value="desserts">Shirinliklar</option>
-                                        <option value="breakfast">Nonushta</option>
-                                        <option value="salads">Salatlar</option>
-                                    </select>
+                                <div class="mb-3">
+                                    <label for="staffAge" class="form-label">Yoshi *</label>
+                                    <input type="number" class="form-input" id="staffAge" name="age" min="18" max="65" required>
                                 </div>
                             </div>
-                            
                             <div class="col-md-6">
-                                <label for="productStatus" class="form-label">Holati *</label>
-                                <div class="custom-select-wrapper">
-                                    <select class="custom-select" id="productStatus" name="status" required>
-                                        <option value="">Tanlang</option>
-                                        <option value="active">Faol</option>
-                                        <option value="inactive">Faol emas</option>
-                                        <option value="out-of-stock">Zaxira tugagan</option>
-                                    </select>
+                                <div class="mb-3">
+                                    <label for="staffPhone" class="form-label">Telefon raqami</label>
+                                    <input type="tel" class="form-input" id="staffPhone" name="phone">
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="mb-3 mt-3">
-                            <label for="productPrice" class="form-label">Narxi (UZS) *</label>
-                            <input type="number" class="form-input" id="productPrice" name="price" min="0" step="100" required>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Rasm</label>
-                            <div class="image-upload" id="imageUpload">
-                                <img class="image-preview" id="imagePreview" alt="Rasm">
-                                <div id="uploadContent">
-                                    <div class="upload-icon">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                    </div>
-                                    <div class="upload-text">Rasm yuklash</div>
-                                    <div class="upload-subtext">PNG, JPG yoki WEBP</div>
-                                </div>
-                                <input type="file" id="imageInput" name="image" accept="image/*" class="d-none">
+                            <label for="staffPosition" class="form-label">Lavozimi *</label>
+                            <div class="custom-select-wrapper">
+                                <select class="custom-select" id="staffPosition" name="position" required>
+                                    <option value="">Tanlang</option>
+                                    <option value="cashier">Kassir</option>
+                                    <option value="waiter">Ofitsiant</option>
+                                    <option value="barista">Barista</option>
+                                    <option value="manager">Menejer</option>
+                                    <option value="cook">Oshpaz</option>
+                                    <option value="cleaner">Tozalovchi</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="staffStatus" class="form-label">Holati *</label>
+                            <div class="custom-select-wrapper">
+                                <select class="custom-select" id="staffStatus" name="status" required>
+                                    <option value="">Tanlang</option>
+                                    <option value="active">Faol</option>
+                                    <option value="inactive">Faol emas</option>
+                                    <option value="vacation">Ta'tilda</option>
+                                    <option value="sick">Kasallik</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="staffUsername" class="form-label">Foydalanuvchi nomi *</label>
+                            <input type="text" class="form-input" id="staffUsername" name="username" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="staffPassword" class="form-label">Parol *</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" class="form-input" id="staffPassword" name="password" required>
+                                <button type="button" class="password-toggle" id="passwordToggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="staffConfirmPassword" class="form-label">Parolni tasdiqlash *</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" class="form-input" id="staffConfirmPassword" name="confirm_password" required>
+                                <button type="button" class="password-toggle" id="confirmPasswordToggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -934,7 +930,7 @@
                     <div class="mb-3">
                         <i class="fas fa-exclamation-triangle text-warning" style="font-size: 48px;"></i>
                     </div>
-                    <p class="mb-0">Mahsulotni o'chirishni tasdiqlaysizmi?</p>
+                    <p class="mb-0">Xodimni o'chirishni tasdiqlaysizmi?</p>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Bekor qilish</button>
@@ -947,56 +943,56 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav" id="bottomNav">
         <div class="nav-items-container">
-            <a class="nav-item active" data-page="dashboard">
+            <a class="nav-item" data-page="dashboard" href="dashboard.html">
                 <div class="nav-icon">
                     <ion-icon name="home-outline"></ion-icon>
                 </div>
                 <div class="nav-text">Asosiy</div>
             </a>
             
-            <a class="nav-item" data-page="orders">
+            <a class="nav-item active" data-page="staff" href="staff.html">
                 <div class="nav-icon">
                     <ion-icon name="person-add-outline"></ion-icon>
                 </div>
                 <div class="nav-text">Xodimlar</div>
             </a>
             
-            <a class="nav-item" data-page="menu">
+            <a class="nav-item" data-page="menu" href="products.html">
                 <div class="nav-icon">
                     <ion-icon name="file-tray-stacked-outline"></ion-icon>
                 </div>
                 <div class="nav-text">Taomlar</div>
             </a>
             
-            <a class="nav-item" data-page="customers">
+            <a class="nav-item" data-page="customers" href="#">
                 <div class="nav-icon">
                     <ion-icon name="people-outline"></ion-icon>
                 </div>
                 <div class="nav-text">Mijozlar</div>
             </a>
             
-            <a class="nav-item" data-page="analytics">
+            <a class="nav-item" data-page="analytics" href="categories.html">
                 <div class="nav-icon">
                     <ion-icon name="receipt-outline"></ion-icon>
                 </div>
                 <div class="nav-text">Kategoriya</div>
             </a>
             
-            <a class="nav-item" data-page="inventory">
+            <a class="nav-item" data-page="inventory" href="#">
                 <div class="nav-icon">
                     <ion-icon name="storefront-outline"></ion-icon>
                 </div>
                 <div class="nav-text">Ombor</div>
             </a>
             
-            <a class="nav-item" data-page="staff">
+            <a class="nav-item" data-page="staff" href="#">
                 <div class="nav-icon">
                     <ion-icon name="fast-food-outline"></ion-icon>
                 </div>
                 <div class="nav-text">Kombolar</div>
             </a>
             
-            <a class="nav-item" data-page="settings">
+            <a class="nav-item" data-page="settings" href="#">
                 <div class="nav-icon">
                     <ion-icon name="settings-outline"></ion-icon>
                 </div>
@@ -1023,54 +1019,50 @@
         updateTime();
         setInterval(updateTime, 60000);
         
-        // Rasm yuklash
+        // Parolni ko'rsatish/yashirish
         document.addEventListener('DOMContentLoaded', function() {
-            const imageUpload = document.getElementById('imageUpload');
-            const imageInput = document.getElementById('imageInput');
-            const imagePreview = document.getElementById('imagePreview');
-            const uploadContent = document.getElementById('uploadContent');
+            const passwordToggle = document.getElementById('passwordToggle');
+            const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
+            const passwordInput = document.getElementById('staffPassword');
+            const confirmPasswordInput = document.getElementById('staffConfirmPassword');
             
-            if (imageUpload && imageInput) {
-                imageUpload.addEventListener('click', function() {
-                    imageInput.click();
+            if (passwordToggle && passwordInput) {
+                passwordToggle.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
                 });
-                
-                imageInput.addEventListener('change', function() {
-                    if (this.files && this.files[0]) {
-                        const reader = new FileReader();
-                        
-                        reader.onload = function(e) {
-                            imagePreview.src = e.target.result;
-                            imagePreview.style.display = 'block';
-                            uploadContent.style.display = 'none';
-                        }
-                        
-                        reader.readAsDataURL(this.files[0]);
-                    }
+            }
+            
+            if (confirmPasswordToggle && confirmPasswordInput) {
+                confirmPasswordToggle.addEventListener('click', function() {
+                    const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    confirmPasswordInput.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
                 });
             }
             
             // Form submit
-            const productForm = document.getElementById('productForm');
-            if (productForm) {
-                productForm.addEventListener('submit', function(e) {
+            const staffForm = document.getElementById('staffForm');
+            if (staffForm) {
+                staffForm.addEventListener('submit', function(e) {
                     e.preventDefault();
+                    
+                    // Parollarni tekshirish
+                    const password = document.getElementById('staffPassword').value;
+                    const confirmPassword = document.getElementById('staffConfirmPassword').value;
+                    
+                    if (password !== confirmPassword) {
+                        alert('Parollar mos kelmadi!');
+                        return;
+                    }
+                    
                     // Django POST qilish
-                    console.log('Form submitted');
+                    console.log('Staff form submitted');
                     
                     // Modalni yopish
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('staffModal'));
                     modal.hide();
-                });
-            }
-            
-            // Search form
-            const searchForm = document.querySelector('.search-form');
-            if (searchForm) {
-                searchForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    // Django GET qilish
-                    console.log('Search submitted');
                 });
             }
         });

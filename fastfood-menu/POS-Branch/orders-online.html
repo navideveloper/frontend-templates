@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tojimahal - Buyurtmalar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        :root {
+            --ios-gray-light: #F2F2F7;
+            --ios-gray: #8E8E93;
+            --ios-gray-dark: #1C1C1E;
+            --ios-blue: #007AFF;
+            --ios-green: #34C759;
+            --ios-red: #FF3B30;
+            --ios-orange: #FF9500;
+            --ios-purple: #AF52DE;
+            --ios-yellow: #FFCC00;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --card-radius: 12px;
+            --transition: all 0.2s ease;
+            --nav-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--ios-gray-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 6rem;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Sarlavha */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header-left h1 {
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 4px;
+        }
+
+        .header-left p {
+            color: var(--ios-gray);
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .time-display {
+            background-color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ios-gray-dark);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--ios-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Filter paneli */
+        .filter-panel {
+            background-color: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .filter-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 16px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ios-gray);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .filter-btn.active {
+            background-color: var(--ios-blue);
+            color: white;
+            border-color: var(--ios-blue);
+        }
+
+        .status-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Buyurtmalar gridi */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .order-card {
+            background-color: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid #f0f0f0;
+            transition: var(--transition);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 16px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .order-info {
+            flex: 1;
+        }
+
+        .order-id {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 4px;
+        }
+
+        .order-time {
+            font-size: 13px;
+            color: var(--ios-gray);
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: #d48806;
+        }
+
+        .status-accepted {
+            background-color: rgba(0, 122, 255, 0.1);
+            color: var(--ios-blue);
+        }
+
+        .status-completed {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: var(--ios-green);
+        }
+
+        .status-rejected {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: var(--ios-red);
+        }
+
+        .order-body {
+            padding: 16px;
+            flex: 1;
+        }
+
+        /* Mijoz ma'lumotlari */
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--ios-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .customer-details {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .customer-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .customer-phone {
+            font-size: 13px;
+            color: var(--ios-gray);
+            margin-bottom: 4px;
+        }
+
+        .customer-address {
+            font-size: 13px;
+            color: var(--ios-gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Mahsulotlar ko'rsatish */
+        .order-preview {
+            margin-bottom: 16px;
+        }
+
+        .preview-title {
+            font-size: 13px;
+            color: var(--ios-gray);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .preview-item {
+            background-color: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--ios-gray-dark);
+            border: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .item-quantity-badge {
+            background-color: var(--ios-blue);
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Buyurtma ma'lumotlari */
+        .order-summary {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: auto;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #dee2e6;
+        }
+
+        .summary-label {
+            font-size: 13px;
+            color: var(--ios-gray);
+        }
+
+        .summary-value {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--ios-gray-dark);
+        }
+
+        .summary-total {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--ios-green);
+        }
+
+        /* Harakatlar tugmalari */
+        .order-actions {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            border-top: 1px solid #f5f5f5;
+            background-color: #fafafa;
+            border-bottom-left-radius: var(--card-radius);
+            border-bottom-right-radius: var(--card-radius);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .accept-btn {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: var(--ios-green);
+        }
+
+        .accept-btn:hover {
+            background-color: rgba(52, 199, 89, 0.2);
+        }
+
+        .reject-btn {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: var(--ios-red);
+        }
+
+        .reject-btn:hover {
+            background-color: rgba(255, 59, 48, 0.2);
+        }
+
+        .complete-btn {
+            background-color: rgba(0, 122, 255, 0.1);
+            color: var(--ios-blue);
+        }
+
+        .complete-btn:hover {
+            background-color: rgba(0, 122, 255, 0.2);
+        }
+
+        .view-details-btn {
+            background-color: rgba(142, 142, 147, 0.1);
+            color: var(--ios-gray);
+        }
+
+        .view-details-btn:hover {
+            background-color: rgba(142, 142, 147, 0.2);
+        }
+
+        /* Modal o'ziga xos style */
+        .modal-order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 20px;
+        }
+
+        .modal-order-id {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--ios-gray-dark);
+        }
+
+        .modal-order-time {
+            font-size: 14px;
+            color: var(--ios-gray);
+        }
+
+        .modal-customer-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .modal-customer-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .modal-customer-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-customer-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--ios-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .modal-customer-text {
+            flex: 1;
+        }
+
+        .modal-customer-label {
+            font-size: 12px;
+            color: var(--ios-gray);
+            margin-bottom: 2px;
+        }
+
+        .modal-customer-value {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--ios-gray-dark);
+        }
+
+        .modal-section-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-items-list {
+            margin-bottom: 24px;
+        }
+
+        .modal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .modal-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-item-info {
+            flex: 1;
+        }
+
+        .modal-item-name {
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 4px;
+        }
+
+        .modal-item-description {
+            font-size: 13px;
+            color: var(--ios-gray);
+        }
+
+        .modal-item-quantity {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ios-gray-dark);
+            margin: 0 16px;
+        }
+
+        .modal-item-price {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--ios-gray-dark);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .modal-order-total {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .modal-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .modal-total-label {
+            font-size: 14px;
+            color: var(--ios-gray);
+        }
+
+        .modal-total-value {
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--ios-gray-dark);
+        }
+
+        .modal-grand-total {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--ios-green);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .modal-action-btn.accept {
+            background-color: var(--ios-green);
+            color: white;
+        }
+
+        .modal-action-btn.accept:hover {
+            background-color: #2db34a;
+        }
+
+        .modal-action-btn.reject {
+            background-color: var(--ios-red);
+            color: white;
+        }
+
+        .modal-action-btn.reject:hover {
+            background-color: #e5352e;
+        }
+
+        .modal-action-btn.complete {
+            background-color: var(--ios-blue);
+            color: white;
+        }
+
+        .modal-action-btn.complete:hover {
+            background-color: #006ee6;
+        }
+
+        .modal-action-btn.secondary {
+            background-color: #f0f0f0;
+            color: var(--ios-gray-dark);
+        }
+
+        .modal-action-btn.secondary:hover {
+            background-color: #e5e5e5;
+        }
+
+        /* BOTTOM NAVIGATION */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            border-top-right-radius: 1rem;
+            border-top-left-radius: 1rem;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background-color: rgba(240, 250, 255, 0.7);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bottom-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-items-container {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            min-width: min-content;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            color: rgb(126, 127, 127);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        
+        .nav-item.active {
+            color: var(--ios-blue);
+            background-color: rgba(0, 122, 255, 0.1);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-text {
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+            
+            .bottom-nav {
+                padding: 0 5px;
+            }
+            
+            .nav-item {
+                min-width: 70px;
+            }
+            
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Desktop uchun */
+        @media (min-width: 768px) {
+            .nav-items-container {
+                justify-content: space-around;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            
+            .bottom-nav {
+                border-radius: 1rem;
+                right: unset;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            .nav-item {
+                min-width: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-bottom: calc(var(--nav-height) + 10px);
+            }
+            
+            .order-actions {
+                flex-direction: column;
+            }
+        }
+        
+        /* Modal o'lchami */
+        @media (min-width: 576px) {
+            .modal-dialog {
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sarlavha -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Tojimahal</h1>
+                <p>Online buyurtmalar</p>
+            </div>
+            <div class="header-right">
+                <div class="time-display" id="current-time">10:45 AM</div>
+                <div class="user-profile">
+                    <div class="user-avatar">OA</div>
+                    <div>
+                        <div style="font-weight: 500;">Orifjonov Alijon</div>
+                        <div style="font-size: 12px; color: var(--ios-gray);">Kafe egasi</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filter paneli -->
+        <div class="filter-panel">
+            <div class="filter-title">Buyurtma holatini tanlang</div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">
+                    Barchasi
+                    <span class="status-badge">5</span>
+                </button>
+                <button class="filter-btn" data-filter="pending">
+                    <i class="fas fa-clock"></i>
+                    Kutishda
+                    <span class="status-badge">2</span>
+                </button>
+                <button class="filter-btn" data-filter="accepted">
+                    <i class="fas fa-check-circle"></i>
+                    Qabul qilingan
+                    <span class="status-badge">2</span>
+                </button>
+                <button class="filter-btn" data-filter="completed">
+                    <i class="fas fa-truck"></i>
+                    Yetkazilgan
+                    <span class="status-badge">1</span>
+                </button>
+                <button class="filter-btn" data-filter="rejected">
+                    <i class="fas fa-times-circle"></i>
+                    Rad etilgan
+                    <span class="status-badge">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Buyurtmalar gridi -->
+        <div class="orders-grid">
+            <!-- 1-buyurtma - Kutishda (pending) -->
+            <div class="order-card" data-status="pending" data-order-id="ORD-00124">
+                <div class="order-header">
+                    <div class="order-info">
+                        <div class="order-id">#ORD-00124</div>
+                        <div class="order-time">5 daqiqa oldin</div>
+                    </div>
+                    <div class="order-status status-pending">KUTISHDA</div>
+                </div>
+                
+                <div class="order-body">
+                    <div class="customer-info">
+                        <div class="customer-avatar">JD</div>
+                        <div class="customer-details">
+                            <div class="customer-name">John Doe</div>
+                            <div class="customer-phone">+998 90 123 45 67</div>
+                            <div class="customer-address">Yunusobod tumani, 9-mavze</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-preview">
+                        <div class="preview-title">
+                            <span>Mahsulotlar:</span>
+                            <span>2 ta mahsulot</span>
+                        </div>
+                        <div class="preview-items">
+                            <div class="preview-item">
+                                <span>Karamel Makkiato</span>
+                                <span class="item-quantity-badge">2</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Avakado Tost</span>
+                                <span class="item-quantity-badge">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <div class="summary-label">Yetkazish:</div>
+                            <div class="summary-value">30 daqiqa</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-label">Umumiy:</div>
+                            <div class="summary-value summary-total">61,000 UZS</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="action-btn accept-btn" data-action="accept">
+                        <i class="fas fa-check"></i>
+                        Qabul qilish
+                    </button>
+                    <button class="action-btn reject-btn" data-action="reject">
+                        <i class="fas fa-times"></i>
+                        Rad etish
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2-buyurtma - Qabul qilingan (accepted) -->
+            <div class="order-card" data-status="accepted" data-order-id="ORD-00123">
+                <div class="order-header">
+                    <div class="order-info">
+                        <div class="order-id">#ORD-00123</div>
+                        <div class="order-time">15 daqiqa oldin</div>
+                    </div>
+                    <div class="order-status status-accepted">QABUL QILINGAN</div>
+                </div>
+                
+                <div class="order-body">
+                    <div class="customer-info">
+                        <div class="customer-avatar" style="background-color: var(--ios-green);">AS</div>
+                        <div class="customer-details">
+                            <div class="customer-name">Alex Smith</div>
+                            <div class="customer-phone">+998 91 234 56 78</div>
+                            <div class="customer-address">Mirzo Ulug'bek tumani</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-preview">
+                        <div class="preview-title">
+                            <span>Mahsulotlar:</span>
+                            <span>2 ta mahsulot</span>
+                        </div>
+                        <div class="preview-items">
+                            <div class="preview-item">
+                                <span>Nonushta kombinatsiyasi</span>
+                                <span class="item-quantity-badge">1</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Muzlatilgan Matcha Latte</span>
+                                <span class="item-quantity-badge">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <div class="summary-label">Yetkazish:</div>
+                            <div class="summary-value">25 daqiqa</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-label">Umumiy:</div>
+                            <div class="summary-value summary-total">55,000 UZS</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="action-btn complete-btn" data-action="complete">
+                        <i class="fas fa-check-circle"></i>
+                        Yetkazilgan deb belgilash
+                    </button>
+                    <button class="action-btn view-details-btn" data-action="view">
+                        <i class="fas fa-eye"></i>
+                        Batafsil
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3-buyurtma - Yetkazilgan (completed) -->
+            <div class="order-card" data-status="completed" data-order-id="ORD-00122">
+                <div class="order-header">
+                    <div class="order-info">
+                        <div class="order-id">#ORD-00122</div>
+                        <div class="order-time">25 daqiqa oldin</div>
+                    </div>
+                    <div class="order-status status-completed">YETKAZILGAN</div>
+                </div>
+                
+                <div class="order-body">
+                    <div class="customer-info">
+                        <div class="customer-avatar" style="background-color: var(--ios-orange);">MJ</div>
+                        <div class="customer-details">
+                            <div class="customer-name">Maria Johnson</div>
+                            <div class="customer-phone">+998 93 345 67 89</div>
+                            <div class="customer-address">Chilonzor tumani, 12-kvartal</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-preview">
+                        <div class="preview-title">
+                            <span>Mahsulotlar:</span>
+                            <span>2 ta mahsulot</span>
+                        </div>
+                        <div class="preview-items">
+                            <div class="preview-item">
+                                <span>Kofe kombinatsiyasi</span>
+                                <span class="item-quantity-badge">1</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Chocolate Croissant</span>
+                                <span class="item-quantity-badge">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <div class="summary-label">Yetkazish:</div>
+                            <div class="summary-value">20 daqiqa</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-label">Umumiy:</div>
+                            <div class="summary-value summary-total">42,000 UZS</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="action-btn view-details-btn" data-action="view">
+                        <i class="fas fa-eye"></i>
+                        Batafsil ko'rish
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4-buyurtma - Kutishda (pending) -->
+            <div class="order-card" data-status="pending" data-order-id="ORD-00121">
+                <div class="order-header">
+                    <div class="order-info">
+                        <div class="order-id">#ORD-00121</div>
+                        <div class="order-time">35 daqiqa oldin</div>
+                    </div>
+                    <div class="order-status status-pending">KUTISHDA</div>
+                </div>
+                
+                <div class="order-body">
+                    <div class="customer-info">
+                        <div class="customer-avatar" style="background-color: var(--ios-purple);">TW</div>
+                        <div class="customer-details">
+                            <div class="customer-name">Tom Wilson</div>
+                            <div class="customer-phone">+998 94 456 78 90</div>
+                            <div class="customer-address">Yakkasaroy tumani</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-preview">
+                        <div class="preview-title">
+                            <span>Mahsulotlar:</span>
+                            <span>2 ta mahsulot</span>
+                        </div>
+                        <div class="preview-items">
+                            <div class="preview-item">
+                                <span>Oilaviy kombinatsiya</span>
+                                <span class="item-quantity-badge">1</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Fresh Orange Juice</span>
+                                <span class="item-quantity-badge">2</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <div class="summary-label">Yetkazish:</div>
+                            <div class="summary-value">40 daqiqa</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-label">Umumiy:</div>
+                            <div class="summary-value summary-total">97,000 UZS</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="action-btn accept-btn" data-action="accept">
+                        <i class="fas fa-check"></i>
+                        Qabul qilish
+                    </button>
+                    <button class="action-btn reject-btn" data-action="reject">
+                        <i class="fas fa-times"></i>
+                        Rad etish
+                    </button>
+                </div>
+            </div>
+
+            <!-- 5-buyurtma - Qabul qilingan (accepted) -->
+            <div class="order-card" data-status="accepted" data-order-id="ORD-00120">
+                <div class="order-header">
+                    <div class="order-info">
+                        <div class="order-id">#ORD-00120</div>
+                        <div class="order-time">2 soat oldin</div>
+                    </div>
+                    <div class="order-status status-accepted">QABUL QILINGAN</div>
+                </div>
+                
+                <div class="order-body">
+                    <div class="customer-info">
+                        <div class="customer-avatar" style="background-color: var(--ios-red);">SR</div>
+                        <div class="customer-details">
+                            <div class="customer-name">Sarah Roberts</div>
+                            <div class="customer-phone">+998 95 567 89 01</div>
+                            <div class="customer-address">Shayxontohur tumani</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-preview">
+                        <div class="preview-title">
+                            <span>Mahsulotlar:</span>
+                            <span>2 ta mahsulot</span>
+                        </div>
+                        <div class="preview-items">
+                            <div class="preview-item">
+                                <span>Avakado Tost</span>
+                                <span class="item-quantity-badge">1</span>
+                            </div>
+                            <div class="preview-item">
+                                <span>Americano</span>
+                                <span class="item-quantity-badge">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <div class="summary-label">Yetkazish:</div>
+                            <div class="summary-value">30 daqiqa</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-label">Umumiy:</div>
+                            <div class="summary-value summary-total">40,000 UZS</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="action-btn complete-btn" data-action="complete">
+                        <i class="fas fa-check-circle"></i>
+                        Yetkazilgan deb belgilash
+                    </button>
+                    <button class="action-btn view-details-btn" data-action="view">
+                        <i class="fas fa-eye"></i>
+                        Batafsil
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailsModalLabel">Buyurtma tafsilotlari</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-order-header">
+                        <div>
+                            <div class="modal-order-id" id="modalOrderId">#ORD-00124</div>
+                            <div class="modal-order-time" id="modalOrderTime">5 daqiqa oldin</div>
+                        </div>
+                        <div class="order-status status-pending" id="modalOrderStatus">KUTISHDA</div>
+                    </div>
+                    
+                    <div class="modal-customer-info">
+                        <div class="modal-customer-row">
+                            <div class="modal-customer-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="modal-customer-text">
+                                <div class="modal-customer-label">Mijoz</div>
+                                <div class="modal-customer-value" id="modalCustomerName">John Doe</div>
+                            </div>
+                        </div>
+                        <div class="modal-customer-row">
+                            <div class="modal-customer-icon" style="background-color: var(--ios-green);">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="modal-customer-text">
+                                <div class="modal-customer-label">Telefon</div>
+                                <div class="modal-customer-value" id="modalCustomerPhone">+998 90 123 45 67</div>
+                            </div>
+                        </div>
+                        <div class="modal-customer-row">
+                            <div class="modal-customer-icon" style="background-color: var(--ios-orange);">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="modal-customer-text">
+                                <div class="modal-customer-label">Manzil</div>
+                                <div class="modal-customer-value" id="modalCustomerAddress">Yunusobod tumani, 9-mavze</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6 class="modal-section-title">
+                        <ion-icon name="fast-food-outline"></ion-icon>
+                        Buyurtma qilingan mahsulotlar
+                    </h6>
+                    
+                    <div class="modal-items-list" id="modalItemsList">
+                        <!-- Items will be loaded here dynamically -->
+                    </div>
+                    
+                    <div class="modal-order-total">
+                        <div class="modal-total-row">
+                            <div class="modal-total-label">Mahsulotlar narxi:</div>
+                            <div class="modal-total-value" id="modalSubtotal">61,000 UZS</div>
+                        </div>
+                        <div class="modal-total-row">
+                            <div class="modal-total-label">Yetkazish xizmati:</div>
+                            <div class="modal-total-value" id="modalDeliveryFee">10,000 UZS</div>
+                        </div>
+                        <div class="modal-total-row">
+                            <div class="modal-total-label">Yetkazish vaqti:</div>
+                            <div class="modal-total-value" id="modalDeliveryTime">30 daqiqa</div>
+                        </div>
+                        <div class="modal-total-row">
+                            <div class="modal-total-label">Umumiy summa:</div>
+                            <div class="modal-total-value modal-grand-total" id="modalTotal">71,000 UZS</div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions" id="modalActions">
+                        <!-- Actions will be loaded here dynamically based on order status -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+        <div class="nav-items-container">
+            <a class="nav-item" data-page="dashboard" href="dashboard.html">
+                <div class="nav-icon">
+                    <ion-icon name="home-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Asosiy</div>
+            </a>
+            
+            <a class="nav-item" data-page="staff" href="staff.html">
+                <div class="nav-icon">
+                    <ion-icon name="person-add-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Xodimlar</div>
+            </a>
+            
+            <a class="nav-item" data-page="menu" href="products.html">
+                <div class="nav-icon">
+                    <ion-icon name="file-tray-stacked-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Taomlar</div>
+            </a>
+            
+            <a class="nav-item" data-page="customers" href="customers.html">
+                <div class="nav-icon">
+                    <ion-icon name="people-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Mijozlar</div>
+            </a>
+            
+            <a class="nav-item" data-page="analytics" href="categories.html">
+                <div class="nav-icon">
+                    <ion-icon name="receipt-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Kategoriya</div>
+            </a>
+            
+            <a class="nav-item active" data-page="orders" href="orders.html">
+                <div class="nav-icon">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Buyurtmalar</div>
+            </a>
+            
+            <a class="nav-item" data-page="combos" href="combos.html">
+                <div class="nav-icon">
+                    <ion-icon name="fast-food-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Kombolar</div>
+            </a>
+            
+            <a class="nav-item" data-page="reports" href="reports.html">
+                <div class="nav-icon">
+                    <ion-icon name="bar-chart-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Hisobotlar</div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vaqtni yangilash
+            function updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('uz-UZ', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: false 
+                });
+                document.getElementById('current-time').textContent = timeString;
+            }
+            
+            updateTime();
+            setInterval(updateTime, 60000);
+            
+            // Order data structure
+            const ordersData = {
+                'ORD-00124': {
+                    id: 'ORD-00124',
+                    time: '5 daqiqa oldin',
+                    status: 'pending',
+                    customer: {
+                        name: 'John Doe',
+                        phone: '+998 90 123 45 67',
+                        address: 'Yunusobod tumani, 9-mavze'
+                    },
+                    items: [
+                        { name: 'Karamel Makkiato', quantity: 2, price: 18000, description: 'Karamel sousi va espresso bilan' },
+                        { name: 'Avakado Tost', quantity: 1, price: 25000, description: 'Avakado, pomidor va non' }
+                    ],
+                    deliveryTime: '30 daqiqa',
+                    subtotal: 61000,
+                    deliveryFee: 10000,
+                    total: 71000
+                },
+                'ORD-00123': {
+                    id: 'ORD-00123',
+                    time: '15 daqiqa oldin',
+                    status: 'accepted',
+                    customer: {
+                        name: 'Alex Smith',
+                        phone: '+998 91 234 56 78',
+                        address: 'Mirzo Ulug\'bek tumani'
+                    },
+                    items: [
+                        { name: 'Nonushta kombinatsiyasi', quantity: 1, price: 35000, description: 'Tuxum, non, pishloq va sabzavotlar' },
+                        { name: 'Muzlatilgan Matcha Latte', quantity: 1, price: 20000, description: 'Yashil choy va sut' }
+                    ],
+                    deliveryTime: '25 daqiqa',
+                    subtotal: 55000,
+                    deliveryFee: 10000,
+                    total: 65000
+                },
+                'ORD-00122': {
+                    id: 'ORD-00122',
+                    time: '25 daqiqa oldin',
+                    status: 'completed',
+                    customer: {
+                        name: 'Maria Johnson',
+                        phone: '+998 93 345 67 89',
+                        address: 'Chilonzor tumani, 12-kvartal'
+                    },
+                    items: [
+                        { name: 'Kofe kombinatsiyasi', quantity: 1, price: 28000, description: 'Kofe va desert' },
+                        { name: 'Chocolate Croissant', quantity: 1, price: 14000, description: 'Shokoladli kruasan' }
+                    ],
+                    deliveryTime: '20 daqiqa',
+                    subtotal: 42000,
+                    deliveryFee: 10000,
+                    total: 52000
+                },
+                'ORD-00121': {
+                    id: 'ORD-00121',
+                    time: '35 daqiqa oldin',
+                    status: 'pending',
+                    customer: {
+                        name: 'Tom Wilson',
+                        phone: '+998 94 456 78 90',
+                        address: 'Yakkasaroy tumani'
+                    },
+                    items: [
+                        { name: 'Oilaviy kombinatsiya', quantity: 1, price: 65000, description: '4 kishilik ovqat to\'plami' },
+                        { name: 'Fresh Orange Juice', quantity: 2, price: 16000, description: 'Tabiiy apelsin sharbati' }
+                    ],
+                    deliveryTime: '40 daqiqa',
+                    subtotal: 97000,
+                    deliveryFee: 10000,
+                    total: 107000
+                },
+                'ORD-00120': {
+                    id: 'ORD-00120',
+                    time: '2 soat oldin',
+                    status: 'accepted',
+                    customer: {
+                        name: 'Sarah Roberts',
+                        phone: '+998 95 567 89 01',
+                        address: 'Shayxontohur tumani'
+                    },
+                    items: [
+                        { name: 'Avakado Tost', quantity: 1, price: 25000, description: 'Avakado, pomidor va non' },
+                        { name: 'Americano', quantity: 1, price: 15000, description: 'Espresso va issiq suv' }
+                    ],
+                    deliveryTime: '30 daqiqa',
+                    subtotal: 40000,
+                    deliveryFee: 10000,
+                    total: 50000
+                }
+            };
+            
+            // Filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const orderCards = document.querySelectorAll('.order-card');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Show/hide order cards based on filter
+                    orderCards.forEach(card => {
+                        const status = card.getAttribute('data-status');
+                        
+                        if (filter === 'all' || filter === status) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Order card click - show modal
+            orderCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Don't open modal if clicking action buttons
+                    if (e.target.closest('.action-btn')) {
+                        return;
+                    }
+                    
+                    const orderId = this.getAttribute('data-order-id');
+                    loadOrderDetails(orderId);
+                    
+                    // Show modal
+                    const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+                    modal.show();
+                });
+            });
+            
+            // Action button click handlers
+            document.addEventListener('click', function(e) {
+                const actionBtn = e.target.closest('.action-btn');
+                if (!actionBtn) return;
+                
+                const card = actionBtn.closest('.order-card');
+                const orderId = card.getAttribute('data-order-id');
+                const action = actionBtn.getAttribute('data-action');
+                const order = ordersData[orderId];
+                
+                e.stopPropagation(); // Prevent modal from opening
+                
+                switch(action) {
+                    case 'accept':
+                        if (confirm(`Buyurtma #${orderId} qabul qilinsinmi?`)) {
+                            updateOrderStatus(orderId, 'accepted');
+                        }
+                        break;
+                    case 'reject':
+                        if (confirm(`Buyurtma #${orderId} rad etilsinmi?`)) {
+                            updateOrderStatus(orderId, 'rejected');
+                        }
+                        break;
+                    case 'complete':
+                        if (confirm(`Buyurtma #${orderId} yetkazilgan deb belgilansinmi?`)) {
+                            updateOrderStatus(orderId, 'completed');
+                        }
+                        break;
+                    case 'view':
+                        loadOrderDetails(orderId);
+                        const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+                        modal.show();
+                        break;
+                }
+            });
+            
+            // Modal action button click handlers
+            document.getElementById('orderDetailsModal').addEventListener('click', function(e) {
+                const modalActionBtn = e.target.closest('.modal-action-btn');
+                if (!modalActionBtn) return;
+                
+                const orderId = document.getElementById('modalOrderId').textContent.substring(1);
+                
+                if (modalActionBtn.classList.contains('accept')) {
+                    if (confirm(`Buyurtma #${orderId} qabul qilinsinmi?`)) {
+                        updateOrderStatus(orderId, 'accepted');
+                        bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal')).hide();
+                    }
+                } else if (modalActionBtn.classList.contains('reject')) {
+                    if (confirm(`Buyurtma #${orderId} rad etilsinmi?`)) {
+                        updateOrderStatus(orderId, 'rejected');
+                        bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal')).hide();
+                    }
+                } else if (modalActionBtn.classList.contains('complete')) {
+                    if (confirm(`Buyurtma #${orderId} yetkazilgan deb belgilansinmi?`)) {
+                        updateOrderStatus(orderId, 'completed');
+                        bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal')).hide();
+                    }
+                }
+            });
+            
+            // Load order details into modal
+            function loadOrderDetails(orderId) {
+                const order = ordersData[orderId];
+                if (!order) return;
+                
+                // Update modal content
+                document.getElementById('modalOrderId').textContent = '#' + order.id;
+                document.getElementById('modalOrderTime').textContent = order.time;
+                document.getElementById('modalCustomerName').textContent = order.customer.name;
+                document.getElementById('modalCustomerPhone').textContent = order.customer.phone;
+                document.getElementById('modalCustomerAddress').textContent = order.customer.address;
+                document.getElementById('modalSubtotal').textContent = order.subtotal.toLocaleString() + ' UZS';
+                document.getElementById('modalDeliveryFee').textContent = order.deliveryFee.toLocaleString() + ' UZS';
+                document.getElementById('modalDeliveryTime').textContent = order.deliveryTime;
+                document.getElementById('modalTotal').textContent = order.total.toLocaleString() + ' UZS';
+                
+                // Update status badge
+                const statusBadge = document.getElementById('modalOrderStatus');
+                statusBadge.className = 'order-status';
+                statusBadge.textContent = getStatusText(order.status);
+                
+                switch(order.status) {
+                    case 'pending':
+                        statusBadge.classList.add('status-pending');
+                        break;
+                    case 'accepted':
+                        statusBadge.classList.add('status-accepted');
+                        break;
+                    case 'completed':
+                        statusBadge.classList.add('status-completed');
+                        break;
+                    case 'rejected':
+                        statusBadge.classList.add('status-rejected');
+                        break;
+                }
+                
+                // Load items
+                const itemsList = document.getElementById('modalItemsList');
+                itemsList.innerHTML = '';
+                
+                order.items.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'modal-item';
+                    itemElement.innerHTML = `
+                        <div class="modal-item-info">
+                            <div class="modal-item-name">${item.name}</div>
+                            <div class="modal-item-description">${item.description}</div>
+                        </div>
+                        <div class="modal-item-quantity">×${item.quantity}</div>
+                        <div class="modal-item-price">${(item.price * item.quantity).toLocaleString()} UZS</div>
+                    `;
+                    itemsList.appendChild(itemElement);
+                });
+                
+                // Update modal actions based on status
+                const modalActions = document.getElementById('modalActions');
+                modalActions.innerHTML = '';
+                
+                switch(order.status) {
+                    case 'pending':
+                        modalActions.innerHTML = `
+                            <button type="button" class="modal-action-btn accept">
+                                <i class="fas fa-check"></i>
+                                Qabul qilish
+                            </button>
+                            <button type="button" class="modal-action-btn reject">
+                                <i class="fas fa-times"></i>
+                                Rad etish
+                            </button>
+                        `;
+                        break;
+                    case 'accepted':
+                        modalActions.innerHTML = `
+                            <button type="button" class="modal-action-btn complete">
+                                <i class="fas fa-truck"></i>
+                                Yetkazilgan deb belgilash
+                            </button>
+                            <button type="button" class="modal-action-btn secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times"></i>
+                                Yopish
+                            </button>
+                        `;
+                        break;
+                    case 'completed':
+                    case 'rejected':
+                        modalActions.innerHTML = `
+                            <button type="button" class="modal-action-btn secondary" data-bs-dismiss="modal" style="flex: 1">
+                                <i class="fas fa-times"></i>
+                                Yopish
+                            </button>
+                        `;
+                        break;
+                }
+            }
+            
+            // Update order status
+            function updateOrderStatus(orderId, newStatus) {
+                const order = ordersData[orderId];
+                if (!order) return;
+                
+                const oldStatus = order.status;
+                order.status = newStatus;
+                
+                // Update card display
+                const card = document.querySelector(`.order-card[data-order-id="${orderId}"]`);
+                if (card) {
+                    // Update card status
+                    card.setAttribute('data-status', newStatus);
+                    
+                    // Update status badge
+                    const statusBadge = card.querySelector('.order-status');
+                    statusBadge.className = 'order-status';
+                    statusBadge.textContent = getStatusText(newStatus);
+                    
+                    switch(newStatus) {
+                        case 'pending':
+                            statusBadge.classList.add('status-pending');
+                            break;
+                        case 'accepted':
+                            statusBadge.classList.add('status-accepted');
+                            break;
+                        case 'completed':
+                            statusBadge.classList.add('status-completed');
+                            break;
+                        case 'rejected':
+                            statusBadge.classList.add('status-rejected');
+                            break;
+                    }
+                    
+                    // Update action buttons
+                    const actionsContainer = card.querySelector('.order-actions');
+                    if (actionsContainer) {
+                        switch(newStatus) {
+                            case 'pending':
+                                actionsContainer.innerHTML = `
+                                    <button class="action-btn accept-btn" data-action="accept">
+                                        <i class="fas fa-check"></i>
+                                        Qabul qilish
+                                    </button>
+                                    <button class="action-btn reject-btn" data-action="reject">
+                                        <i class="fas fa-times"></i>
+                                        Rad etish
+                                    </button>
+                                `;
+                                break;
+                            case 'accepted':
+                                actionsContainer.innerHTML = `
+                                    <button class="action-btn complete-btn" data-action="complete">
+                                        <i class="fas fa-check-circle"></i>
+                                        Yetkazilgan deb belgilash
+                                    </button>
+                                    <button class="action-btn view-details-btn" data-action="view">
+                                        <i class="fas fa-eye"></i>
+                                        Batafsil
+                                    </button>
+                                `;
+                                break;
+                            case 'completed':
+                                actionsContainer.innerHTML = `
+                                    <button class="action-btn view-details-btn" data-action="view">
+                                        <i class="fas fa-eye"></i>
+                                        Batafsil ko'rish
+                                    </button>
+                                `;
+                                break;
+                            case 'rejected':
+                                actionsContainer.innerHTML = `
+                                    <button class="action-btn view-details-btn" data-action="view">
+                                        <i class="fas fa-eye"></i>
+                                        Batafsil ko'rish
+                                    </button>
+                                `;
+                                break;
+                        }
+                    }
+                    
+                    // Update filter counts
+                    updateFilterCounts();
+                }
+                
+                // Show notification
+                showNotification(`Buyurtma #${orderId} holati o'zgartirildi: ${getStatusText(oldStatus)} → ${getStatusText(newStatus)}`);
+            }
+            
+            // Get status text
+            function getStatusText(status) {
+                switch(status) {
+                    case 'pending': return 'KUTISHDA';
+                    case 'accepted': return 'QABUL QILINGAN';
+                    case 'completed': return 'YETKAZILGAN';
+                    case 'rejected': return 'RAD ETILGAN';
+                    default: return status.toUpperCase();
+                }
+            }
+            
+            // Update filter counts
+            function updateFilterCounts() {
+                const statusCounts = {
+                    all: orderCards.length,
+                    pending: 0,
+                    accepted: 0,
+                    completed: 0,
+                    rejected: 0
+                };
+                
+                orderCards.forEach(card => {
+                    const status = card.getAttribute('data-status');
+                    if (statusCounts[status] !== undefined) {
+                        statusCounts[status]++;
+                    }
+                });
+                
+                // Update badge counts
+                filterButtons.forEach(button => {
+                    const filter = button.getAttribute('data-filter');
+                    const badge = button.querySelector('.status-badge');
+                    if (badge && statusCounts[filter] !== undefined) {
+                        badge.textContent = statusCounts[filter];
+                    }
+                });
+            }
+            
+            // Show notification
+            function showNotification(message) {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `
+                    <div style="position: fixed; top: 20px; right: 20px; z-index: 9999; background: var(--ios-green); color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; animation: slideIn 0.3s ease;">
+                        ${message}
+                    </div>
+                `;
+                document.body.appendChild(notification);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+            
+            // Initialize filter counts
+            updateFilterCounts();
+        });
+    </script>
+</body>
+</html>

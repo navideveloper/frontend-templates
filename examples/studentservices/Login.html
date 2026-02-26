@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish | Ro'yxatdan o'tish</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background-color: #f2f2f7;
+            color: #000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 0;
+        }
+        
+        /* Tabs Styles */
+        .tabs {
+            display: flex;
+            background-color: #fff;
+            border-bottom: 1px solid #e5e5ea;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: #8e8e93;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: #007aff;
+            border-bottom: 3px solid #007aff;
+        }
+        
+        .tab:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .header {
+            padding: 16px 0 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 6px;
+        }
+        
+        .header p {
+            font-size: 15px;
+            color: #8e8e93;
+            line-height: 1.4;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 6px;
+            padding-left: 2px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px solid #c7c7cc;
+            border-radius: 12px;
+            font-size: 18px;
+            transition: all 0.2s;
+            background-color: #fff;
+            color: #000;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+        
+        .form-control.error {
+            border-color: #ff3b30;
+        }
+        
+        .form-control.success {
+            border-color: #34c759;
+        }
+        
+        .error-message {
+            color: #ff3b30;
+            font-size: 13px;
+            margin-top: 5px;
+            padding-left: 2px;
+            display: none;
+        }
+        
+        /* University search dropdown */
+        .university-search-container {
+            position: relative;
+        }
+        
+        .university-search-input {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px solid #c7c7cc;
+            border-radius: 12px;
+            font-size: 18px;
+            transition: all 0.2s;
+            background-color: #fff;
+            color: #000;
+            padding-right: 45px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e8e93;
+            font-size: 16px;
+            pointer-events: none;
+        }
+        
+        .university-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1.5px solid #c7c7cc;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            margin-top: 4px;
+        }
+        
+        .university-dropdown.active {
+            display: block;
+        }
+        
+        .university-option {
+            padding: 14px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f2f2f7;
+            transition: background-color 0.2s;
+            font-size: 16px;
+        }
+        
+        .university-option:hover {
+            background-color: #f2f2f7;
+        }
+        
+        .university-option:last-child {
+            border-bottom: none;
+        }
+        
+        .no-results {
+            padding: 14px 16px;
+            color: #8e8e93;
+            font-style: italic;
+            text-align: center;
+        }
+        
+        /* Password Field */
+        .password-field {
+            position: relative;
+        }
+        
+        .password-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #007aff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        /* Phone input styling */
+        .phone-input-group {
+            position: relative;
+        }
+        
+        .phone-prefix {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #000;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        /* Buttons */
+        .submit-btn {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0056cc;
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 16px;
+        }
+        
+        .forgot-password a {
+            color: #007aff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Success State */
+        .success-message {
+            background-color: #d1f7c4;
+            color: #1e7e34;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+        
+        .success-message i {
+            font-size: 18px;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal {
+            background-color: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 380px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: modalAppear 0.3s ease;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: 24px 24px 16px;
+            text-align: center;
+            border-bottom: 1px solid #e5e5ea;
+        }
+        
+        .modal-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 6px;
+        }
+        
+        .modal-header p {
+            font-size: 16px;
+            color: #8e8e93;
+            line-height: 1.4;
+        }
+        
+        .modal-body {
+            padding: 20px 24px;
+        }
+        
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 1.5px solid #c7c7cc;
+            border-radius: 12px;
+            background-color: #fff;
+            color: #000;
+            transition: all 0.2s;
+        }
+        
+        .otp-input:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+        
+        .timer {
+            text-align: center;
+            font-size: 16px;
+            color: #8e8e93;
+            margin-bottom: 20px;
+        }
+        
+        .timer span {
+            font-weight: 600;
+            color: #007aff;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .btn-primary {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056cc;
+        }
+        
+        .btn-secondary {
+            background-color: #e5e5ea;
+            color: #000;
+            border: none;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d1d1d6;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px 24px;
+            text-align: center;
+            border-top: 1px solid #e5e5ea;
+            font-size: 15px;
+            color: #8e8e93;
+        }
+        
+        .modal-footer a {
+            color: #007aff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .modal-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 12px;
+            }
+            
+            .tab {
+                padding: 16px;
+                font-size: 16px;
+            }
+            
+            .header {
+                padding: 12px 0 16px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .tab-content {
+                padding: 16px;
+            }
+            
+            .form-control, .university-search-input {
+                font-size: 16px;
+                padding: 14px;
+            }
+            
+            .university-option {
+                padding: 12px 14px;
+                font-size: 15px;
+            }
+            
+            .otp-input {
+                width: 46px;
+                height: 46px;
+                font-size: 20px;
+            }
+            
+            .submit-btn {
+                padding: 16px;
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" id="loginTab">Kirish</div>
+            <div class="tab" id="registerTab">Ro'yxatdan o'tish</div>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="tab-content active" id="loginContent">
+            <div class="header">
+                <h1>Hisobingizga kiring</h1>
+                <p>Telefon raqamingiz va parolingiz bilan tizimga kiring</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginPhone">Telefon raqami</label>
+                    <div class="phone-input-group">
+                        <input type="text" id="loginPhone" class="form-control phone-input" placeholder="90 123 45 67" required>
+                    </div>
+                    <div class="error-message" id="loginPhone-error">To'g'ri telefon raqamini kiriting</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Parol</label>
+                    <div class="password-field">
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Parolingizni kiriting" required>
+                        <i class="fas fa-eye password-icon" id="toggleLoginPassword"></i>
+                    </div>
+                    <div class="error-message" id="loginPassword-error">Parolni kiriting</div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i> Tizimga kirish
+                </button>
+                
+                <div class="forgot-password">
+                    <a href="#" id="forgotPasswordLink">Parolni unutdingizmi?</a>
+                </div>
+                
+                <div class="success-message" id="loginSuccessMessage">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Muvaffaqiyatli tizimga kirdingiz!</span>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Registration Form -->
+        <div class="tab-content" id="registerContent">
+            <div class="header">
+                <h1>Ro'yxatdan o'tish</h1>
+                <p>Ma'lumotlaringizni to'ldiring va ro'yxatdan o'ting</p>
+            </div>
+            
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="university">Universitet</label>
+                    <div class="university-search-container">
+                        <input type="text" id="universitySearch" class="university-search-input" placeholder="Universitetni qidirish..." autocomplete="off">
+                        <i class="fas fa-search search-icon"></i>
+                        <div class="university-dropdown" id="universityDropdown"></div>
+                        <input type="hidden" id="university" name="university" value="">
+                    </div>
+                    <div class="error-message" id="university-error">Universitetni tanlang</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullName">To'liq ism</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Alijonov Alijon" required>
+                    <div class="error-message" id="fullName-error">To'liq ism familiyangizni kiriting</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneNumber">Telefon raqami</label>
+                    <div class="phone-input-group">
+                        <input type="text" id="phoneNumber" class="form-control phone-input" placeholder="90 123 45 67" required>
+                    </div>
+                    <div class="error-message" id="phone-error">To'g'ri telefon raqamini kiriting</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Parol</label>
+                    <div class="password-field">
+                        <input type="password" id="password" class="form-control" placeholder="Kamida 8 ta belgi" required>
+                        <i class="fas fa-eye password-icon" id="togglePassword"></i>
+                    </div>
+                    <div class="error-message" id="password-error">Parol kamida 8 ta belgidan iborat bo'lishi kerak</div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-user-plus"></i> Ro'yxatdan o'tish
+                </button>
+                
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Muvaffaqiyatli ro'yxatdan o'tdingiz!</span>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- OTP Modal -->
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Telefon raqamini tasdiqlash</h2>
+                <p>Telegram botga yuborilgan kodni kiriting</p>
+            </div>
+            
+            <div class="modal-body">
+                <div class="otp-inputs">
+                    <input type="text" class="otp-input" maxlength="1" id="otp1" data-index="0">
+                    <input type="text" class="otp-input" maxlength="1" id="otp2" data-index="1">
+                    <input type="text" class="otp-input" maxlength="1" id="otp3" data-index="2">
+                    <input type="text" class="otp-input" maxlength="1" id="otp4" data-index="3">
+                    <input type="text" class="otp-input" maxlength="1" id="otp5" data-index="4">
+                    <input type="text" class="otp-input" maxlength="1" id="otp6" data-index="5">
+                </div>
+                
+                <div class="timer">
+                    Kod: <span id="timer">02:00</span> daqiqa amal qiladi
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="btn-primary" id="verifyOtpBtn">
+                        <i class="fas fa-check"></i> Tasdiqlash
+                    </button>
+                    <button type="button" class="btn-secondary" id="goToBotBtn">
+                        <i class="fab fa-telegram"></i> Telegram botga o'tish
+                    </button>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                Kod olmadingizmi? <a href="#" id="resendCode">Qayta yuborish</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const loginContent = document.getElementById('loginContent');
+            const registerContent = document.getElementById('registerContent');
+            const loginForm = document.getElementById('loginForm');
+            const registrationForm = document.getElementById('registrationForm');
+            
+            // Login form elements
+            const loginPhoneInput = document.getElementById('loginPhone');
+            const loginPasswordInput = document.getElementById('loginPassword');
+            const toggleLoginPasswordBtn = document.getElementById('toggleLoginPassword');
+            const loginSuccessMessage = document.getElementById('loginSuccessMessage');
+            
+            // Registration form elements
+            const universitySearch = document.getElementById('universitySearch');
+            const universityHidden = document.getElementById('university');
+            const universityDropdown = document.getElementById('universityDropdown');
+            const fullNameInput = document.getElementById('fullName');
+            const phoneInput = document.getElementById('phoneNumber');
+            const passwordInput = document.getElementById('password');
+            const togglePasswordBtn = document.getElementById('togglePassword');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Modal elements
+            const otpModal = document.getElementById('otpModal');
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+            const goToBotBtn = document.getElementById('goToBotBtn');
+            const resendCodeBtn = document.getElementById('resendCode');
+            const timerElement = document.getElementById('timer');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            
+            // Variables
+            let timerInterval;
+            let timeLeft = 120;
+            let universities = [];
+            let selectedUniversity = null;
+            
+            // University data (JSON format)
+            const universityData = [
+                { id: 'TATU', name: 'Toshkent Axborot Texnologiyalari Universiteti', abbreviation: 'TATU' },
+                { id: 'TDYU', name: 'Toshkent Davlat Yuridik Universiteti', abbreviation: 'TDYU' },
+                { id: 'TDIU', name: 'Toshkent Davlat Iqtisodiyot Universiteti', abbreviation: 'TDIU' },
+                { id: 'SAMDU', name: 'Samarqand Davlat Universiteti', abbreviation: 'SamDU' },
+                { id: 'NAMDU', name: 'Namangan Davlat Universiteti', abbreviation: 'NamDU' },
+                { id: 'FARDU', name: 'Farg\'ona Davlat Universiteti', abbreviation: 'FarDU' },
+                { id: 'ANDIJAN', name: 'Andijon Davlat Universiteti', abbreviation: 'Andijon DU' },
+                { id: 'MIU', name: 'Muhandislik-Iqtisodiyot Instituti', abbreviation: 'MII' },
+                { id: 'MEDUNI', name: 'Toshkent Tibbiyot Akademiyasi', abbreviation: 'TTA' },
+                { id: 'PEDUNI', name: 'Toshkent Davlat Pedagogika Universiteti', abbreviation: 'TDPU' },
+                { id: 'TURIN', name: 'Turin Politexnika Universiteti', abbreviation: 'Turin PU' },
+                { id: 'INHA', name: 'Inha Universiteti Toshkent', abbreviation: 'Inha Toshkent' },
+                { id: 'WESTMINSTER', name: 'Westminster Universiteti Toshkent', abbreviation: 'Westminster' },
+                { id: 'UO', name: 'O\'zbekiston Milliy Universiteti', abbreviation: 'O\'zMU' },
+                { id: 'OTHER', name: 'Boshqa universitet', abbreviation: 'Boshqa' }
+            ];
+            
+            // Initialize universities
+            universities = universityData;
+            
+            // Tab switching functionality
+            loginTab.addEventListener('click', function() {
+                switchTab('login');
+            });
+            
+            registerTab.addEventListener('click', function() {
+                switchTab('register');
+            });
+            
+            function switchTab(tabName) {
+                // Reset forms
+                loginForm.reset();
+                registrationForm.reset();
+                
+                // Hide success messages
+                loginSuccessMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                
+                // Reset university search
+                universitySearch.value = '';
+                universityHidden.value = '';
+                selectedUniversity = null;
+                universityDropdown.classList.remove('active');
+                
+                // Update tabs
+                loginTab.classList.remove('active');
+                registerTab.classList.remove('active');
+                loginContent.classList.remove('active');
+                registerContent.classList.remove('active');
+                
+                if (tabName === 'login') {
+                    loginTab.classList.add('active');
+                    loginContent.classList.add('active');
+                } else {
+                    registerTab.classList.add('active');
+                    registerContent.classList.add('active');
+                }
+            }
+            
+            // Toggle password visibility
+            togglePasswordBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+            
+            toggleLoginPasswordBtn.addEventListener('click', function() {
+                const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                loginPasswordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+            
+            // Form validation functions
+            function showError(inputElement, errorElement, message) {
+                inputElement.classList.add('error');
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+            
+            function showSuccess(inputElement, errorElement) {
+                inputElement.classList.remove('error');
+                inputElement.classList.add('success');
+                errorElement.style.display = 'none';
+            }
+            
+            // Validate phone number (only digits and length)
+            function validatePhone(phone) {
+                const cleaned = phone.replace(/\s/g, '');
+                return /^\d{9}$/.test(cleaned);
+            }
+            
+            // Validate full name
+            function validateFullName(name) {
+                const nameParts = name.trim().split(' ');
+                return nameParts.length >= 2 && nameParts.every(part => part.length > 1);
+            }
+            
+            // Validate password
+            function validatePassword(password) {
+                return password.length >= 8;
+            }
+            
+            // Search universities function
+            function searchUniversities(query) {
+                
+                const searchTerm = query.toLowerCase();
+                return universities.filter(university => 
+                    university.name.toLowerCase().includes(searchTerm) ||
+                    university.abbreviation.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Display search results
+            function displaySearchResults(results) {
+                universityDropdown.innerHTML = '';
+                
+                if (results.length === 0) {
+                    universityDropdown.innerHTML = '<div class="no-results">Universitet topilmadi</div>';
+                    return;
+                }
+                
+                results.forEach(university => {
+                    const option = document.createElement('div');
+                    option.className = 'university-option';
+                    option.innerHTML = `
+                        <div><strong>${university.name}</strong></div>
+                        <div style="font-size: 14px; color: #8e8e93;">${university.abbreviation}</div>
+                    `;
+                    
+                    option.addEventListener('click', () => {
+                        selectUniversity(university);
+                    });
+                    
+                    universityDropdown.appendChild(option);
+                });
+            }
+            
+            // Select a university
+            function selectUniversity(university) {
+                selectedUniversity = university;
+                universitySearch.value = university.name;
+                universityHidden.value = university.id;
+                universityDropdown.classList.remove('active');
+                
+                // Show success state
+                const errorElement = document.getElementById('university-error');
+                showSuccess(universitySearch, errorElement);
+            }
+            
+            // University search input event listeners
+            let searchTimeout;
+            universitySearch.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                
+                const query = this.value.trim();
+                
+                if (query.length >= 0) {
+                    searchTimeout = setTimeout(() => {
+                        const results = searchUniversities(query);
+                        displaySearchResults(results);
+                        universityDropdown.classList.add('active');
+                    }, 300);
+                } else {
+                    universityDropdown.classList.remove('active');
+                    selectedUniversity = null;
+                    universityHidden.value = '';
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!universitySearch.contains(event.target) && !universityDropdown.contains(event.target)) {
+                    universityDropdown.classList.remove('active');
+                }
+            });
+            
+            // University search on focus
+            universitySearch.addEventListener('focus', function() {
+                const query = this.value.trim();
+                if (query.length >= 0) {
+                    const results = searchUniversities(query);
+                    displaySearchResults(results);
+                    universityDropdown.classList.add('active');
+                }
+            });
+            
+            // Real-time validation for registration form
+            universitySearch.addEventListener('blur', function() {
+                const errorElement = document.getElementById('university-error');
+                if (selectedUniversity) {
+                    showSuccess(this, errorElement);
+                }
+            });
+            
+            fullNameInput.addEventListener('blur', function() {
+                const errorElement = document.getElementById('fullName-error');
+                if (validateFullName(this.value)) {
+                    showSuccess(this, errorElement);
+                }
+            });
+            
+            // Format phone number as user types
+            phoneInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                
+                // Format with spaces
+                if (value.length > 0) {
+                    if (value.length <= 2) {
+                        value = value;
+                    } else if (value.length <= 5) {
+                        value = value.substring(0, 2) + ' ' + value.substring(2);
+                    } else if (value.length <= 7) {
+                        value = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5);
+                    } else {
+                        value = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5, 7) + ' ' + value.substring(7, 9);
+                    }
+                }
+                
+                this.value = value;
+                
+                // Validate on blur
+                const errorElement = document.getElementById('phone-error');
+                if (validatePhone(this.value)) {
+                    showSuccess(this, errorElement);
+                }
+            });
+            
+            passwordInput.addEventListener('blur', function() {
+                const errorElement = document.getElementById('password-error');
+                if (validatePassword(this.value)) {
+                    showSuccess(this, errorElement);
+                }
+            });
+            
+            // Real-time validation for login form
+            loginPhoneInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                
+                // Format with spaces
+                if (value.length > 0) {
+                    if (value.length <= 2) {
+                        value = value;
+                    } else if (value.length <= 5) {
+                        value = value.substring(0, 2) + ' ' + value.substring(2);
+                    } else if (value.length <= 7) {
+                        value = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5);
+                    } else {
+                        value = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5, 7) + ' ' + value.substring(7, 9);
+                    }
+                }
+                
+                this.value = value;
+                
+                // Validate on blur
+                const errorElement = document.getElementById('loginPhone-error');
+                if (validatePhone(this.value)) {
+                    showSuccess(this, errorElement);
+                }
+            });
+            
+            loginPasswordInput.addEventListener('blur', function() {
+                const errorElement = document.getElementById('loginPassword-error');
+                if (this.value.trim().length > 0) {
+                    showSuccess(this, errorElement);
+                }
+            });
+            
+            // OTP Input handling
+            otpInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    const index = parseInt(this.dataset.index);
+                    
+                    // Allow only digits
+                    if (!/^\d*$/.test(value)) {
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // If a digit is entered, move to next input
+                    if (value.length === 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+                
+                input.addEventListener('keydown', function(e) {
+                    const index = parseInt(this.dataset.index);
+                    
+                    // Move to previous input on backspace if current is empty
+                    if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+                
+                // Paste OTP
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').trim();
+                    
+                    if (/^\d{6}$/.test(pastedData)) {
+                        for (let i = 0; i < 6; i++) {
+                            otpInputs[i].value = pastedData[i];
+                        }
+                        otpInputs[5].focus();
+                    }
+                });
+            });
+            
+            // Start timer function
+            function startTimer() {
+                clearInterval(timerInterval);
+                timeLeft = 120;
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    
+                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerElement.textContent = "00:00";
+                        timerElement.style.color = "#ff3b30";
+                    }
+                }, 1000);
+            }
+            
+            // Resend code
+            resendCodeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                startTimer();
+                
+                // Clear OTP inputs
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+                
+                // Show message
+                alert("Yangi kod telegram botga yuborildi!");
+            });
+            
+            // Registration form submission
+            registrationForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Validate all fields
+                let isValid = true;
+                
+                // Validate university
+                if (!selectedUniversity) {
+                    showError(universitySearch, document.getElementById('university-error'), "Universitetni tanlang yoki qidiring");
+                    isValid = false;
+                } else {
+                    showSuccess(universitySearch, document.getElementById('university-error'));
+                }
+                
+                // Validate full name
+                if (!validateFullName(fullNameInput.value)) {
+                    showError(fullNameInput, document.getElementById('fullName-error'), "To'liq ism familiyangizni kiriting");
+                    isValid = false;
+                } else {
+                    showSuccess(fullNameInput, document.getElementById('fullName-error'));
+                }
+                
+                // Validate phone
+                if (!validatePhone(phoneInput.value)) {
+                    showError(phoneInput, document.getElementById('phone-error'), "9 xonali telefon raqamini kiriting");
+                    isValid = false;
+                } else {
+                    showSuccess(phoneInput, document.getElementById('phone-error'));
+                }
+                
+                // Validate password
+                if (!validatePassword(passwordInput.value)) {
+                    showError(passwordInput, document.getElementById('password-error'), "Parol kamida 8 ta belgidan iborat bo'lishi kerak");
+                    isValid = false;
+                } else {
+                    showSuccess(passwordInput, document.getElementById('password-error'));
+                }
+                
+                // If form is valid, show OTP modal
+                if (isValid) {
+                    otpModal.style.display = 'flex';
+                    startTimer();
+                    otpInputs[0].focus();
+                    
+                    // Reset form styles
+                    const formControls = registrationForm.querySelectorAll('.form-control, .university-search-input');
+                    formControls.forEach(control => {
+                        control.classList.remove('success', 'error');
+                    });
+                }
+            });
+            
+            // Login form submission
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Validate all fields
+                let isValid = true;
+                
+                // Validate phone
+                if (!validatePhone(loginPhoneInput.value)) {
+                    showError(loginPhoneInput, document.getElementById('loginPhone-error'), "9 xonali telefon raqamini kiriting");
+                    isValid = false;
+                } else {
+                    showSuccess(loginPhoneInput, document.getElementById('loginPhone-error'));
+                }
+                
+                // Validate password
+                if (loginPasswordInput.value.trim().length === 0) {
+                    showError(loginPasswordInput, document.getElementById('loginPassword-error'), "Parolni kiriting");
+                    isValid = false;
+                } else {
+                    showSuccess(loginPasswordInput, document.getElementById('loginPassword-error'));
+                }
+                
+                // If form is valid, simulate login
+                if (isValid) {
+                    // Demo login - always successful for demo purposes
+                    // In real app, you would check credentials against a database
+                    
+                    loginSuccessMessage.style.display = 'flex';
+                    
+                    // Reset form styles
+                    const formControls = loginForm.querySelectorAll('.form-control');
+                    formControls.forEach(control => {
+                        control.classList.remove('success', 'error');
+                    });
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        loginSuccessMessage.style.display = 'none';
+                        loginForm.reset();
+                    }, 3000);
+                    
+                    // In a real app, you would redirect to dashboard or next page
+                    // window.location.href = '/dashboard.html';
+                }
+            });
+            
+            // Forgot password link
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert("Parolni tiklash funksiyasi demo rejimda ishlamaydi. Haqiqiy ilovada bu sizning email yoki telefon raqamingizga parol tiklash havolasini yuboradi.");
+            });
+            
+            // Verify OTP
+            verifyOtpBtn.addEventListener('click', function() {
+                let otp = '';
+                otpInputs.forEach(input => {
+                    otp += input.value;
+                });
+                
+                if (otp.length !== 6) {
+                    alert("Iltimos, 6 xonali kodni to'liq kiriting!");
+                    return;
+                }
+                
+                // Demo OTP verification (123456 works)
+                if (otp === "123456") {
+                    otpModal.style.display = 'none';
+                    successMessage.style.display = 'flex';
+                    registrationForm.reset();
+                    universitySearch.value = '';
+                    universityHidden.value = '';
+                    selectedUniversity = null;
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                        // Switch to login tab after successful registration
+                        switchTab('login');
+                    }, 3000);
+                } else {
+                    alert("Noto'g'ri kod! Demo uchun to'g'ri kod: 123456");
+                }
+            });
+            
+            // Go to Telegram bot
+            goToBotBtn.addEventListener('click', function() {
+                window.open('https://t.me/demo_bot', '_blank');
+            });
+            
+            // Close modal when clicking outside
+            otpModal.addEventListener('click', function(e) {
+                if (e.target === otpModal) {
+                    otpModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

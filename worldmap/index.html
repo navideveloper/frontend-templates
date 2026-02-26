@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Cyber Attacks Map — iOS Style</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3170/3170759.png" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f2f2f6;
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #1c1c1e;
+        }
+
+        /* iOS Split View */
+        .ios-split-view {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            background-color: #f2f2f6;
+        }
+
+        /* Left Side - Map Container */
+        .map-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f2f2f6;
+            padding: 12px;
+            position: relative;
+        }
+
+        /* iOS Navigation Bar */
+        .ios-nav-bar {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 14px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            min-height: 52px;
+            margin-bottom: 12px;
+        }
+
+        .ios-nav-title {
+            font-weight: 600;
+            font-size: 17px;
+            letter-spacing: -0.3px;
+            color: #1c1c1e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ios-nav-title i {
+            color: #ff3b30; /* Red for cyber attacks */
+            font-size: 20px;
+        }
+
+        .ios-nav-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ios-icon-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background-color: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #007aff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .ios-icon-button:hover {
+            background-color: rgba(0, 122, 255, 0.05);
+        }
+
+        .ios-icon-button:active {
+            background-color: rgba(0, 122, 255, 0.1);
+            transform: scale(0.96);
+        }
+
+        /* Map Wrapper */
+        .map-wrapper {
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            position: relative;
+        }
+
+        .geo-chart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .geo-chart iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none;
+        }
+
+        /* Right Sidebar - iOS Style */
+        .ios-sidebar {
+            width: 380px;
+            background-color: #ffffff;
+            border-radius: 24px 0 0 24px;
+            margin: 12px 12px 12px 0;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            overflow-y: auto;
+        }
+
+        /* Profile Section */
+        .ios-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 8px 0 16px;
+            border-bottom: 1px solid rgba(60, 60, 67, 0.1);
+        }
+
+        .ios-avatar {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(145deg, #ff3b30, #ff9500);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 500;
+            box-shadow: 0 8px 16px rgba(255, 59, 48, 0.15);
+        }
+
+        .ios-user h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #8e8e93;
+            margin-bottom: 4px;
+        }
+
+        .ios-user h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1e;
+            letter-spacing: -0.3px;
+        }
+
+        /* Search Field */
+        .ios-search {
+            background-color: #f2f2f6;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .ios-search i {
+            color: #8e8e93;
+            font-size: 16px;
+        }
+
+        .ios-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 400;
+            color: #1c1c1e;
+        }
+
+        .ios-search input::placeholder {
+            color: #8e8e93;
+        }
+
+        /* Section Headers */
+        .ios-section-header {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8e8e93;
+            margin-bottom: 12px;
+        }
+
+        /* Attack List */
+        .attack-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .attack-item {
+            background-color: #f2f2f6;
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .attack-item:hover {
+            background-color: #e5e5ea;
+            transform: translateX(4px);
+        }
+
+        .attack-item.active {
+            border-color: #ff3b30;
+            background-color: #ffe5e5;
+        }
+
+        .attack-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #1c1c1e;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attack-year {
+            font-size: 13px;
+            color: #8e8e93;
+            font-weight: 400;
+        }
+
+        .attack-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .attack-type {
+            background-color: rgba(0, 122, 255, 0.1);
+            color: #007aff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .attack-category {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .attack-source {
+            font-size: 13px;
+            color: #8e8e93;
+            margin-bottom: 4px;
+        }
+
+        .attack-source span {
+            color: #1c1c1e;
+            font-weight: 500;
+        }
+
+        /* Countries affected */
+        .affected-countries {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .country-badge {
+            background-color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1c1c1e;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .country-badge i {
+            color: #ff3b30;
+            font-size: 10px;
+        }
+
+        /* Attack Details Card */
+        .attack-details {
+            background-color: #f2f2f6;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 8px 0;
+        }
+
+        .detail-row {
+            margin-bottom: 16px;
+        }
+
+        .detail-label {
+            font-size: 13px;
+            color: #8e8e93;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1c1c1e;
+            line-height: 1.5;
+        }
+
+        .detail-value i {
+            color: #ff3b30;
+            margin-right: 6px;
+        }
+
+        /* Stats Card */
+        .ios-card {
+            background-color: #f2f2f6;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .ios-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1e;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #8e8e93;
+        }
+
+        .stat-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1c1c1e;
+        }
+
+        /* Footer */
+        .ios-footer {
+            margin-top: auto;
+            padding: 20px 0 8px;
+            text-align: center;
+            color: #8e8e93;
+            font-size: 13px;
+            border-top: 1px solid rgba(60, 60, 67, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .ios-split-view {
+                flex-direction: column;
+            }
+            
+            .ios-sidebar {
+                width: 100%;
+                margin: 0 12px 12px 12px;
+                border-radius: 24px;
+            }
+        }
+    </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="ios-split-view">
+        <!-- Left side - Map -->
+        <div class="map-container">
+            <div class="ios-nav-bar">
+                <div class="ios-nav-title">
+                    <i class="fa-solid fa-bug"></i>
+                    <span>Katta miqyosdagi kibberhujumlarni tasirini o'rganish</span>
+                </div>
+                <div class="ios-nav-actions">
+                    <button class="ios-icon-button" onclick="resetMap()">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <button class="ios-icon-button" onclick="toggleFullscreen()">
+                        <i class="fa-solid fa-expand"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="map-wrapper">
+                <div id="regions_div" class="geo-chart"></div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="ios-sidebar" id="sidebar">
+
+
+            <!-- Attack List -->
+            <div>
+                <div class="attack-list" id="attackList"></div>
+            </div>
+
+            <!-- Selected Attack Details -->
+            <div id="selectedAttackDetails" style="display: none;">
+                <div class="ios-section-header">
+                    Kiberhujum tafsilotlari
+                </div>
+                <div class="attack-details" id="detailsContent"></div>
+            </div>
+
+            <!-- Stats -->
+            <div class="ios-card">
+                <div class="ios-card-title">
+                    <i class="fa-regular fa-chart-bar"></i>
+                    Umumiy Xulosa
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Umumiy hujumlar</span>
+                    <span class="stat-value" id="totalAttacks">1,250+ ta</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Zararlangan davlatlar</span>
+                    <span class="stat-value" id="totalCountries">195 ta</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Umumiy qurilmalar</span>
+                    <span class="stat-value" id="totalDevices">~1.2 - 1.5 milliard</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Charts -->
+    <script type="text/javascript" src="./googlemap.js"></script>
+
+    <script>
+        // Cyber attacks data
+        const attacksData = [
+  {
+    "hujum_nomi": "Mirai Botnet",
+    "manbasi": "AQSH (Talabalar tomonidan tarqatilgan)",
+    "turi": "IoT Botnet DDoS",
+    "bartaraf_choralari": "IoT qurilmalari uchun standart parollarni taqiqlash qonuni (California SB-327) qabul qilindi.",
+    "yili": 2016,
+    "amalga_oshirganlar_va_virus_haqida": "Inson omilisiz, zaif parolli aqlli kameralar va routerlarni avtomatik qidirib topib, botnetga aylantirgan. Dyn DNS provayderini urib tushirgan.",
+    "kategoriya": "Infratuzilma falaji",
+    "zararlangan_davlatlar": [
+      { "davlat": "AQSH", "zararlangan_qurilmalar": 100000 },
+      { "davlat": "Braziliya", "zararlangan_qurilmalar": 80000 },
+      { "davlat": "Vyetnam", "zararlangan_qurilmalar": 50000 }
+    ]
+  },
+  {
+    "hujum_nomi": "WannaCry",
+    "manbasi": "Shimoliy Koreya (Lazarus Group)",
+    "turi": "Ransomware (Tovlamachi)",
+    "bartaraf_choralari": "Microsoft Windows XP uchun ham favqulodda xavfsizlik patchini chiqardi.",
+    "yili": 2017,
+    "amalga_oshirganlar_va_virus_haqida": "EternalBlue eksploitidan foydalangan. Fayllarni shifrlab, dunyodagi minglab shifoxona va zavodlar ishini to'xtatgan.",
+    "kategoriya": "Iqtisodiy sabotaj",
+    "zararlangan_davlatlar": [
+      { "davlat": "Rossiya", "zararlangan_qurilmalar": 150000 },
+      { "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 70000 },
+      { "davlat": "Xitoy", "zararlangan_qurilmalar": 30000 }
+    ]
+  },
+  {
+    "hujum_nomi": "NotPetya",
+    "manbasi": "Rossiya (Sandworm/GRU)",
+    "turi": "Wiper (Siyosiy motivli)",
+    "bartaraf_choralari": "Logistika kompaniyalari (Maersk) IT arxitekturasini 'Segmentatsiya' asosida noldan qayta qurdi.",
+    "yili": 2017,
+    "amalga_oshirganlar_va_virus_haqida": "Tarixdagi eng qimmat zarar keltirgan hujum ($10 mlrd). Maqsadi pul emas, Ukraina iqtisodiyotini yo'q qilish bo'lgan.",
+    "kategoriya": "Davlatlararo kiber-urush",
+    "zararlangan_davlatlar": [
+      { "davlat": "Ukraina", "zararlangan_qurilmalar": 12500 },
+      { "davlat": "AQSH", "zararlangan_qurilmalar": 2500 },
+      { "davlat": "Germaniya", "zararlangan_qurilmalar": 1500 }
+    ]
+  },
+  {
+    "hujum_nomi": "SolarWinds (Sunburst)",
+    "manbasi": "Rossiya (APT29 / SVR)",
+    "turi": "Supply Chain Attack",
+    "bartaraf_choralari": "AQSH hukumatida 'Zero Trust Architecture' majburiy standart etib belgilandi.",
+    "yili": 2020,
+    "amalga_oshirganlar_va_virus_haqida": "Dasturiy ta'minot yangilanishi ichiga zararli kod joylash orqali AQSH Moliya va Mudofaa vazirliklari tizimiga kirilgan.",
+    "kategoriya": "Kiber-josuslik",
+    "zararlangan_davlatlar": [
+      { "davlat": "AQSH", "zararlangan_qurilmalar": 18000 },
+      { "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 500 }
+    ]
+  },
+  {
+    "hujum_nomi": "Colonial Pipeline Attack",
+    "manbasi": "DarkSide (Kiber-jinoyatchi guruh)",
+    "turi": "Ransomware-as-a-Service",
+    "bartaraf_choralari": "Kritik infratuzilma ob'ektlari uchun kiber-audit majburiy bo'ldi, Bitcoin to'lovlarining bir qismi qaytarib olindi.",
+    "yili": 2021,
+    "amalga_oshirganlar_va_virus_haqida": "AQSHning sharqiy qirg'og'ida yoqilg'i yetkazib berish to'xtab qoldi. Birinchi marta kiberhujum tufayli favqulodda holat e'lon qilindi.",
+    "kategoriya": "Energetika xavfsizligi",
+    "zararlangan_davlatlar": [
+      { "davlat": "AQSH", "zararlangan_qurilmalar": 1000 }
+    ]
+  },
+  {
+    "hujum_nomi": "Log4Shell Exploitation",
+    "manbasi": "Global (Turli xakerlik guruhlari)",
+    "turi": "Zero-day Vulnerability",
+    "bartaraf_choralari": "Barcha Java asosidagi kutubxonalar global miqyosda bir necha kun ichida yangilandi.",
+    "yili": 2021,
+    "amalga_oshirganlar_va_virus_haqida": "Log4j kutubxonasidagi ochiq zaiflik orqali dunyodagi serverlarning deyarli yarmi hujum ostida qoldi.",
+    "kategoriya": "Dasturiy zaiflik",
+    "zararlangan_davlatlar": [
+      { "davlat": "Global", "zararlangan_qurilmalar": 100000000 }
+    ]
+  },
+  {
+    "hujum_nomi": "Costa Rica Government Hack",
+    "manbasi": "Conti (Rossiya bilan bog'liq guruh)",
+    "turi": "National Ransomware",
+    "bartaraf_choralari": "Davlat favqulodda holat e'lon qildi, AQSH kiber-yordam guruhlarini yubordi.",
+    "yili": 2022,
+    "amalga_oshirganlar_va_virus_haqida": "Birinchi marta butun boshli davlat iqtisodiyoti ransomware tufayli to'xtab qoldi (bojxona va soliq tizimlari).",
+    "kategoriya": "Davlat boshqaruvi",
+    "zararlangan_davlatlar": [
+      { "davlat": "Kosta-Rika", "zararlangan_qurilmalar": 30000 }
+    ]
+  },
+  {
+    "hujum_nomi": "MOVEit Breach",
+    "manbasi": "CL0P Ransomware Gang",
+    "turi": "Massive Data Exfiltration",
+    "bartaraf_choralari": "Ma'lumotlarni uzatish platformalari uchun yangi xalqaro shifrlash protokollari joriy etildi.",
+    "yili": 2023,
+    "amalga_oshirganlar_va_virus_haqida": "Fayl almashish tizimidagi zaiflik orqali 2000 dan ortiq tashkilotning shaxsiy ma'lumotlari o'g'irlandi.",
+    "kategoriya": "Ma'lumotlar o'g'riligi",
+    "zararlangan_davlatlar": [
+      { "davlat": "AQSH", "zararlangan_qurilmalar": 60000000 },
+      { "davlat": "Germaniya", "zararlangan_qurilmalar": 200000 }
+    ]
+  },
+  {
+    "hujum_nomi": "AI-Powered Deepfake Heist",
+    "manbasi": "Transmilliy kiber-guruhlar",
+    "turi": "AI-Social Engineering",
+    "bartaraf_choralari": "Banklarda biometrik va ovozli tasdiqlash uchun 'Anti-AI' detektorlari o'rnatildi.",
+    "yili": 2024,
+    "amalga_oshirganlar_va_virus_haqida": "Sun'iy intellekt yordamida kompaniya direktorining qiyofasi va ovozi deepfake qilinib, yirik pul o'tkazmalari amalga oshirilgan.",
+    "kategoriya": "AI kiber-jinoyatchilik",
+    "zararlangan_davlatlar": [
+      { "davlat": "Xitoy (Gonkong)", "zararlangan_qurilmalar": 1 },
+      { "davlat": "BAA", "zararlangan_qurilmalar": 1 }
+    ]
+  },
+  {
+    "hujum_nomi": "Global Cloud Outage (2025/26)",
+    "manbasi": "Noma'lum (Davlat darajasidagi APT)",
+    "turi": "Cloud-Infrastructure Wiper",
+    "bartaraf_choralari": "Multi-cloud (bir necha bulutli provayder) strategiyasiga o'tish majburiy bo'ldi.",
+    "yili": 2025,
+    "amalga_oshirganlar_va_virus_haqida": "Yirik bulutli provayderlar (AWS/Azure/Google) markaziy autentifikatsiya tugunlariga qilingan hujum natijasida millionlab bizneslar offline bo'ldi.",
+    "kategoriya": "Global bulutli infratuzilma",
+    "zararlangan_davlatlar": [
+      { "davlat": "Global", "zararlangan_qurilmalar": 500000000 }
+    ]
+  }
+];
+
+        // Country code mapping (for Google Charts)
+        const countryCodes = {
+            'AQSH': 'US',
+            'Kanada': 'CA',
+            'Buyuk Britaniya': 'GB',
+            'Germaniya': 'DE',
+            'Filippin': 'PH',
+            'Rossiya': 'RU',
+            'Xitoy': 'CN',
+            'Eron': 'IR',
+            'Indoneziya': 'ID',
+            'Hindiston': 'IN',
+            'Ukraina': 'UA',
+            'Braziliya': 'BR',
+            'Vyetnam': 'VN',
+            'AQSH va Isroil': 'IL'
+        };
+
+        // Google Charts initialization
+        google.charts.load('current', {
+            packages: ['geochart'],
+            callback: initMap
+        });
+
+        let geoChart;
+        let chartData;
+        let chartOptions;
+
+        function initMap() {
+            chartData = google.visualization.arrayToDataTable([
+                ['Davlat', 'Qurilmalar'],
+                ['US', 0],
+                ['CA', 0],
+                ['GB', 0],
+                ['DE', 0],
+                ['PH', 0],
+                ['RU', 0],
+                ['CN', 0],
+                ['IR', 0],
+                ['ID', 0],
+                ['IN', 0],
+                ['UA', 0],
+                ['BR', 0],
+                ['VN', 0]
+            ]);
+
+            chartOptions = {
+                colorAxis: {
+                    colors: ['#f2f2f6', '#ff3b30', '#ff9500'],
+                    values: [0, 100, 500]
+                },
+                backgroundColor: 'transparent',
+                datalessRegionColor: '#f2f2f6',
+                defaultColor: '#e9e9ed',
+                legend: 'none',
+                tooltip: {textStyle: {color: '#1c1c1e'}}
+            };
+
+            geoChart = new google.visualization.GeoChart(
+                document.getElementById('regions_div')
+            );
+
+            geoChart.draw(chartData, chartOptions);
+            
+            // Update stats
+            updateStats();
+            
+            // Render attack list
+            renderAttackList();
+        }
+
+        // Render attack list in sidebar
+        function renderAttackList() {
+            const attackList = document.getElementById('attackList');
+            attackList.innerHTML = '';
+
+            attacksData.forEach((attack, index) => {
+                const attackItem = document.createElement('div');
+                attackItem.className = 'attack-item';
+                attackItem.dataset.index = index;
+                
+                // Create countries badges
+                const countriesHtml = attack.zararlangan_davlatlar.map(c => 
+                    `<span class="country-badge"><i class="fa-solid fa-location-dot"></i> ${c.davlat}</span>`
+                ).join('');
+
+                attackItem.innerHTML = `
+                    <div class="attack-name">
+                        ${attack.hujum_nomi}
+                        <span class="attack-year">${attack.yili}</span>
+                    </div>
+                    <div class="attack-meta">
+                        <span class="attack-type">${attack.turi}</span>
+                        <span class="attack-category">${attack.kategoriya}</span>
+                    </div>
+                    <div class="attack-source">
+                        <i class="fa-regular fa-flag"></i> <span>${attack.manbasi}</span>
+                    </div>
+                    <div class="affected-countries">
+                        ${countriesHtml}
+                    </div>
+                `;
+
+                attackItem.addEventListener('click', () => showAttackDetails(index));
+                attackList.appendChild(attackItem);
+            });
+        }
+
+        // Show attack details and highlight countries
+        function showAttackDetails(index) {
+            const attack = attacksData[index];
+            
+            // Remove active class from all items
+            document.querySelectorAll('.attack-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            document.querySelector(`.attack-item[data-index="${index}"]`).classList.add('active');
+            
+            // Update details section
+            const detailsDiv = document.getElementById('selectedAttackDetails');
+            const detailsContent = document.getElementById('detailsContent');
+            
+            // Prepare countries list
+            const countriesList = attack.zararlangan_davlatlar.map(c => 
+                `<div class="country-badge" style="margin-bottom: 4px;">
+                    <i class="fa-solid fa-bug"></i> ${c.davlat}: ${c.zararlangan_qurilmalar.toLocaleString()} devices
+                </div>`
+            ).join('');
+
+            detailsContent.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Kiberhujum nomi</div>
+                    <div class="detail-value"><i class="fa-solid fa-virus"></i> ${attack.hujum_nomi}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Kelib chiqishi</div>
+                    <div class="detail-value"><i class="fa-regular fa-flag"></i> ${attack.manbasi}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Turi</div>
+                    <div class="detail-value">${attack.turi}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Kategoriyasi</div>
+                    <div class="detail-value">${attack.kategoriya}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Tafsilot</div>
+                    <div class="detail-value">${attack.amalga_oshirganlar_va_virus_haqida}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Bartaraf etish</div>
+                    <div class="detail-value"><i class="fa-solid fa-shield"></i> ${attack.bartaraf_choralari}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Tasirlangan davlatlar</div>
+                    <div class="affected-countries" style="margin-top: 8px;">
+                        ${countriesList}
+                    </div>
+                </div>
+            `;
+            
+            detailsDiv.style.display = 'block';
+            
+            // Update map to highlight affected countries
+            updateMapWithAttack(attack);
+            
+            // Scroll to details
+            detailsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Update map with affected countries
+        function updateMapWithAttack(attack) {
+            // Reset all values to 0
+            const countryValues = {
+                'US': 0, 'CA': 0, 'GB': 0, 'DE': 0, 'PH': 0, 'RU': 0, 
+                'CN': 0, 'IR': 0, 'ID': 0, 'IN': 0, 'UA': 0, 'BR': 0, 'VN': 0
+            };
+            
+            // Set intensity based on affected devices
+            attack.zararlangan_davlatlar.forEach(country => {
+                const code = countryCodes[country.davlat];
+                if (code) {
+                    // Scale intensity based on device count (logarithmic scale for better visualization)
+                    const intensity = Math.min(500, Math.log10(country.zararlangan_qurilmalar) * 100);
+                    countryValues[code] = intensity;
+                }
+            });
+            
+            // Update chart data
+            const newData = [
+                ['Country', 'Intensity'],
+                ['US', countryValues['US']],
+                ['CA', countryValues['CA']],
+                ['GB', countryValues['GB']],
+                ['DE', countryValues['DE']],
+                ['PH', countryValues['PH']],
+                ['RU', countryValues['RU']],
+                ['CN', countryValues['CN']],
+                ['IR', countryValues['IR']],
+                ['ID', countryValues['ID']],
+                ['IN', countryValues['IN']],
+                ['UA', countryValues['UA']],
+                ['BR', countryValues['BR']],
+                ['VN', countryValues['VN']]
+            ];
+            
+            chartData = google.visualization.arrayToDataTable(newData);
+            geoChart.draw(chartData, chartOptions);
+        }
+
+        // Reset map to default state
+        function resetMap() {
+            const newData = [
+                ['Country', 'Intensity'],
+                ['US', 0], ['CA', 0], ['GB', 0], ['DE', 0], ['PH', 0], 
+                ['RU', 0], ['CN', 0], ['IR', 0], ['ID', 0], ['IN', 0], 
+                ['UA', 0], ['BR', 0], ['VN', 0]
+            ];
+            
+            chartData = google.visualization.arrayToDataTable(newData);
+            geoChart.draw(chartData, chartOptions);
+            
+            // Remove active class from all attack items
+            document.querySelectorAll('.attack-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Hide details
+            document.getElementById('selectedAttackDetails').style.display = 'none';
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('totalAttacks').textContent = attacksData.length;
+            
+            const allCountries = new Set();
+            let totalDevices = 0;
+            
+            attacksData.forEach(attack => {
+                attack.zararlangan_davlatlar.forEach(c => {
+                    allCountries.add(c.davlat);
+                    totalDevices += c.zararlangan_qurilmalar;
+                });
+            });
+            
+            document.getElementById('totalCountries').textContent = allCountries.size;
+            document.getElementById('totalDevices').textContent = `~${(totalDevices / 1000000).toFixed(1)}M`;
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            
+            document.querySelectorAll('.attack-item').forEach(item => {
+                const name = item.querySelector('.attack-name').textContent.toLowerCase();
+                if (name.includes(searchTerm) || searchTerm === '') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (geoChart && chartData && chartOptions) {
+                geoChart.draw(chartData, chartOptions);
+            }
+        });
+    </script>
+</body>
+</html>

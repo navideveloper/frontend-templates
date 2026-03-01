@@ -486,153 +486,456 @@
     <script>
         // Cyber attacks data
         const attacksData = [
-  {
-    "hujum_nomi": "Mirai Botnet",
-    "manbasi": "AQSH (Talabalar tomonidan tarqatilgan)",
-    "turi": "IoT Botnet DDoS",
-    "bartaraf_choralari": "IoT qurilmalari uchun standart parollarni taqiqlash qonuni (California SB-327) qabul qilindi.",
-    "yili": 2016,
-    "amalga_oshirganlar_va_virus_haqida": "Inson omilisiz, zaif parolli aqlli kameralar va routerlarni avtomatik qidirib topib, botnetga aylantirgan. Dyn DNS provayderini urib tushirgan.",
-    "kategoriya": "Infratuzilma falaji",
-    "zararlangan_davlatlar": [
-      { "davlat": "AQSH", "zararlangan_qurilmalar": 100000 },
-      { "davlat": "Braziliya", "zararlangan_qurilmalar": 80000 },
-      { "davlat": "Vyetnam", "zararlangan_qurilmalar": 50000 }
-    ]
-  },
-  {
-    "hujum_nomi": "WannaCry",
-    "manbasi": "Shimoliy Koreya (Lazarus Group)",
-    "turi": "Ransomware (Tovlamachi)",
-    "bartaraf_choralari": "Microsoft Windows XP uchun ham favqulodda xavfsizlik patchini chiqardi.",
-    "yili": 2017,
-    "amalga_oshirganlar_va_virus_haqida": "EternalBlue eksploitidan foydalangan. Fayllarni shifrlab, dunyodagi minglab shifoxona va zavodlar ishini to'xtatgan.",
-    "kategoriya": "Iqtisodiy sabotaj",
-    "zararlangan_davlatlar": [
-      { "davlat": "Rossiya", "zararlangan_qurilmalar": 150000 },
-      { "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 70000 },
-      { "davlat": "Xitoy", "zararlangan_qurilmalar": 30000 }
-    ]
-  },
-  {
-    "hujum_nomi": "NotPetya",
-    "manbasi": "Rossiya (Sandworm/GRU)",
-    "turi": "Wiper (Siyosiy motivli)",
-    "bartaraf_choralari": "Logistika kompaniyalari (Maersk) IT arxitekturasini 'Segmentatsiya' asosida noldan qayta qurdi.",
-    "yili": 2017,
-    "amalga_oshirganlar_va_virus_haqida": "Tarixdagi eng qimmat zarar keltirgan hujum ($10 mlrd). Maqsadi pul emas, Ukraina iqtisodiyotini yo'q qilish bo'lgan.",
-    "kategoriya": "Davlatlararo kiber-urush",
-    "zararlangan_davlatlar": [
-      { "davlat": "Ukraina", "zararlangan_qurilmalar": 12500 },
-      { "davlat": "AQSH", "zararlangan_qurilmalar": 2500 },
-      { "davlat": "Germaniya", "zararlangan_qurilmalar": 1500 }
-    ]
-  },
-  {
-    "hujum_nomi": "SolarWinds (Sunburst)",
-    "manbasi": "Rossiya (APT29 / SVR)",
-    "turi": "Supply Chain Attack",
-    "bartaraf_choralari": "AQSH hukumatida 'Zero Trust Architecture' majburiy standart etib belgilandi.",
-    "yili": 2020,
-    "amalga_oshirganlar_va_virus_haqida": "Dasturiy ta'minot yangilanishi ichiga zararli kod joylash orqali AQSH Moliya va Mudofaa vazirliklari tizimiga kirilgan.",
-    "kategoriya": "Kiber-josuslik",
-    "zararlangan_davlatlar": [
-      { "davlat": "AQSH", "zararlangan_qurilmalar": 18000 },
-      { "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 500 }
-    ]
-  },
-  {
-    "hujum_nomi": "Colonial Pipeline Attack",
-    "manbasi": "DarkSide (Kiber-jinoyatchi guruh)",
-    "turi": "Ransomware-as-a-Service",
-    "bartaraf_choralari": "Kritik infratuzilma ob'ektlari uchun kiber-audit majburiy bo'ldi, Bitcoin to'lovlarining bir qismi qaytarib olindi.",
-    "yili": 2021,
-    "amalga_oshirganlar_va_virus_haqida": "AQSHning sharqiy qirg'og'ida yoqilg'i yetkazib berish to'xtab qoldi. Birinchi marta kiberhujum tufayli favqulodda holat e'lon qilindi.",
-    "kategoriya": "Energetika xavfsizligi",
-    "zararlangan_davlatlar": [
-      { "davlat": "AQSH", "zararlangan_qurilmalar": 1000 }
-    ]
-  },
-  {
-    "hujum_nomi": "Log4Shell Exploitation",
-    "manbasi": "Global (Turli xakerlik guruhlari)",
-    "turi": "Zero-day Vulnerability",
-    "bartaraf_choralari": "Barcha Java asosidagi kutubxonalar global miqyosda bir necha kun ichida yangilandi.",
-    "yili": 2021,
-    "amalga_oshirganlar_va_virus_haqida": "Log4j kutubxonasidagi ochiq zaiflik orqali dunyodagi serverlarning deyarli yarmi hujum ostida qoldi.",
-    "kategoriya": "Dasturiy zaiflik",
-    "zararlangan_davlatlar": [
-      { "davlat": "Global", "zararlangan_qurilmalar": 100000000 }
-    ]
-  },
-  {
-    "hujum_nomi": "Costa Rica Government Hack",
-    "manbasi": "Conti (Rossiya bilan bog'liq guruh)",
-    "turi": "National Ransomware",
-    "bartaraf_choralari": "Davlat favqulodda holat e'lon qildi, AQSH kiber-yordam guruhlarini yubordi.",
-    "yili": 2022,
-    "amalga_oshirganlar_va_virus_haqida": "Birinchi marta butun boshli davlat iqtisodiyoti ransomware tufayli to'xtab qoldi (bojxona va soliq tizimlari).",
-    "kategoriya": "Davlat boshqaruvi",
-    "zararlangan_davlatlar": [
-      { "davlat": "Kosta-Rika", "zararlangan_qurilmalar": 30000 }
-    ]
-  },
-  {
-    "hujum_nomi": "MOVEit Breach",
-    "manbasi": "CL0P Ransomware Gang",
-    "turi": "Massive Data Exfiltration",
-    "bartaraf_choralari": "Ma'lumotlarni uzatish platformalari uchun yangi xalqaro shifrlash protokollari joriy etildi.",
-    "yili": 2023,
-    "amalga_oshirganlar_va_virus_haqida": "Fayl almashish tizimidagi zaiflik orqali 2000 dan ortiq tashkilotning shaxsiy ma'lumotlari o'g'irlandi.",
-    "kategoriya": "Ma'lumotlar o'g'riligi",
-    "zararlangan_davlatlar": [
-      { "davlat": "AQSH", "zararlangan_qurilmalar": 60000000 },
-      { "davlat": "Germaniya", "zararlangan_qurilmalar": 200000 }
-    ]
-  },
-  {
-    "hujum_nomi": "AI-Powered Deepfake Heist",
-    "manbasi": "Transmilliy kiber-guruhlar",
-    "turi": "AI-Social Engineering",
-    "bartaraf_choralari": "Banklarda biometrik va ovozli tasdiqlash uchun 'Anti-AI' detektorlari o'rnatildi.",
-    "yili": 2024,
-    "amalga_oshirganlar_va_virus_haqida": "Sun'iy intellekt yordamida kompaniya direktorining qiyofasi va ovozi deepfake qilinib, yirik pul o'tkazmalari amalga oshirilgan.",
-    "kategoriya": "AI kiber-jinoyatchilik",
-    "zararlangan_davlatlar": [
-      { "davlat": "Xitoy (Gonkong)", "zararlangan_qurilmalar": 1 },
-      { "davlat": "BAA", "zararlangan_qurilmalar": 1 }
-    ]
-  },
-  {
-    "hujum_nomi": "Global Cloud Outage (2025/26)",
-    "manbasi": "Noma'lum (Davlat darajasidagi APT)",
-    "turi": "Cloud-Infrastructure Wiper",
-    "bartaraf_choralari": "Multi-cloud (bir necha bulutli provayder) strategiyasiga o'tish majburiy bo'ldi.",
-    "yili": 2025,
-    "amalga_oshirganlar_va_virus_haqida": "Yirik bulutli provayderlar (AWS/Azure/Google) markaziy autentifikatsiya tugunlariga qilingan hujum natijasida millionlab bizneslar offline bo'ldi.",
-    "kategoriya": "Global bulutli infratuzilma",
-    "zararlangan_davlatlar": [
-      { "davlat": "Global", "zararlangan_qurilmalar": 500000000 }
-    ]
-  }
+{
+"hujum_nomi": "WannaCry Ransomware",
+"manbasi": "EternalBlue eksploiti (NSA'dan sizdirilgan)",
+"turi": "Ransomware (Tovlamachilik dasturi)",
+"bartaraf_choralari": "Microsoft MS17-010 xavfsizlik yamog'ini o'rnatish va 'Kill Switch' domenini faollashtirish",
+"yili": 2017,
+"amalga_oshirganlar_va_virus_haqida": "Lazarus Group (Shimoliy Koreya). Virus SMB protokoli orqali tarqalib, ma'lumotlarni shifrlagan",
+"kategoriya": "Ransomware outbreak",
+"zararlangan_davlatlar": [
+{ "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 70000 },
+{ "davlat": "Rossiya", "zararlangan_qurilmalar": 150000 }
+]
+},
+{
+"hujum_nomi": "NotPetya",
+"manbasi": "M.E.Doc buxgalteriya dasturi yangilanishi",
+"turi": "Wiper / Supply Chain Attack",
+"bartaraf_choralari": "Tarmoqni segmentatsiya qilish va zaxira nusxalaridan tizimni tiklash",
+"yili": 2017,
+"amalga_oshirganlar_va_virus_haqida": "Sandworm (Rossiya GRU). Ma'lumotlarni qayta tiklab bo'lmaydigan darajada o'chirib tashlagan",
+"kategoriya": "Supply chain attack",
+"zararlangan_davlatlar": [
+{ "davlat": "Ukraina", "zararlangan_qurilmalar": 250000 },
+{ "davlat": "Germaniya", "zararlangan_qurilmalar": 40000 }
+]
+},
+{
+"hujum_nomi": "Stuxnet",
+"manbasi": "Infected USB drayvlar",
+"turi": "Industrial Control System (ICS) Attack",
+"bartaraf_choralari": "Siemens Step7 dasturiy ta'minotini yangilash va havo bo'shlig'i (air-gap) xavfsizligini kuchaytirish",
+"yili": 2010,
+"amalga_oshirganlar_va_virus_haqida": "AQSH va Isroil maxsus xizmatlari. Eron yadroviy sentrifugalarini jismoniy ishdan chiqargan",
+"kategoriya": "Critical infrastructure attack",
+"zararlangan_davlatlar": [
+{ "davlat": "Eron", "zararlangan_qurilmalar": 60000 },
+{ "davlat": "Indoneziya", "zararlangan_qurilmalar": 12000 }
+]
+},
+{
+"hujum_nomi": "SolarWinds SUNBURST",
+"manbasi": "Orion Platform yangilanish paketi",
+"turi": "Supply Chain Espionage",
+"bartaraf_choralari": "Buzilgan Orion platformasini yangilash va ruxsatsiz kirish nuqtalarini yopish",
+"yili": 2020,
+"amalga_oshirganlar_va_virus_haqida": "APT29 (Rossiya SVR). Davlat idoralari tarmoqlariga backdoor o'rnatgan",
+"kategoriya": "Supply chain attack",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 18000 },
+{ "davlat": "Kanada", "zararlangan_qurilmalar": 500 }
+]
+},
+{
+"hujum_nomi": "Yahoo Data Breach",
+"manbasi": "Spear-phishing va cookie-forging",
+"turi": "Massive Data Breach",
+"bartaraf_choralari": "Parollarni majburiy almashtirish va xavfsizlik sertifikatlarini yangilash",
+"yili": 2013,
+"amalga_oshirganlar_va_virus_haqida": "Rossiya razvedkasi bilan bog'liq xakerlar. 3 milliard foydalanuvchi hisobi o'g'irlangan",
+"kategoriya": "Massive data breach",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 1000000000 },
+{ "davlat": "Hindiston", "zararlangan_qurilmalar": 150000000 }
+]
+},
+{
+"hujum_nomi": "Equifax Breach",
+"manbasi": "Apache Struts zaifligi (CVE-2017-5638)",
+"turi": "Data Breach",
+"bartaraf_choralari": "Veb-freymvorklarni yamoqlash va shaxsiy ma'lumotlar monitoringini yo'lga qo'yish",
+"yili": 2017,
+"amalga_oshirganlar_va_virus_haqida": "Xitoy xalq ozodlik armiyasi (PLA). 147 million kishining moliyaviy ma'lumotlari o'g'irlangan",
+"kategoriya": "Massive data breach",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 143000000 },
+{ "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 15000000 }
+]
+},
+{
+"hujum_nomi": "Mirai Botnet",
+"manbasi": "IoT qurilmalaridagi standart parollar",
+"turi": "DDoS Attack",
+"bartaraf_choralari": "Qurilma parollarini o'zgartirish va telnet portlarini yopish",
+"yili": 2016,
+"amalga_oshirganlar_va_virus_haqida": "Paras Jha va boshqalar. IP kameralar va routerlardan foydalanib Dyn DNS'ga hujum qilingan",
+"kategoriya": "Internet worms",
+"zararlangan_davlatlar": [
+{ "davlat": "Braziliya", "zararlangan_qurilmalar": 550000 },
+{ "davlat": "Vetnam", "zararlangan_qurilmalar": 480000 }
+]
+},
+{
+"hujum_nomi": "Conficker Worm",
+"manbasi": "Windows Server xizmati zaifligi (MS08-067)",
+"turi": "Computer Worm",
+"bartaraf_choralari": "MS08-067 yamog'ini o'rnatish va tarmoqdagi zararli trafikni bloklash",
+"yili": 2008,
+"amalga_oshirganlar_va_virus_haqida": "Noma'lum guruh. Botnet yaratish uchun millionlab kompyuterlarni birlashtirgan",
+"kategoriya": "Internet worms",
+"zararlangan_davlatlar": [
+{ "davlat": "Xitoy", "zararlangan_qurilmalar": 3000000 },
+{ "davlat": "Fransiya", "zararlangan_qurilmalar": 1000000 }
+]
+},
+{
+"hujum_nomi": "ILOVEYOU Virus",
+"manbasi": "Elektron pochta ilovasi (.vbs)",
+"turi": "Email Worm",
+"bartaraf_choralari": "VBS scriptlarni bloklash va pochta filtrlash tizimlarini joriy etish",
+"yili": 2000,
+"amalga_oshirganlar_va_virus_haqida": "Onel de Guzman. Pochta orqali tarqalib, fayllarni o'chirib tashlagan",
+"kategoriya": "Internet worms",
+"zararlangan_davlatlar": [
+{ "davlat": "Filippin", "zararlangan_qurilmalar": 5000000 },
+{ "davlat": "Germaniya", "zararlangan_qurilmalar": 2000000 }
+]
+},
+{
+"hujum_nomi": "Sony Pictures Hack",
+"manbasi": "Spear-phishing va SMB worm",
+"turi": "State-sponsored Attack",
+"bartaraf_choralari": "Tizimlarni noldan qayta o'rnatish va ma'lumotlar sizib chiqishini nazorat qilish",
+"yili": 2014,
+"amalga_oshirganlar_va_virus_haqida": "Guardians of Peace (Shimoliy Koreya). Maxfiy filmlar va yozishmalar sizdirilgan",
+"kategoriya": "State-sponsored attacks",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 3500 },
+{ "davlat": "Yaponiya", "zararlangan_qurilmalar": 800 }
+]
+},
+{
+"hujum_nomi": "Kaseya Ransomware Attack",
+"manbasi": "Kaseya VSA dasturiy ta'minoti zaifligi",
+"turi": "Supply Chain Ransomware",
+"bartaraf_choralari": "Universal deşifrator kalitini qo'llash va VSA serverlarini yangilash",
+"yili": 2021,
+"amalga_oshirganlar_va_virus_haqida": "REvil xakerlar guruhi. Managed Service Provider'lar orqali minglab mijozlarni zararlagan",
+"kategoriya": "Ransomware outbreak",
+"zararlangan_davlatlar": [
+{ "davlat": "Shvetsiya", "zararlangan_qurilmalar": 800 },
+{ "davlat": "Yangi Zelandiya", "zararlangan_qurilmalar": 150 }
+]
+},
+{
+"hujum_nomi": "Estonia DDoS Attack",
+"manbasi": "Siyosiy motivatsiyali botnetlar",
+"turi": "DDoS Attack",
+"bartaraf_choralari": "IP filtrlash va NATO yordamida kiber-mudofaani kuchaytirish",
+"yili": 2007,
+"amalga_oshirganlar_va_virus_haqida": "Rossiya tarafdori bo'lgan xakerlar. Davlat banklari va hukumat saytlarini to'xtatib qo'ygan",
+"kategoriya": "Critical infrastructure attack",
+"zararlangan_davlatlar": [
+{ "davlat": "Estoniya", "zararlangan_qurilmalar": 1000000 },
+{ "davlat": "Finlyandiya", "zararlangan_qurilmalar": 50000 }
+]
+},
+{
+"hujum_nomi": "SQL Slammer",
+"manbasi": "Microsoft SQL Server zaifligi",
+"turi": "Internet Worm",
+"bartaraf_choralari": "UDP 1434 portini bloklash va SQL serverlarni yamoqlash",
+"yili": 2003,
+"amalga_oshirganlar_va_virus_haqida": "Noma'lum. Internetni 15 daqiqa ichida sekinlashtirgan juda tez tarqaluvchi kod",
+"kategoriya": "Internet worms",
+"zararlangan_davlatlar": [
+{ "davlat": "Janubiy Koreya", "zararlangan_qurilmalar": 35000 },
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 40000 }
+]
+},
+{
+"hujum_nomi": "Log4Shell",
+"manbasi": "Apache Log4j kutubxonasi (CVE-2021-44228)",
+"turi": "Zero-day Exploit Campaign",
+"bartaraf_choralari": "Log4j kutubxonasini 2.17.1 versiyasigacha yangilash",
+"yili": 2021,
+"amalga_oshirganlar_va_virus_haqida": "Turli APT guruhlari. Millionlab Java ilovalarida masofadan kod ijro etish imkonini bergan",
+"kategoriya": "Zero-day exploit campaigns",
+"zararlangan_davlatlar": [
+{ "davlat": "Xitoy", "zararlangan_qurilmalar": 5000000 },
+{ "davlat": "Germaniya", "zararlangan_qurilmalar": 1200000 }
+]
+},
+{
+"hujum_nomi": "Code Red Worm",
+"manbasi": "Microsoft IIS veb-server zaifligi",
+"turi": "Internet Worm",
+"bartaraf_choralari": "IIS serverlari uchun xavfsizlik yamog'ini o'rnatish",
+"yili": 2001,
+"amalga_oshirganlar_va_virus_haqida": "Noma'lum. Oq uy saytiga DDoS hujum qilishga dasturlangan edi",
+"kategoriya": "Internet worms",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 359000 },
+{ "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 45000 }
+]
+},
+{
+"hujum_nomi": "Melissa Virus",
+"manbasi": "Microsoft Word makroslari",
+"turi": "Email Macro Virus",
+"bartaraf_choralari": "Antivirus bazalarini yangilash va makroslarni o'chirish",
+"yili": 1999,
+"amalga_oshirganlar_va_virus_haqida": "David L. Smith. Pochta orqali o'z-o'zini tarqatib, serverlarni to'ldirib yuborgan",
+"kategoriya": "Internet worms",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 1000000 },
+{ "davlat": "Kanada", "zararlangan_qurilmalar": 150000 }
+]
+},
+{
+"hujum_nomi": "Morris Worm",
+"manbasi": "Unix sendmail va finger xizmatlari",
+"turi": "Computer Worm",
+"bartaraf_choralari": "Tizim xizmatlarini yamoqlash va parollarni murakkablashtirish",
+"yili": 1988,
+"amalga_oshirganlar_va_virus_haqida": "Robert Tappan Morris. Internet tarixidagi birinchi keng ko'lamli qurt (worm)",
+"kategoriya": "Internet worms",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 6000 },
+{ "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 200 }
+]
+},
+{
+"hujum_nomi": "OPM Data Breach",
+"manbasi": "O'g'irlangan foydalanuvchi ma'lumotlari",
+"turi": "State-sponsored Espionage",
+"bartaraf_choralari": "Ikki bosqichli autentifikatsiyani joriy etish va tarmoq auditi",
+"yili": 2015,
+"amalga_oshirganlar_va_virus_haqida": "Xitoy davlat xakerlari (taxminan). AQSH federal xizmatchilarining biografik ma'lumotlari o'g'irlangan",
+"kategoriya": "State-sponsored attacks",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 21500000 },
+{ "davlat": "Xitoy", "zararlangan_qurilmalar": 1000 }
+]
+},
+{
+"hujum_nomi": "Heartbleed",
+"manbasi": "OpenSSL TLS Heartbeat kengaytmasi (CVE-2014-0160)",
+"turi": "Global Vulnerability Exploit",
+"bartaraf_choralari": "OpenSSL kutubxonasini yangilash va SSL sertifikatlarini qayta yaratish",
+"yili": 2014,
+"amalga_oshirganlar_va_virus_haqida": "Turli xakerlik guruhlari. Internet serverlarining operativ xotirasidan ma'lumotlarni o'g'irlash imkonini bergan",
+"kategoriya": "Zero-day exploit campaigns",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 500000 },
+{ "davlat": "Yaponiya", "zararlangan_qurilmalar": 120000 }
+]
+},
+{
+"hujum_nomi": "MOVEit Breach",
+"manbasi": "MOVEit Transfer SQL in'ektsiyasi zaifligi",
+"turi": "Massive Data Breach / Ransomware",
+"bartaraf_choralari": "SQL in'ektsiya zaifligini yopish va ma'lumotlarni monitoring qilish",
+"yili": 2023,
+"amalga_oshirganlar_va_virus_haqida": "CL0P ransomware guruhi. Minglab tashkilotlarning maxfiy fayllari o'g'irlangan",
+"kategoriya": "Massive data breach",
+"zararlangan_davlatlar": [
+{ "davlat": "AQSH", "zararlangan_qurilmalar": 25000000 },
+{ "davlat": "Buyuk Britaniya", "zararlangan_qurilmalar": 2000000 }
+]
+}
 ];
 
-        // Country code mapping (for Google Charts)
         const countryCodes = {
-            'AQSH': 'US',
-            'Kanada': 'CA',
-            'Buyuk Britaniya': 'GB',
-            'Germaniya': 'DE',
-            'Filippin': 'PH',
-            'Rossiya': 'RU',
-            'Xitoy': 'CN',
-            'Eron': 'IR',
-            'Indoneziya': 'ID',
-            'Hindiston': 'IN',
-            'Ukraina': 'UA',
+            'Afgʻoniston': 'AF',
+            'Albaniya': 'AL',
+            'Jazoir': 'DZ',
+            'Andorra': 'AD',
+            'Angola': 'AO',
+            'Antigua va Barbuda': 'AG',
+            'Argentina': 'AR',
+            'Armaniston': 'AM',
+            'Avstraliya': 'AU',
+            'Avstriya': 'AT',
+            'Ozarbayjon': 'AZ',
+            'Bagama orollari': 'BS',
+            'Bahrayn': 'BH',
+            'Bangladesh': 'BD',
+            'Barbados': 'BB',
+            'Belarus': 'BY',
+            'Belgiya': 'BE',
+            'Beliz': 'BZ',
+            'Benin': 'BJ',
+            'Butan': 'BT',
+            'Boliviya': 'BO',
+            'Bosniya va Gersegovina': 'BA',
+            'Botsvana': 'BW',
             'Braziliya': 'BR',
+            'Bruney': 'BN',
+            'Bolgariya': 'BG',
+            'Burkina-Faso': 'BF',
+            'Burundi': 'BI',
+            'Kabo-Verde': 'CV',
+            'Kambodja': 'KH',
+            'Kamerun': 'CM',
+            'Kanada': 'CA',
+            'Markaziy Afrika Respublikasi': 'CF',
+            'Chad': 'TD',
+            'Chili': 'CL',
+            'Xitoy': 'CN',
+            'Kolumbiya': 'CO',
+            'Komor orollari': 'KM',
+            'Kongo (Brazzavil)': 'CG',
+            'Kongo (DRK)': 'CD',
+            'Kosta-Rika': 'CR',
+            'Kot-d’Ivuar': 'CI',
+            'Xorvatiya': 'HR',
+            'Kuba': 'CU',
+            'Kipr': 'CY',
+            'Chexiya': 'CZ',
+            'Daniya': 'DK',
+            'Jibuti': 'DJ',
+            'Dominika': 'DM',
+            'Dominikan Respublikasi': 'DO',
+            'Ekvador': 'EC',
+            'Misr': 'EG',
+            'Salvador': 'SV',
+            'Ekvatorial Gvineya': 'GQ',
+            'Eritreya': 'ER',
+            'Estoniya': 'EE',
+            'Efiopiya': 'ET',
+            'Fiji': 'FJ',
+            'Finlandiya': 'FI',
+            'Fransiya': 'FR',
+            'Gabon': 'GA',
+            'Gambiya': 'GM',
+            'Gruziya': 'GE',
+            'Germaniya': 'DE',
+            'Gana': 'GH',
+            'Gretsiya': 'GR',
+            'Grenada': 'GD',
+            'Gvatemala': 'GT',
+            'Gvineya': 'GN',
+            'Gvineya-Bisau': 'GW',
+            'Gayana': 'GY',
+            'Gaiti': 'HT',
+            'Gonduras': 'HN',
+            'Vengriya': 'HU',
+            'Islandiya': 'IS',
+            'Hindiston': 'IN',
+            'Indoneziya': 'ID',
+            'Eron': 'IR',
+            'Iroq': 'IQ',
+            'Irlandiya': 'IE',
+            'Isroil': 'IL',
+            'Italiya': 'IT',
+            'Yamayka': 'JM',
+            'Yaponiya': 'JP',
+            'Iordaniya': 'JO',
+            'Qozogʻiston': 'KZ',
+            'Keniya': 'KE',
+            'Kiribati': 'KI',
+            'Kuvayt': 'KW',
+            'Qirgʻiziston': 'KG',
+            'Laos': 'LA',
+            'Latviya': 'LV',
+            'Livan': 'LB',
+            'Lesoto': 'LS',
+            'Liberiya': 'LR',
+            'Liviya': 'LY',
+            'Lixtenshteyn': 'LI',
+            'Litva': 'LT',
+            'Lyuksemburg': 'LU',
+            'Madagaskar': 'MG',
+            'Malavi': 'MW',
+            'Malayziya': 'MY',
+            'Maldiv': 'MV',
+            'Mali': 'ML',
+            'Malta': 'MT',
+            'Marshall orollari': 'MH',
+            'Mavritaniya': 'MR',
+            'Mavrikiy': 'MU',
+            'Meksika': 'MX',
+            'Mikroneziya': 'FM',
+            'Moldova': 'MD',
+            'Monako': 'MC',
+            'Moʻgʻuliston': 'MN',
+            'Chernogoriya': 'ME',
+            'Marokash': 'MA',
+            'Mozambik': 'MZ',
+            'Myanma': 'MM',
+            'Namibiya': 'NA',
+            'Nauru': 'NR',
+            'Nepal': 'NP',
+            'Niderlandiya': 'NL',
+            'Yangi Zelandiya': 'NZ',
+            'Nikaragua': 'NI',
+            'Niger': 'NE',
+            'Nigeriya': 'NG',
+            'Shimoliy Koreya': 'KP',
+            'Shimoliy Makedoniya': 'MK',
+            'Norvegiya': 'NO',
+            'Ummon': 'OM',
+            'Pokiston': 'PK',
+            'Palau': 'PW',
+            'Panama': 'PA',
+            'Papua-Yangi Gvineya': 'PG',
+            'Paragvay': 'PY',
+            'Peru': 'PE',
+            'Filippin': 'PH',
+            'Polsha': 'PL',
+            'Portugaliya': 'PT',
+            'Qatar': 'QA',
+            'Ruminiya': 'RO',
+            'Rossiya': 'RU',
+            'Ruanda': 'RW',
+            'Saudiya Arabistoni': 'SA',
+            'Senegal': 'SN',
+            'Serbiya': 'RS',
+            'Seyshel orollari': 'SC',
+            'Syerra-Leone': 'SL',
+            'Singapur': 'SG',
+            'Slovakiya': 'SK',
+            'Sloveniya': 'SI',
+            'Solomon orollari': 'SB',
+            'Somali': 'SO',
+            'Janubiy Afrika': 'ZA',
+            'Janubiy Koreya': 'KR',
+            'Janubiy Sudan': 'SS',
+            'Ispaniya': 'ES',
+            'Shri-Lanka': 'LK',
+            'Sudan': 'SD',
+            'Surinam': 'SR',
+            'Shvetsiya': 'SE',
+            'Shveytsariya': 'CH',
+            'Suriya': 'SY',
+            'Tojikiston': 'TJ',
+            'Tanzaniya': 'TZ',
+            'Tailand': 'TH',
+            'Timor-Leste': 'TL',
+            'Togo': 'TG',
+            'Tonga': 'TO',
+            'Trinidad va Tobago': 'TT',
+            'Tunis': 'TN',
+            'Turkiya': 'TR',
+            'Turkmaniston': 'TM',
+            'Tuvalu': 'TV',
+            'Uganda': 'UG',
+            'Ukraina': 'UA',
+            'BAA': 'AE',
+            'Buyuk Britaniya': 'GB',
+            'AQSH': 'US',
+            'Urugvay': 'UY',
+            'Oʻzbekiston': 'UZ',
+            'Vanuatu': 'VU',
+            'Vatikan': 'VA',
+            'Venesuela': 'VE',
             'Vyetnam': 'VN',
-            'AQSH va Isroil': 'IL'
+            'Yaman': 'YE',
+            'Zambiya': 'ZM',
+            'Zimbabve': 'ZW'
         };
 
         // Google Charts initialization

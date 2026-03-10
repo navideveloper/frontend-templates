@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monarchy - Botnet Boshqaruv Paneli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        :root {
+            --ios-gray-light: #F2F2F7;
+            --ios-gray: #8E8E93;
+            --ios-gray-dark: #1C1C1E;
+            --ios-blue: #007AFF;
+            --ios-green: #34C759;
+            --ios-red: #FF3B30;
+            --ios-orange: #FF9500;
+            --ios-purple: #AF52DE;
+            --ios-yellow: #FFCC00;
+            --ios-teal: #5AC8FA;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --card-radius: 18px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --nav-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #fdfdfd;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--ios-gray-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 6rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Sarlavha */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .header-left h1 {
+            font-weight: 700;
+            font-size: 28px;
+            color: var(--ios-gray-dark);
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            color: var(--ios-gray);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .time-display {
+            background-color: white;
+            padding: 10px 18px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+            font-weight: 600;
+            color: var(--ios-gray-dark);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--ios-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        /* Kartalar */
+        .card {
+            background-color: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--ios-gray-dark);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+        }
+
+        .devices .card-icon {
+            background-color: var(--ios-blue);
+        }
+
+        .commands .card-icon {
+            background-color: var(--ios-gray-dark);
+        }
+
+        .recent-devices .card-icon {
+            background-color: var(--ios-green);
+        }
+
+        /* Qurilmalar kartasi */
+        .devices-total {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--ios-gray-dark);
+            margin-bottom: 10px;
+        }
+
+        .devices-total span {
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: var(--ios-gray);
+        }
+
+        .devices-change {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .positive {
+            color: var(--ios-green);
+        }
+
+        .devices-chart {
+            height: 100px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            margin-top: 25px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background-color: var(--ios-blue);
+            border-radius: 8px 8px 0 0;
+            min-height: 5px;
+            position: relative;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .chart-bar:hover {
+            opacity: 1;
+        }
+
+        .chart-bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 11px;
+            color: var(--ios-gray);
+            font-weight: 500;
+        }
+
+        /* Buyruqlar statistikasi */
+        .commands-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 14px;
+            background-color: var(--ios-gray-light);
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--ios-gray-dark);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--ios-gray);
+            font-weight: 500;
+        }
+
+        /* Eng ko'p ishlatilgan buyruqlar */
+        .commands-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .command-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 10px;
+            background-color: var(--ios-gray-light);
+        }
+
+        .command-name {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--ios-gray-dark);
+        }
+
+        .command-count {
+            background-color: var(--ios-purple);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* So'nggi qurilmalar ro'yxati */
+        .devices-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .devices-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .devices-list::-webkit-scrollbar-track {
+            background: var(--ios-gray-light);
+            border-radius: 4px;
+        }
+
+        .devices-list::-webkit-scrollbar-thumb {
+            background: var(--ios-gray);
+            border-radius: 4px;
+        }
+
+        .device-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            background-color: var(--ios-gray-light);
+            transition: var(--transition);
+        }
+
+        .device-item:hover {
+            background-color: white;
+            box-shadow: var(--card-shadow);
+        }
+
+        .device-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--ios-blue);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .device-info {
+            flex: 1;
+        }
+
+        .device-info h4 {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: var(--ios-gray-dark);
+        }
+
+        .device-meta {
+            display: flex;
+            flex-direction: column;
+            font-size: 13px;
+            color: var(--ios-gray);
+        }
+
+        .device-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-online {
+            background-color: rgba(52, 199, 89, 0.15);
+            color: var(--ios-green);
+            border: 1px solid rgba(52, 199, 89, 0.3);
+        }
+
+        .status-offline {
+            background-color: rgba(142, 142, 147, 0.15);
+            color: var(--ios-gray);
+            border: 1px solid rgba(142, 142, 147, 0.3);
+        }
+
+        .status-idle {
+            background-color: rgba(255, 149, 0, 0.15);
+            color: var(--ios-orange);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+        }
+
+        /* Tezkor harakatlar */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .action-button {
+            flex: 1;
+            min-width: 200px;
+            background-color: white;
+            border: none;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            text-align: left;
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .action-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .action-deploy .action-icon {
+            background-color: var(--ios-green);
+        }
+
+        .action-scan .action-icon {
+            background-color: var(--ios-orange);
+        }
+
+        .action-attack .action-icon {
+            background-color: var(--ios-red);
+        }
+
+        .action-sync .action-icon {
+            background-color: var(--ios-blue);
+        }
+
+        .action-content h3 {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--ios-gray-dark);
+        }
+
+        .action-content p {
+            color: var(--ios-gray);
+            font-size: 14px;
+        }
+
+        /* iOS segmentli boshqaruv */
+        .ios-segmented-control {
+            display: inline-flex;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 4px;
+            margin-top: 10px;
+        }
+
+        .ios-segment {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: var(--ios-gray);
+        }
+
+        .ios-segment.active {
+            background-color: white;
+            color: var(--ios-blue);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* BOTTOM NAVIGATION */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            border-top-right-radius: 1rem;
+            border-top-left-radius: 1rem;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background-color: rgba(240, 250, 255, 0.7);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bottom-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-items-container {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            min-width: min-content;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            color: rgb(126, 127, 127);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .nav-item.active {
+            color: var(--ios-blue);
+        }
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-text {
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Desktop uchun */
+        @media (min-width: 768px) {
+            .nav-items-container {
+                justify-content: space-around;
+                max-width: 900px;
+                margin: 0 auto;
+            }
+            .bottom-nav {
+                border-radius: 1rem;
+                right: unset;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                max-width: 1000px;
+            }
+            
+            .nav-item {
+                min-width: 100px;
+            }
+        }
+
+        /* Mobil uchun */
+        @media (max-width: 767px) {
+            .bottom-nav {
+                padding: 0 5px;
+            }
+            
+            .nav-item {
+                min-width: 70px;
+                padding: 8px 10px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-button {
+                min-width: 100%;
+            }
+
+            .device-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-bottom: calc(var(--nav-height) + 10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sarlavha -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Monarchy</h1>
+                <p>Botnet boshqaruv markazi</p>
+            </div>
+            <div class="header-right">
+                <div class="time-display" id="current-time">10:45 AM</div>
+                <div class="user-profile">
+                    <div class="user-avatar">AD</div>
+                    <div>
+                        <div style="font-weight: 600;">Administrator</div>
+                        <div style="font-size: 12px; color: var(--ios-gray);">Root</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Qurilmalar kartasi -->
+            <div class="card devices">
+                <div class="card-header" style="margin-bottom: 0;">
+                    <h2 class="card-title">Qurilmalar Faollik</h2>
+                            <img src="https://cdn-icons-png.freepik.com/512/4505/4505701.png" width="50px" alt="">
+                </div>
+                <div class="devices-total" style="margin-bottom: 0;">
+                    8 <span>/ 16</span>
+                </div>
+                <div class="devices-change positive" style="margin-bottom: 0;">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+4 oxirgi 24 soatda</span>
+                </div>
+                
+                <!-- Oylar bo'yicha faollik -->
+                <div class="ios-segmented-control">
+                    <div class="ios-segment active">2026</div>
+                    <div class="ios-segment">2025</div>
+                </div>
+                
+                <!-- Oylik faol qurilmalar grafigi -->
+                <div class="devices-chart">
+                    <div class="chart-bar" style="height: 65%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Yan</div>
+                    </div>
+                    <div class="chart-bar" style="height: 70%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Fev</div>
+                    </div>
+                    <div class="chart-bar" style="height: 82%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Mar</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Apr</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">May</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Iyn</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Iyl</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Avg</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Sen</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Okt</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Noy</div>
+                    </div>
+                    <div class="chart-bar" style="height: 0%; background-color: var(--ios-blue);">
+                        <div class="chart-bar-label">Dek</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buyruqlar statistikasi -->
+            <div class="card commands">
+                <div class="card-header">
+                    <h2 class="card-title">Buyruqlar Statistikasi</h2>
+                    <img src="https://www.freeiconspng.com/thumbs/powershell-icon/powershell-icon-24.png" width="50px" alt="">
+                </div>
+                        <div class="command-item" style="margin-bottom: 10px;">
+                            <span class="command-name">Jami buyruqlar</span>
+                            <span class="command-count">70</span>
+                        </div>
+
+                <!-- Eng ko'p ishlatilgan buyruqlar -->
+                <div>
+                    <h3 style="font-size: 14px; color: var(--ios-gray); margin-bottom: 12px;">Eng ko'p ishlatilgan</h3>
+                    <div class="commands-list">
+                        <div class="command-item">
+                            <span class="command-name">system.info</span>
+                            <span class="command-count">3,247</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-name">network.scan</span>
+                            <span class="command-count">2,891</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-name">payload.update</span>
+                            <span class="command-count">1,654</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-name">ddos.udp</span>
+                            <span class="command-count">1,247</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- So'nggi qurilmalar ro'yxati -->
+            <div class="card recent-devices" style="grid-column: span 1;">
+                <div class="card-header">
+                    <h2 class="card-title">So'nggi Qo'shilgan</h2>
+                            <img src="https://www.freepnglogos.com/uploads/computer-png/file-gnome-computer-svg-wikipedia-40.png" width="50px" alt="">
+                </div>
+                
+                <div class="devices-list">
+                    <div class="device-item">
+                        
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/009/887/131/small/computer-monitor-free-png.png" width="50px" alt="">
+                        
+                        <div class="device-info">
+                            <h4>Windows 11 Pro</h4>
+                            <div class="device-meta">
+                                <span>2024-03-15</span>
+                                <span><i class="fas fa-globe"></i> 192.168.1.45</span>
+                            </div>
+                        </div>
+                        <div class="device-status status-online">Online</div>
+                    </div>
+
+                    <div class="device-item">
+                        
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/009/887/131/small/computer-monitor-free-png.png" width="50px" alt="">
+                        
+                        <div class="device-info">
+                            <h4>Windows 10 Enterprise</h4>
+                            <div class="device-meta">
+                                <span>2024-03-14</span>
+                                <span><i class="fas fa-globe"></i> 87.245.67.89</span>
+                            </div>
+                        </div>
+                        <div class="device-status status-online">Online</div>
+                    </div>
+
+                    <div class="device-item">
+                        
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/009/887/131/small/computer-monitor-free-png.png" width="50px" alt="">
+
+                        
+                        <div class="device-info">
+                            <h4>Windows 10 Home</h4>
+                            <div class="device-meta">
+                                <span>2024-03-14</span>
+                                <span><i class="fas fa-globe"></i> 103.156.89.23</span>
+                            </div>
+                        </div>
+                        <div class="device-status status-online">Online</div>
+                    </div>
+
+                    <div class="device-item">
+                        
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/009/887/131/small/computer-monitor-free-png.png" width="50px" alt="">
+                        
+                        <div class="device-info">
+                            <h4>Windows 11</h4>
+                            <div class="device-meta">
+                                <span>2024-03-13</span>
+                                <span><i class="fas fa-globe"></i> 45.67.123.89</span>
+                            </div>
+                        </div>
+                        <div class="device-status status-offline">Offline</div>
+                    </div>
+
+                    <div class="device-item">
+                        
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/009/887/131/small/computer-monitor-free-png.png" width="50px" alt="">
+                        
+                        <div class="device-info">
+                            <h4>Windows 10 Pro</h4>
+                            <div class="device-meta">
+                                <span>2024-03-12</span>
+                                <span><i class="fas fa-globe"></i> 179.56.34.78</span>
+                            </div>
+                        </div>
+                        <div class="device-status status-offline">Offline</div>
+                    </div>
+
+                    <div class="device-item">
+                        <img src="https://static.vecteezy.com/system/resources/thumbnails/009/887/131/small/computer-monitor-free-png.png" width="50px" alt="">
+                        <div class="device-info">
+                            <h4>Windows 11</h4>
+                            <div class="device-meta">
+                                <span>2024-03-11</span>
+                                <span><i class="fas fa-globe"></i> 24.67.89.123</span>
+                            </div>
+                        </div>
+                        <div class="device-status status-online">Online</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tezkor harakatlar -->
+        <!-- <div class="quick-actions">
+            <button class="action-button action-deploy">
+                <div class="action-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Payload yuklash</h3>
+                    <p>Yangi modullarni joylashtirish</p>
+                </div>
+            </button>
+            
+            <button class="action-button action-scan">
+                <div class="action-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Tarmoqni skanerlash</h3>
+                    <p>Yangi qurilmalarni qidirish</p>
+                </div>
+            </button>
+            
+            <button class="action-button action-attack">
+                <div class="action-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Masshtabli hujum</h3>
+                    <p>DDoS hujumini boshlash</p>
+                </div>
+            </button>
+            
+            <button class="action-button action-sync">
+                <div class="action-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Sinxronlash</h3>
+                    <p>Barcha botlarni yangilash</p>
+                </div>
+            </button>
+        </div> -->
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+        <div class="nav-items-container">
+            <a class="nav-item active" data-page="dashboard">
+                <div class="nav-icon">
+                    <ion-icon name="home-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Asosiy</div>
+            </a>
+            
+            <a class="nav-item" data-page="devices">
+                <div class="nav-icon">
+                    <ion-icon name="desktop-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Qurilmalar</div>
+            </a>
+            
+            <a class="nav-item" data-page="commands">
+                <div class="nav-icon">
+                    <ion-icon name="terminal-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Buyruqlar</div>
+            </a>
+            
+            <a class="nav-item" data-page="network">
+                <div class="nav-icon">
+                    <ion-icon name="git-network-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Guruhlar</div>
+            </a>
+            
+            <a class="nav-item" data-page="payloads">
+                <div class="nav-icon">
+                    <ion-icon name="document-attach-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Dasturiy Paket</div>
+            </a>
+            
+            <a class="nav-item" data-page="logs">
+                <div class="nav-icon">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                </div>
+                <div class="nav-text">Loglar</div>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // Vaqtni yangilash
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            document.getElementById('current-time').textContent = timeString;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 60000);
+        
+        // Segmentli boshqaruv
+        document.querySelectorAll('.ios-segment').forEach(segment => {
+            segment.addEventListener('click', function() {
+                document.querySelectorAll('.ios-segment').forEach(s => {
+                    s.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Bottom navigatsiya
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                navItems.forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                
+                this.classList.add('active');
+                
+                const page = this.getAttribute('data-page');
+                console.log(`${page.charAt(0).toUpperCase() + page.slice(1)} sahifasiga o'tildi`);
+                
+                if (window.innerWidth < 768) {
+                    this.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+                }
+            });
+        });
+        
+        // Navigatsiya overflow tekshiruvi
+        const bottomNav = document.getElementById('bottomNav');
+        const navContainer = bottomNav.querySelector('.nav-items-container');
+        
+        function checkNavOverflow() {
+            const containerWidth = bottomNav.clientWidth;
+            const contentWidth = navContainer.scrollWidth;
+            
+            if (contentWidth > containerWidth) {
+                navContainer.style.justifyContent = 'flex-start';
+            } else {
+                navContainer.style.justifyContent = 'center';
+            }
+        }
+        
+        window.addEventListener('resize', checkNavOverflow);
+        setTimeout(checkNavOverflow, 100);
+    </script>
+</body>
+</html>

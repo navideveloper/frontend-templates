@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish | Tizimga kirish</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background-color: #f2f2f7;
+            color: #000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 0;
+        }
+        
+        .header {
+            padding: 24px 20px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 15px;
+            color: #8e8e93;
+            line-height: 1.4;
+        }
+        
+        /* Form Styles */
+        .form-container {
+            padding: 0 20px 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 6px;
+            padding-left: 2px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px solid #c7c7cc;
+            border-radius: 12px;
+            font-size: 18px;
+            transition: all 0.2s;
+            background-color: #fff;
+            color: #000;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+        
+        .form-control.error {
+            border-color: #ff3b30;
+        }
+        
+        .form-control.success {
+            border-color: #34c759;
+        }
+        
+        .error-message {
+            color: #ff3b30;
+            font-size: 13px;
+            margin-top: 5px;
+            padding-left: 2px;
+            display: none;
+        }
+        
+        /* Phone input styling */
+        .phone-input-group {
+            position: relative;
+        }
+        
+        .phone-prefix {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #000;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        /* Password Field */
+        .password-field {
+            position: relative;
+        }
+        
+        .password-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #007aff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        /* Checkbox styles */
+        .checkbox-group {
+            margin-bottom: 24px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            color: #000;
+            user-select: none;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #007aff;
+        }
+        
+        .checkbox-text {
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .checkbox-text strong {
+            color: #007aff;
+            font-weight: 600;
+        }
+        
+        /* Buttons */
+        .submit-btn {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0056cc;
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 16px;
+        }
+        
+        .forgot-password a {
+            color: #007aff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Success State */
+        .success-message {
+            background-color: #d1f7c4;
+            color: #1e7e34;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+        
+        .success-message i {
+            font-size: 18px;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 12px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .form-control {
+                font-size: 16px;
+                padding: 14px;
+            }
+            
+            .submit-btn {
+                padding: 16px;
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tizimga Kirish</h1>
+            <p>Telefon raqamingiz va parolingiz bilan tizimga kiring</p>
+        </div>
+        
+        <div class="form-container">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginPhone">Telefon raqami</label>
+                    <div class="phone-input-group">
+                        <input type="text" name="login" id="loginPhone" class="form-control" placeholder="90 123 45 67" required>
+                    </div>
+                    <div class="error-message" id="loginPhone-error">To'g'ri telefon raqamini kiriting</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Parol</label>
+                    <div class="password-field">
+                        <input type="password" name="password" id="loginPassword" class="form-control" placeholder="Parolingizni kiriting" required>
+                        <i class="fas fa-eye password-icon" id="toggleLoginPassword"></i>
+                    </div>
+                    <div class="error-message" id="loginPassword-error">Parolni kiriting</div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="notifyAdmin" style="width: 2rem;" id="notifyAdmin">
+                        <span class="checkbox-text">
+                            <i class="fas fa-shield-alt" style="color: #007aff;"></i> 
+                            <strong>Adminga xabar berish</strong> - tizimga xavfsiz kirishingiz ta'minlanishi uchun
+                        </span>
+                    </label>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i> Tizimga kirish
+                </button>
+                
+                <div class="success-message" id="loginSuccessMessage">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Muvaffaqiyatli tizimga kirdingiz!</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const loginForm = document.getElementById('loginForm');
+            const loginPhoneInput = document.getElementById('loginPhone');
+            const loginPasswordInput = document.getElementById('loginPassword');
+            const toggleLoginPasswordBtn = document.getElementById('toggleLoginPassword');
+            const loginSuccessMessage = document.getElementById('loginSuccessMessage');
+            const notifyAdminCheckbox = document.getElementById('notifyAdmin');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            
+            // Toggle password visibility
+            toggleLoginPasswordBtn.addEventListener('click', function() {
+                const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                loginPasswordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+            
+            // Form validation functions
+            function showError(inputElement, errorElement, message) {
+                inputElement.classList.add('error');
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+            
+            function showSuccess(inputElement, errorElement) {
+                inputElement.classList.remove('error');
+                inputElement.classList.add('success');
+                errorElement.style.display = 'none';
+            }
+            
+            // Validate phone number (only digits and length)
+            function validatePhone(phone) {
+                const cleaned = phone.replace(/\s/g, '');
+                return /^\d{9}$/.test(cleaned);
+            }
+            
+            // Format phone number as user types
+            loginPhoneInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                
+                // Format with spaces
+                if (value.length > 0) {
+                    if (value.length <= 2) {
+                        value = value;
+                    } else if (value.length <= 5) {
+                        value = value.substring(0, 2) + ' ' + value.substring(2);
+                    } else if (value.length <= 7) {
+                        value = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5);
+                    } else {
+                        value = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5, 7) + ' ' + value.substring(7, 9);
+                    }
+                }
+                
+                this.value = value;
+            });
+            
+            loginPhoneInput.addEventListener('blur', function() {
+                const errorElement = document.getElementById('loginPhone-error');
+                if (validatePhone(this.value)) {
+                    showSuccess(this, errorElement);
+                } else if (this.value.trim() !== '') {
+                    showError(this, errorElement, "9 xonali telefon raqamini kiriting");
+                }
+            });
+            
+            loginPasswordInput.addEventListener('blur', function() {
+                const errorElement = document.getElementById('loginPassword-error');
+                if (this.value.trim().length > 0) {
+                    showSuccess(this, errorElement);
+                }
+            });
+            
+            // Login form submission
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Validate all fields
+                let isValid = true;
+                
+                // Validate phone
+                if (!validatePhone(loginPhoneInput.value)) {
+                    showError(loginPhoneInput, document.getElementById('loginPhone-error'), "9 xonali telefon raqamini kiriting");
+                    isValid = false;
+                } else {
+                    showSuccess(loginPhoneInput, document.getElementById('loginPhone-error'));
+                }
+                
+                // Validate password
+                if (loginPasswordInput.value.trim().length === 0) {
+                    showError(loginPasswordInput, document.getElementById('loginPassword-error'), "Parolni kiriting");
+                    isValid = false;
+                } else {
+                    showSuccess(loginPasswordInput, document.getElementById('loginPassword-error'));
+                }
+                
+                // If form is valid, simulate login
+                if (isValid) {
+                    // Check if "Notify Admin" is checked
+                    if (notifyAdminCheckbox.checked) {
+                        console.log("Admin notified about login attempt");
+                        // Here you would send notification to admin
+                        // For demo, we'll show an alert
+                        alert("Adminga xabar yuborildi! Tez orada siz bilan bog'lanamiz.");
+                    }
+                    
+                    loginSuccessMessage.style.display = 'flex';
+                    
+                    // Reset form styles
+                    const formControls = loginForm.querySelectorAll('.form-control');
+                    formControls.forEach(control => {
+                        control.classList.remove('success', 'error');
+                    });
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        loginSuccessMessage.style.display = 'none';
+                        loginForm.reset();
+                    }, 3000);
+                }
+            });
+            
+            // Forgot password link
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert("Parolni tiklash funksiyasi demo rejimda ishlamaydi. Haqiqiy ilovada bu sizning email yoki telefon raqamingizga parol tiklash havolasini yuboradi.");
+            });
+        });
+    </script>
+</body>
+</html>

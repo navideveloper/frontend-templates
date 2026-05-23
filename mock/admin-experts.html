@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tekshiruvchilar — Admin Panel</title>
+  <meta name="description" content="Tekshiruvchilarni boshqarish sahifasi" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:         hsl(45, 30%, 98%);
+      --fg:         hsl(200, 25%, 15%);
+      --card:       hsl(0, 0%, 100%);
+      --primary:    hsl(351.69deg, 71.14%, 59.59%);
+      --primary-fg: hsl(0, 0%, 100%);
+      --secondary:  hsl(40, 90%, 55%);
+      --muted:      hsl(45, 20%, 92%);
+      --muted-fg:   hsl(200, 15%, 45%);
+      --border:     hsl(200, 15%, 88%);
+      --accent:     hsl(351.69deg, 60%, 92%);
+      --radius:     0.75rem;
+      --success:    hsl(145, 63%, 42%);
+      --warning:    hsl(35, 90%, 50%);
+      --info:       hsl(210, 90%, 50%);
+      --purple:     hsl(270, 60%, 55%);
+      --shadow-soft: 0 4px 20px -4px hsla(200, 25%, 15%, 0.08);
+      --shadow-card: 0 8px 30px -8px hsla(200, 25%, 15%, 0.12);
+      --shadow-glow: 0 0 40px hsla(351.69deg, 71.14%, 59.59%, 0.25);
+      --font-body:   'Poppins', system-ui, -apple-system, sans-serif;
+      --font-arabic: 'Tajawal', system-ui, sans-serif;
+      --destructive: hsl(0, 84%, 60%);
+    }
+
+    .dark {
+      --bg:         hsl(220, 25%, 8%);
+      --fg:         hsl(45, 20%, 95%);
+      --card:       hsl(220, 25%, 12%);
+      --muted:      hsl(220, 20%, 18%);
+      --muted-fg:   hsl(45, 15%, 60%);
+      --border:     hsl(220, 20%, 20%);
+      --accent:     hsl(351.69deg, 45%, 25%);
+      --shadow-soft: 0 4px 20px -4px rgba(0, 0, 0, 0.3);
+      --shadow-card: 0 8px 30px -8px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 40px hsla(351.69deg, 65%, 55%, 0.25);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.5;
+      min-height: 100vh;
+      font-weight: 400;
+    }
+
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+    .admin-layout { display: flex; min-height: 100vh; }
+
+    /* ─── Sidebar ──────────────────────────────────────── */
+    .sidebar {
+      width: 260px;
+      background-color: var(--card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 40;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      width: 2.5rem; height: 2.5rem;
+      border-radius: calc(var(--radius) + 4px);
+      background: linear-gradient(135deg, var(--primary), hsl(351.69deg, 71.14%, 70%));
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo span {
+      font-family: var(--font-arabic);
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--primary-fg);
+    }
+
+    .sidebar-brand {
+      font-weight: 700; font-size: 1rem;
+      color: var(--fg); line-height: 1.2;
+    }
+
+    .sidebar-brand small {
+      display: block; font-size: 0.675rem;
+      font-weight: 500; color: var(--muted-fg);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    .sidebar-nav {
+      flex: 1; overflow-y: auto;
+      padding: 1rem 0.75rem;
+      display: flex; flex-direction: column; gap: 0.25rem;
+    }
+
+    .sidebar-nav a {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.625rem 0.875rem;
+      border-radius: calc(var(--radius) + 4px);
+      font-size: 0.85rem; font-weight: 500;
+      color: var(--muted-fg);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .sidebar-nav a:hover { background-color: var(--muted); color: var(--fg); }
+
+    .sidebar-nav a.active {
+      background: linear-gradient(135deg, var(--primary), hsl(351.69deg, 71.14%, 65%));
+      color: var(--primary-fg); font-weight: 600;
+      box-shadow: 0 4px 12px hsla(351.69deg, 71.14%, 55%, 0.3);
+    }
+
+    .sidebar-nav a svg { width: 1.15rem; height: 1.15rem; flex-shrink: 0; }
+
+    .sidebar-nav .nav-section {
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted-fg);
+      padding: 1rem 0.875rem 0.375rem;
+    }
+
+    .sidebar-footer {
+      padding: 0.75rem;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer a {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.625rem 0.875rem;
+      border-radius: calc(var(--radius) + 4px);
+      font-size: 0.85rem; font-weight: 500;
+      color: var(--muted-fg);
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-footer a:hover { background-color: var(--muted); color: var(--destructive); }
+    .sidebar-footer svg { width: 1.2rem; }
+
+    /* ─── Main Content ─────────────────────────────────── */
+    .main-content {
+      flex: 1; margin-left: 260px;
+      display: flex; flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ─── Topbar ───────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 30;
+      background-color: hsla(45, 30%, 98%, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem; height: 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .dark .topbar { background-color: hsla(220, 25%, 8%, 0.95); }
+
+    .topbar-left { display: flex; align-items: center; gap: 0.75rem; }
+
+    .menu-toggle {
+      display: none; width: 2.5rem; height: 2.5rem;
+      align-items: center; justify-content: center;
+      border-radius: calc(var(--radius) + 4px);
+      color: var(--muted-fg);
+    }
+    .menu-toggle:hover { background-color: var(--muted); }
+
+    .topbar-title { font-size: 1.1rem; font-weight: 700; }
+
+    .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
+
+    .btn-icon {
+      width: 2.5rem; height: 2.5rem;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: calc(var(--radius) + 4px);
+      color: var(--muted-fg); transition: background-color 0.15s;
+    }
+    .btn-icon:hover { background-color: var(--muted); color: var(--fg); }
+
+    .admin-badge {
+      background: linear-gradient(135deg, var(--purple), hsl(270, 55%, 45%));
+      color: #fff; font-size: 0.7rem; font-weight: 700;
+      padding: 0.25rem 0.6rem; border-radius: 9999px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ─── Content ──────────────────────────────────────── */
+    .content { padding: 1.5rem; flex: 1; min-width: 0; }
+
+    /* ─── Stat Cards ───────────────────────────────────── */
+    .stat-grid {
+      display: grid; gap: 1rem; margin-bottom: 2rem;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 480px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .stat-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1rem;
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    @media (min-width: 480px) { .stat-card { padding: 1.25rem; gap: 0.875rem; } }
+
+    .stat-card:hover {
+      border-color: hsla(351.69deg, 71.14%, 59.59%, 0.4);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .stat-icon {
+      width: 2.5rem; height: 2.5rem;
+      border-radius: calc(var(--radius) + 4px);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    @media (min-width: 480px) { .stat-icon { width: 3rem; height: 3rem; } }
+
+    .stat-icon.primary {
+      background: linear-gradient(135deg, var(--primary), hsl(351.69deg, 71.14%, 70%));
+      color: #fff; box-shadow: 0 4px 12px hsla(351.69deg, 71.14%, 55%, 0.3);
+    }
+    .stat-icon.success {
+      background: linear-gradient(135deg, var(--success), hsl(145, 55%, 38%));
+      color: #fff; box-shadow: 0 4px 12px hsla(145, 63%, 42%, 0.3);
+    }
+    .stat-icon.warning {
+      background: linear-gradient(135deg, var(--warning), hsl(35, 80%, 45%));
+      color: #fff; box-shadow: 0 4px 12px hsla(35, 90%, 50%, 0.3);
+    }
+    .stat-icon.purple {
+      background: linear-gradient(135deg, var(--purple), hsl(270, 55%, 45%));
+      color: #fff; box-shadow: 0 4px 12px hsla(270, 60%, 55%, 0.3);
+    }
+
+    .stat-icon svg { width: 1.2rem; height: 1.2rem; }
+    @media (min-width: 480px) { .stat-icon svg { width: 1.4rem; height: 1.4rem; } }
+
+    .stat-info h4 {
+      font-size: 0.7rem; font-weight: 600;
+      color: var(--muted-fg); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 0.25rem;
+    }
+
+    .stat-value { font-size: 1.5rem; font-weight: 800; line-height: 1; color: var(--fg); }
+    @media (min-width: 480px) { .stat-value { font-size: 1.75rem; } }
+
+    .stat-change { font-size: 0.7rem; font-weight: 600; margin-top: 0.25rem; }
+    .stat-change.up { color: var(--success); }
+    .stat-change.down { color: var(--destructive); }
+
+    /* ─── Section Card ─────────────────────────────────── */
+    .section-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 0.75rem;
+    }
+    @media (min-width: 640px) { .section-header { padding: 1rem 1.25rem; } }
+
+    .section-header h3 {
+      font-size: 0.9rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    @media (min-width: 640px) { .section-header h3 { font-size: 1rem; } }
+
+    .section-header h3 svg { width: 1.1rem; height: 1.1rem; color: var(--primary); flex-shrink: 0; }
+
+    .section-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 0.4rem; font-size: 0.75rem; font-weight: 600;
+      border-radius: calc(var(--radius) + 4px);
+      padding: 0.45rem 0.75rem;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    @media (min-width: 640px) { .btn { font-size: 0.8rem; padding: 0.5rem 0.875rem; } }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), hsl(351.69deg, 71.14%, 65%));
+      color: var(--primary-fg);
+    }
+    .btn-primary:hover { opacity: 0.9; box-shadow: 0 4px 12px hsla(351.69deg, 71.14%, 55%, 0.35); }
+
+    .btn-outline { border: 1px solid var(--border); background-color: var(--card); color: var(--fg); }
+    .btn-outline:hover { background-color: var(--muted); }
+
+    .btn-success { background: linear-gradient(135deg, var(--success), hsl(145, 55%, 38%)); color: #fff; }
+    .btn-success:hover { opacity: 0.9; }
+
+    .btn-destructive { background-color: var(--destructive); color: #fff; }
+    .btn-destructive:hover { opacity: 0.9; }
+
+    .btn-sm {
+      padding: 0.3rem 0.55rem; font-size: 0.7rem;
+      border-radius: calc(var(--radius) + 2px);
+    }
+    @media (min-width: 640px) { .btn-sm { padding: 0.35rem 0.65rem; font-size: 0.75rem; } }
+
+    .section-body { padding: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* ─── Table ────────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+
+    .data-table thead th {
+      padding: 0.6rem 0.75rem;
+      font-size: 0.65rem; font-weight: 600;
+      color: var(--muted-fg); text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--border);
+      text-align: left; white-space: nowrap;
+      background-color: var(--card);
+      position: sticky; top: 0;
+    }
+    @media (min-width: 640px) { .data-table thead th { padding: 0.7rem 1rem; font-size: 0.7rem; } }
+
+    .data-table tbody td {
+      padding: 0.65rem 0.75rem;
+      font-size: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle; white-space: nowrap;
+    }
+    @media (min-width: 640px) { .data-table tbody td { padding: 0.75rem 1rem; font-size: 0.8rem; } }
+
+    .data-table tbody tr { transition: background-color 0.15s; }
+    .data-table tbody tr:hover { background-color: var(--muted); }
+
+    .user-cell { display: flex; align-items: center; gap: 0.4rem; }
+    @media (min-width: 640px) { .user-cell { gap: 0.5rem; } }
+
+    .avatar-sm {
+      width: 1.75rem; height: 1.75rem;
+      border-radius: 7px;
+      background: linear-gradient(135deg, hsl(351.69deg, 60%, 92%), hsl(351.69deg, 50%, 85%));
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 0.65rem; font-weight: 700;
+      color: var(--primary);
+    }
+    @media (min-width: 640px) { .avatar-sm { width: 2rem; height: 2rem; border-radius: 8px; font-size: 0.7rem; } }
+
+    .dark .avatar-sm {
+      background: linear-gradient(135deg, hsl(351.69deg, 45%, 25%), hsl(351.69deg, 40%, 20%));
+    }
+
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 0.18rem 0.5rem; border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.02em;
+    }
+    @media (min-width: 640px) { .badge { padding: 0.2rem 0.6rem; font-size: 0.7rem; } }
+
+    .badge-success { background-color: hsla(145, 63%, 42%, 0.12); color: var(--success); }
+    .badge-warning { background-color: hsla(35, 90%, 50%, 0.12); color: var(--warning); }
+    .badge-info { background-color: hsla(210, 90%, 50%, 0.12); color: var(--info); }
+    .badge-purple { background-color: hsla(270, 60%, 55%, 0.12); color: var(--purple); }
+    .badge-primary { background-color: hsla(351.69deg, 71.14%, 59.59%, 0.12); color: var(--primary); }
+
+    .text-right { text-align: right; }
+    .text-muted { color: var(--muted-fg); font-size: 0.7rem; }
+    @media (min-width: 640px) { .text-muted { font-size: 0.75rem; } }
+
+    .font-mono {
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-weight: 600; font-size: 0.75rem;
+    }
+    @media (min-width: 640px) { .font-mono { font-size: 0.8rem; } }
+
+    .text-success { color: var(--success); font-weight: 600; }
+    .text-danger { color: var(--destructive); font-weight: 600; }
+
+    /* ─── Modal (o'qituvchi qo'shish) ──────────────────── */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background-color: var(--card);
+      border-radius: 1rem;
+      width: 90%;
+      max-width: 500px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      animation: slideUp 0.3s ease-out;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .modal-close {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted-fg);
+      background: none;
+      border: none;
+    }
+    .modal-close:hover {
+      color: var(--fg);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--muted-fg);
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+
+    /* ─── Footer ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      background-color: var(--card);
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem; color: var(--muted-fg);
+      text-align: center;
+    }
+    @media (min-width: 640px) { footer { padding: 1rem 1.5rem; font-size: 0.8rem; } }
+
+    /* ─── Mobile Responsive ────────────────────────────── */
+    @media (max-width: 1023px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .menu-toggle { display: flex; }
+
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0, 0, 0, 0.45); z-index: 35;
+      }
+      .sidebar-overlay.active { display: block; }
+
+      .topbar { padding: 0 1rem; }
+      .content { padding: 1rem; }
+
+      .topbar-title { font-size: 1rem; }
+      .admin-badge { font-size: 0.65rem; padding: 0.2rem 0.5rem; }
+
+      .section-header { flex-direction: column; align-items: flex-start; }
+      .section-actions { width: 100%; justify-content: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .stat-card { flex-direction: row; align-items: flex-start; gap: 0.8rem; }
+      .btn { width: 100%; justify-content: center; }
+      .section-actions { flex-direction: row; width: 100%; }
+      .section-actions .btn { width: 100%; }
+      .topbar-right { gap: 0.25rem; }
+      .admin-badge { display: none; }
+    }
+
+    /* ─── Animations ───────────────────────────────────── */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    .animate-slide-up { opacity: 0; animation: slideUp 0.4s ease-out forwards; }
+    .delay-100 { animation-delay: 100ms; }
+    .delay-200 { animation-delay: 200ms; }
+    .delay-300 { animation-delay: 300ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="admin-layout">
+
+    <!-- ═══════ SIDEBAR ═══════ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo"><span>M</span></div>
+        <div class="sidebar-brand">Mock<small>Admin Panel</small></div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">Asosiy</div>
+        <a href="dashboard.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+          </svg>
+          Dashboard
+        </a>
+
+        <div class="nav-section">Boshqaruv</div>
+        <a href="#" class="active">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/>
+            <path d="M12 17v4"/><path d="M9 21h6"/><path d="M8 7h8"/><path d="M8 11h5"/>
+          </svg>
+          Tekshiruvchilar
+        </a>
+        <a href="page-users.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Foydalanuvchilar
+        </a>
+
+        <div class="nav-section">Moliya</div>
+        <a href="page-topups.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
+            <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+          </svg>
+          Hisob to'ldirishlar
+        </a>
+        <a href="page-earnings.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+            <path d="M3 20h18"/>
+          </svg>
+          Tushumlar
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="./dashboard.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
+          </svg>
+          Saytga qaytish
+        </a>
+      </div>
+    </aside>
+
+    <!-- ═══════ MAIN CONTENT ═══════ -->
+    <div class="main-content">
+
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menuToggle" aria-label="Menyuni ochish">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <span class="topbar-title">Tekshiruvchilar</span>
+        </div>
+        <div class="topbar-right">
+          <span class="admin-badge">ADMIN</span>
+          <button class="btn-icon" id="themeToggle" aria-label="Tungi rejim" title="Tungi rejim">
+            <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            </svg>
+            <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="content" id="contentArea">
+
+        <!-- Statistika kartalari -->
+        <div class="stat-grid">
+          <div class="stat-card animate-slide-up delay-100">
+            <div class="stat-icon primary">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h4>Jami tekshiruvchilar</h4>
+              <div class="stat-value" id="totalTeachers">32</div>
+              <div class="stat-change up">↑ 3 ta yangi</div>
+            </div>
+          </div>
+          <div class="stat-card animate-slide-up delay-200">
+            <div class="stat-icon success">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h4>Faol tekshiruvchilar</h4>
+              <div class="stat-value" id="activeTeachers">28</div>
+              <div class="stat-change up">↑ 2 bu oyda</div>
+            </div>
+          </div>
+          <div class="stat-card animate-slide-up delay-300">
+            <div class="stat-icon warning">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h4>Jami testlar</h4>
+              <div class="stat-value">3,842</div>
+              <div class="stat-change up">↑ 24%</div>
+            </div>
+          </div>
+          <div class="stat-card animate-slide-up delay-300">
+            <div class="stat-icon purple">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h4>O'rtacha talabalar</h4>
+              <div class="stat-value">24</div>
+              <div class="stat-change up">har bir tekshiruvchi</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tekshiruvchilar jadvali -->
+        <div class="section-card animate-slide-up delay-200">
+          <div class="section-header">
+            <h3>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              Tekshiruvchilar ro'yxati
+            </h3>
+            <div class="section-actions">
+              <button class="btn btn-outline btn-sm" id="exportBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Eksport
+              </button>
+              <button class="btn btn-primary btn-sm" id="addTeacherBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                Tekshiruvchi qo'shish
+              </button>
+            </div>
+          </div>
+          <div class="section-body">
+            <table class="data-table" id="teachersTable">
+              <thead>
+                <tr><th>O'qituvchi</th><th>Telefon raqam</th><th>Fan</th><th>Talabalar</th><th>Testlar</th><th>Holat</th><th>Amallar</th></tr>
+              </thead>
+              <tbody id="teachersTableBody">
+                <tr>
+                  <td><div class="user-cell"><div class="avatar-sm">D</div>Doniyor Arabic</div></td>
+                  <td>+998 90 111 22 33</td>
+                  <td><span class="badge badge-purple">Arab tili</span></td>
+                  <td>856</td>
+                  <td>124</td>
+                  <td><span class="badge badge-success status-badge">Faol</span></td>
+                  <td><button class="btn btn-outline btn-sm edit-btn" data-id="1">Tahrirlash</button></td>
+                </tr>
+                <tr>
+                  <td><div class="user-cell"><div class="avatar-sm">M</div>Muhammad Ali</div></td>
+                  <td>+998 91 222 33 44</td>
+                  <td><span class="badge badge-info">Nahv</span></td>
+                  <td>432</td>
+                  <td>67</td>
+                  <td><span class="badge badge-success status-badge">Faol</span></td>
+                  <td><button class="btn btn-outline btn-sm edit-btn" data-id="2">Tahrirlash</button></td>
+                </tr>
+                <tr>
+                  <td><div class="user-cell"><div class="avatar-sm">A</div>Aisha Umar</div></td>
+                  <td>+998 93 333 44 55</td>
+                  <td><span class="badge badge-warning">Sarf</span></td>
+                  <td>298</td>
+                  <td>43</td>
+                  <td><span class="badge badge-warning status-badge">Tanaffusda</span></td>
+                  <td><button class="btn btn-outline btn-sm edit-btn" data-id="3">Tahrirlash</button></td>
+                </tr>
+                <tr>
+                  <td><div class="user-cell"><div class="avatar-sm">H</div>Hasan Tursunov</div></td>
+                  <td>+998 94 444 55 66</td>
+                  <td><span class="badge badge-purple">Arab tili</span></td>
+                  <td>567</td>
+                  <td>89</td>
+                  <td><span class="badge badge-success status-badge">Faol</span></td>
+                  <td><button class="btn btn-outline btn-sm edit-btn" data-id="4">Tahrirlash</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <footer><p>© Salokhiddinov 2026. Barcha huquqlar himoyalangan.</p></footer>
+    </div>
+  </div>
+
+  <!-- Modal (Tekshiruvchi qo'shish) -->
+  <div id="teacherModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Tekshiruvchi qo'shish</h3>
+        <button class="modal-close" id="closeModal">&times;</button>
+      </div>
+      <form id="teacherForm">
+        <div class="form-group">
+          <label>Ism familiya</label>
+          <input type="text" id="teacherName" required placeholder="Masalan: Alisher Navoiy">
+        </div>
+        <div class="form-group">
+          <label>Telefon raqam</label>
+          <input type="text" id="teacherPhone" required placeholder="+998 90 123 45 67">
+        </div>
+        <div class="form-group">
+          <label>Fan</label>
+          <select id="teacherSubject">
+            <option value="Arab tili">Arab tili</option>
+            <option value="Nahv">Nahv</option>
+            <option value="Sarf">Sarf</option>
+            <option value="Balog'at">Balog'at</option>
+            <option value="Tafsir">Tafsir</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Holat</label>
+          <select id="teacherStatus">
+            <option value="Faol">Faol</option>
+            <option value="Tanaffusda">Tanaffusda</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="cancelModal">Bekor qilish</button>
+          <button type="submit" class="btn btn-primary">Saqlash</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ========== DARK MODE ==========
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('themeToggle');
+      const sunIcon = document.getElementById('iconSun');
+      const moonIcon = document.getElementById('iconMoon');
+
+      const setTheme = (t) => {
+        if (t === 'dark') {
+          html.classList.add('dark');
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'block';
+        } else {
+          html.classList.remove('dark');
+          sunIcon.style.display = 'block';
+          moonIcon.style.display = 'none';
+        }
+      };
+
+      const stored = localStorage.getItem('theme');
+      setTheme(stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+
+      themeToggle.addEventListener('click', () => {
+        const isDark = html.classList.contains('dark');
+        setTheme(isDark ? 'light' : 'dark');
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      });
+
+      // ========== MOBILE MENU ==========
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const menuToggle = document.getElementById('menuToggle');
+
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+      });
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+      });
+
+      // ========== TEKSHIRUVCHILARNI BOSHQARISH ==========
+      let teachers = [
+        { id: 1, name: 'Doniyor Arabic', phone: '+998 90 111 22 33', subject: 'Arab tili', students: 856, tests: 124, status: 'Faol' },
+        { id: 2, name: 'Muhammad Ali', phone: '+998 91 222 33 44', subject: 'Nahv', students: 432, tests: 67, status: 'Faol' },
+        { id: 3, name: 'Aisha Umar', phone: '+998 93 333 44 55', subject: 'Sarf', students: 298, tests: 43, status: 'Tanaffusda' },
+        { id: 4, name: 'Hasan Tursunov', phone: '+998 94 444 55 66', subject: 'Arab tili', students: 567, tests: 89, status: 'Faol' }
+      ];
+
+      let nextId = 5;
+      let editingId = null;
+
+      // Subject badge class
+      function getSubjectBadgeClass(subject) {
+        const map = {
+          'Arab tili': 'badge-purple',
+          'Nahv': 'badge-info',
+          'Sarf': 'badge-warning',
+          'Balog\'at': 'badge-primary',
+          'Tafsir': 'badge-success'
+        };
+        return map[subject] || 'badge-primary';
+      }
+
+      // Status badge class
+      function getStatusBadgeClass(status) {
+        return status === 'Faol' ? 'badge-success' : 'badge-warning';
+      }
+
+      // Avatar harfi (ismning birinchi harfi)
+      function getAvatarLetter(name) {
+        return name.charAt(0).toUpperCase();
+      }
+
+      // Jadvalni yangilash
+      function renderTable() {
+        const tbody = document.getElementById('teachersTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        teachers.forEach(teacher => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><div class="user-cell"><div class="avatar-sm">${getAvatarLetter(teacher.name)}</div>${teacher.name}</div></td>
+            <td>${teacher.phone}</td>
+            <td><span class="badge ${getSubjectBadgeClass(teacher.subject)}">${teacher.subject}</span></td>
+            <td>${teacher.students}</td>
+            <td>${teacher.tests}</td>
+            <td><span class="badge ${getStatusBadgeClass(teacher.status)} status-badge">${teacher.status}</span></td>
+            <td><button class="btn btn-outline btn-sm edit-btn" data-id="${teacher.id}">Tahrirlash</button></td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        // Edit tugmalariga event listener
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = parseInt(btn.getAttribute('data-id'));
+            editTeacher(id);
+          });
+        });
+
+        // Statistikani yangilash
+        updateStats();
+      }
+
+      // Statistikani yangilash
+      function updateStats() {
+        const totalTeachers = teachers.length;
+        const activeTeachers = teachers.filter(t => t.status === 'Faol').length;
+        document.getElementById('totalTeachers').textContent = totalTeachers;
+        document.getElementById('activeTeachers').textContent = activeTeachers;
+      }
+
+      // Tekshiruvchini tahrirlash
+      function editTeacher(id) {
+        const teacher = teachers.find(t => t.id === id);
+        if (!teacher) return;
+        editingId = id;
+        document.getElementById('modalTitle').textContent = 'Tekshiruvchini tahrirlash';
+        document.getElementById('teacherName').value = teacher.name;
+        document.getElementById('teacherPhone').value = teacher.phone;
+        document.getElementById('teacherSubject').value = teacher.subject;
+        document.getElementById('teacherStatus').value = teacher.status;
+        document.getElementById('teacherModal').classList.add('active');
+      }
+
+      // Tekshiruvchini saqlash (yangi yoki tahrirlangan)
+      function saveTeacher(event) {
+        event.preventDefault();
+        const name = document.getElementById('teacherName').value.trim();
+        const phone = document.getElementById('teacherPhone').value.trim();
+        const subject = document.getElementById('teacherSubject').value;
+        const status = document.getElementById('teacherStatus').value;
+
+        if (!name || !phone) {
+          alert('Iltimos, barcha maydonlarni to\'ldiring!');
+          return;
+        }
+
+        if (editingId) {
+          // Tahrirlash
+          const index = teachers.findIndex(t => t.id === editingId);
+          if (index !== -1) {
+            teachers[index] = {
+              ...teachers[index],
+              name: name,
+              phone: phone,
+              subject: subject,
+              status: status
+            };
+          }
+        } else {
+          // Yangi qo'shish
+          const newTeacher = {
+            id: nextId++,
+            name: name,
+            phone: phone,
+            subject: subject,
+            students: 0,
+            tests: 0,
+            status: status
+          };
+          teachers.push(newTeacher);
+        }
+
+        renderTable();
+        closeModal();
+      }
+
+      // Modalni yopish
+      function closeModal() {
+        document.getElementById('teacherModal').classList.remove('active');
+        editingId = null;
+        document.getElementById('teacherForm').reset();
+        document.getElementById('modalTitle').textContent = 'Tekshiruvchi qo\'shish';
+      }
+
+      // Eksport (CSV)
+      function exportToCSV() {
+        let csvContent = "Ism,Telefon,Fan,Talabalar,Testlar,Holat\n";
+        teachers.forEach(t => {
+          csvContent += `"${t.name}",${t.phone},${t.subject},${t.students},${t.tests},${t.status}\n`;
+        });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.setAttribute('download', 'tekshiruvchilar.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      // ========== EVENT LISTENERLAR ==========
+      document.getElementById('addTeacherBtn').addEventListener('click', () => {
+        editingId = null;
+        document.getElementById('teacherForm').reset();
+        document.getElementById('modalTitle').textContent = 'Tekshiruvchi qo\'shish';
+        document.getElementById('teacherModal').classList.add('active');
+      });
+      document.getElementById('closeModal').addEventListener('click', closeModal);
+      document.getElementById('cancelModal').addEventListener('click', closeModal);
+      document.getElementById('teacherForm').addEventListener('submit', saveTeacher);
+      document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+
+      // Modalni tashqariga bosganda yopish
+      window.addEventListener('click', (e) => {
+        const modal = document.getElementById('teacherModal');
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      // Jadvalni dastlabki render
+      renderTable();
+    })();
+  </script>
+</body>
+</html>

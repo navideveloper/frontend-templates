@@ -173,7 +173,6 @@
             background: #ffffff;
             border-radius: 8px;
             padding: 8px;
-            /* aspect-ratio: 16/9; */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -250,20 +249,7 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0, 122, 255, 0.2);
         }
-        .not-installed .command-icon,
-        .not-installed .command-text,
-        .not-installed .command-desc {
-            color: white;
-        }.not-installed {
-            background-color: var(--ios-gray);
-        }
-        .not-installed:hover {
-            background-color: var(--ios-gray);
-            transform: none;
-            box-shadow: none;
-            cursor: default;
-        }
-
+        
         .command-btn:hover .command-icon,
         .command-btn:hover .command-text,
         .command-btn:hover .command-desc {
@@ -298,16 +284,34 @@
             color: var(--ios-gray);
         }
 
-        /* Terminal Card - Bottom Section */
+        /* Split Layout - Terminal va File Manager yonma-yon */
+        .split-layout {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            margin-bottom: 80px;
+        }
+
+        .split-col-terminal {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .split-col-filemanager {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        /* Terminal Card */
         .terminal-card {
             background-color: #1e1e1e;
             border-radius: var(--card-radius);
             box-shadow: var(--card-shadow);
-            margin-top: 20px;
-            margin-bottom: 80px; /* Bottom navigation uchun joy */
             border: 1px solid rgba(255, 255, 255, 0.05);
             overflow: hidden;
-            max-width: 500px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .terminal-card-header {
@@ -336,9 +340,11 @@
         .terminal-card-body {
             padding: 20px;
             font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            max-height: 250px;
+            flex: 1;
             overflow-y: auto;
             background-color: #1e1e1e;
+            min-height: 400px;
+            max-height: 500px;
         }
 
         .terminal-card-body::-webkit-scrollbar {
@@ -387,9 +393,9 @@
         .terminal-input-area {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 12px;
             background-color: #252526;
-            padding: 0 12px;
+            padding: 12px 20px;
             border-top: 1px solid #3c3c3c;
         }
 
@@ -398,6 +404,7 @@
             font-weight: 600;
             font-size: 14px;
             font-family: 'Consolas', monospace;
+            white-space: nowrap;
         }
 
         .terminal-input-area input {
@@ -416,22 +423,41 @@
             font-size: 13px;
         }
 
-        .terminal-send-btn {
-            background-color: #0e639c;
-            color: white;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+        /* File Manager Wrapper */
+        .filemanager-wrapper {
+            background: white;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            height: 100%;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            cursor: pointer;
+            flex-direction: column;
         }
 
-        .terminal-send-btn:hover {
-            background-color: #1177bb;
+        .filemanager-header {
+            background: white;
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .filemanager-header h3 {
+            font-weight: 600;
+            font-size: 16px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filemanager-header h3 i {
+            color: var(--ios-orange);
+        }
+
+        .filemanager-frame {
+            width: 100%;
+            flex: 1;
+            border: none;
+            min-height: 450px;
         }
 
         /* Bottom Navigation */
@@ -483,9 +509,11 @@
             text-decoration: none;
             flex-shrink: 0;
         }
+        
         .nav-item.active {
             color: var(--ios-blue);
         }
+        
         .nav-icon {
             font-size: 20px;
             margin-bottom: 4px;
@@ -533,28 +561,18 @@
                 padding: 8px 10px;
             }
             
-            .header {
+            .split-layout {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
             }
             
-            .control-bar {
-                flex-direction: column;
-                align-items: stretch;
+            .split-col-terminal,
+            .split-col-filemanager {
+                min-width: 100%;
             }
             
-            .search-box {
-                width: 100%;
-            }
-            
-            .filter-box {
-                justify-content: space-between;
-            }
-            
-            .ios-select {
-                flex: 1;
-                min-width: 0;
+            .terminal-card-body {
+                min-height: 300px;
+                max-height: 300px;
             }
         }
 
@@ -566,9 +584,6 @@
             .monitor-card {
                 min-width: 100%;
             }
-            .terminal-input-area {
-                flex-wrap: wrap;
-            }
         }
 
         @media (max-width: 480px) {
@@ -579,7 +594,10 @@
                 aspect-ratio: 4/3;
             }
             .terminal-card-body {
-                max-height: 200px;
+                max-height: 250px;
+            }
+            .filemanager-frame {
+                min-height: 400px;
             }
         }
     </style>
@@ -668,7 +686,7 @@
                             <div class="command-desc">Klaviyatura harakatini tinglash</div>
                         </div>
                     </div>
-                    <div class="command-btn not-installed" onclick="sendQuickCommand('shutdown /r /t 0')">
+                    <div class="command-btn" onclick="sendQuickCommand('shutdown /r /t 0')">
                         <div class="command-icon"><i class="fas fa-power-off"></i></div>
                         <div class="command-content">
                             <div class="command-text">Qurilmani o'chirish</div>
@@ -679,34 +697,58 @@
             </div>
         </div>
 
-        <!-- Terminal Card (Fixed, not draggable) -->
-        <div class="terminal-card" id="terminalCard">
-            <div class="terminal-card-header">
-                <div class="terminal-card-title">
-                    <i class="fas fa-terminal"></i>
-                    <span>Terminal</span>
+        <!-- Split Layout: Terminal va File Manager yonma-yon -->
+        <div class="split-layout">
+            <!-- Terminal ustuni - kengroq (flex: 2) -->
+            <div class="split-col-terminal">
+                <div class="terminal-card" id="terminalCard">
+                    <div class="terminal-card-header">
+                        <div class="terminal-card-title">
+                            <i class="fas fa-terminal"></i>
+                            <span>Terminal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="terminal-card-body" id="terminalContent">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">C:\Users\Admin&gt;</span>
+                            <span class="terminal-command">systeminfo</span>
+                        </div>
+                        <div class="terminal-output">
+                            Host Name: OFIS-1<br>
+                            OS Name: Microsoft Windows 11 Pro<br>
+                            OS Version: 10.0.22621<br>
+                            System Manufacturer: Dell Inc.<br>
+                            Total Physical Memory: 32 GB
+                        </div>
+                        <div class="terminal-line" id="lastPrompt">
+                            <span class="terminal-prompt">C:\Users\Admin&gt;</span>
+                            <span class="terminal-command">_</span>
+                        </div>
+                    </div>
+                    
+                    <div class="terminal-input-area">
+                        <span class="terminal-prompt-small">C:\Users\Admin&gt;</span>
+                        <input type="text" id="terminalInput" placeholder="Buyruq kiriting..." autofocus>
+                    </div>
                 </div>
             </div>
-            
-            <div class="terminal-card-body" id="terminalContent">
-                <div class="terminal-line">
-                    <span class="terminal-prompt">C:\Users\Admin&gt;</span>
-                    <span class="terminal-command">systeminfo</span>
+
+            <!-- File Manager ustuni - kichikroq (flex: 1) -->
+            <div class="split-col-filemanager">
+                <div class="filemanager-wrapper">
+                    <div class="filemanager-header">
+                        <h3>
+                            <i class="fas fa-folder"></i>
+                            Fayl menejeri
+                        </h3>
+                    </div>
+                    <iframe 
+                        src="filemanager.html" 
+                        class="filemanager-frame"
+                        title="Fayl menejeri">
+                    </iframe>
                 </div>
-                <div class="terminal-output">
-                    Host Name: OFIS-1<br>
-                    OS Name: Microsoft Windows 11 Pro<br>
-                    OS Version: 10.0.22621<br>
-                    System Manufacturer: Dell Inc.<br>
-                    Total Physical Memory: 32 GB
-                </div>
-            </div>
-            
-            <div class="terminal-input-area">
-                <span class="terminal-prompt-small">C:\Users\Admin&gt;</span>
-                <input type="text" id="terminalInput" placeholder="">
-                <!-- <button class="terminal-send-btn" onclick="sendCommand()">
-                </button> -->
             </div>
         </div>
     </div>
@@ -789,16 +831,19 @@
                 output.innerHTML = ' Volume in drive C is Windows<br> Volume Serial Number is 1234-5678<br><br> Directory of C:\\Users\\Admin<br><br>12/15/2024  10:30 AM    &lt;DIR&gt;          Desktop<br>12/15/2024  10:30 AM    &lt;DIR&gt;          Documents<br>12/15/2024  10:30 AM    &lt;DIR&gt;          Downloads';
             } else if (cmd === 'cls' || cmd === 'clear') {
                 // Clear terminal
-                while (terminalContent.children.length > 1) {
-                    terminalContent.removeChild(terminalContent.firstChild);
-                }
-                terminalInput.value = '';
+                const outputs = terminalContent.querySelectorAll('.terminal-output');
+                outputs.forEach(output => output.remove());
                 
-                // Add new prompt
-                const newPrompt = document.createElement('div');
-                newPrompt.className = 'terminal-line';
-                newPrompt.id = 'lastPrompt';
-                terminalContent.appendChild(newPrompt);
+                // Reset last prompt
+                if (lastPrompt) {
+                    const promptSpan = lastPrompt.querySelector('.terminal-prompt');
+                    const cmdSpan = lastPrompt.querySelector('.terminal-command');
+                    if (promptSpan) promptSpan.textContent = 'C:\\Users\\Admin&gt;';
+                    if (cmdSpan) cmdSpan.textContent = '_';
+                }
+                
+                terminalInput.value = '';
+                terminalContent.scrollTop = terminalContent.scrollHeight;
                 return;
             } else if (cmd === 'date') {
                 const now = new Date();
@@ -818,12 +863,13 @@
             
             terminalContent.insertBefore(output, lastPrompt);
 
-            // Create new prompt
-            const newPrompt = document.createElement('div');
-            newPrompt.className = 'terminal-line';
-            newPrompt.id = 'lastPrompt';
-            newPrompt.innerHTML = '<span class="terminal-prompt">C:\\Users\\Admin&gt;</span><span class="terminal-command">_</span>';
-            terminalContent.appendChild(newPrompt);
+            // Reset last prompt for next command
+            if (lastPrompt) {
+                const promptSpan = lastPrompt.querySelector('.terminal-prompt');
+                const cmdSpan = lastPrompt.querySelector('.terminal-command');
+                if (promptSpan) promptSpan.textContent = 'C:\\Users\\Admin&gt;';
+                if (cmdSpan) cmdSpan.textContent = '_';
+            }
 
             // Scroll to bottom
             terminalContent.scrollTop = terminalContent.scrollHeight;
@@ -833,34 +879,41 @@
         }
 
         // Enter key
-        terminalInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendCommand();
-            }
-        });
+        if (terminalInput) {
+            terminalInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendCommand();
+                }
+            });
+        }
 
         // Quick commands
         function sendQuickCommand(command) {
-            terminalInput.value = command;
-            sendCommand();
+            if (terminalInput) {
+                terminalInput.value = command;
+                sendCommand();
+            }
         }
 
         // Monitor functions
         function refreshScreen() {
             const img = document.getElementById('monitorImg');
-            img.style.opacity = '0.5';
-            setTimeout(() => {
-                img.style.opacity = '1';
-                alert('Ekran yangilandi');
-            }, 500);
+            if (img) {
+                img.style.opacity = '0.5';
+                setTimeout(() => {
+                    img.style.opacity = '1';
+                }, 500);
+            }
         }
 
         function fullscreenMonitor() {
             const monitor = document.querySelector('.monitor-screen');
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-            } else {
-                monitor.requestFullscreen();
+            if (monitor) {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    monitor.requestFullscreen();
+                }
             }
         }
 
@@ -875,7 +928,9 @@
 
         // Focus input on load
         window.addEventListener('load', () => {
-            terminalInput.focus();
+            if (terminalInput) {
+                terminalInput.focus();
+            }
         });
     </script>
 </body>

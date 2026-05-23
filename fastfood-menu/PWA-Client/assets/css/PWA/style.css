@@ -1,9 +1,9 @@
 @import url("../theme.css");
 
-@font-face {
-    font-family: Futura;
-    src: url("../fonts/Futura.ttf");
-}
+/* @font-face {
+    font-family: Lexend;
+    src: url("../../fonts/Lexend.ttf");
+} */
 * {
     margin: 0;
     padding: 0;

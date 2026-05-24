@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tojimahal - Buyurtmalar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
         :root {
             --ios-gray-light: #F2F2F7;
             --ios-gray: #8E8E93;
@@ -20,10 +20,9 @@
             --ios-red: #FF3B30;
             --ios-orange: #FF9500;
             --ios-purple: #AF52DE;
-            --ios-yellow: #FFCC00;
-            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --card-radius: 12px;
-            --transition: all 0.2s ease;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --card-radius: 18px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --nav-height: 70px;
         }
 
@@ -31,15 +30,15 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--ios-gray-dark);
             line-height: 1.5;
             min-height: 100vh;
             padding-bottom: 6rem;
-            background-color: #fafafa;
         }
 
         .container {
@@ -53,34 +52,35 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .header-left h1 {
             font-weight: 700;
-            font-size: 24px;
+            font-size: 28px;
             color: var(--ios-gray-dark);
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .header-left p {
             color: var(--ios-gray);
-            font-size: 14px;
+            font-weight: 500;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
         .time-display {
             background-color: white;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 50px;
             box-shadow: var(--card-shadow);
             font-weight: 600;
-            font-size: 14px;
             color: var(--ios-gray-dark);
         }
 
@@ -92,6 +92,7 @@
             padding: 8px 16px;
             border-radius: 50px;
             box-shadow: var(--card-shadow);
+            cursor: pointer;
         }
 
         .user-avatar {
@@ -673,7 +674,7 @@
             left: 0;
             right: 0;
             height: var(--nav-height);
-            background-color: rgba(240, 250, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(16px);
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
@@ -712,12 +713,9 @@
             text-decoration: none;
             flex-shrink: 0;
         }
-        
         .nav-item.active {
             color: var(--ios-blue);
-            background-color: rgba(0, 122, 255, 0.1);
         }
-        
         .nav-icon {
             font-size: 20px;
             margin-bottom: 4px;

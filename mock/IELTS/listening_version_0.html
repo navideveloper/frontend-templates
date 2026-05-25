@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Computer-Delivered Listening Practice Test</title>
+    <style>
+        :root {
+            --ielts-yellow: #f5c242;
+            --ielts-black: #202124;
+            --ielts-blue: #1a73e8;
+            --ielts-light-blue: #f1f3f4;
+            --ielts-gray-bg: #f8f9fa;
+            --ielts-border: #dadce0;
+            --text-color: #3c4043;
+            --success-color: #137333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--ielts-gray-bg);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--ielts-black);
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 24px;
+            border-bottom: 3px solid var(--ielts-yellow);
+            z-index: 10;
+            gap: 20px;
+        }
+
+        .test-title {
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-grow: 1;
+            justify-content: flex-end;
+        }
+
+        .audio-container-header {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+        }
+
+        .audio-container-header audio {
+            width: 100%;
+            height: 36px;
+        }
+
+        .timer-container {
+            background-color: var(--ielts-yellow);
+            color: var(--ielts-black);
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            font-family: monospace;
+            white-space: nowrap;
+        }
+
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        .test-content {
+            flex: 1;
+            background: #ffffff;
+            padding: 30px 40px;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .part-container {
+            display: none;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .part-container.active {
+            display: block;
+        }
+
+        .instructions {
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--ielts-blue);
+            padding: 12px;
+            margin-bottom: 25px;
+            font-style: italic;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .part-header {
+            border-bottom: 2px solid var(--ielts-black);
+            padding-bottom: 6px;
+            margin-bottom: 16px;
+        }
+
+        .part-header h2 {
+            font-size: 1.4rem;
+            color: var(--ielts-black);
+        }
+
+        .question-group {
+            margin-bottom: 30px;
+        }
+
+        .group-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--ielts-black);
+            font-weight: bold;
+        }
+
+        .question-row {
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .static-row {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #5f6368;
+        }
+
+        .input-wrapper {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--ielts-border);
+            background: #ffffff;
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        .q-number-inline {
+            font-weight: bold;
+            color: #5f6368;
+            font-size: 0.85rem;
+            margin-right: 6px;
+            background: #e8eaed;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        input[type="text"] {
+            border: none;
+            padding: 4px;
+            font-size: 1rem;
+            width: 150px;
+            outline: none;
+            color: var(--ielts-blue);
+            font-weight: normal;
+        }
+
+        .options-list {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        .option-item {
+            margin: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .q-number-block {
+            font-weight: bold;
+            background: var(--ielts-black);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+        }
+
+        .matching-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .matching-table th, .matching-table td {
+            border: 1px solid var(--ielts-border);
+            padding: 10px;
+            text-align: center;
+        }
+
+        .matching-table th {
+            background-color: #f1f3f4;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .matching-table td:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .map-graphic-container {
+            text-align: center;
+            margin: 20px 0;
+            background: #ffffff;
+        }
+
+        .map-image {
+            max-width: 100%;
+            max-height: 280px;
+            height: auto;
+            border: 1px solid var(--ielts-border);
+            border-radius: 4px;
+            object-fit: contain;
+        }
+
+        .map-dropdown-row {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 0.95rem;
+        }
+
+        .map-select {
+            padding: 6px 12px;
+            font-weight: bold;
+            color: var(--ielts-blue);
+            border: 1px solid var(--ielts-border);
+            border-radius: 4px;
+            outline: none;
+            margin-left: auto;
+            width: 160px;
+        }
+
+        footer {
+            background-color: var(--ielts-black);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .part-switcher {
+            display: flex;
+            gap: 4px;
+        }
+
+        .part-btn {
+            background-color: #3c4043;
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .part-btn.active {
+            background-color: var(--ielts-yellow);
+            color: var(--ielts-black);
+        }
+
+        .nav-buttons-container {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            max-width: 50%;
+            padding: 4px 0;
+        }
+
+        .q-nav-btn {
+            background-color: #5f6368;
+            color: #ffffff;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border-radius: 3px;
+            min-width: 32px;
+        }
+
+        .q-nav-btn.answered {
+            background-color: var(--ielts-blue);
+            color: white;
+        }
+
+        .q-nav-btn.current-context {
+            box-shadow: inset 0 0 0 2px var(--ielts-yellow);
+        }
+
+        .submit-btn {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.2s ease-out;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-window {
+            background: #fff;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: var(--ielts-black);
+            color: #fff;
+            padding: 16px 20px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            border-bottom: 3px solid var(--ielts-yellow);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            background: #f1f3f4;
+            padding: 12px 20px;
+            text-align: right;
+            border-top: 1px solid var(--ielts-border);
+        }
+
+        .modal-close-btn {
+            background: var(--ielts-blue);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .report-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--ielts-border);
+        }
+        .text-correct { color: #137333; font-weight: bold; }
+        .text-incorrect { color: #c5221f; font-weight: bold; }
+        
+        .section-divider {
+            border-top: 2px dashed var(--ielts-border);
+            margin: 30px 0 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="test-title">IELTS Listening Practice Mock Test</div>
+        <div class="header-controls">
+            <div class="audio-container-header">
+                <audio controls>
+                    <source src="./ielts-practice-listening.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+            <div class="timer-container" id="timer">30:00</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="test-content" id="test-view-wrapper">
+            <!-- Dynamic content loads here -->
+        </section>
+    </main>
+
+    <footer>
+        <div class="part-switcher">
+            <button class="part-btn active" onclick="switchPart(1)" id="part-btn-1">Part 1</button>
+            <button class="part-btn" onclick="switchPart(2)" id="part-btn-2">Part 2</button>
+            <button class="part-btn" onclick="switchPart(3)" id="part-btn-3">Part 3</button>
+            <button class="part-btn" onclick="switchPart(4)" id="part-btn-4">Part 4</button>
+        </div>
+
+        <div class="nav-buttons-container" id="nav-dock"></div>
+
+        <div class="action-btns">
+            <button class="submit-btn" onclick="submitTest()">Submit Test</button>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="score-modal">
+        <div class="modal-window">
+            <div class="modal-header">Test Results Summary</div>
+            <div class="modal-body" id="modal-report-content"></div>
+            <div class="modal-footer">
+                <button class="modal-close-btn" onclick="closeModal()">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Restructured data with clear separation of static items and answer fields
+        const examData = {
+            "part1": {
+                "instructions": "Questions 1 - 10: Complete the notes below. Write <strong>NO MORE THAN TWO WORDS AND/OR A NUMBER</strong> for each answer.",
+                "title": "City Bank Customer Service Log",
+                "sections": [
+                    {
+                        "type": "mixed",
+                        "items": [
+                            { "type": "static", "text": "Customer details" },
+                            { "type": "question", "id": 1, "prefix": "Customer name: David ", "suffix": "" },
+                            { "type": "static", "text": "Phone: 023 - 561 - 055" },
+                            { "type": "static", "text": "D.O.B.: 18 / 02 / 1968" },
+                            { "type": "static", "text": "Customer's Term Deposit details" },
+                            { "type": "static", "text": "Amount: $18,000" },
+                            { "type": "question", "id": 2, "prefix": "Term: ", "suffix": "" },
+                            { "type": "static", "text": "Interest rate: 3.45% per annum" }
+                        ]
+                    },
+                    {
+                        "type": "mixed",
+                        "items": [
+                            { "type": "static", "text": "Current Term Deposit interest rates" },
+                            { "type": "static", "text": "1 year: 3.65% per annum" },
+                            { "type": "question", "id": 3, "prefix": "2 years: ", "suffix": "% per annum" },
+                            { "type": "question", "id": 4, "prefix": "Interest payout options: ", "suffix": " Term Deposits" }
+                        ]
+                    },
+                    {
+                        "type": "mixed",
+                        "items": [
+                            { "type": "static", "text": "Investment Rules (Minimum deposit: $20,000)" },
+                            { "type": "question", "id": 5, "prefix": "", "suffix": " tax rate: 28%" },
+                            { "type": "question", "id": 6, "prefix": "Investment returns: Depend on ", "suffix": "" },
+                            { "type": "static", "text": "Table Header - Term: 2 years" },
+                            { "type": "static", "text": "Effective rate of return (Salary $48,001 – $70,000): 3.75% per annum" },
+                            { "type": "question", "id": 7, "prefix": "Effective rate of return (Salary $70,001 – ): ", "suffix": "3.92% per annum" },
+                            { "type": "static", "text": "Minimum investment amount: $10,000" },
+                            { "type": "question", "id": 8, "prefix": "Hidden charges/fees: ", "suffix": "" },
+                            { "type": "question", "id": 9, "prefix": "Interest payment options: monthly, ", "suffix": ", 6-monthly, annually" },
+                            { "type": "question", "id": 10, "prefix": "Application options: online, ", "suffix": ", in person" }
+                        ]
+                    }
+                ]
+            },
+            "part2": {
+                "instructions": "Questions 11 - 15: Choose the correct letter, <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.",
+                "title": "Celebration Park Infrastructure and Features",
+                "sections": [
+                    {
+                        "type": "multiple-choice",
+                        "items": [
+                            {
+                                "id": 11,
+                                "question": "The September Celebration day is held ..........",
+                                "options": [
+                                    "A) five times a year to honour the city",
+                                    "B) on the park's important birthday",
+                                    "C) to remember the history of the park"
+                                ]
+                            },
+                            {
+                                "id": 12,
+                                "question": "The park was first built in ...........",
+                                "options": [
+                                    "A) 1955",
+                                    "B) 1979",
+                                    "C) the 1990s"
+                                ]
+                            },
+                            {
+                                "id": 13,
+                                "question": "The park still uses ...........",
+                                "options": [
+                                    "A) a children's play area",
+                                    "B) a petting zoo",
+                                    "C) two of the early rides"
+                                ]
+                            },
+                            {
+                                "id": 14,
+                                "question": "The Hurricane roller-coaster is ...........",
+                                "options": [
+                                    "A) tall and made of wood",
+                                    "B) designed for smaller children",
+                                    "C) very fast and exciting"
+                                ]
+                            },
+                            {
+                                "id": 15,
+                                "question": "The rides with a height limit are coded ...........",
+                                "options": [
+                                    "A) yellow",
+                                    "B) blue",
+                                    "C) black"
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "extraSections": [
+                    {
+                        "instructions": "Questions 16 - 20: Complete the notes below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+                        "title": "Celebration Park Event Scheduling and Safety Map",
+                        "sections": [
+                            {
+                                "type": "mixed",
+                                "items": [
+                                    { "type": "static", "text": "Food options" },
+                                    { "type": "static", "text": "Italian, Chinese, etc. at the Food Court" },
+                                    { "type": "question", "id": 16, "prefix": "hamburgers, sandwiches, etc. at ", "suffix": "" },
+                                    { "type": "static", "text": "Special events" },
+                                    { "type": "static", "text": "Parade - Starts at noon" },
+                                    { "type": "question", "id": 17, "prefix": "On the ", "suffix": "" },
+                                    { "type": "static", "text": "Run by final year high school students" },
+                                    { "type": "static", "text": "Concert - At the amphitheatre" },
+                                    { "type": "question", "id": 18, "prefix": "Theme: ", "suffix": "" },
+                                    { "type": "static", "text": "Starts at 7:00" },
+                                    { "type": "static", "text": "Safety and Security" },
+                                    { "type": "question", "id": 19, "prefix": "Ten ", "suffix": " centres in the park" },
+                                    { "type": "static", "text": "Children ask any staff member for help" },
+                                    { "type": "question", "id": 20, "prefix": "Ask security team at the ", "suffix": "" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "part3": {
+                "instructions": "Questions 21 - 24: Complete the flowchart below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+                "title": "Tutorial Structure Flowchart: Design a Water Treatment System",
+                "sections": [
+                    {
+                        "type": "mixed",
+                        "items": [
+                            { "type": "static", "text": "Session outline: Project topic: design a water treatment system" },
+                            { "type": "question", "id": 21, "prefix": "Step 1: go over ", "suffix": "" },
+                            { "type": "question", "id": 22, "prefix": "Step 2: think about research ", "suffix": "" },
+                            { "type": "static", "text": "Research strategy:" },
+                            { "type": "static", "text": "• search online databases using good search terms" },
+                            { "type": "question", "id": 23, "prefix": "• consider the kind of research, e.g. ", "suffix": " from other projects" },
+                            { "type": "question", "id": 24, "prefix": "Step 3: develop an ", "suffix": "" }
+                        ]
+                    }
+                ],
+                "extraSections": [
+                    {
+                        "instructions": "Questions 25 - 27: Complete the summary below. Write <strong>NO MORE THAN ONE WORD</strong> for each answer.",
+                        "title": "Project Description: Grey-Water Treatment System",
+                        "sections": [
+                            {
+                                "type": "mixed",
+                                "items": [
+                                    { "type": "question", "id": 25, "prefix": "You need to design a grey-water treatment system to reduce the pressure on the water ", "suffix": " in a Cameroon village." },
+                                    { "type": "question", "id": 26, "prefix": "Grey-water is wastewater from household ", "suffix": " ." },
+                                    { "type": "question", "id": 27, "prefix": "The system needs to treat this water to remove bacteria, and recycle it to use for purposes such as watering plants, flushing toilets and doing ", "suffix": " ." }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "instructions": "Questions 28 - 30: Complete the notes below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+                        "title": "Academic Research Tips and Library Catalogue",
+                        "sections": [
+                            {
+                                "type": "mixed",
+                                "items": [
+                                    { "type": "static", "text": "Research tips" },
+                                    { "type": "static", "text": "General internet searches:" },
+                                    { "type": "question", "id": 28, "prefix": "Avoid websites where ", "suffix": " try to sell their products." },
+                                    { "type": "static", "text": "Engineering library:" },
+                                    { "type": "static", "text": "Use key words when searching the catalogue" },
+                                    { "type": "question", "id": 29, "prefix": "e.g. grey-water treatment systems / ", "suffix": " use" },
+                                    { "type": "static", "text": "EWB website:" },
+                                    { "type": "question", "id": 30, "prefix": "Check examples from the ", "suffix": " last year." }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "part4": {
+                "instructions": "Questions 31 - 34: Complete the summary below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+                "title": "Origins of the Caveman Diet and Anthropological Nutritional Metrics",
+                "sections": [
+                    {
+                        "type": "mixed",
+                        "items": [
+                            { "type": "question", "id": 31, "prefix": "There are many popular fad diets nowadays. They all promise good health if you stick to the ", "suffix": " ." },
+                            { "type": "question", "id": 32, "prefix": "The Caveman diet includes foods such as lean meat and fish that our forebears ate before we developed ", "suffix": " ." },
+                            { "type": "static", "text": "We need to find out what our ancestors did eat, so researchers are studying some existing hunter-gatherer tribes. These tribes typically like to eat meat but they can't always get it, even though they are skilled with their weapons," },
+                            { "type": "question", "id": 33, "prefix": "e.g. ", "suffix": " and arrows." },
+                            { "type": "static", "text": "So, instead, they eat foods that their wives gather." },
+                            { "type": "question", "id": 34, "prefix": "They get only about a ", "suffix": " of their energy from meat." }
+                        ]
+                    }
+                ],
+                "extraSections": [
+                    {
+                        "instructions": "Questions 35 - 36: Choose the correct letter, <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.",
+                        "title": "Evolutionary Diet Adaptations and Lactase Enzyme Research",
+                        "sections": [
+                            {
+                                "type": "multiple-choice",
+                                "items": [
+                                    {
+                                        "id": 35,
+                                        "question": "Research evidence suggests that ..........",
+                                        "options": [
+                                            "A) the tribesmen's traditional diet is unhealthy",
+                                            "B) our bodies can digest only certain foods",
+                                            "C) we can adapt to a range of diets."
+                                        ]
+                                    },
+                                    {
+                                        "id": 36,
+                                        "question": "Thai people have difficulty digesting milk because ..........",
+                                        "options": [
+                                            "A) they have too much lactase in their bodies",
+                                            "B) in the past they didn't farm cows",
+                                            "C) their saliva lacks certain enzymes."
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "instructions": "Questions 37 - 40: Complete the notes below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+                        "title": "Global Dietary Variations and Caveman Diet Problems",
+                        "sections": [
+                            {
+                                "type": "mixed",
+                                "items": [
+                                    { "type": "static", "text": "Variation in global diets:" },
+                                    { "type": "question", "id": 37, "prefix": "• Inuit – most calories from ", "suffix": " foods, e.g. seal meat" },
+                                    { "type": "static", "text": "• Jains – vegetarian, but milk is permitted" },
+                                    { "type": "static", "text": "• Others – fish, insects" },
+                                    { "type": "static", "text": "Implications for the caveman diet:" },
+                                    { "type": "static", "text": "• Cavemen did not all eat the same diet" },
+                                    { "type": "question", "id": 38, "prefix": "• Diets come from complicated cultural ", "suffix": "" },
+                                    { "type": "static", "text": "Problems with Caveman diet:" },
+                                    { "type": "question", "id": 39, "prefix": "• Costs a lot of money for lean meat and ", "suffix": "" },
+                                    { "type": "static", "text": "• Too much red meat may be unhealthy" },
+                                    { "type": "question", "id": 40, "prefix": "• Reliance on meat is bad for the ", "suffix": "" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const answerKey = {
+            "1": "jordan", "2": "b47", "3": "3.65", "4": "goods", "5": "ms90", "6": "ocean", 
+            "7": "premium", "8": "22", "9": "seven", "10": "450",
+            "11": "B", "12": "A", "13": "C", "14": "C", "15": "A", "16": "the grill", 
+            "17": "boardwalk", "18": "jazz", "19": "first aid", "20": "main gate",
+            "21": "feedback", "22": "methods", "23": "findings", "24": "outline", 
+            "25": "supply", "26": "appliances", "27": "laundry", "28": "companies", 
+            "29": "domestic", "30": "project",
+            "31": "rules", "32": "agriculture", "33": "spears", "34": "quarter", 
+            "35": "C", "36": "B", "37": "sea", "38": "traditions", "39": "vegetables", 
+            "40": "environment"
+        };
+
+        const totalQuestions = 40;
+        let currentActivePart = 1;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderExamContent();
+            renderNavigationDock();
+            initializeTimerSystem();
+            setupInputTrackingListeners();
+            switchPart(1);
+        });
+
+        function renderExamContent() {
+            const wrapper = document.getElementById("test-view-wrapper");
+            wrapper.innerHTML = "";
+
+            Object.keys(examData).forEach((partKey, index) => {
+                const partNum = index + 1;
+                const part = examData[partKey];
+
+                const partDiv = document.createElement("div");
+                partDiv.className = `part-container`;
+                partDiv.id = `part-view-block-${partNum}`;
+
+                let contentHtml = `
+                    <div class="part-header"><h2>Listening Part ${partNum}</h2></div>
+                    <div class="instructions">${part.instructions}</div>
+                    <div class="question-group">
+                        <h3 class="group-title">${part.title}</h3>
+                `;
+
+                // Render main sections
+                if (part.sections) {
+                    part.sections.forEach(section => {
+                        contentHtml += renderSection(section);
+                    });
+                }
+
+                contentHtml += `</div>`;
+
+                // Render extra sections
+                if (part.extraSections) {
+                    part.extraSections.forEach(extra => {
+                        contentHtml += `<div class="section-divider"></div>`;
+                        contentHtml += `<div class="instructions">${extra.instructions}</div>`;
+                        contentHtml += `<h3 class="group-title">${extra.title}</h3>`;
+                        
+                        if (extra.sections) {
+                            extra.sections.forEach(section => {
+                                contentHtml += renderSection(section);
+                            });
+                        }
+                    });
+                }
+
+                partDiv.innerHTML = contentHtml;
+                wrapper.appendChild(partDiv);
+            });
+        }
+
+        function renderSection(section) {
+            let html = '';
+            
+            if (section.type === "mixed") {
+                section.items.forEach(item => {
+                    if (item.type === "static") {
+                        html += `<div class="static-row">${item.text}</div>`;
+                    } else if (item.type === "question") {
+                        html += `
+                            <div class="question-row">
+                                <span>${item.prefix}</span>
+                                <div class="input-wrapper">
+                                    <span class="q-number-inline">${item.id}</span>
+                                    <input type="text" data-q="${item.id}">
+                                </div>
+                                <span>${item.suffix}</span>
+                            </div>
+                        `;
+                    }
+                });
+            } else if (section.type === "multiple-choice") {
+                section.items.forEach(q => {
+                    html += `
+                        <div style="margin-bottom: 25px;">
+                            <div class="question-row">
+                                <span class="q-number-block">${q.id}</span> 
+                                <strong>${q.question}</strong>
+                            </div>
+                            <div class="options-list">
+                    `;
+                    
+                    q.options.forEach(opt => {
+                        const charLabel = opt.substring(0, 1);
+                        html += `
+                            <label class="option-item">
+                                <input type="radio" name="q_${q.id}" value="${charLabel}" data-q="${q.id}">
+                                <span>${opt}</span>
+                            </label>
+                        `;
+                    });
+                    
+                    html += `</div></div>`;
+                });
+            }
+            
+            return html;
+        }
+
+        function renderNavigationDock() {
+            const dock = document.getElementById("nav-dock");
+            dock.innerHTML = "";
+            for (let i = 1; i <= totalQuestions; i++) {
+                const b = document.createElement("button");
+                b.className = "q-nav-btn";
+                b.id = `nav-node-item-${i}`;
+                b.innerText = i;
+                b.onclick = () => jumpToQuestionTargetContext(i);
+                dock.appendChild(b);
+            }
+        }
+
+        function switchPart(partIndex) {
+            currentActivePart = partIndex;
+            for (let i = 1; i <= 4; i++) {
+                const view = document.getElementById(`part-view-block-${i}`);
+                const btn = document.getElementById(`part-btn-${i}`);
+                if (view && btn) {
+                    if (i === partIndex) {
+                        view.classList.add("active");
+                        btn.classList.add("active");
+                    } else {
+                        view.classList.remove("active");
+                        btn.classList.remove("active");
+                    }
+                }
+            }
+            updateNavigationBorderHighlight();
+        }
+
+        function jumpToQuestionTargetContext(qNum) {
+            let targetPart = 1;
+            if (qNum >= 11 && qNum <= 20) targetPart = 2;
+            if (qNum >= 21 && qNum <= 30) targetPart = 3;
+            if (qNum >= 31) targetPart = 4;
+
+            if (currentActivePart !== targetPart) switchPart(targetPart);
+
+            setTimeout(() => {
+                const field = document.querySelector(`[data-q="${qNum}"]`);
+                if (field) {
+                    field.scrollIntoView({ behavior: "smooth", block: "center" });
+                    field.focus();
+                }
+            }, 100);
+        }
+
+        function updateNavigationBorderHighlight() {
+            for (let i = 1; i <= totalQuestions; i++) {
+                const btn = document.getElementById(`nav-node-item-${i}`);
+                if (!btn) continue;
+                
+                let assignedPart = 1;
+                if (i >= 11 && i <= 20) assignedPart = 2;
+                if (i >= 21 && i <= 30) assignedPart = 3;
+                if (i >= 31) assignedPart = 4;
+
+                if (assignedPart === currentActivePart) {
+                    btn.classList.add("current-context");
+                } else {
+                    btn.classList.remove("current-context");
+                }
+            }
+        }
+
+        function setupInputTrackingListeners() {
+            const handleStateModification = (e) => {
+                const qNum = e.target.getAttribute("data-q");
+                if (!qNum) return;
+
+                const navBtn = document.getElementById(`nav-node-item-${qNum}`);
+                if (!navBtn) return;
+
+                let hasValue = false;
+                if (e.target.tagName === "INPUT" && e.target.type === "text") {
+                    hasValue = e.target.value.trim() !== "";
+                } else if (e.target.tagName === "INPUT" && e.target.type === "radio") {
+                    hasValue = e.target.checked;
+                } else if (e.target.tagName === "SELECT") {
+                    hasValue = e.target.value !== "";
+                }
+
+                if (hasValue) navBtn.classList.add("answered");
+                else navBtn.classList.remove("answered");
+            };
+
+            document.addEventListener("input", handleStateModification);
+            document.addEventListener("change", handleStateModification);
+        }
+
+        let operationalSecondsRemaining = 30 * 60; 
+        let internalTimerThreadRef = null;
+
+        function initializeTimerSystem() {
+            const display = document.getElementById("timer");
+            internalTimerThreadRef = setInterval(() => {
+                let m = Math.floor(operationalSecondsRemaining / 60);
+                let s = operationalSecondsRemaining % 60;
+                display.innerText = `${m < 10 ? "0" + m : m}:${s < 10 ? "0" + s : s}`;
+
+                if (operationalSecondsRemaining <= 0) {
+                    clearInterval(internalTimerThreadRef);
+                    submitTest();
+                }
+                operationalSecondsRemaining--;
+            }, 1000);
+        }
+
+        function submitTest() {
+            if (internalTimerThreadRef) clearInterval(internalTimerThreadRef);
+            
+            let rawScore = 0;
+            let feedbackLogHtml = `<div>`;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                let userVal = "";
+                const textField = document.querySelector(`input[data-q="${i}"][type="text"]`);
+                const selectField = document.querySelector(`select[data-q="${i}"]`);
+                const checkedRadio = document.querySelector(`input[data-q="${i}"][type="radio"]:checked`);
+
+                if (textField) userVal = textField.value.trim().toLowerCase();
+                else if (selectField) userVal = selectField.value.trim().toLowerCase();
+                else if (checkedRadio) userVal = checkedRadio.value.trim().toLowerCase();
+
+                const correctTarget = answerKey[i].toString().toLowerCase();
+                const cleanDisplayUserVal = userVal || "[Blank]";
+
+                if (userVal === correctTarget) {
+                    rawScore++;
+                    feedbackLogHtml += `
+                        <div class="report-item">
+                            <span class="q-number-inline">${i}</span> <span class="text-correct">Correct</span> — Value: "${cleanDisplayUserVal}"
+                        </div>
+                    `;
+                } else {
+                    feedbackLogHtml += `
+                        <div class="report-item">
+                            <span class="q-number-inline">${i}</span> <span class="text-incorrect">Incorrect</span> — Your Answer: "${cleanDisplayUserVal}" | Correct: "${correctTarget}"
+                        </div>
+                    `;
+                }
+            }
+
+            let bandScore = 4.0;
+            if (rawScore >= 39) bandScore = 9.0;
+            else if (rawScore >= 37) bandScore = 8.5;
+            else if (rawScore >= 35) bandScore = 8.0;
+            else if (rawScore >= 32) bandScore = 7.5;
+            else if (rawScore >= 30) bandScore = 7.0;
+            else if (rawScore >= 26) bandScore = 6.5;
+            else if (rawScore >= 23) bandScore = 6.0;
+            else if (rawScore >= 18) bandScore = 5.5;
+            else if (rawScore >= 14) bandScore = 5.0;
+
+            let finalSummaryPrefixHtml = `
+                <p style="font-size:1.1rem; margin-bottom:10px;">Score Matrix: <strong>${rawScore} / 40</strong> Answers Verified.</p>
+                <div style="background:var(--ielts-yellow); color:#000; padding:12px; font-weight:bold; font-size:1.2rem; text-align:center; border-radius:4px; margin-bottom:20px;">
+                    Estimated Performance Scale: Band ${bandScore}
+                </div>
+                <h4 style="margin-bottom:15px; border-bottom:1px solid var(--ielts-border); padding-bottom:5px;">Review Log Summary:</h4>
+            `;
+
+            feedbackLogHtml += `</div>`;
+            document.getElementById("modal-report-content").innerHTML = finalSummaryPrefixHtml + feedbackLogHtml;
+            document.getElementById("score-modal").classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("score-modal").classList.remove("active");
+        }
+    </script>
+</body>
+</html>

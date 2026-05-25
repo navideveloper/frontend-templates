@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Computer-Delivered Listening Practice Test</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow: #f5c118;
+  --black: #111318;
+  --blue: #1757c2;
+  --blue-light: #eef2fc;
+  --green: #0e6630;
+  --red: #b5190f;
+  --border: #d0d5e0;
+  --bg: #f4f5f8;
+  --white: #ffffff;
+  --text: #1e2130;
+  --muted: #5f6678;
+  --primary: #f5c118;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  font-size: 15px;
+}
+
+/* ─── HEADER ─── */
+header {
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 54px;
+  border-bottom: 3px solid var(--primary);
+  flex-shrink: 0;
+  gap: 16px;
+}
+.logo {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.logo span { color: var(--primary); }
+.header-center {
+  flex: 1;
+  max-width: 420px;
+}
+.header-center audio { width: 100%; height: 32px; }
+.timer {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: var(--primary);
+  color: var(--black);
+  padding: 5px 16px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* ─── MAIN LAYOUT ─── */
+main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.test-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 36px;
+  background: var(--white);
+}
+.part-block { display: none; max-width: 860px; margin: 0 auto; }
+.part-block.active { display: block; }
+
+/* ─── PART SECTIONS ─── */
+.part-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  border-bottom: 2px solid var(--black);
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+}
+.part-head h2 { font-family: var(--mono); font-size: 1.3rem; font-weight: 700; }
+.part-head .part-tag {
+  background: var(--black);
+  color: var(--primary);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+}
+.instructions {
+  background: var(--blue-light);
+  border-left: 4px solid var(--blue);
+  padding: 10px 14px;
+  font-size: 1rem;
+  line-height: 1.55;
+  margin-bottom: 20px;
+  border-radius: 0 4px 4px 0;
+  font-style: italic;
+}
+.section-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 14px;
+  color: var(--black);
+}
+.section-divider {
+  border: none;
+  border-top: 2px dashed var(--border);
+  margin: 28px 0 20px;
+}
+.q-group { margin-bottom: 28px; }
+
+/* ─── Q-NUMBER BADGE ─── */
+.qn {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #e8eaed;
+  color: var(--muted);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+.qn-dark {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* ─── FORM / NOTE / SENTENCE / SUMMARY / FLOW / TABLE completion ─── */
+.mixed-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 11px 0;
+  line-height: 1.7;
+}
+.static-row {
+  margin: 9px 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.input-wrap {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: var(--white);
+  padding: 1px 5px;
+  transition: border-color 0.15s;
+}
+.input-wrap:focus-within { border-color: var(--blue); }
+input[type="text"] {
+  border: none;
+  outline: none;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  width: 140px;
+  padding: 4px 3px;
+  color: var(--blue);
+  font-weight: 600;
+  background: transparent;
+}
+
+/* ─── TABLE COMPLETION ─── */
+.completion-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 24px;
+  font-size: 0.9rem;
+}
+.completion-table th, .completion-table td {
+  border: 1.5px solid var(--border);
+  padding: 9px 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+.completion-table th {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.completion-table tr:nth-child(even) td { background: var(--bg); }
+
+/* ─── FLOWCHART ─── */
+.flowchart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 16px 0;
+}
+.flow-step {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 20px;
+  width: 100%;
+  max-width: 520px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  line-height: 1.7;
+}
+.flow-step.decision {
+  background: #fffce6;
+  border-color: var(--primary);
+  border-radius: 50px;
+}
+.flow-arrow {
+  font-size: 1.5rem;
+  color: var(--muted);
+  line-height: 1;
+  margin: 2px 0;
+}
+
+/* ─── MAP / DIAGRAM LABEL ─── */
+.diagram-wrap {
+  position: relative;
+  display: inline-block;
+  margin: 14px 0;
+}
+.diagram-wrap img { display: block; max-width: 100%; border: 1.5px solid var(--border); border-radius: 4px; }
+.map-labels { margin: 12px 0; }
+.map-label-row {
+  display: flex;
+  align-items: center;
+  margin: 9px 0;
+  font-size: 0.95rem;
+  gap: 8px;
+}
+.map-label-letter {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: var(--blue);
+  color: var(--white);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+select.map-select, select.dropdown-select {
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--blue);
+  font-weight: 600;
+  outline: none;
+  background: var(--white);
+  cursor: pointer;
+  min-width: 160px;
+  transition: border-color 0.15s;
+}
+select.map-select:focus, select.dropdown-select:focus { border-color: var(--blue); }
+
+/* ─── MULTIPLE CHOICE ─── */
+.mc-item { margin-bottom: 22px; }
+.mc-question {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+.options-list { margin-left: 38px; }
+.option-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 9px 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.option-item input[type="radio"],
+.option-item input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: var(--blue);
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ─── PICK FROM LIST (multi-select long) ─── */
+.pick-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 12px 10px; }
+.pick-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+/* ─── MATCHING ─── */
+.matching-grid { margin: 14px 0; }
+.matching-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 9px 0;
+  font-size: 0.95rem;
+}
+.matching-statement { flex: 1; }
+.matching-options { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 14px 20px; font-size: 0.85rem; color: var(--muted); font-style: italic; }
+
+/* ─── CLASSIFICATION ─── */
+.classification-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 0.9rem;
+}
+.classification-table th, .classification-table td {
+  border: 1.5px solid var(--border);
+  padding: 9px 12px;
+  vertical-align: middle;
+}
+.classification-table th {
+  background: var(--blue);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+.classification-table td:first-child { font-weight: 600; }
+
+/* ─── SHORT ANSWER ─── */
+.short-answer-item { margin: 14px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--black);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.part-tabs { display: flex; gap: 4px; }
+.part-tab {
+  background: #2d3142;
+  color: #aeb4c8;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+.part-tab:hover { background: #3d4260; color: var(--white); }
+.part-tab.active { background: var(--primary); color: var(--black); }
+
+.q-dock {
+  display: flex;
+  gap: 3px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  max-width: 55%;
+}
+.q-btn {
+  background: #3c4260;
+  color: #aeb4c8;
+  border: none;
+  padding: 5px 8px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 3px;
+  min-width: 30px;
+  line-height: 1.4;
+  transition: all 0.12s;
+}
+.q-btn.answered { background: var(--blue); color: var(--white); }
+.q-btn.current { box-shadow: inset 0 0 0 2px var(--primary); }
+
+.submit-btn {
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  padding: 9px 22px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.submit-btn:hover { background: #0b521e; }
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s;
+}
+.modal-overlay.active { visibility: visible; opacity: 1; }
+.modal-box {
+  background: var(--white);
+  width: 92%;
+  max-width: 620px;
+  max-height: 82vh;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.modal-head {
+  background: var(--black);
+  color: var(--white);
+  padding: 16px 22px;
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  border-bottom: 3px solid var(--primary);
+  letter-spacing: 0.04em;
+}
+.modal-body {
+  padding: 22px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.modal-foot {
+  background: var(--bg);
+  padding: 12px 22px;
+  text-align: right;
+  border-top: 1px solid var(--border);
+}
+.modal-close {
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  padding: 8px 20px;
+  font-family: var(--mono);
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+.report-row {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ok { color: var(--green); font-weight: 700; }
+.no { color: var(--red); font-weight: 700; }
+.band-badge {
+  background: var(--primary);
+  color: var(--black);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-align: center;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">IELTS <span>LISTENING</span></div>
+  <div class="header-center">
+    <audio controls>
+      <source src="./ielts-practice-listening.mp3" type="audio/mpeg">
+      Your browser does not support audio.
+    </audio>
+  </div>
+  <div class="timer" id="timer">30:00</div>
+</header>
+
+<main>
+  <section class="test-content" id="test-content"></section>
+</main>
+
+<footer>
+  <div class="part-tabs" id="part-tabs"></div>
+  <div class="q-dock" id="q-dock"></div>
+  <button class="submit-btn" onclick="submitTest()">Finish</button>
+</footer>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">Test Results Summary</div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="modal-close" onclick="closeModal()">Review Answers</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   EXAM DATA — each section declares its type explicitly.
+   Supported section types:
+     "form"           → Note/Form/Sentence/Summary completion (mixed static + question rows)
+     "table"          → Table completion
+     "flowchart"      → Flowchart/sequence completion
+     "diagram"        → Map/diagram label (label list with selects or text)
+     "multiple-choice"→ MCQ single answer (A/B/C)
+     "multi-select"   → MCQ multiple answers (pick N from list)
+     "pick-from-list" → Pick from a longer list (checkbox)
+     "matching"       → Match items to a set of options
+     "classification" → Classify items into categories
+     "short-answer"   → Short WH-answer text boxes
+   Each section has an optional `instructions` override.
+═══════════════════════════════════════════════════════════════════ */
+
+const EXAM = [
+  /* ══════ PART 1 ══════ */
+  {
+    part: 1,
+    title: "City Bank Customer Service Log",
+    instructions: "Questions 1–10: Complete the notes below. Write <strong>NO MORE THAN TWO WORDS AND/OR A NUMBER</strong> for each answer.",
+    sections: [
+      {
+        type: "form",
+        items: [
+          { type: "static", text: "Customer details" },
+          { type: "q", id: 1, prefix: "Customer name: David ", suffix: "" },
+          { type: "static", text: "Phone: 023 - 561 - 055" },
+          { type: "static", text: "D.O.B.: 18 / 02 / 1968" },
+          { type: "divider" },
+          { type: "static", text: "Customer's Term Deposit details" },
+          { type: "static", text: "Amount: $18,000" },
+          { type: "q", id: 2, prefix: "Term: ", suffix: "" },
+          { type: "static", text: "Interest rate: 3.45% per annum" },
+          { type: "divider" },
+          { type: "static", text: "Current Term Deposit interest rates" },
+          { type: "static", text: "1 year: 3.65% per annum" },
+          { type: "q", id: 3, prefix: "2 years: ", suffix: "% per annum" },
+          { type: "q", id: 4, prefix: "Interest payout options: ", suffix: " Term Deposits" },
+          { type: "divider" },
+          { type: "static", text: "Investment Rules (Minimum deposit: $20,000)" },
+          { type: "q", id: 5, prefix: "", suffix: " tax rate: 28%" },
+          { type: "q", id: 6, prefix: "Investment returns: Depend on ", suffix: "" },
+          { type: "static", text: "Effective rate of return (Salary $48,001–$70,000): 3.75% per annum" },
+          { type: "q", id: 7, prefix: "Effective rate of return (Salary $70,001–): ", suffix: "3.92% per annum" },
+          { type: "static", text: "Minimum investment amount: $10,000" },
+          { type: "q", id: 8, prefix: "Hidden charges/fees: ", suffix: "" },
+          { type: "q", id: 9, prefix: "Interest payment options: monthly, ", suffix: ", 6-monthly, annually" },
+          { type: "q", id: 10, prefix: "Application options: online, ", suffix: ", in person" }
+        ]
+      }
+    ]
+  },
+
+  /* ══════ PART 2 ══════ */
+  {
+    part: 2,
+    title: "Celebration Park",
+    instructions: "Questions 11–15: Choose the correct letter, <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.",
+    sections: [
+      {
+        type: "multiple-choice",
+        items: [
+          {
+            id: 11,
+            question: "The September Celebration day is held ..........",
+            options: ["A) five times a year to honour the city", "B) on the park's important birthday", "C) to remember the history of the park"]
+          },
+          {
+            id: 12,
+            question: "The park was first built in ...........",
+            options: ["A) 1955", "B) 1979", "C) the 1990s"]
+          },
+          {
+            id: 13,
+            question: "The park still uses ...........",
+            options: ["A) a children's play area", "B) a petting zoo", "C) two of the early rides"]
+          },
+          {
+            id: 14,
+            question: "The Hurricane roller-coaster is ...........",
+            options: ["A) tall and made of wood", "B) designed for smaller children", "C) very fast and exciting"]
+          },
+          {
+            id: 15,
+            question: "The rides with a height limit are coded ...........",
+            options: ["A) yellow", "B) blue", "C) black"]
+          }
+        ]
+      },
+      {
+        type: "form",
+        instructions: "Questions 16–20: Complete the notes below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+        title: "Event Scheduling and Safety",
+        items: [
+          { type: "static", text: "Food options" },
+          { type: "static", text: "Italian, Chinese, etc. at the Food Court" },
+          { type: "q", id: 16, prefix: "Hamburgers, sandwiches, etc. at ", suffix: "" },
+          { type: "divider" },
+          { type: "static", text: "Special events — Parade starts at noon" },
+          { type: "q", id: 17, prefix: "On the ", suffix: "" },
+          { type: "static", text: "Run by final year high school students" },
+          { type: "static", text: "Concert — At the amphitheatre" },
+          { type: "q", id: 18, prefix: "Theme: ", suffix: "" },
+          { type: "static", text: "Starts at 7:00" },
+          { type: "divider" },
+          { type: "static", text: "Safety and Security" },
+          { type: "q", id: 19, prefix: "Ten ", suffix: " centres in the park" },
+          { type: "static", text: "Children ask any staff member for help" },
+          { type: "q", id: 20, prefix: "Ask security team at the ", suffix: "" }
+        ]
+      }
+    ]
+  },
+
+  /* ══════ PART 3 ══════ */
+  {
+    part: 3,
+    title: "Design a Water Treatment System — Tutorial",
+    instructions: "Questions 21–24: Complete the flowchart below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+    sections: [
+      {
+        type: "flowchart",
+        steps: [
+          { type: "step", text: "Project topic: design a water treatment system" },
+          { type: "q-step", id: 21, prefix: "Step 1: go over ", suffix: "" },
+          { type: "q-step", id: 22, prefix: "Step 2: think about research ", suffix: "" },
+          {
+            type: "sub", items: [
+              "• search online databases using good search terms",
+              { type: "q-sub", id: 23, prefix: "• consider the kind of research, e.g. ", suffix: " from other projects" }
+            ]
+          },
+          { type: "q-step", id: 24, prefix: "Step 3: develop an ", suffix: "" }
+        ]
+      },
+      {
+        type: "form",
+        instructions: "Questions 25–27: Complete the summary below. Write <strong>NO MORE THAN ONE WORD</strong> for each answer.",
+        title: "Grey-Water Treatment System",
+        items: [
+          { type: "q", id: 25, prefix: "You need to design a grey-water treatment system to reduce the pressure on the water ", suffix: " in a Cameroon village." },
+          { type: "q", id: 26, prefix: "Grey-water is wastewater from household ", suffix: " ." },
+          { type: "q", id: 27, prefix: "The system needs to treat this water to remove bacteria, and recycle it to use for purposes such as watering plants, flushing toilets and doing ", suffix: " ." }
+        ]
+      },
+      {
+        type: "form",
+        instructions: "Questions 28–30: Complete the notes below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+        title: "Research Tips",
+        items: [
+          { type: "static", text: "General internet searches:" },
+          { type: "q", id: 28, prefix: "Avoid websites where ", suffix: " try to sell their products." },
+          { type: "static", text: "Engineering library — use key words when searching the catalogue" },
+          { type: "q", id: 29, prefix: "e.g. grey-water treatment systems / ", suffix: " use" },
+          { type: "static", text: "EWB website:" },
+          { type: "q", id: 30, prefix: "Check examples from the ", suffix: " last year." }
+        ]
+      }
+    ]
+  },
+
+  /* ══════ PART 4 ══════ */
+  {
+    part: 4,
+    title: "The Caveman Diet",
+    instructions: "Questions 31–34: Complete the summary below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+    sections: [
+      {
+        type: "form",
+        items: [
+          { type: "q", id: 31, prefix: "There are many popular fad diets nowadays. They all promise good health if you stick to the ", suffix: " ." },
+          { type: "q", id: 32, prefix: "The Caveman diet includes foods such as lean meat and fish that our forebears ate before we developed ", suffix: " ." },
+          { type: "static", text: "We need to find out what our ancestors did eat, so researchers are studying some existing hunter-gatherer tribes. These tribes typically like to eat meat but they can't always get it, even though they are skilled with their weapons," },
+          { type: "q", id: 33, prefix: "e.g. ", suffix: " and arrows." },
+          { type: "q", id: 34, prefix: "They get only about a ", suffix: " of their energy from meat." }
+        ]
+      },
+      {
+        type: "multiple-choice",
+        instructions: "Questions 35–36: Choose the correct letter, <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.",
+        items: [
+          {
+            id: 35,
+            question: "Research evidence suggests that ..........",
+            options: ["A) the tribesmen's traditional diet is unhealthy", "B) our bodies can digest only certain foods", "C) we can adapt to a range of diets."]
+          },
+          {
+            id: 36,
+            question: "Thai people have difficulty digesting milk because ..........",
+            options: ["A) they have too much lactase in their bodies", "B) in the past they didn't farm cows", "C) their saliva lacks certain enzymes."]
+          }
+        ]
+      },
+      {
+        /* === DEMONSTRATION: TABLE COMPLETION === */
+        type: "table",
+        instructions: "Questions 37–38 (Demo — Table Completion): Complete the table. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.",
+        title: "Global Dietary Variation",
+        headers: ["Group", "Primary Diet", "Notable Feature"],
+        rows: [
+          { cells: ["Inuit", { type: "q", id: 37, prefix: "", suffix: " foods (e.g. seal meat)" }, "High fat, Arctic"] },
+          { cells: ["Jains", "Vegetarian (milk allowed)", "Strictly non-violent"] },
+          { cells: ["Others", "Fish, insects", "High protein, low cost"] }
+        ]
+      },
+      {
+        /* === DEMONSTRATION: MATCHING === */
+        type: "matching",
+        instructions: "Questions 39 (Demo — Matching): Match each diet problem (A–C) with the correct description.",
+        title: "Problems with Caveman Diet",
+        options: ["A — High cost", "B — Health risk", "C — Environmental impact"],
+        items: [
+          { id: 39, statement: "Costs a lot of money for lean meat and vegetables", matchSelect: true },
+          { id: "39b", statement: "Too much red meat may be unhealthy", matchSelect: true, noAnswer: true },
+          { id: "39c", statement: "Reliance on meat is bad for the planet", matchSelect: true, noAnswer: true }
+        ]
+      },
+      {
+        /* === DEMONSTRATION: SHORT ANSWER === */
+        type: "short-answer",
+        instructions: "Question 40 (Demo — Short Answer): Answer the question below. Write <strong>NO MORE THAN TWO WORDS</strong>.",
+        items: [
+          { id: 40, question: "What is one negative effect of the Caveman diet on the natural world?" }
+        ]
+      }
+    ]
+  }
+];
+
+/* ─── Additional demo parts showing remaining types ─── */
+const DEMO_PART5 = {
+  part: 5,
+  title: "Demo: All Remaining Question Types",
+  instructions: "Demonstration of remaining IELTS question types: Classification, Pick-from-list, Multi-select, Diagram/Map Labeling.",
+  sections: [
+    {
+      /* === CLASSIFICATION === */
+      type: "classification",
+      instructions: "Questions 41–45 (Demo — Classification): Classify each item as A, B, or C.",
+      title: "Classify Food Sources",
+      categories: ["A — Animal", "B — Plant", "C — Processed"],
+      items: [
+        { id: 41, label: "Seal meat" },
+        { id: 42, label: "Lentils" },
+        { id: 43, label: "Protein powder" },
+        { id: 44, label: "Salmon" },
+        { id: 45, label: "White bread" }
+      ]
+    },
+    {
+      /* === MULTI-SELECT MCQ === */
+      type: "multi-select",
+      instructions: "Questions 46–47 (Demo — Multi-select): Choose <strong>TWO</strong> letters, A–E.",
+      title: "Which TWO features does Celebration Park offer?",
+      questionId: "46-47",
+      pickCount: 2,
+      ids: [46, 47],
+      options: [
+        "A — A petting zoo",
+        "B — A food court with multiple cuisines",
+        "C — An open-air concert amphitheatre",
+        "D — A ski slope",
+        "E — Bungee jumping"
+      ]
+    },
+    {
+      /* === PICK FROM LIST === */
+      type: "pick-from-list",
+      instructions: "Questions 48–50 (Demo — Pick from list): Choose <strong>THREE</strong> correct answers from the list.",
+      title: "Which THREE things does the grey-water system need to do?",
+      ids: [48, 49, 50],
+      pickCount: 3,
+      options: [
+        "A — Remove bacteria from water",
+        "B — Generate electricity",
+        "C — Recycle water for flushing toilets",
+        "D — Purify drinking water to WHO standards",
+        "E — Allow water to be used for watering plants",
+        "F — Heat water for showers"
+      ]
+    },
+    {
+      /* === MAP / DIAGRAM LABELING (dropdown) === */
+      type: "diagram",
+      instructions: "Questions 51–54 (Demo — Map Labeling): Label the map. Choose the correct letter from the box.",
+      title: "Celebration Park Map",
+      diagramSrc: "map.png",
+      diagramAlt: "Celebration Park layout map (image placeholder)",
+      labelChoices: ["A — Food Court", "B — Main Gate", "C — Amphitheatre", "D — First Aid Centre", "E — Roller Coaster", "F — Gift Shop"],
+      items: [
+        { id: 51, locationLabel: "Building north-east of entrance" },
+        { id: 52, locationLabel: "Structure at park centre" },
+        { id: 53, locationLabel: "Area near the lake" },
+        { id: 54, locationLabel: "Building south-west corner" }
+      ]
+    }
+  ]
+};
+
+EXAM.push(DEMO_PART5);
+
+/* ─── ANSWER KEY ─── */
+const ANSWER_KEY = {
+  1: "jordan", 2: "b47", 3: "3.65", 4: "goods", 5: "ms90", 6: "ocean",
+  7: "premium", 8: "22", 9: "seven", 10: "450",
+  11: "B", 12: "A", 13: "C", 14: "C", 15: "A",
+  16: "the grill", 17: "boardwalk", 18: "jazz", 19: "first aid", 20: "main gate",
+  21: "feedback", 22: "methods", 23: "findings", 24: "outline",
+  25: "supply", 26: "appliances", 27: "laundry", 28: "companies",
+  29: "domestic", 30: "project",
+  31: "rules", 32: "agriculture", 33: "spears", 34: "quarter",
+  35: "C", 36: "B",
+  37: "sea", 38: "traditions",
+  39: "A",
+  40: "environment",
+  // demo answers
+  41: "A", 42: "B", 43: "C", 44: "A", 45: "C",
+  "46-47": ["B", "C"],
+  48: "A", 49: "C", 50: "E",
+  51: "A", 52: "C", 53: "D", 54: "B"
+};
+
+/* ═══════════════ RENDERING ENGINE ═══════════════ */
+
+let currentPart = 1;
+const totalParts = EXAM.length;
+
+function buildInputWrap(id) {
+  return `<div class="input-wrap"><span class="qn">${id}</span><input type="text" data-q="${id}" autocomplete="off"></div>`;
+}
+
+function renderForm(section) {
+  let h = '';
+  (section.items || []).forEach(item => {
+    if (item.type === 'static') {
+      h += `<div class="static-row">${item.text}</div>`;
+    } else if (item.type === 'divider') {
+      h += `<hr class="section-divider" style="margin:14px 0 10px">`;
+    } else if (item.type === 'q') {
+      h += `<div class="mixed-row">${item.prefix}${buildInputWrap(item.id)}${item.suffix}</div>`;
+    }
+  });
+  return h;
+}
+
+function renderTable(section) {
+  let h = `<table class="completion-table"><thead><tr>`;
+  section.headers.forEach(hd => { h += `<th>${hd}</th>`; });
+  h += `</tr></thead><tbody>`;
+  section.rows.forEach(row => {
+    h += `<tr>`;
+    row.cells.forEach(cell => {
+      if (typeof cell === 'string') {
+        h += `<td>${cell}</td>`;
+      } else if (cell.type === 'q') {
+        h += `<td>${cell.prefix}${buildInputWrap(cell.id)}${cell.suffix}</td>`;
+      }
+    });
+    h += `</tr>`;
+  });
+  h += `</tbody></table>`;
+  return h;
+}
+
+function renderFlowchart(section) {
+  let h = `<div class="flowchart">`;
+  section.steps.forEach((step, i) => {
+    if (step.type === 'step') {
+      h += `<div class="flow-step"><strong>${step.text}</strong></div>`;
+    } else if (step.type === 'q-step') {
+      h += `<div class="flow-step">${step.prefix}${buildInputWrap(step.id)}${step.suffix}</div>`;
+    } else if (step.type === 'sub') {
+      h += `<div class="flow-step" style="background:#f8f9fa;font-size:0.88rem;flex-direction:column;align-items:flex-start;gap:4px;">`;
+      step.items.forEach(sub => {
+        if (typeof sub === 'string') {
+          h += `<div>${sub}</div>`;
+        } else if (sub.type === 'q-sub') {
+          h += `<div class="mixed-row" style="margin:2px 0">${sub.prefix}${buildInputWrap(sub.id)}${sub.suffix}</div>`;
+        }
+      });
+      h += `</div>`;
+    }
+    if (i < section.steps.length - 1) h += `<div class="flow-arrow">↓</div>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderMultipleChoice(section) {
+  let h = '';
+  section.items.forEach(q => {
+    h += `<div class="mc-item">
+      <div class="mc-question"><span class="qn qn-dark">${q.id}</span><span>${q.question}</span></div>
+      <div class="options-list">`;
+    q.options.forEach(opt => {
+      const val = opt[0];
+      h += `<label class="option-item">
+        <input type="radio" name="q_${q.id}" value="${val}" data-q="${q.id}">
+        <span>${opt}</span>
+      </label>`;
+    });
+    h += `</div></div>`;
+  });
+  return h;
+}
+
+function renderMultiSelect(section) {
+  const nameKey = `q_ms_${section.questionId}`;
+  let h = `<p style="margin-bottom:10px;font-weight:600;">Select exactly ${section.pickCount}:</p><div class="pick-list">`;
+  section.options.forEach(opt => {
+    const val = opt[0];
+    h += `<label class="pick-item">
+      <input type="checkbox" name="${nameKey}" value="${val}" data-ms-group="${section.questionId}" data-ms-count="${section.pickCount}">
+      <span>${opt}</span>
+    </label>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderPickFromList(section) {
+  const nameKey = `q_pfl_${section.ids.join('_')}`;
+  let h = `<p style="margin-bottom:10px;font-weight:600;">Select exactly ${section.pickCount}:</p><div class="pick-list">`;
+  section.options.forEach(opt => {
+    const val = opt[0];
+    h += `<label class="pick-item">
+      <input type="checkbox" name="${nameKey}" value="${val}" data-pfl-ids="${section.ids.join(',')}" data-pfl-count="${section.pickCount}">
+      <span>${opt}</span>
+    </label>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderMatching(section) {
+  let h = `<div class="matching-options">${section.options.join(' &nbsp;|&nbsp; ')}</div><div class="matching-grid">`;
+  section.items.forEach(item => {
+    if (item.noAnswer) {
+      h += `<div class="matching-row"><span class="qn qn-dark" style="opacity:0.3">${item.id}</span><span class="matching-statement">${item.statement}</span><em style="color:var(--muted);font-size:0.85rem">(no answer required)</em></div>`;
+    } else {
+      h += `<div class="matching-row">
+        <span class="qn qn-dark">${item.id}</span>
+        <span class="matching-statement">${item.statement}</span>
+        <select class="dropdown-select" data-q="${item.id}">
+          <option value="">Select...</option>
+          ${section.options.map(o => `<option value="${o[0]}">${o}</option>`).join('')}
+        </select>
+      </div>`;
+    }
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderClassification(section) {
+  let h = `<div class="matching-options">${section.categories.join(' &nbsp;|&nbsp; ')}</div><table class="classification-table"><thead><tr><th>Item</th><th>Category (select)</th></tr></thead><tbody>`;
+  section.items.forEach(item => {
+    h += `<tr><td><span class="qn qn-dark">${item.id}</span> ${item.label}</td>
+    <td><select class="dropdown-select" data-q="${item.id}">
+      <option value="">Select...</option>
+      ${section.categories.map(c => `<option value="${c[0]}">${c}</option>`).join('')}
+    </select></td></tr>`;
+  });
+  h += `</tbody></table>`;
+  return h;
+}
+
+function renderDiagram(section) {
+  let h = '';
+  if (section.diagramSrc) {
+    h += `<div class="diagram-wrap"><img src="${section.diagramSrc}" alt="${section.diagramAlt}" class="map-image"></div>`;
+  } else {
+    h += `<div style="border:2px dashed var(--border);border-radius:6px;padding:30px;text-align:center;color:var(--muted);margin:14px 0;font-style:italic;">[Map/Diagram Image Placeholder: ${section.diagramAlt}]</div>`;
+  }
+  h += `<div class="map-labels">`;
+  section.items.forEach(item => {
+    h += `<div class="map-label-row">
+      <span class="qn qn-dark">${item.id}</span>
+      <span style="flex:1">${item.locationLabel}</span>
+      <select class="map-select" data-q="${item.id}">
+        <option value="">Select label...</option>
+        ${section.labelChoices.map(c => `<option value="${c[0]}">${c}</option>`).join('')}
+      </select>
+    </div>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderShortAnswer(section) {
+  let h = '';
+  section.items.forEach(item => {
+    h += `<div class="short-answer-item">
+      <span class="qn qn-dark">${item.id}</span>
+      <strong>${item.question}</strong>
+      ${buildInputWrap(item.id)}
+    </div>`;
+  });
+  return h;
+}
+
+function renderSection(sec) {
+  let h = '';
+  if (sec.instructions) h += `<div class="instructions">${sec.instructions}</div>`;
+  if (sec.title) h += `<div class="section-title">${sec.title}</div>`;
+  switch (sec.type) {
+    case 'form':          h += renderForm(sec); break;
+    case 'table':         h += renderTable(sec); break;
+    case 'flowchart':     h += renderFlowchart(sec); break;
+    case 'multiple-choice': h += renderMultipleChoice(sec); break;
+    case 'multi-select':  h += renderMultiSelect(sec); break;
+    case 'pick-from-list': h += renderPickFromList(sec); break;
+    case 'matching':      h += renderMatching(sec); break;
+    case 'classification': h += renderClassification(sec); break;
+    case 'diagram':       h += renderDiagram(sec); break;
+    case 'short-answer':  h += renderShortAnswer(sec); break;
+    default: h += `<p style="color:var(--red)">Unknown section type: ${sec.type}</p>`;
+  }
+  return h;
+}
+
+function buildAllParts() {
+  const container = document.getElementById('test-content');
+  const tabsEl = document.getElementById('part-tabs');
+  container.innerHTML = '';
+  tabsEl.innerHTML = '';
+
+  EXAM.forEach((part, idx) => {
+    /* Part block */
+    const div = document.createElement('div');
+    div.className = 'part-block';
+    div.id = `part-${part.part}`;
+    let html = `<div class="part-head">
+      <h2>Listening — Part ${part.part}</h2>
+      <span class="part-tag">PART ${part.part}</span>
+    </div>
+    <div class="instructions">${part.instructions}</div>
+    <div class="section-title">${part.title}</div>`;
+    part.sections.forEach((sec, si) => {
+      if (si > 0) html += `<hr class="section-divider">`;
+      html += renderSection(sec);
+    });
+    div.innerHTML = html;
+    container.appendChild(div);
+
+    /* Tab button */
+    const btn = document.createElement('button');
+    btn.className = 'part-tab';
+    btn.id = `tab-${part.part}`;
+    btn.textContent = `Part ${part.part}`;
+    btn.onclick = () => switchPart(part.part);
+    tabsEl.appendChild(btn);
+  });
+}
+
+/* ─── Collect ALL question IDs from EXAM ─── */
+function collectAllQids() {
+  const ids = [];
+  EXAM.forEach(part => {
+    part.sections.forEach(sec => {
+      if (sec.type === 'form') {
+        sec.items.forEach(it => { if (it.type === 'q') ids.push(it.id); });
+      } else if (sec.type === 'table') {
+        sec.rows.forEach(row => row.cells.forEach(c => { if (c && c.type === 'q') ids.push(c.id); }));
+      } else if (sec.type === 'flowchart') {
+        sec.steps.forEach(st => {
+          if (st.type === 'q-step') ids.push(st.id);
+          if (st.type === 'sub') st.items.forEach(s => { if (s.type === 'q-sub') ids.push(s.id); });
+        });
+      } else if (sec.type === 'multiple-choice') {
+        sec.items.forEach(q => ids.push(q.id));
+      } else if (sec.type === 'multi-select') {
+        sec.ids.forEach(id => ids.push(id));
+      } else if (sec.type === 'pick-from-list') {
+        sec.ids.forEach(id => ids.push(id));
+      } else if (sec.type === 'matching') {
+        sec.items.forEach(it => { if (!it.noAnswer) ids.push(it.id); });
+      } else if (sec.type === 'classification') {
+        sec.items.forEach(it => ids.push(it.id));
+      } else if (sec.type === 'diagram') {
+        sec.items.forEach(it => ids.push(it.id));
+      } else if (sec.type === 'short-answer') {
+        sec.items.forEach(it => ids.push(it.id));
+      }
+    });
+  });
+  return ids;
+}
+
+function buildDock() {
+  const dock = document.getElementById('q-dock');
+  dock.innerHTML = '';
+  const ids = collectAllQids();
+  ids.forEach(id => {
+    const b = document.createElement('button');
+    b.className = 'q-btn';
+    b.id = `qb-${id}`;
+    b.textContent = id;
+    b.onclick = () => jumpToQ(id);
+    dock.appendChild(b);
+  });
+}
+
+function switchPart(p) {
+  currentPart = p;
+  document.querySelectorAll('.part-block').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.part-tab').forEach(el => el.classList.remove('active'));
+  const pb = document.getElementById(`part-${p}`);
+  const tb = document.getElementById(`tab-${p}`);
+  if (pb) pb.classList.add('active');
+  if (tb) tb.classList.add('active');
+  updateDockHighlight();
+}
+
+function partForQ(id) {
+  for (const part of EXAM) {
+    const ids = [];
+    part.sections.forEach(sec => gatherIds(sec, ids));
+    if (ids.includes(id) || ids.includes(String(id))) return part.part;
+  }
+  return 1;
+}
+
+function gatherIds(sec, arr) {
+  if (sec.type === 'form') sec.items.forEach(it => { if (it.type === 'q') arr.push(it.id); });
+  else if (sec.type === 'table') sec.rows.forEach(r => r.cells.forEach(c => { if (c && c.type === 'q') arr.push(c.id); }));
+  else if (sec.type === 'flowchart') sec.steps.forEach(st => { if (st.type === 'q-step') arr.push(st.id); if (st.type === 'sub') st.items.forEach(s => { if (s.type === 'q-sub') arr.push(s.id); }); });
+  else if (sec.type === 'multiple-choice') sec.items.forEach(q => arr.push(q.id));
+  else if (sec.type === 'multi-select') sec.ids.forEach(id => arr.push(id));
+  else if (sec.type === 'pick-from-list') sec.ids.forEach(id => arr.push(id));
+  else if (sec.type === 'matching') sec.items.forEach(it => { if (!it.noAnswer) arr.push(it.id); });
+  else if (sec.type === 'classification') sec.items.forEach(it => arr.push(it.id));
+  else if (sec.type === 'diagram') sec.items.forEach(it => arr.push(it.id));
+  else if (sec.type === 'short-answer') sec.items.forEach(it => arr.push(it.id));
+}
+
+function jumpToQ(id) {
+  const p = partForQ(id);
+  if (currentPart !== p) switchPart(p);
+  setTimeout(() => {
+    const el = document.querySelector(`[data-q="${id}"]`);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus && el.focus(); }
+  }, 80);
+}
+
+function updateDockHighlight() {
+  const ids = collectAllQids();
+  ids.forEach(id => {
+    const btn = document.getElementById(`qb-${id}`);
+    if (!btn) return;
+    const p = partForQ(id);
+    btn.classList.toggle('current', p === currentPart);
+  });
+}
+
+/* ─── Answer tracking ─── */
+function setupTracking() {
+  document.addEventListener('input', onInputChange);
+  document.addEventListener('change', onInputChange);
+}
+
+function onInputChange(e) {
+  const el = e.target;
+  const qid = el.getAttribute('data-q');
+  if (!qid) return;
+  let answered = false;
+  if (el.type === 'text') answered = el.value.trim() !== '';
+  else if (el.type === 'radio') answered = el.checked;
+  else if (el.tagName === 'SELECT') answered = el.value !== '';
+  else if (el.type === 'checkbox') {
+    /* handled per-group below */
+    const grp = el.getAttribute('data-ms-group') || el.getAttribute('data-pfl-ids');
+    if (grp) { updateMultiAnswerDock(el); return; }
+  }
+  const btn = document.getElementById(`qb-${qid}`);
+  if (btn) btn.classList.toggle('answered', answered);
+}
+
+function updateMultiAnswerDock(changedEl) {
+  const grp = changedEl.getAttribute('data-ms-group');
+  const pflIds = changedEl.getAttribute('data-pfl-ids');
+  const key = grp || pflIds;
+  const checked = [...document.querySelectorAll(`[data-ms-group="${key}"]:checked,[data-pfl-ids="${key}"]:checked`)];
+  // Mark all related IDs based on whether something is checked
+  if (grp) {
+    // multi-select: ids not individually tracked, mark the group button if exists
+    checked.length > 0 ? null : null; // dock uses first id of the group
+  }
+  if (pflIds) {
+    const ids = pflIds.split(',');
+    ids.forEach((id, i) => {
+      const btn = document.getElementById(`qb-${id}`);
+      if (btn) btn.classList.toggle('answered', checked.length > i);
+    });
+  }
+}
+
+/* ─── Timer ─── */
+let secondsLeft = 30 * 60;
+let timerRef = null;
+function startTimer() {
+  const el = document.getElementById('timer');
+  timerRef = setInterval(() => {
+    const m = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
+    const s = String(secondsLeft % 60).padStart(2, '0');
+    el.textContent = `${m}:${s}`;
+    if (secondsLeft <= 0) { clearInterval(timerRef); submitTest(); }
+    secondsLeft--;
+  }, 1000);
+}
+
+/* ─── Submit ─── */
+function getUserAnswer(id) {
+  const text = document.querySelector(`input[type="text"][data-q="${id}"]`);
+  if (text) return text.value.trim().toLowerCase();
+  const radio = document.querySelector(`input[type="radio"][data-q="${id}"]:checked`);
+  if (radio) return radio.value.trim().toLowerCase();
+  const sel = document.querySelector(`select[data-q="${id}"]`);
+  if (sel) return sel.value.trim().toLowerCase();
+  return '';
+}
+
+function submitTest() {
+  clearInterval(timerRef);
+  const ids = collectAllQids();
+  let score = 0;
+  let log = '';
+
+  ids.forEach(id => {
+    const correct = ANSWER_KEY[id];
+    if (correct === undefined) return; // no answer required (noAnswer items)
+    
+    let userAns = '';
+    // multi-select / pick-from-list — answer is array
+    if (Array.isArray(correct)) {
+      const grpKey = Object.keys(ANSWER_KEY).find(k => k === String(id) || k.startsWith(id + '-'));
+      const msGroup = document.querySelectorAll(`[data-ms-group]:checked`);
+      const pflGroup = document.querySelectorAll(`[data-pfl-ids]:checked`);
+      const allChecked = [...msGroup, ...pflGroup].map(el => el.value.toUpperCase()).sort();
+      const correctSorted = [...correct].map(c => c.toUpperCase()).sort();
+      const isCorrect = JSON.stringify(allChecked) === JSON.stringify(correctSorted);
+      if (isCorrect) score++;
+      log += reportRow(id, isCorrect, allChecked.join(', ') || '[Blank]', correct.join(', '));
+      return;
+    }
+
+    userAns = getUserAnswer(id);
+    const isCorrect = userAns === String(correct).toLowerCase();
+    if (isCorrect) score++;
+    log += reportRow(id, isCorrect, userAns || '[Blank]', correct);
+  });
+
+  const total = ids.length;
+  const band = calcBand(score, total);
+
+  document.getElementById('modal-body').innerHTML = `
+    <p style="margin-bottom:8px">Questions answered correctly: <strong>${score} / ${total}</strong></p>
+    <div class="band-badge">Estimated Band Score: ${band}</div>
+    <h4 style="margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:5px;font-family:var(--mono)">Review Log</h4>
+    ${log}
+  `;
+  document.getElementById('modal').classList.add('active');
+}
+
+function reportRow(id, correct, userAns, correctAns) {
+  return `<div class="report-row">
+    <span class="qn">${id}</span>
+    <span class="${correct ? 'ok' : 'no'}">${correct ? '✓ Correct' : '✗ Incorrect'}</span>
+    <span>Your answer: "<strong>${userAns}</strong>"</span>
+    ${!correct ? `<span style="color:var(--muted)">| Correct: "<strong>${correctAns}</strong>"</span>` : ''}
+  </div>`;
+}
+
+function calcBand(score, total) {
+  const pct = score / total;
+  if (pct >= 0.975) return 9.0;
+  if (pct >= 0.925) return 8.5;
+  if (pct >= 0.875) return 8.0;
+  if (pct >= 0.800) return 7.5;
+  if (pct >= 0.750) return 7.0;
+  if (pct >= 0.650) return 6.5;
+  if (pct >= 0.575) return 6.0;
+  if (pct >= 0.450) return 5.5;
+  if (pct >= 0.350) return 5.0;
+  return 4.0;
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+/* ─── Init ─── */
+document.addEventListener('DOMContentLoaded', () => {
+  buildAllParts();
+  buildDock();
+  setupTracking();
+  switchPart(1);
+  startTimer();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Computer-Delivered Listening Practice Test</title>
+    <style>
+        :root {
+            --yl: #f5c242; --bk: #202124; --bl: #1a73e8; --lbg: #f8f9fa;
+            --bd: #dadce0; --tx: #3c4043; --ok: #137333; --err: #c5221f;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+        body{background:var(--lbg);color:var(--tx);display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+        /* ── Header ── */
+        header{background:var(--bk);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:10px 24px;border-bottom:3px solid var(--yl);z-index:10;gap:16px;flex-wrap:wrap}
+        .test-title{font-size:1rem;font-weight:bold;letter-spacing:.3px;white-space:nowrap}
+        .header-controls{display:flex;align-items:center;gap:20px;flex:1;justify-content:flex-end}
+        .audio-wrap{width:100%;max-width:380px}
+        .audio-wrap audio{width:100%;height:34px}
+        .timer-box{background:var(--yl);color:var(--bk);padding:6px 16px;border-radius:4px;font:bold 1.15rem monospace;white-space:nowrap}
+
+        /* ── Main ── */
+        main{display:flex;flex:1;overflow:hidden;background:#fff}
+        .test-content{flex:1;padding:28px 40px;overflow-y:auto;width:100%}
+        .part-box{display:none;max-width:960px;margin:0 auto}
+        .part-box.active{display:block}
+        .instructions{background:#e3f2fd;border-left:4px solid var(--bl);padding:12px;margin-bottom:22px;font-style:italic;font-size:.93rem;line-height:1.55}
+        .part-hdr{border-bottom:2px solid var(--bk);padding-bottom:6px;margin-bottom:14px}
+        .part-hdr h2{font-size:1.35rem;color:var(--bk)}
+        .grp-title{font-size:1.05rem;margin-bottom:14px;color:var(--bk);font-weight:bold}
+        .sec-divider{border-top:2px dashed var(--bd);margin:28px 0 18px}
+
+        /* ── Shared inline items (form-note / sentence) ── */
+        .static-row{margin:10px 0;font-size:.93rem;line-height:1.6;color:#5f6368}
+        .question-row{margin:14px 0;display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:.97rem;line-height:1.6}
+        .input-wrap{display:inline-flex;align-items:center;border:1px solid var(--bd);background:#fff;border-radius:4px;padding:2px 6px}
+        .q-num-inline{font-weight:bold;color:#5f6368;font-size:.82rem;margin-right:5px;background:#e8eaed;padding:2px 6px;border-radius:3px}
+        .q-num-block{font-weight:bold;background:var(--bk);color:#fff;padding:2px 8px;border-radius:3px;font-size:.82rem;margin-right:8px;flex-shrink:0}
+        input[type="text"]{border:none;padding:4px;font-size:1rem;width:150px;outline:none;color:var(--bl)}
+
+        /* ── Summary (paragraph flow) ── */
+        .summary-flow{font-size:.95rem;line-height:2}
+        .summary-flow .input-wrap{vertical-align:middle;margin:0 2px}
+        .summary-flow input[type="text"]{width:130px}
+
+        /* ── Table ── */
+        .q-table{width:100%;border-collapse:collapse;margin:14px 0 28px;font-size:.93rem}
+        .q-table th,.q-table td{border:1px solid var(--bd);padding:10px;text-align:center}
+        .q-table th{background:#f1f3f4;font-weight:bold}
+        .q-table td:first-child{text-align:left;width:45%}
+        .q-table input[type="text"]{width:120px}
+
+        /* ── Flowchart ── */
+        .fc-wrap{max-width:520px;margin:18px auto}
+        .fc-step{border:2px solid var(--bd);background:#fafbfc;padding:10px 20px;border-radius:6px;text-align:center;font-size:.93rem;line-height:1.8}
+        .fc-step.fc-has-input{background:#fffde7;border-color:var(--yl)}
+        .fc-arrow{text-align:center;color:#5f6368;font-size:1.15rem;line-height:1;padding:3px 0}
+
+        /* ── Diagram / Map label ── */
+        .diag-container{text-align:center;margin:18px 0}
+        .diag-container svg{max-width:100%;height:auto;border:1px solid var(--bd);border-radius:6px}
+        .diag-qs{max-width:520px;margin:0 auto}
+        .diag-q-row{display:flex;align-items:center;gap:12px;margin:12px 0;font-size:.93rem}
+        .diag-q-row .diag-letter{font-weight:bold;color:var(--bk);min-width:22px}
+        .diag-select{padding:6px 10px;font-weight:bold;color:var(--bl);border:1px solid var(--bd);border-radius:4px;outline:none;margin-left:auto;width:180px}
+
+        /* ── Short Answer ── */
+        .sa-item{margin:18px 0}
+        .sa-q-text{margin-bottom:8px;font-size:.95rem;line-height:1.55}
+        .sa-input{border:1px solid var(--bd);border-radius:4px;padding:6px 12px;font-size:.95rem;width:280px;outline:none;color:var(--bl)}
+
+        /* ── MCQ Single ── */
+        .mcq-item{margin-bottom:24px}
+        .mcq-q-row{display:flex;align-items:flex-start;gap:8px;font-size:.95rem;line-height:1.5;margin-bottom:8px}
+        .opt-list{margin-left:36px}
+        .opt-item{margin:10px 0;display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:.93rem}
+        .opt-item input{margin-top:3px;accent-color:var(--bl)}
+
+        /* ── MCQ Multi ── */
+        .mcq-multi-note{font-style:italic;color:#5f6368;font-size:.88rem;margin-bottom:8px;margin-left:36px}
+
+        /* ── Matching / Classification ── */
+        .match-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd);gap:12px}
+        .match-text{flex:1;font-size:.93rem;line-height:1.5}
+        .match-select{width:200px;padding:6px 10px;border:1px solid var(--bd);border-radius:4px;font-size:.93rem;color:var(--bl);font-weight:bold;outline:none}
+        .class-legend{margin-bottom:16px;font-size:.93rem;line-height:1.7}
+        .class-legend strong{margin-right:4px}
+
+        /* ── Pick from List ── */
+        .pick-item{display:flex;align-items:center;gap:12px;padding:10px 16px;margin:6px 0;border:1px solid var(--bd);border-radius:4px;cursor:pointer;transition:background .15s;font-size:.93rem}
+        .pick-item:hover{background:#f1f3f4}
+        .pick-item input[type="checkbox"]{width:17px;height:17px;accent-color:var(--bl);flex-shrink:0}
+        .pick-letter{font-weight:bold;color:var(--bk);min-width:22px}
+
+        /* ── Footer ── */
+        footer{background:var(--bk);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:10;gap:12px;flex-wrap:wrap}
+        .part-sw{display:flex;gap:4px}
+        .p-btn{background:#3c4043;color:#fff;border:none;padding:10px 18px;cursor:pointer;font-weight:bold;border-radius:4px;font-size:.83rem;transition:background .2s}
+        .p-btn.active{background:var(--yl);color:var(--bk)}
+        .nav-dock{display:flex;gap:4px;overflow-x:auto;max-width:50%;padding:4px 0}
+        .n-btn{background:#5f6368;color:#fff;border:none;padding:6px 9px;cursor:pointer;font-weight:bold;font-size:.78rem;border-radius:3px;min-width:30px;transition:background .15s}
+        .n-btn.answered{background:var(--bl)}
+        .n-btn.ctx{box-shadow:inset 0 0 0 2px var(--yl)}
+        .submit-btn{background:var(--ok);color:#fff;border:none;padding:10px 24px;font-weight:bold;cursor:pointer;border-radius:4px;font-size:.88rem;transition:filter .15s}
+        .submit-btn:hover{filter:brightness(1.1)}
+
+        /* ── Modal ── */
+        .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;z-index:2000;visibility:hidden;opacity:0;transition:all .2s ease-out}
+        .modal-ov.active{visibility:visible;opacity:1}
+        .modal-win{background:#fff;width:92%;max-width:620px;max-height:82vh;border-radius:8px;display:flex;flex-direction:column;overflow:hidden}
+        .modal-hdr{background:var(--bk);color:#fff;padding:16px 20px;font-size:1.12rem;font-weight:bold;border-bottom:3px solid var(--yl)}
+        .modal-body{padding:24px;overflow-y:auto;flex:1;font-size:.93rem;line-height:1.6}
+        .modal-ftr{background:#f1f3f4;padding:12px 20px;text-align:right;border-top:1px solid var(--bd)}
+        .modal-close{background:var(--bl);color:#fff;border:none;padding:8px 20px;font-weight:bold;cursor:pointer;border-radius:4px}
+        .rpt-item{margin-bottom:9px;padding-bottom:9px;border-bottom:1px dashed var(--bd)}
+        .t-ok{color:var(--ok);font-weight:bold}
+        .t-err{color:var(--err);font-weight:bold}
+        .band-box{background:var(--yl);color:#000;padding:14px;font-weight:bold;font-size:1.2rem;text-align:center;border-radius:4px;margin:16px 0}
+
+        @media(prefers-reduced-motion:reduce){.modal-ov{transition:none}}
+        @media(max-width:700px){
+            .test-content{padding:18px 14px}
+            header{padding:8px 12px}
+            footer{padding:10px 12px;flex-direction:column;align-items:stretch}
+            .nav-dock{max-width:100%}
+            .match-select,.diag-select{width:140px}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="test-title">IELTS Listening Practice Test</div>
+    <div class="header-controls">
+        <div class="audio-wrap"><audio controls><source src="./ielts-practice-listening.mp3" type="audio/mpeg"></audio></div>
+        <div class="timer-box" id="timer">30:00</div>
+    </div>
+</header>
+
+<main><section class="test-content" id="wrapper"></section></main>
+
+<footer>
+    <div class="part-sw">
+        <button class="p-btn active" onclick="switchPart(1)" id="pb1">Part 1</button>
+        <button class="p-btn" onclick="switchPart(2)" id="pb2">Part 2</button>
+        <button class="p-btn" onclick="switchPart(3)" id="pb3">Part 3</button>
+        <button class="p-btn" onclick="switchPart(4)" id="pb4">Part 4</button>
+    </div>
+    <div class="nav-dock" id="dock"></div>
+    <button class="submit-btn" onclick="submitTest()">Submit Test</button>
+</footer>
+
+<div class="modal-ov" id="modal">
+    <div class="modal-win">
+        <div class="modal-hdr">Test Results Summary</div>
+        <div class="modal-body" id="report"></div>
+        <div class="modal-ftr"><button class="modal-close" onclick="closeModal()">Review Answers</button></div>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   EXAM DATA — supports all 12 IELTS Listening question types
+   ============================================================
+   Section types:
+     "form-note"       – Form / Note Completion
+     "table"           – Table Completion
+     "flowchart"       – Flow-chart Completion
+     "diagram-label"   – Diagram Labeling (with SVG/image)
+     "sentence"        – Sentence Completion
+     "summary"         – Summary Completion (paragraph flow)
+     "short-answer"    – Short Answer Questions
+     "mcq-single"      – Multiple Choice (single answer)
+     "mcq-multi"       – Multiple Choice (multiple answers)
+     "matching"        – Matching (items → options)
+     "classification"  – Classification (items → categories)
+     "map-label"       – Map / Plan Labeling (with SVG/image)
+     "pick-list"       – Pick from a List (multi-select)
+   ============================================================ */
+
+const examData = {
+    part1: {
+        instructions: 'Questions 1–4: Complete the notes below. Write <strong>NO MORE THAN TWO WORDS AND/OR A NUMBER</strong> for each answer.',
+        title: 'Riverside Hotel Booking Enquiry',
+        sections: [
+            {
+                type: 'form-note',
+                items: [
+                    { type:'static', text:'Customer details' },
+                    { type:'question', id:1, prefix:'Surname: ', suffix:'' },
+                    { type:'static', text:'Phone: 07700 – 900 – 123' },
+                    { type:'question', id:2, prefix:'Check-in date: ', suffix:'' },
+                    { type:'question', id:3, prefix:'Room type: ', suffix:'' },
+                    { type:'question', id:4, prefix:'Includes: ', suffix:'' }
+                ]
+            }
+        ],
+        extraSections: [
+            {
+                instructions: 'Questions 5–8: Complete the table below. Write <strong>NO MORE THAN TWO WORDS AND/OR A NUMBER</strong> for each answer.',
+                title: 'Booking Details',
+                sections: [
+                    {
+                        type: 'table',
+                        headers: ['Detail', 'Information'],
+                        rows: [
+                            { cells:[ {type:'static',text:'Number of nights'}, {type:'input',id:5} ] },
+                            { cells:[ {type:'static',text:'Nearest train station'}, {type:'input',id:6} ] },
+                            { cells:[ {type:'static',text:'Shuttle departure time'}, {type:'input',id:7} ] },
+                            { cells:[ {type:'static',text:'Cost of shuttle (£)'}, {type:'input',id:8} ] }
+                        ]
+                    }
+                ]
+            },
+            {
+                instructions: 'Questions 9–10: Complete the sentences below. Write <strong>NO MORE THAN TWO WORDS AND/OR A NUMBER</strong> for each answer.',
+                title: 'Additional Information',
+                sections: [
+                    {
+                        type: 'sentence',
+                        items: [
+                            { type:'question', id:9, prefix:'The hotel restaurant specialises in local ', suffix:' dishes.' },
+                            { type:'question', id:10, prefix:'Guests should bring a ', suffix:' email.' }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+
+    part2: {
+        instructions: 'Questions 11–13: Choose the correct letter, <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.',
+        title: 'Greenfield University Open Day',
+        sections: [
+            {
+                type: 'mcq-single',
+                items: [
+                    { id:11, question:'The main purpose of the open day is to ..........', options:['A) show off new buildings','B) help prospective students decide','C) celebrate the university\'s anniversary'] },
+                    { id:12, question:'The science building was constructed in ..........', options:['A) 2015','B) 2008','C) 1996'] },
+                    { id:13, question:'What does the guide say about parking?', options:['A) It is free for all visitors today','B) Spaces are limited near the campus','C) A permit must be bought in advance'] }
+                ]
+            }
+        ],
+        extraSections: [
+            {
+                instructions: 'Questions 14–15: Choose <strong>TWO</strong> correct answers from the list below.',
+                title: 'Newly Opened Facilities',
+                sections: [
+                    {
+                        type: 'mcq-multi',
+                        question: 'Which TWO facilities have opened in the last six months?',
+                        selectCount: 2,
+                        answerIds: [14, 15],
+                        groupKey: 'mm-g1',
+                        options: [
+                            { letter:'A', text:'A new student cafeteria' },
+                            { letter:'B', text:'An indoor swimming pool' },
+                            { letter:'C', text:'A postgraduate research centre' },
+                            { letter:'D', text:'A 24-hour computer laboratory' },
+                            { letter:'E', text:'A refurbished sports hall' }
+                        ]
+                    }
+                ]
+            },
+            {
+                instructions: 'Questions 16–20: Label the map below. Choose <strong>NO MORE THAN TWO WORDS</strong> from the box for each answer.',
+                title: 'Campus Map',
+                sections: [
+                    {
+                        type: 'map-label',
+                        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" style="background:#e8f5e9;border-radius:6px">
+                            <rect x="295" y="30" width="50" height="310" fill="#bdbdbd" rx="4"/>
+                            <rect x="40" y="175" width="560" height="28" fill="#bdbdbd" rx="4"/>
+                            <rect x="60" y="55" width="105" height="65" fill="#bbdefb" stroke="#1565c0" stroke-width="2" rx="5"/><text x="112" y="95" text-anchor="middle" font-size="22" font-weight="bold" fill="#1565c0">A</text>
+                            <rect x="430" y="55" width="105" height="65" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2" rx="5"/><text x="482" y="95" text-anchor="middle" font-size="22" font-weight="bold" fill="#2e7d32">B</text>
+                            <rect x="60" y="240" width="105" height="65" fill="#ffe0b2" stroke="#e65100" stroke-width="2" rx="5"/><text x="112" y="280" text-anchor="middle" font-size="22" font-weight="bold" fill="#e65100">C</text>
+                            <rect x="430" y="240" width="105" height="65" fill="#f8bbd0" stroke="#c2185b" stroke-width="2" rx="5"/><text x="482" y="280" text-anchor="middle" font-size="22" font-weight="bold" fill="#c2185b">D</text>
+                            <rect x="60" y="340" width="105" height="45" fill="#d1c4e9" stroke="#512da8" stroke-width="2" rx="5"/><text x="112" y="370" text-anchor="middle" font-size="22" font-weight="bold" fill="#512da8">E</text>
+                            <rect x="430" y="340" width="105" height="45" fill="#b2dfdb" stroke="#00695c" stroke-width="2" rx="5"/><text x="482" y="370" text-anchor="middle" font-size="22" font-weight="bold" fill="#00695c">F</text>
+                            <ellipse cx="210" cy="330" rx="42" ry="26" fill="#90caf9" stroke="#42a5f5" stroke-width="1.5"/><text x="210" y="335" text-anchor="middle" font-size="9" fill="#1565c0">Pond</text>
+                            <circle cx="560" cy="160" r="16" fill="#66bb6a" opacity=".7"/><circle cx="580" cy="172" r="12" fill="#43a047" opacity=".7"/>
+                            <circle cx="75" cy="160" r="14" fill="#66bb6a" opacity=".7"/>
+                            <text x="320" y="395" text-anchor="middle" font-size="11" fill="#424242" font-weight="bold">Main Entrance</text>
+                            <text x="600" y="22" text-anchor="end" font-size="12" fill="#424242" font-weight="bold">N &#8593;</text>
+                        </svg>`,
+                        items: [
+                            { id:16, label:'A' },
+                            { id:17, label:'B' },
+                            { id:18, label:'C' },
+                            { id:19, label:'D' },
+                            { id:20, label:'E' }
+                        ],
+                        options: ['reception','library','café','sports hall','bookshop','lecture theatre','dormitory','car park']
+                    }
+                ]
+            }
+        ]
+    },
+
+    part3: {
+        instructions: 'Questions 21–24: Complete the flowchart below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.',
+        title: 'Tutorial: Engineering Group Project Plan',
+        sections: [
+            {
+                type: 'flowchart',
+                steps: [
+                    { type:'static', text:'Choose project topic' },
+                    { type:'question', id:21, prefix:'Go over ', suffix:'' },
+                    { type:'question', id:22, prefix:'Consider research ', suffix:'' },
+                    { type:'static', text:'Decide on research strategy' },
+                    { type:'question', id:23, prefix:'Carry out ', suffix:'' },
+                    { type:'question', id:24, prefix:'Prepare a draft ', suffix:'' }
+                ]
+            }
+        ],
+        extraSections: [
+            {
+                instructions: 'Questions 25–27: Match each student to the topic they chose. Write the correct letter, <strong>A–E</strong>, next to questions 25–27.',
+                title: 'Student Project Topics',
+                sections: [
+                    {
+                        type: 'matching',
+                        items: [
+                            { id:25, text:'Tom' },
+                            { id:26, text:'Sarah' },
+                            { id:27, text:'James' }
+                        ],
+                        options: [
+                            { letter:'A', text:'Solar panel efficiency' },
+                            { letter:'B', text:'Wind turbine design' },
+                            { letter:'C', text:'Water filtration systems' },
+                            { letter:'D', text:'Soil erosion prevention' },
+                            { letter:'E', text:'Urban waste management' }
+                        ]
+                    }
+                ]
+            },
+            {
+                instructions: 'Questions 28–30: Complete the summary below. Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.',
+                title: 'Project Requirements Summary',
+                sections: [
+                    {
+                        type: 'summary',
+                        items: [
+                            { type:'static', text:'The project must address a real-world problem in a ' },
+                            { type:'question', id:28, prefix:'', suffix:' country. Students need to consider the availability of local ' },
+                            { type:'question', id:29, prefix:'', suffix:' . The final presentation is scheduled for ' },
+                            { type:'question', id:30, prefix:'', suffix:' .' }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+
+    part4: {
+        instructions: 'Questions 31–34: Classify the following features. Write the correct letter, <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>, next to questions 31–34.',
+        title: 'Lecture: Urban Agriculture Methods',
+        sections: [
+            {
+                type: 'classification',
+                categories: [
+                    { letter:'A', name:'Rooftop gardens' },
+                    { letter:'B', name:'Vertical farms' },
+                    { letter:'C', name:'Community plots' }
+                ],
+                items: [
+                    { id:31, text:'Uses hydroponic growing systems' },
+                    { id:32, text:'Helps reduce the urban heat island effect' },
+                    { id:33, text:'Relies on the involvement of local residents' },
+                    { id:34, text:'Requires artificial lighting to function year-round' }
+                ]
+            }
+        ],
+        extraSections: [
+            {
+                instructions: 'Questions 35–36: Label the diagram below. Choose <strong>NO MORE THAN TWO WORDS</strong> from the box for each answer.',
+                title: 'Vertical Farming System Diagram',
+                sections: [
+                    {
+                        type: 'diagram-label',
+                        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" style="background:#fafafa;border-radius:6px">
+                            <rect x="110" y="15" width="270" height="290" fill="none" stroke="#424242" stroke-width="2.5" rx="6"/>
+                            <rect x="130" y="50" width="230" height="8" fill="#795548"/>
+                            <rect x="130" y="22" width="230" height="28" fill="#e8f5e9"/>
+                            <rect x="150" y="30" width="14" height="18" fill="#4caf50" rx="2"/><rect x="178" y="34" width="14" height="14" fill="#66bb6a" rx="2"/>
+                            <rect x="206" y="28" width="14" height="20" fill="#4caf50" rx="2"/><rect x="234" y="32" width="14" height="16" fill="#81c784" rx="2"/>
+                            <rect x="262" y="30" width="14" height="18" fill="#4caf50" rx="2"/><rect x="290" y="34" width="14" height="14" fill="#66bb6a" rx="2"/>
+                            <rect x="318" y="30" width="14" height="18" fill="#4caf50" rx="2"/>
+                            <text x="80" y="42" text-anchor="end" font-size="15" font-weight="bold" fill="#d32f2f">A</text>
+                            <line x1="85" y1="39" x2="130" y2="39" stroke="#d32f2f" stroke-width="1.5" stroke-dasharray="4,2"/>
+                            <rect x="130" y="130" width="230" height="8" fill="#795548"/>
+                            <rect x="130" y="102" width="230" height="28" fill="#e8f5e9"/>
+                            <rect x="150" y="110" width="14" height="18" fill="#4caf50" rx="2"/><rect x="178" y="114" width="14" height="14" fill="#66bb6a" rx="2"/>
+                            <rect x="206" y="108" width="14" height="20" fill="#4caf50" rx="2"/><rect x="234" y="112" width="14" height="16" fill="#81c784" rx="2"/>
+                            <rect x="262" y="110" width="14" height="18" fill="#4caf50" rx="2"/><rect x="290" y="114" width="14" height="14" fill="#66bb6a" rx="2"/>
+                            <rect x="318" y="110" width="14" height="18" fill="#4caf50" rx="2"/>
+                            <rect x="130" y="210" width="230" height="8" fill="#795548"/>
+                            <rect x="130" y="182" width="230" height="28" fill="#e8f5e9"/>
+                            <rect x="150" y="190" width="14" height="18" fill="#4caf50" rx="2"/><rect x="178" y="194" width="14" height="14" fill="#66bb6a" rx="2"/>
+                            <rect x="206" y="188" width="14" height="20" fill="#4caf50" rx="2"/><rect x="234" y="192" width="14" height="16" fill="#81c784" rx="2"/>
+                            <rect x="262" y="190" width="14" height="18" fill="#4caf50" rx="2"/><rect x="290" y="194" width="14" height="14" fill="#66bb6a" rx="2"/>
+                            <rect x="318" y="190" width="14" height="18" fill="#4caf50" rx="2"/>
+                            <rect x="385" y="30" width="14" height="260" fill="#42a5f5" rx="4"/>
+                            <circle cx="392" cy="70" r="5" fill="#1e88e5"/><circle cx="392" cy="150" r="5" fill="#1e88e5"/><circle cx="392" cy="230" r="5" fill="#1e88e5"/>
+                            <text x="430" y="168" text-anchor="start" font-size="15" font-weight="bold" fill="#1565c0">B</text>
+                            <line x1="399" y1="165" x2="425" y2="165" stroke="#1565c0" stroke-width="1.5" stroke-dasharray="4,2"/>
+                            <text x="50" y="155" text-anchor="end" font-size="10" fill="#424242">Water in &#8594;</text>
+                            <text x="50" y="175" text-anchor="end" font-size="10" fill="#424242">&#8592; Nutrients</text>
+                        </svg>`,
+                        items: [
+                            { id:35, label:'A' },
+                            { id:36, label:'B' }
+                        ],
+                        options: ['LED lights','water pump','solar panel','air filter','temperature sensor','nutrient tank']
+                    }
+                ]
+            },
+            {
+                instructions: 'Questions 37: Answer the question below. Write <strong>NO MORE THAN THREE WORDS</strong>.',
+                title: 'Short Answer',
+                sections: [
+                    {
+                        type: 'short-answer',
+                        items: [
+                            { id:37, question:'What two factors most limit crop growth in cities?' }
+                        ]
+                    }
+                ]
+            },
+            {
+                instructions: 'Questions 38–40: Choose <strong>THREE</strong> correct answers from the list below.',
+                title: 'Benefits of Urban Agriculture',
+                sections: [
+                    {
+                        type: 'pick-list',
+                        selectCount: 3,
+                        answerIds: [38, 39, 40],
+                        groupKey: 'pl-g1',
+                        listItems: [
+                            { letter:'A', text:'Fresh produce for local consumption' },
+                            { letter:'B', text:'Lower electricity bills for buildings' },
+                            { letter:'C', text:'Reduced food transportation costs' },
+                            { letter:'D', text:'Increased property values nearby' },
+                            { letter:'E', text:'Better indoor air quality' },
+                            { letter:'F', text:'Stronger community connections' }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+};
+
+/* ── Answer Key ── */
+const answerKey = {
+    1:'harrison', 2:'14 march', 3:'single', 4:'breakfast',
+    5:'5', 6:'riverside', 7:'4:30', 8:'15',
+    9:'seafood', 10:'confirmation',
+    11:'B', 12:'A', 13:'B',
+    14:'B', 15:'D',
+    16:'reception', 17:'library', 18:'café', 19:'sports hall', 20:'bookshop',
+    21:'literature', 22:'methods', 23:'data collection', 24:'outline',
+    25:'C', 26:'A', 27:'E',
+    28:'developing', 29:'materials', 30:'december',
+    31:'B', 32:'A', 33:'C', 34:'B',
+    35:'LED lights', 36:'water pump',
+    37:'space and sunlight',
+    38:'A', 39:'C', 40:'F'
+};
+
+/* ── Grouped answer meta (mcq-multi & pick-list) ── */
+const answerGroups = {
+    'mm-g1': { ids:[14,15], correctLetters:['B','D'] },
+    'pl-g1': { ids:[38,39,40], correctLetters:['A','C','F'] }
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const TOTAL_Q = 40;
+let activePart = 1;
+let seconds = 1800;
+let timerRef = null;
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', function() {
+    buildAllParts();
+    buildDock();
+    startTimer();
+    wireInputs();
+    switchPart(1);
+});
+
+/* ============================================================
+   RENDERING ENGINE
+   ============================================================ */
+function buildAllParts() {
+    const w = document.getElementById('wrapper');
+    w.innerHTML = '';
+    ['part1','part2','part3','part4'].forEach(function(key, idx) {
+        var num = idx + 1;
+        var part = examData[key];
+        var div = document.createElement('div');
+        div.className = 'part-box';
+        div.id = 'pv' + num;
+        var h = '<div class="part-hdr"><h2>Part ' + num + '</h2></div>';
+        h += '<div class="instructions">' + part.instructions + '</div>';
+        h += '<div class="grp-title">' + part.title + '</div>';
+        part.sections.forEach(function(s) { h += renderSection(s); });
+        if (part.extraSections) {
+            part.extraSections.forEach(function(es) {
+                h += '<div class="sec-divider"></div>';
+                h += '<div class="instructions">' + es.instructions + '</div>';
+                h += '<div class="grp-title">' + es.title + '</div>';
+                es.sections.forEach(function(s) { h += renderSection(s); });
+            });
+        }
+        div.innerHTML = h;
+        w.appendChild(div);
+    });
+}
+
+function renderSection(s) {
+    var r = {
+        'form-note':    rFormNote,
+        'table':        rTable,
+        'flowchart':    rFlowchart,
+        'diagram-label':rDiagramLabel,
+        'sentence':     rSentence,
+        'summary':      rSummary,
+        'short-answer': rShortAnswer,
+        'mcq-single':   rMcqSingle,
+        'mcq-multi':    rMcqMulti,
+        'matching':     rMatching,
+        'classification':rClassification,
+        'map-label':    rMapLabel,
+        'pick-list':    rPickList
+    };
+    return (r[s.type] || function(){return '<p style="color:red">Unknown type: '+s.type+'</p>';})(s);
+}
+
+/* ── Shared: mixed static/question items ── */
+function mixedLines(items, extraCls) {
+    var h = '';
+    items.forEach(function(it) {
+        if (it.type === 'static') {
+            h += '<div class="static-row ' + (extraCls||'') + '">' + it.text + '</div>';
+        } else {
+            h += '<div class="question-row ' + (extraCls||'') + '"><span>' + it.prefix + '</span>'
+               + '<span class="input-wrap"><span class="q-num-inline">' + it.id + '</span>'
+               + '<input type="text" data-q="' + it.id + '" aria-label="Question ' + it.id + '"></span>'
+               + '<span>' + it.suffix + '</span></div>';
+        }
+    });
+    return h;
+}
+
+/* ── Type: form-note ── */
+function rFormNote(s) { return mixedLines(s.items, ''); }
+
+/* ── Type: sentence ── */
+function rSentence(s) { return mixedLines(s.items, 'sentence'); }
+
+/* ── Type: summary (paragraph flow) ── */
+function rSummary(s) {
+    var h = '<div class="summary-flow">';
+    s.items.forEach(function(it) {
+        if (it.type === 'static') {
+            h += '<span>' + it.text + '</span>';
+        } else {
+            h += '<span class="input-wrap"><span class="q-num-inline">' + it.id + '</span>'
+               + '<input type="text" data-q="' + it.id + '" aria-label="Question ' + it.id + '"></span>'
+               + '<span>' + it.suffix + '</span>';
+        }
+    });
+    h += '</div>';
+    return h;
+}
+
+/* ── Type: table ── */
+function rTable(s) {
+    var h = '<table class="q-table"><thead><tr>';
+    s.headers.forEach(function(hd) { h += '<th>' + hd + '</th>'; });
+    h += '</tr></thead><tbody>';
+    s.rows.forEach(function(row) {
+        h += '<tr>';
+        row.cells.forEach(function(c) {
+            if (c.type === 'static') {
+                h += '<td>' + c.text + '</td>';
+            } else {
+                h += '<td><span class="input-wrap"><span class="q-num-inline">' + c.id + '</span>'
+                   + '<input type="text" data-q="' + c.id + '" aria-label="Question ' + c.id + '"></span></td>';
+            }
+        });
+        h += '</tr>';
+    });
+    h += '</tbody></table>';
+    return h;
+}
+
+/* ── Type: flowchart ── */
+function rFlowchart(s) {
+    var h = '<div class="fc-wrap">';
+    s.steps.forEach(function(st, i) {
+        if (i > 0) h += '<div class="fc-arrow">&#9660;</div>';
+        if (st.type === 'static') {
+            h += '<div class="fc-step">' + st.text + '</div>';
+        } else {
+            h += '<div class="fc-step fc-has-input">' + st.prefix
+               + '<span class="input-wrap"><span class="q-num-inline">' + st.id + '</span>'
+               + '<input type="text" data-q="' + st.id + '" aria-label="Question ' + st.id + '"></span>'
+               + st.suffix + '</div>';
+        }
+    });
+    h += '</div>';
+    return h;
+}
+
+/* ── Type: diagram-label ── */
+function rDiagramLabel(s) {
+    var h = '<div class="diag-container">' + s.svg + '</div><div class="diag-qs">';
+    s.items.forEach(function(it) {
+        h += '<div class="diag-q-row"><span class="q-num-block">' + it.id + '</span>'
+           + '<span class="diag-letter">' + it.label + '</span>'
+           + '<select class="diag-select" data-q="' + it.id + '" aria-label="Question ' + it.id + '">'
+           + '<option value="">Choose...</option>';
+        s.options.forEach(function(o) { h += '<option value="' + o + '">' + o + '</option>'; });
+        h += '</select></div>';
+    });
+    h += '</div>';
+    return h;
+}
+
+/* ── Type: map-label ── */
+function rMapLabel(s) {
+    return rDiagramLabel(s); // identical rendering structure
+}
+
+/* ── Type: short-answer ── */
+function rShortAnswer(s) {
+    var h = '';
+    s.items.forEach(function(it) {
+        h += '<div class="sa-item"><div class="sa-q-row"><span class="q-num-block">' + it.id + '</span>'
+           + '<span class="sa-q-text">' + it.question + '</span></div>'
+           + '<input type="text" class="sa-input" data-q="' + it.id + '" aria-label="Question ' + it.id + '"></div>';
+    });
+    return h;
+}
+
+/* ── Type: mcq-single ── */
+function rMcqSingle(s) {
+    var h = '';
+    s.items.forEach(function(q) {
+        h += '<div class="mcq-item"><div class="mcq-q-row"><span class="q-num-block">' + q.id + '</span><strong>' + q.question + '</strong></div><div class="opt-list">';
+        q.options.forEach(function(o) {
+            var ch = o.charAt(0);
+            h += '<label class="opt-item"><input type="radio" name="q' + q.id + '" value="' + ch + '" data-q="' + q.id + '"><span>' + o + '</span></label>';
+        });
+        h += '</div></div>';
+    });
+    return h;
+}
+
+/* ── Type: mcq-multi ── */
+function rMcqMulti(s) {
+    var h = '<div class="mcq-item"><div class="mcq-q-row"><strong>' + s.question + '</strong></div>';
+    h += '<div class="mcq-multi-note">Choose ' + s.selectCount + ' answers.</div>';
+    h += '<div class="opt-list" data-group="' + s.groupKey + '">';
+    s.options.forEach(function(o) {
+        h += '<label class="opt-item"><input type="checkbox" value="' + o.letter + '" data-group="' + s.groupKey + '"><span>' + o.letter + ') ' + o.text + '</span></label>';
+    });
+    h += '</div></div>';
+    return h;
+}
+
+/* ── Type: matching ── */
+function rMatching(s) {
+    var h = '<div>';
+    s.items.forEach(function(it) {
+        h += '<div class="match-row"><span class="q-num-block">' + it.id + '</span>'
+           + '<span class="match-text">' + it.text + '</span>'
+           + '<select class="match-select" data-q="' + it.id + '" aria-label="Question ' + it.id + '">'
+           + '<option value="">Choose...</option>';
+        s.options.forEach(function(o) { h += '<option value="' + o.letter + '">' + o.letter + '</option>'; });
+        h += '</select></div>';
+    });
+    /* Option reference list */
+    h += '<div style="margin-top:16px;font-size:.9rem;line-height:1.8;color:#5f6368">';
+    s.options.forEach(function(o) { h += '<strong>' + o.letter + '</strong>  ' + o.text + '<br>'; });
+    h += '</div></div>';
+    return h;
+}
+
+/* ── Type: classification ── */
+function rClassification(s) {
+    var h = '<div class="class-legend">';
+    s.categories.forEach(function(c) { h += '<strong>' + c.letter + '</strong> ' + c.name + '&nbsp;&nbsp;&nbsp;'; });
+    h += '</div><div>';
+    s.items.forEach(function(it) {
+        h += '<div class="match-row"><span class="q-num-block">' + it.id + '</span>'
+           + '<span class="match-text">' + it.text + '</span>'
+           + '<select class="match-select" data-q="' + it.id + '" aria-label="Question ' + it.id + '">'
+           + '<option value="">Choose...</option>';
+        s.categories.forEach(function(c) { h += '<option value="' + c.letter + '">' + c.letter + '</option>'; });
+        h += '</select></div>';
+    });
+    h += '</div>';
+    return h;
+}
+
+/* ── Type: pick-list ── */
+function rPickList(s) {
+    var h = '<div data-group="' + s.groupKey + '">';
+    s.listItems.forEach(function(it) {
+        h += '<label class="pick-item"><input type="checkbox" value="' + it.letter + '" data-group="' + s.groupKey + '">'
+           + '<span class="pick-letter">' + it.letter + '</span><span>' + it.text + '</span></label>';
+    });
+    h += '</div>';
+    return h;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function buildDock() {
+    var d = document.getElementById('dock');
+    d.innerHTML = '';
+    for (var i = 1; i <= TOTAL_Q; i++) {
+        var b = document.createElement('button');
+        b.className = 'n-btn';
+        b.id = 'nb' + i;
+        b.textContent = i;
+        b.onclick = (function(n){ return function(){ jumpTo(n); }; })(i);
+        d.appendChild(b);
+    }
+}
+
+function switchPart(n) {
+    activePart = n;
+    for (var i = 1; i <= 4; i++) {
+        var v = document.getElementById('pv' + i);
+        var b = document.getElementById('pb' + i);
+        if (v) v.classList.toggle('active', i === n);
+        if (b) b.classList.toggle('active', i === n);
+    }
+    refreshCtx();
+}
+
+function jumpTo(n) {
+    var tp = n <= 10 ? 1 : n <= 20 ? 2 : n <= 30 ? 3 : 4;
+    if (activePart !== tp) switchPart(tp);
+    setTimeout(function() {
+        var el = document.querySelector('[data-q="' + n + '"]');
+        if (el) { el.scrollIntoView({ behavior:'smooth', block:'center' }); el.focus(); }
+    }, 80);
+}
+
+function refreshCtx() {
+    for (var i = 1; i <= TOTAL_Q; i++) {
+        var b = document.getElementById('nb' + i);
+        if (!b) continue;
+        var tp = i <= 10 ? 1 : i <= 20 ? 2 : i <= 30 ? 3 : 4;
+        b.classList.toggle('ctx', tp === activePart);
+    }
+}
+
+/* ============================================================
+   INPUT TRACKING
+   ============================================================ */
+function wireInputs() {
+    function track(e) {
+        var el = e.target;
+
+        /* Grouped checkboxes (mcq-multi / pick-list) */
+        if (el.type === 'checkbox' && el.hasAttribute('data-group')) {
+            var gk = el.getAttribute('data-group');
+            var grp = answerGroups[gk];
+            if (!grp) return;
+            var container = document.querySelector('[data-group="' + gk + '"].opt-list, [data-group="' + gk + '"]:not(.opt-list)');
+            /* Find correct container — could be the opt-list div or the pick-list div */
+            var parent = el.closest('[data-group="' + gk + '"]');
+            var any = parent ? parent.querySelector('input[type="checkbox"]:checked') : null;
+            grp.ids.forEach(function(id) {
+                var nb = document.getElementById('nb' + id);
+                if (nb) nb.classList.toggle('answered', !!any);
+            });
+            return;
+        }
+
+        var qn = el.getAttribute('data-q');
+        if (!qn) return;
+        var nb = document.getElementById('nb' + qn);
+        if (!nb) return;
+        var val = false;
+        if (el.type === 'text') val = el.value.trim() !== '';
+        else if (el.type === 'radio') val = el.checked;
+        else if (el.tagName === 'SELECT') val = el.value !== '';
+        nb.classList.toggle('answered', val);
+    }
+    document.addEventListener('input', track);
+    document.addEventListener('change', track);
+}
+
+/* ============================================================
+   TIMER
+   ============================================================ */
+function startTimer() {
+    var disp = document.getElementById('timer');
+    timerRef = setInterval(function() {
+        var m = Math.floor(seconds / 60);
+        var s = seconds % 60;
+        disp.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+        if (seconds <= 0) { clearInterval(timerRef); submitTest(); }
+        seconds--;
+    }, 1000);
+}
+
+/* ============================================================
+   SUBMISSION & SCORING
+   ============================================================ */
+function submitTest() {
+    if (timerRef) clearInterval(timerRef);
+    var score = 0;
+    var log = '';
+    var groupedIds = {};
+
+    /* Collect all IDs that belong to groups so we skip them in normal loop */
+    Object.keys(answerGroups).forEach(function(gk) {
+        answerGroups[gk].ids.forEach(function(id) { groupedIds[id] = gk; });
+    });
+
+    /* Normal questions (text, radio, select) */
+    for (var i = 1; i <= TOTAL_Q; i++) {
+        if (groupedIds[i]) continue; // handled separately
+        var uv = getUserVal(i);
+        var cv = answerKey[i].toString().toLowerCase();
+        var du = uv || '[Blank]';
+        if (uv === cv) {
+            score++;
+            log += rptHTML(i, true, du, '');
+        } else {
+            log += rptHTML(i, false, du, cv);
+        }
+    }
+
+    /* Grouped questions (mcq-multi, pick-list) */
+    Object.keys(answerGroups).forEach(function(gk) {
+        var grp = answerGroups[gk];
+        var parent = document.querySelector('[data-group="' + gk + '"].opt-list') || document.querySelector('[data-group="' + gk + '"]:not(label)');
+        var cbs = parent ? parent.querySelectorAll('input[type="checkbox"]') : [];
+        var selected = [];
+        cbs.forEach(function(cb) { if (cb.checked) selected.push(cb.value); });
+        var selSet = new Set(selected);
+
+        grp.ids.forEach(function(id) {
+            var expected = answerKey[id].toString().toLowerCase();
+            if (selSet.has(expected)) {
+                score++;
+                log += rptHTML(id, true, expected + ' (selected)', '');
+            } else {
+                log += rptHTML(id, false, selected.length ? 'Other selections: ' + selected.join(', ') : '[None selected]', expected);
+            }
+        });
+    });
+
+    /* Band score */
+    var band = 4.0;
+    if (score >= 39) band = 9.0;
+    else if (score >= 37) band = 8.5;
+    else if (score >= 35) band = 8.0;
+    else if (score >= 32) band = 7.5;
+    else if (score >= 30) band = 7.0;
+    else if (score >= 26) band = 6.5;
+    else if (score >= 23) band = 6.0;
+    else if (score >= 18) band = 5.5;
+    else if (score >= 14) band = 5.0;
+
+    document.getElementById('report').innerHTML =
+        '<p style="font-size:1.05rem;margin-bottom:8px">Score: <strong>' + score + ' / 40</strong></p>'
+        + '<div class="band-box">Estimated Band Score: ' + band + '</div>'
+        + '<h4 style="margin-bottom:14px;border-bottom:1px solid var(--bd);padding-bottom:5px">Detailed Review:</h4>'
+        + log;
+    document.getElementById('modal').classList.add('active');
+}
+
+function getUserVal(qn) {
+    var t = document.querySelector('input[data-q="' + qn + '"][type="text"]');
+    if (t) return t.value.trim().toLowerCase();
+    var r = document.querySelector('input[data-q="' + qn + '"][type="radio"]:checked');
+    if (r) return r.value.trim().toLowerCase();
+    var s = document.querySelector('select[data-q="' + qn + '"]');
+    if (s) return s.value.trim().toLowerCase();
+    return '';
+}
+
+function rptHTML(id, ok, userVal, correct) {
+    return '<div class="rpt-item"><span class="q-num-inline">' + id + '</span> '
+        + (ok ? '<span class="t-ok">Correct</span> &mdash; ' + userVal
+               : '<span class="t-err">Incorrect</span> &mdash; Your answer: ' + userVal + ' | Correct: ' + correct)
+        + '</div>';
+}
+
+function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Computer-Delivered Reading Practice Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #141820;
+  --page:      #faf8f4;
+  --cream:     #f2efe8;
+  --rule:      #d8d2c4;
+  --blue:      #1a4fa0;
+  --blue-pale: #eef2fb;
+  --gold:      #c9952a;
+  --gold-pale: #fdf6e3;
+  --green:     #0e6630;
+  --red:       #b5190f;
+  --muted:     #6b6455;
+  --white:     #ffffff;
+  --serif:     'Crimson Pro', Georgia, serif;
+  --mono:      'JetBrains Mono', 'Courier New', monospace;
+  --panel-w:   48%;
+  --header-h:  52px;
+  --footer-h:  52px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: var(--serif);
+  background: var(--ink);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+/* ══ HEADER ══ */
+header {
+  height: var(--header-h);
+  background: var(--ink);
+  border-bottom: 2.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  flex-shrink: 0;
+  gap: 16px;
+  z-index: 100;
+}
+.logo {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.logo em { color: var(--gold); font-style: normal; }
+
+.passage-tabs {
+  display: flex;
+  gap: 3px;
+}
+.passage-tab {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: #2a2f3e;
+  color: #8a90a8;
+  border: none;
+  padding: 6px 16px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.passage-tab:hover { background: #363c52; color: var(--white); }
+.passage-tab.active { background: var(--gold); color: var(--ink); }
+
+.timer {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: var(--gold);
+  color: var(--ink);
+  padding: 5px 14px;
+  border-radius: 3px;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+.timer.warn { background: #e05a2b; color: var(--white); }
+
+/* ══ MAIN SPLIT PANE ══ */
+main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: var(--ink);
+  gap: 3px;
+}
+
+/* ── Passage Panel ── */
+.passage-panel {
+  width: var(--panel-w);
+  flex-shrink: 0;
+  background: var(--page);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 3px solid var(--gold);
+}
+.passage-panel-inner {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px 36px;
+}
+.passage-header {
+  margin-bottom: 18px;
+}
+.passage-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.passage-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+.passage-subtitle {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.passage-divider {
+  border: none;
+  border-top: 1.5px solid var(--rule);
+  margin: 16px 0;
+}
+.passage-body {
+  font-size: 0.97rem;
+  line-height: 1.82;
+  color: var(--ink);
+}
+.passage-body p {
+  margin-bottom: 1.1em;
+  text-align: justify;
+  hyphens: auto;
+}
+.para-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  background: var(--ink);
+  color: var(--white);
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.06em;
+}
+.passage-body mark {
+  background: #fff3c4;
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* ── Questions Panel ── */
+.questions-panel {
+  flex: 1;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.questions-panel-inner {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px 36px;
+}
+.q-section {
+  margin-bottom: 32px;
+}
+.q-instructions {
+  background: var(--blue-pale);
+  border-left: 4px solid var(--blue);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 16px;
+  border-radius: 0 4px 4px 0;
+  font-family: var(--serif);
+  font-style: italic;
+}
+.q-section-title {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.section-divider {
+  border: none;
+  border-top: 2px dashed var(--rule);
+  margin: 28px 0 22px;
+}
+
+/* ── Q number badge ── */
+.qn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  min-width: 24px;
+  height: 20px;
+  padding: 0 5px;
+  background: var(--ink);
+  color: var(--white);
+  border-radius: 3px;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ── Text input ── */
+.input-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1.5px solid var(--rule);
+  background: var(--white);
+  border-radius: 4px;
+  padding: 2px 6px;
+  transition: border-color 0.15s;
+}
+.input-wrap:focus-within { border-color: var(--blue); }
+input[type="text"] {
+  border: none;
+  outline: none;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  width: 160px;
+  padding: 4px 2px;
+  color: var(--blue);
+  font-weight: 600;
+  background: transparent;
+}
+
+/* ── MCQ / Radio ── */
+.mc-item { margin-bottom: 20px; }
+.mc-q {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 9px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  font-weight: 600;
+}
+.options-list { margin-left: 32px; display: flex; flex-direction: column; gap: 7px; }
+.opt-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+.opt-label input[type="radio"],
+.opt-label input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+}
+
+/* ── TFNG / YNNG ── */
+.tfng-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+.tfng-statement { flex: 1; }
+.tfng-radios {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.tfng-btn {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 9px;
+  border: 1.5px solid var(--rule);
+  border-radius: 3px;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--muted);
+  transition: all 0.12s;
+  white-space: nowrap;
+  user-select: none;
+}
+.tfng-btn:hover { border-color: var(--blue); color: var(--blue); }
+.tfng-btn.selected { background: var(--blue); color: var(--white); border-color: var(--blue); }
+.tfng-btn.sel-T { background: var(--green); border-color: var(--green); color: var(--white); }
+.tfng-btn.sel-F { background: var(--red); border-color: var(--red); color: var(--white); }
+.tfng-btn.sel-NG { background: #7a6e5f; border-color: #7a6e5f; color: var(--white); }
+.tfng-btn.sel-Y { background: var(--green); border-color: var(--green); color: var(--white); }
+.tfng-btn.sel-N { background: var(--red); border-color: var(--red); color: var(--white); }
+
+/* ── Matching headings / features / sentence endings ── */
+.match-pool {
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+.match-pool-title {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.match-pool-item { margin: 3px 0; }
+.match-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 11px;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+.match-label { flex: 1; }
+select.drop {
+  border: 1.5px solid var(--rule);
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-family: var(--serif);
+  font-size: 0.88rem;
+  color: var(--blue);
+  font-weight: 600;
+  background: var(--white);
+  outline: none;
+  min-width: 110px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+select.drop:focus { border-color: var(--blue); }
+
+/* ── Sentence endings ── */
+.sent-ending-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+.sent-stem { flex: 1; font-style: italic; }
+
+/* ── Summary / Note completion (inline) ── */
+.summary-block {
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  padding: 16px 18px;
+  font-size: 0.95rem;
+  line-height: 2.1;
+  margin-bottom: 8px;
+}
+.summary-block p { margin-bottom: 0.5em; }
+
+/* ── Short answer ── */
+.short-a-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+.short-a-q { flex: 1; }
+.short-a-inputs { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+/* ── Pick from list ── */
+.pick-list { display: flex; flex-direction: column; gap: 7px; margin: 6px 0 6px 4px; }
+
+/* ── Classification table ── */
+.class-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 8px 0;
+}
+.class-table th {
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 8px 10px;
+  text-align: left;
+}
+.class-table td {
+  border: 1.5px solid var(--rule);
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+.class-table tr:nth-child(even) td { background: #f7f5f0; }
+
+/* ── Diagram ── */
+.diagram-placeholder {
+  border: 2px dashed var(--rule);
+  border-radius: 6px;
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  margin: 10px 0 14px;
+  font-style: italic;
+  font-size: 0.88rem;
+}
+.diagram-labels { margin: 6px 0; }
+.diagram-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  font-size: 0.93rem;
+}
+.diag-pin {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  background: var(--blue);
+  color: var(--white);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.diagram-label-row input[type="text"] { width: 180px; }
+
+/* ── Table completion ── */
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 8px 0;
+}
+.comp-table th {
+  background: var(--blue);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 8px 10px;
+  text-align: center;
+}
+.comp-table td {
+  border: 1.5px solid var(--rule);
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+.comp-table .mixed-cell { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+
+/* ── Flowchart ── */
+.flowchart { display: flex; flex-direction: column; align-items: center; margin: 10px 0; gap: 0; }
+.flow-box {
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  padding: 10px 18px;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.93rem;
+  line-height: 1.7;
+}
+.flow-box.decision { border-color: var(--gold); background: var(--gold-pale); border-radius: 50px; }
+.flow-arrow { font-size: 1.4rem; color: var(--muted); margin: 3px 0; line-height: 1; }
+
+/* ══ FOOTER ══ */
+footer {
+  height: var(--footer-h);
+  background: var(--ink);
+  border-top: 2px solid #2a2f3e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  gap: 14px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+.q-dock {
+  display: flex;
+  gap: 3px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  max-width: 65%;
+  padding: 2px 0;
+}
+.q-btn {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #2a2f3e;
+  color: #7a80a0;
+  border: none;
+  padding: 5px 7px;
+  border-radius: 3px;
+  cursor: pointer;
+  min-width: 28px;
+  text-align: center;
+  transition: all 0.12s;
+}
+.q-btn:hover { background: #363c52; color: var(--white); }
+.q-btn.answered { background: var(--blue); color: var(--white); }
+.q-btn.current-passage { box-shadow: inset 0 0 0 2px var(--gold); }
+
+.submit-btn {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  padding: 9px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.submit-btn:hover { background: #0b5226; }
+
+/* ══ MODAL ══ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s;
+}
+.modal-overlay.active { visibility: visible; opacity: 1; }
+.modal-box {
+  background: var(--page);
+  width: 92%;
+  max-width: 640px;
+  max-height: 84vh;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-top: 4px solid var(--gold);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+}
+.modal-head {
+  background: var(--ink);
+  color: var(--white);
+  padding: 16px 22px;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.modal-body { padding: 22px; overflow-y: auto; flex: 1; font-size: 0.9rem; line-height: 1.7; }
+.modal-foot { background: var(--cream); padding: 12px 22px; text-align: right; border-top: 1px solid var(--rule); }
+.modal-close {
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  padding: 8px 20px;
+  font-family: var(--mono);
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+.band-badge {
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-align: center;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 18px;
+}
+.report-row {
+  margin-bottom: 7px;
+  padding-bottom: 7px;
+  border-bottom: 1px dashed var(--rule);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.88rem;
+}
+.ok { color: var(--green); font-weight: 700; }
+.no { color: var(--red); font-weight: 700; }
+
+/* ── Scrollbar styling ── */
+.passage-panel-inner::-webkit-scrollbar,
+.questions-panel-inner::-webkit-scrollbar,
+.q-dock::-webkit-scrollbar { width: 5px; height: 5px; }
+.passage-panel-inner::-webkit-scrollbar-track,
+.questions-panel-inner::-webkit-scrollbar-track { background: transparent; }
+.passage-panel-inner::-webkit-scrollbar-thumb,
+.questions-panel-inner::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+.q-dock::-webkit-scrollbar-thumb { background: #2a2f3e; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">IELTS <em>READING</em></div>
+  <div class="passage-tabs" id="passage-tabs"></div>
+  <div class="timer" id="timer">60:00</div>
+</header>
+
+<main id="main-area"></main>
+
+<footer>
+  <div class="q-dock" id="q-dock"></div>
+  <button class="submit-btn" onclick="submitTest()">Submit Test</button>
+</footer>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">TEST RESULTS SUMMARY</div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="modal-close" onclick="closeModal()">Review Answers</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   IELTS READING — DATA-DRIVEN ENGINE
+   
+   Each passage has:
+     - passage: { title, subtitle, body: [...] }   ← rendered left-pane
+     - sections: [...]                              ← rendered right-pane
+   
+   Section types supported:
+     "multiple-choice"    → Single MCQ (A/B/C/D)
+     "multi-select"       → Choose N from list (checkboxes)
+     "tfng"               → True / False / Not Given (button group)
+     "ynng"               → Yes / No / Not Given (button group)
+     "matching-headings"  → Match paragraph letters to heading list
+     "matching-features"  → Match statements to a list of features/people
+     "sentence-endings"   → Match sentence stems to correct endings
+     "summary-completion" → Fill-in-blank summary (inline or box)
+     "note-completion"    → Note/form fill (same as listening form)
+     "table-completion"   → Table with blank cells
+     "flowchart"          → Process/flowchart completion
+     "short-answer"       → WH-question text answers
+     "diagram-label"      → Label parts of a diagram (text or dropdown)
+     "pick-from-list"     → Select N items from a longer list
+     "classification"     → Classify items using a dropdown
+     "sentence-completion"→ Complete sentences with text input
+═══════════════════════════════════════════════════════════════════════ */
+
+const PASSAGES = [
+
+  /* ══════════════════════════════════════════════════════
+     PASSAGE 1 — The Deep Ocean
+  ══════════════════════════════════════════════════════ */
+  {
+    id: 1,
+    passage: {
+      title: "Life in the Deep Ocean",
+      subtitle: "An exploration of the extraordinary organisms that thrive beneath the sunlit zone",
+      body: [
+        { para: "A", text: "The ocean covers more than 70 percent of the Earth's surface, yet the vast majority of its volume — everything below about 200 metres — remains in near or total darkness. This sunless realm, known as the deep sea, represents the largest living space on Earth. Despite being cold, pressurised and perpetually dark, it hosts a remarkable array of life forms that have evolved extraordinary adaptations over millions of years." },
+        { para: "B", text: "Until the twentieth century, many scientists believed the deep ocean was barren and lifeless. This view was challenged in 1977 when researchers aboard the submersible <em>Alvin</em> discovered hydrothermal vents along the Galapagos Rift. These vents — essentially cracks in the ocean floor through which superheated, mineral-rich water is expelled — support entire ecosystems not driven by sunlight but by chemosynthesis, a process in which bacteria convert chemicals into energy." },
+        { para: "C", text: "The organisms that inhabit these vent communities are unlike almost anything found elsewhere on Earth. Giant tube worms, some growing to over two metres in length, cluster around the vents in vast colonies. They have no mouth, no stomach and no digestive system; instead, they rely entirely on symbiotic bacteria housed in a specialised organ called the trophosome, which converts hydrogen sulphide into nutrients. Nearby, ghostly white crabs and shrimp pick at bacterial mats, while octopuses and fish patrol the periphery." },
+        { para: "D", text: "Beyond the vent communities, the deep sea floor — the abyssal plain — is a remarkably uniform environment. It is covered in fine sediment that accumulates at a rate of just a few millimetres per thousand years. Yet even this seemingly featureless landscape is teeming with life: polychaete worms, sea cucumbers, brittle stars and countless species of microscopic organisms sift through the sediment in search of organic particles that drift down from the surface world above — a phenomenon oceanographers call 'marine snow'." },
+        { para: "E", text: "Many deep-sea animals produce their own light through a process called bioluminescence. In the mesopelagic zone (200–1,000 m), an estimated 70–80 percent of all organisms are bioluminescent. The function of this light varies: some use it as a lure — most famously the anglerfish, which dangles a glowing filament to attract prey into its enormous jaws. Others use counterillumination to camouflage themselves against the faint light filtering from above. Still others flash patterns of light to communicate with potential mates or to startle predators." },
+        { para: "F", text: "The deep ocean is also a crucial component of global climate regulation. The biological pump — a process by which carbon captured by surface phytoplankton is eventually transferred to the deep via sinking organic matter — sequesters billions of tonnes of carbon dioxide annually. Without this mechanism, atmospheric CO₂ levels would be significantly higher than they are today. Yet despite its importance, very little of the deep ocean has been explored or mapped in high resolution, and new species continue to be discovered on virtually every deep-sea expedition." }
+      ]
+    },
+    sections: [
+      {
+        type: "tfng",
+        instructions: "Questions 1–6: Do the following statements agree with the information given in the Reading Passage? Write <strong>TRUE</strong> if the statement agrees with the information, <strong>FALSE</strong> if the statement contradicts the information, or <strong>NOT GIVEN</strong> if there is no information on this.",
+        title: "True / False / Not Given",
+        items: [
+          { id: 1, statement: "The deep sea constitutes the largest inhabitable space on Earth." },
+          { id: 2, statement: "Before the twentieth century, scientists were divided about whether life existed in the deep sea." },
+          { id: 3, statement: "The <em>Alvin</em> submersible was purpose-built for the 1977 expedition to the Galapagos Rift." },
+          { id: 4, statement: "Giant tube worms obtain nutrients with the help of bacteria living inside them." },
+          { id: 5, statement: "Marine snow consists of organic material that sinks from the ocean's surface." },
+          { id: 6, statement: "All bioluminescent deep-sea animals use light to attract prey." }
+        ]
+      },
+      {
+        type: "matching-headings",
+        instructions: "Questions 7–10: The Reading Passage has six paragraphs, A–F. Choose the correct heading for paragraphs <strong>B–E</strong> from the list of headings below.",
+        title: "Matching Headings",
+        pool: {
+          title: "List of Headings",
+          items: [
+            "i   A challenge to scientific orthodoxy",
+            "ii  The chemistry of darkness",
+            "iii Carbon storage and global consequences",
+            "iv  Life without sunlight: vent organisms",
+            "v   Light as a survival tool",
+            "vi  The monotonous but living abyss",
+            "vii The discovery of ocean heat",
+            "viii Diversity across ocean zones"
+          ]
+        },
+        items: [
+          { id: 7,  label: "Paragraph B" },
+          { id: 8,  label: "Paragraph C" },
+          { id: 9,  label: "Paragraph D" },
+          { id: 10, label: "Paragraph E" }
+        ],
+        poolLabels: ["i","ii","iii","iv","v","vi","vii","viii"]
+      }
+    ]
+  },
+
+  /* ══════════════════════════════════════════════════════
+     PASSAGE 2 — The History of Glass
+  ══════════════════════════════════════════════════════ */
+  {
+    id: 2,
+    passage: {
+      title: "A Clear History: The Story of Glass",
+      subtitle: "How a chance discovery transformed architecture, science and daily life",
+      body: [
+        { para: "A", text: "Glass is so woven into the fabric of modern life that it is easy to forget how remarkable it is. It is simultaneously a liquid and a solid — or, more precisely, an amorphous solid whose molecules never settle into the orderly lattice of a crystal. It can be drawn into fibres thinner than a human hair, moulded into lenses capable of gathering the light of distant galaxies, or pressed into panes strong enough to withstand hurricane-force winds." },
+        { para: "B", text: "The earliest known manufactured glass dates to around 3500 BCE in Mesopotamia and ancient Egypt, where craftsmen discovered that heating a mixture of silica sand, soda ash and limestone produced a hard, translucent material. Initially, glass was a luxury product — opaque, coloured and fashioned into beads and small vessels for the wealthy. The breakthrough of glassblowing, which originated in Syria around the first century BCE, transformed production, making glass vessels cheaper and far more varied in form." },
+        { para: "C", text: "Roman glassmakers were the first to recognise that glass could be made transparent and used it to glaze windows, separating interior spaces from the weather while admitting light. However, flat glass for windows was difficult to produce until the development of the crown glass process in fourteenth-century France, in which a glassblower would spin a molten globe on a rod until centrifugal force flattened it into a disc. These discs, though limited in size and sometimes distorted at the edges, were cut into panes and used in the great Gothic cathedrals of Europe." },
+        { para: "D", text: "The Industrial Revolution brought a new urgency to glass production. In 1851, Joseph Paxton's Crystal Palace — a vast greenhouse of glass and iron constructed for the Great Exhibition in London — demonstrated that glass could be an architectural material on a monumental scale. The development of the float glass process in the 1950s by Alastair Pilkington was equally transformative: molten glass is poured onto a bed of liquid tin, where it spreads out and solidifies into sheets of perfectly uniform thickness and exceptional flatness, becoming the standard for modern architectural glazing." },
+        { para: "E", text: "Glass has also been indispensable to science. Galileo's refinement of the telescope in 1609 opened the heavens; van Leeuwenhoek's hand-ground lenses revealed the microbial world. The twentieth century brought optical fibres — strands of ultra-pure glass along which light pulses carry vast quantities of digital information — and glass substrates for microchip fabrication. Contemporary scientists are developing bulk metallic glasses and glass-ceramics with properties undreamed of by the Syrian craftsmen who first discovered how to blow a bubble of molten silica." },
+        { para: "F", text: "Yet glass is not without its problems. It is energy-intensive to manufacture, requiring furnace temperatures above 1,500°C. Its transparency, a virtue in architecture, becomes a hazard for birds: an estimated one billion birds die annually in the United States alone by flying into glass surfaces. Researchers are developing ultraviolet-patterned glazing, visible to birds but not humans, as a potential solution. Meanwhile, the recyclability of glass — it can be melted and remoulded indefinitely without loss of quality — is one of its great environmental advantages, though collection and processing infrastructure remains uneven globally." }
+      ]
+    },
+    sections: [
+      {
+        type: "multiple-choice",
+        instructions: "Questions 11–14: Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.",
+        title: "Multiple Choice",
+        items: [
+          {
+            id: 11,
+            question: "What is described as the key innovation that made glass vessels more affordable?",
+            options: ["A) The discovery of silica sand as a raw material", "B) The invention of glassblowing in Syria", "C) The Roman technique of making flat window glass", "D) The development of the float glass process"]
+          },
+          {
+            id: 12,
+            question: "What was the main limitation of glass produced by the crown glass process?",
+            options: ["A) It was too expensive for most builders", "B) It could only be made in small quantities", "C) Panes were restricted in size and sometimes distorted", "D) It shattered easily under wind pressure"]
+          },
+          {
+            id: 13,
+            question: "According to the passage, what distinguishes the float glass process?",
+            options: ["A) It uses centrifugal force to flatten molten glass", "B) It produces glass of uniform thickness and flatness", "C) It was developed in the nineteenth century", "D) It requires lower temperatures than earlier methods"]
+          },
+          {
+            id: 14,
+            question: "Which of the following is presented as an environmental ADVANTAGE of glass?",
+            options: ["A) It requires little energy to manufacture", "B) It is safe for wildlife", "C) It can be recycled without quality loss", "D) It is produced using sustainable raw materials"]
+          }
+        ]
+      },
+      {
+        type: "matching-features",
+        instructions: "Questions 15–19: Look at the following statements and the list of people/periods below. Match each statement with the correct person or period, <strong>A–F</strong>. You may use any letter more than once.",
+        title: "Matching Features",
+        pool: {
+          title: "List of People / Periods",
+          items: [
+            "A — Ancient Mesopotamian craftsmen",
+            "B — Syrian glassmakers (~1st century BCE)",
+            "C — Roman glassmakers",
+            "D — Joseph Paxton",
+            "E — Alastair Pilkington",
+            "F — Galileo"
+          ]
+        },
+        items: [
+          { id: 15, statement: "First recognised that glass could be used to glaze windows." },
+          { id: 16, statement: "Demonstrated glass could be used as a large-scale architectural material." },
+          { id: 17, statement: "Invented a process that became the standard for modern architectural glass." },
+          { id: 18, statement: "Originated the technique that diversified the shapes of glass vessels." },
+          { id: 19, statement: "Used improved glass optics to study the night sky." }
+        ],
+        poolLabels: ["A","B","C","D","E","F"]
+      },
+      {
+        type: "summary-completion",
+        instructions: "Questions 20–22: Complete the summary below. Choose <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.",
+        title: "Summary Completion",
+        summaryTitle: "Environmental Challenges of Glass",
+        blocks: [
+          { type: "text", content: "Glass production is energy-intensive, needing furnace temperatures above 1,500°C. Its transparency poses a " },
+          { type: "q", id: 20, width: 130 },
+          { type: "text", content: " for birds, which collide with glass surfaces. One proposed solution involves " },
+          { type: "q", id: 21, width: 180 },
+          { type: "text", content: " glazing that birds can see but humans cannot. On the positive side, glass has excellent " },
+          { type: "q", id: 22, width: 130 },
+          { type: "text", content: " properties, meaning it can be melted and remoulded indefinitely without losing quality." }
+        ]
+      }
+    ]
+  },
+
+  /* ══════════════════════════════════════════════════════
+     PASSAGE 3 — Urban Farming
+  ══════════════════════════════════════════════════════ */
+  {
+    id: 3,
+    passage: {
+      title: "Urban Farming: Growing the Future",
+      subtitle: "Can cities feed themselves — and should they try?",
+      body: [
+        { para: "A", text: "As cities continue to expand and the global population edges toward ten billion, the question of how to feed urban populations sustainably has become increasingly urgent. Urban farming — the practice of cultivating food within city limits — is being promoted by planners, entrepreneurs and policymakers as part of the solution. Proponents argue that it reduces food miles, improves food security, creates green spaces and builds community resilience. Sceptics, however, question whether it can ever be more than a niche activity for affluent neighbourhoods." },
+        { para: "B", text: "The scale of urban agriculture varies enormously. At one end of the spectrum are small community gardens and rooftop allotments producing modest quantities of salads, herbs and vegetables for local consumption. At the other are sophisticated vertical farms — multi-storey buildings in which crops are grown in stacked trays under LED lighting, irrigated by precision systems and monitored by sensors. These facilities can produce high yields of certain crops year-round, independent of weather or soil conditions." },
+        { para: "C", text: "Vertical farms have attracted significant venture capital investment, particularly in the United States, Japan and the Netherlands. Companies such as AeroFarms and Bowery Farming claim to achieve yields up to 100 times greater per square metre than conventional field agriculture, while using 95 percent less water. However, the economics are challenging. Energy costs — primarily for lighting — are substantial, and vertical farms currently produce only a limited range of crops: leafy greens, herbs and microgreens thrive; calorie-dense staples like wheat, rice and potatoes are not viable at scale." },
+        { para: "D", text: "A different model is found in cities such as Havana, Cuba, where urban farming emerged not from entrepreneurial ambition but from necessity. Following the collapse of the Soviet Union and the tightening of the US trade embargo in the early 1990s, Cuba faced a severe food crisis. The government promoted organoponicos — raised-bed urban gardens — and by the mid-2000s, Havana was producing a significant proportion of its fresh vegetable needs within the city. This organic, labour-intensive model stands in sharp contrast to the technology-heavy approach of most Western vertical farms." },
+        { para: "E", text: "The environmental credentials of urban farming are frequently invoked but are more complicated than they first appear. Reducing food miles does lower transport emissions, but these typically account for only a small fraction of food's total carbon footprint. The dominant factors are the type of food produced and the farming method. A head of lettuce grown in an energy-intensive vertical farm under artificial lighting may have a higher carbon footprint than one grown conventionally in a field and transported hundreds of kilometres, unless the electricity comes from renewable sources." },
+        { para: "F", text: "Social and educational benefits are perhaps less contested. Urban farms and community gardens have been shown to improve mental health, foster social connections across demographic groups and serve as outdoor classrooms for children with limited access to nature. In some cities, urban agriculture projects in low-income areas have addressed food deserts — neighbourhoods with limited access to fresh, affordable produce — though critics note that such projects can also trigger gentrification if not managed carefully." },
+        { para: "G", text: "The future of urban farming will likely be neither the wholesale transformation of cities into food-producing machines nor its dismissal as irrelevant. A more nuanced view suggests that urban agriculture is most valuable as one component of a diverse food system: capable of supplying niche, high-value or perishable crops close to consumers, building community and greening the city, while conventional agriculture continues to provide the bulk of calorie needs. For this potential to be realised, supportive planning policies, investment in research and equitable access to land and resources will all be essential." }
+      ]
+    },
+    sections: [
+      {
+        type: "ynng",
+        instructions: "Questions 23–27: Do the following statements agree with the <em>claims of the writer</em> in the Reading Passage? Write <strong>YES</strong> if the statement agrees with the claims of the writer, <strong>NO</strong> if the statement contradicts the claims of the writer, or <strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this.",
+        title: "Yes / No / Not Given",
+        items: [
+          { id: 23, statement: "Urban farming is capable of becoming the primary food source for most cities." },
+          { id: 24, statement: "Vertical farms use significantly less water than conventional field agriculture." },
+          { id: 25, statement: "The environmental impact of urban farming is straightforward to evaluate." },
+          { id: 26, statement: "Community gardens have demonstrated benefits for mental health and social cohesion." },
+          { id: 27, statement: "Urban farming projects always lead to gentrification in low-income areas." }
+        ]
+      },
+      {
+        type: "sentence-endings",
+        instructions: "Questions 28–31: Complete each sentence with the correct ending, <strong>A–G</strong>, from the box below.",
+        title: "Sentence Endings",
+        pool: {
+          title: "List of Endings",
+          items: [
+            "A — is not viable for staple crops like wheat and rice at commercial scale.",
+            "B — were introduced as a response to a national food emergency.",
+            "C — can be worsened rather than solved by urban agriculture projects.",
+            "D — is largely determined by food type and farming method rather than transport distance.",
+            "E — have received large amounts of private investment.",
+            "F — would require policy support, funding and fair access to land.",
+            "G — uses an organic, low-technology approach very different from Western models."
+          ]
+        },
+        items: [
+          { id: 28, stem: "Vertical farms in the US, Japan and the Netherlands" },
+          { id: 29, stem: "Cuba's urban farming model" },
+          { id: 30, stem: "The carbon footprint of food" },
+          { id: 31, stem: "Realising the potential of urban farming fully" }
+        ],
+        poolLabels: ["A","B","C","D","E","F","G"]
+      },
+      {
+        type: "short-answer",
+        instructions: "Questions 32–35: Answer the questions below. Choose <strong>NO MORE THAN THREE WORDS</strong> from the passage for each answer.",
+        title: "Short Answer Questions",
+        items: [
+          { id: 32, question: "What type of crops do vertical farms currently produce most successfully?" },
+          { id: 33, question: "What event triggered the Cuban government to promote urban garden cultivation?" },
+          { id: 34, question: "What name is given to the Cuban raised-bed urban gardens?" },
+          { id: 35, question: "What term describes neighbourhoods with poor access to fresh, affordable food?" }
+        ]
+      },
+      {
+        type: "classification",
+        instructions: "Questions 36–40 (Demo — Classification): Classify each statement as referring to <strong>A</strong> (Vertical Farms), <strong>B</strong> (Cuban Organoponicos) or <strong>C</strong> (Both).",
+        title: "Classification",
+        categories: ["A — Vertical Farms", "B — Cuban Organoponicos", "C — Both"],
+        items: [
+          { id: 36, label: "Located within city limits" },
+          { id: 37, label: "Technology-intensive growing environment" },
+          { id: 38, label: "Emerged in response to commercial opportunity" },
+          { id: 39, label: "Capable of year-round production" },
+          { id: 40, label: "Labour-intensive and organic" }
+        ]
+      }
+    ]
+  }
+];
+
+/* ─── ANSWER KEY ─── */
+const ANSWER_KEY = {
+  // Passage 1
+  1: "TRUE", 2: "FALSE", 3: "NOT GIVEN", 4: "TRUE", 5: "TRUE", 6: "FALSE",
+  7: "i", 8: "iv", 9: "vi", 10: "v",
+  // Passage 2
+  11: "B", 12: "C", 13: "B", 14: "C",
+  15: "C", 16: "D", 17: "E", 18: "B", 19: "F",
+  20: "hazard", 21: "ultraviolet-patterned", 22: "recyclability",
+  // Passage 3
+  23: "NO", 24: "YES", 25: "NO", 26: "YES", 27: "NO",
+  28: "E", 29: "G", 30: "D", 31: "F",
+  32: "leafy greens", 33: "collapse of the soviet union", 34: "organoponicos", 35: "food deserts",
+  36: "C", 37: "A", 38: "A", 39: "A", 40: "B"
+};
+
+/* ══════════════════════════════════════════════════════
+   RENDERING ENGINE
+══════════════════════════════════════════════════════ */
+
+let currentPassage = 1;
+
+function buildInputWrap(id, width) {
+  const w = width || 150;
+  return `<span class="input-wrap"><span class="qn">${id}</span><input type="text" data-q="${id}" autocomplete="off" style="width:${w}px"></span>`;
+}
+
+/* ── Passage body ── */
+function renderPassageBody(body) {
+  return body.map(p => {
+    const label = p.para ? `<span class="para-label">${p.para}</span>` : '';
+    return `<p>${label}${p.text}</p>`;
+  }).join('');
+}
+
+/* ── Section renderers ── */
+function renderTFNG(sec) {
+  const labels = sec.type === 'ynng'
+    ? [['Y','YES'],['N','NO'],['NG','NOT GIVEN']]
+    : [['T','TRUE'],['F','FALSE'],['NG','NOT GIVEN']];
+
+  return sec.items.map(item => `
+    <div class="tfng-item">
+      <span class="qn">${item.id}</span>
+      <span class="tfng-statement">${item.statement}</span>
+      <div class="tfng-radios">
+        ${labels.map(([code, label]) =>
+          `<button class="tfng-btn" data-q="${item.id}" data-val="${label}" onclick="selectTFNG(this)">${label}</button>`
+        ).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderMultipleChoice(sec) {
+  return sec.items.map(q => `
+    <div class="mc-item">
+      <div class="mc-q"><span class="qn">${q.id}</span><span>${q.question}</span></div>
+      <div class="options-list">
+        ${q.options.map(opt => `
+          <label class="opt-label">
+            <input type="radio" name="q_${q.id}" value="${opt[0]}" data-q="${q.id}">
+            <span>${opt}</span>
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderMatchingPool(pool, labels) {
+  return `<div class="match-pool">
+    <div class="match-pool-title">${pool.title}</div>
+    ${pool.items.map(i => `<div class="match-pool-item">${i}</div>`).join('')}
+  </div>`;
+}
+
+function renderMatchingHeadings(sec) {
+  let h = renderMatchingPool(sec.pool, sec.poolLabels);
+  h += sec.items.map(item => `
+    <div class="match-row">
+      <span class="qn">${item.id}</span>
+      <span class="match-label">${item.label}</span>
+      <select class="drop" data-q="${item.id}">
+        <option value="">Select...</option>
+        ${sec.poolLabels.map(l => `<option value="${l}">${l}</option>`).join('')}
+      </select>
+    </div>
+  `).join('');
+  return h;
+}
+
+function renderMatchingFeatures(sec) {
+  let h = renderMatchingPool(sec.pool, sec.poolLabels);
+  h += sec.items.map(item => `
+    <div class="match-row">
+      <span class="qn">${item.id}</span>
+      <span class="match-label">${item.statement}</span>
+      <select class="drop" data-q="${item.id}">
+        <option value="">Select...</option>
+        ${sec.poolLabels.map(l => `<option value="${l}">${l}</option>`).join('')}
+      </select>
+    </div>
+  `).join('');
+  return h;
+}
+
+function renderSentenceEndings(sec) {
+  let h = renderMatchingPool(sec.pool, sec.poolLabels);
+  h += sec.items.map(item => `
+    <div class="sent-ending-row">
+      <span class="qn">${item.id}</span>
+      <span class="sent-stem">${item.stem} ...</span>
+      <select class="drop" data-q="${item.id}">
+        <option value="">Select...</option>
+        ${sec.poolLabels.map(l => `<option value="${l}">${l}</option>`).join('')}
+      </select>
+    </div>
+  `).join('');
+  return h;
+}
+
+function renderSummaryCompletion(sec) {
+  let inner = sec.blocks.map(block => {
+    if (block.type === 'text') return `<span>${block.content}</span>`;
+    if (block.type === 'q') return buildInputWrap(block.id, block.width);
+    if (block.type === 'newline') return `<br>`;
+    return '';
+  }).join('');
+  return `<div class="summary-block"><p><strong>${sec.summaryTitle || ''}</strong></p><p style="margin-top:10px">${inner}</p></div>`;
+}
+
+function renderNoteCompletion(sec) {
+  return (sec.items || []).map(item => {
+    if (item.type === 'static') return `<div style="margin:7px 0;color:var(--muted);font-size:0.88rem">${item.text}</div>`;
+    if (item.type === 'divider') return `<hr style="border:none;border-top:1px dashed var(--rule);margin:10px 0">`;
+    if (item.type === 'q') return `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:9px 0;font-size:0.93rem">${item.prefix}${buildInputWrap(item.id)}${item.suffix}</div>`;
+    return '';
+  }).join('');
+}
+
+function renderTableCompletion(sec) {
+  let h = `<table class="comp-table"><thead><tr>`;
+  sec.headers.forEach(hd => { h += `<th>${hd}</th>`; });
+  h += `</tr></thead><tbody>`;
+  sec.rows.forEach(row => {
+    h += `<tr>`;
+    row.cells.forEach(cell => {
+      if (typeof cell === 'string') {
+        h += `<td>${cell}</td>`;
+      } else if (cell && cell.type === 'q') {
+        h += `<td><div class="mixed-cell">${cell.prefix || ''}${buildInputWrap(cell.id)}${cell.suffix || ''}</div></td>`;
+      }
+    });
+    h += `</tr>`;
+  });
+  h += `</tbody></table>`;
+  return h;
+}
+
+function renderFlowchart(sec) {
+  let h = `<div class="flowchart">`;
+  sec.steps.forEach((step, i) => {
+    const cls = step.decision ? 'flow-box decision' : 'flow-box';
+    if (step.type === 'static') {
+      h += `<div class="${cls}"><strong>${step.text}</strong></div>`;
+    } else if (step.type === 'q') {
+      h += `<div class="${cls}">${step.prefix || ''}${buildInputWrap(step.id)}${step.suffix || ''}</div>`;
+    }
+    if (i < sec.steps.length - 1) h += `<div class="flow-arrow">↓</div>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderShortAnswer(sec) {
+  return sec.items.map(item => `
+    <div class="short-a-item">
+      <span class="qn">${item.id}</span>
+      <span class="short-a-q">${item.question}</span>
+      ${buildInputWrap(item.id, 180)}
+    </div>
+  `).join('');
+}
+
+function renderDiagramLabel(sec) {
+  let h = '';
+  if (sec.diagramSrc) {
+    h += `<img src="${sec.diagramSrc}" alt="${sec.diagramAlt}" style="max-width:100%;border:1.5px solid var(--rule);border-radius:4px;display:block;margin-bottom:12px">`;
+  } else {
+    h += `<div class="diagram-placeholder">[Diagram: ${sec.diagramAlt || 'image placeholder'}]</div>`;
+  }
+  h += `<div class="diagram-labels">`;
+  sec.items.forEach(item => {
+    const choicesHtml = sec.labelChoices
+      ? `<select class="drop" data-q="${item.id}"><option value="">Select...</option>${sec.labelChoices.map(c=>`<option value="${c[0]}">${c}</option>`).join('')}</select>`
+      : buildInputWrap(item.id, 160);
+    h += `<div class="diagram-label-row">
+      <span class="diag-pin">${item.id}</span>
+      <span style="flex:1">${item.locationLabel}</span>
+      ${choicesHtml}
+    </div>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderPickFromList(sec) {
+  const name = `pfl_${sec.ids.join('_')}`;
+  return `<p style="margin-bottom:10px;font-size:0.88rem;font-weight:600">Select ${sec.pickCount}:</p>
+    <div class="pick-list">
+      ${sec.options.map(opt => `
+        <label class="opt-label">
+          <input type="checkbox" name="${name}" value="${opt[0]}" data-pfl="${sec.ids.join(',')}">
+          <span>${opt}</span>
+        </label>
+      `).join('')}
+    </div>`;
+}
+
+function renderMultiSelect(sec) {
+  const name = `ms_${sec.questionId}`;
+  return `<p style="margin-bottom:10px;font-size:0.88rem;font-weight:600">Choose ${sec.pickCount} letters:</p>
+    <div class="pick-list">
+      ${sec.options.map(opt => `
+        <label class="opt-label">
+          <input type="checkbox" name="${name}" value="${opt[0]}" data-ms="${sec.questionId}">
+          <span>${opt}</span>
+        </label>
+      `).join('')}
+    </div>`;
+}
+
+function renderClassification(sec) {
+  let h = `<div class="match-pool"><div class="match-pool-title">Categories</div>
+    ${sec.categories.map(c=>`<div class="match-pool-item">${c}</div>`).join('')}
+  </div>`;
+  h += `<table class="class-table"><thead><tr><th>Item</th><th>Category</th></tr></thead><tbody>`;
+  sec.items.forEach(item => {
+    h += `<tr><td><span class="qn">${item.id}</span> ${item.label}</td>
+    <td><select class="drop" data-q="${item.id}">
+      <option value="">Select...</option>
+      ${sec.categories.map(c=>`<option value="${c[0]}">${c}</option>`).join('')}
+    </select></td></tr>`;
+  });
+  h += `</tbody></table>`;
+  return h;
+}
+
+function renderSentenceCompletion(sec) {
+  return sec.items.map(item => `
+    <div style="display:flex;align-items:flex-start;flex-wrap:wrap;gap:6px;margin:10px 0;font-size:0.93rem;line-height:1.7">
+      <span class="qn">${item.id}</span>
+      ${item.prefix || ''}${buildInputWrap(item.id)}${item.suffix || ''}
+    </div>
+  `).join('');
+}
+
+function renderSection(sec) {
+  let html = '';
+  if (sec.instructions) html += `<div class="q-instructions">${sec.instructions}</div>`;
+  if (sec.title) html += `<div class="q-section-title">${sec.title}</div>`;
+  switch (sec.type) {
+    case 'tfng':                html += renderTFNG(sec); break;
+    case 'ynng':                html += renderTFNG(sec); break;
+    case 'multiple-choice':     html += renderMultipleChoice(sec); break;
+    case 'matching-headings':   html += renderMatchingHeadings(sec); break;
+    case 'matching-features':   html += renderMatchingFeatures(sec); break;
+    case 'sentence-endings':    html += renderSentenceEndings(sec); break;
+    case 'summary-completion':  html += renderSummaryCompletion(sec); break;
+    case 'note-completion':     html += renderNoteCompletion(sec); break;
+    case 'table-completion':    html += renderTableCompletion(sec); break;
+    case 'flowchart':           html += renderFlowchart(sec); break;
+    case 'short-answer':        html += renderShortAnswer(sec); break;
+    case 'diagram-label':       html += renderDiagramLabel(sec); break;
+    case 'pick-from-list':      html += renderPickFromList(sec); break;
+    case 'multi-select':        html += renderMultiSelect(sec); break;
+    case 'classification':      html += renderClassification(sec); break;
+    case 'sentence-completion': html += renderSentenceCompletion(sec); break;
+    default: html += `<p style="color:var(--red)">Unknown type: ${sec.type}</p>`;
+  }
+  return html;
+}
+
+/* ── Build all passage views ── */
+function buildAll() {
+  const main = document.getElementById('main-area');
+  const tabs = document.getElementById('passage-tabs');
+  main.innerHTML = '';
+  tabs.innerHTML = '';
+
+  PASSAGES.forEach((p, idx) => {
+    /* Passage + questions wrapper */
+    const wrap = document.createElement('div');
+    wrap.id = `passage-view-${p.id}`;
+    wrap.style.cssText = 'display:none;flex:1;overflow:hidden;';
+    wrap.style.flexDirection = 'row';
+
+    /* Left: passage */
+    const leftPane = document.createElement('div');
+    leftPane.className = 'passage-panel';
+    leftPane.innerHTML = `
+      <div class="passage-panel-inner">
+        <div class="passage-header">
+          <div class="passage-label">Reading Passage ${p.id}</div>
+          <div class="passage-title">${p.passage.title}</div>
+          ${p.passage.subtitle ? `<div class="passage-subtitle">${p.passage.subtitle}</div>` : ''}
+        </div>
+        <hr class="passage-divider">
+        <div class="passage-body">${renderPassageBody(p.passage.body)}</div>
+      </div>
+    `;
+
+    /* Right: questions */
+    const rightPane = document.createElement('div');
+    rightPane.className = 'questions-panel';
+    let qHtml = '';
+    p.sections.forEach((sec, si) => {
+      if (si > 0) qHtml += `<hr class="section-divider">`;
+      qHtml += `<div class="q-section">${renderSection(sec)}</div>`;
+    });
+    rightPane.innerHTML = `<div class="questions-panel-inner">${qHtml}</div>`;
+
+    wrap.appendChild(leftPane);
+    wrap.appendChild(rightPane);
+    main.appendChild(wrap);
+
+    /* Tab */
+    const tab = document.createElement('button');
+    tab.className = 'passage-tab';
+    tab.id = `tab-${p.id}`;
+    tab.textContent = `Passage ${p.id}`;
+    tab.onclick = () => switchPassage(p.id);
+    tabs.appendChild(tab);
+  });
+}
+
+function switchPassage(pid) {
+  currentPassage = pid;
+  PASSAGES.forEach(p => {
+    const view = document.getElementById(`passage-view-${p.id}`);
+    const tab = document.getElementById(`tab-${p.id}`);
+    if (view) {
+      view.style.display = p.id === pid ? 'flex' : 'none';
+    }
+    if (tab) tab.classList.toggle('active', p.id === pid);
+  });
+  updateDock();
+}
+
+/* ── Navigation dock ── */
+function collectAllQids() {
+  const all = [];
+  PASSAGES.forEach(p => {
+    p.sections.forEach(sec => gatherIds(sec, all));
+  });
+  return all;
+}
+
+function gatherIds(sec, arr) {
+  const push = id => { if (!arr.includes(id)) arr.push(id); };
+  if (sec.type === 'tfng' || sec.type === 'ynng') sec.items.forEach(i => push(i.id));
+  else if (sec.type === 'multiple-choice') sec.items.forEach(i => push(i.id));
+  else if (sec.type === 'matching-headings' || sec.type === 'matching-features' || sec.type === 'sentence-endings') sec.items.forEach(i => push(i.id));
+  else if (sec.type === 'summary-completion') sec.blocks.filter(b=>b.type==='q').forEach(b=>push(b.id));
+  else if (sec.type === 'note-completion') (sec.items||[]).filter(i=>i.type==='q').forEach(i=>push(i.id));
+  else if (sec.type === 'table-completion') sec.rows.forEach(r=>r.cells.forEach(c=>{ if(c&&c.type==='q') push(c.id); }));
+  else if (sec.type === 'flowchart') sec.steps.forEach(s=>{ if(s.type==='q') push(s.id); });
+  else if (sec.type === 'short-answer') sec.items.forEach(i=>push(i.id));
+  else if (sec.type === 'diagram-label') sec.items.forEach(i=>push(i.id));
+  else if (sec.type === 'pick-from-list') sec.ids.forEach(id=>push(id));
+  else if (sec.type === 'multi-select') sec.ids.forEach(id=>push(id));
+  else if (sec.type === 'classification') sec.items.forEach(i=>push(i.id));
+  else if (sec.type === 'sentence-completion') sec.items.forEach(i=>push(i.id));
+}
+
+function passageForQ(qid) {
+  for (const p of PASSAGES) {
+    const ids = [];
+    p.sections.forEach(sec => gatherIds(sec, ids));
+    if (ids.includes(qid)) return p.id;
+  }
+  return 1;
+}
+
+function buildDock() {
+  const dock = document.getElementById('q-dock');
+  dock.innerHTML = '';
+  collectAllQids().forEach(id => {
+    const b = document.createElement('button');
+    b.className = 'q-btn';
+    b.id = `qb-${id}`;
+    b.textContent = id;
+    b.onclick = () => jumpToQ(id);
+    dock.appendChild(b);
+  });
+}
+
+function updateDock() {
+  collectAllQids().forEach(id => {
+    const btn = document.getElementById(`qb-${id}`);
+    if (!btn) return;
+    btn.classList.toggle('current-passage', passageForQ(id) === currentPassage);
+  });
+}
+
+function jumpToQ(qid) {
+  const pid = passageForQ(qid);
+  if (currentPassage !== pid) switchPassage(pid);
+  setTimeout(() => {
+    const el = document.querySelector(`[data-q="${qid}"]`);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus && el.focus(); }
+  }, 80);
+}
+
+/* ── TFNG button handler ── */
+function selectTFNG(btn) {
+  const qid = btn.getAttribute('data-q');
+  const val = btn.getAttribute('data-val');
+  // Deselect siblings
+  document.querySelectorAll(`.tfng-btn[data-q="${qid}"]`).forEach(b => {
+    b.classList.remove('selected','sel-T','sel-F','sel-NG','sel-Y','sel-N');
+  });
+  // Colour by value
+  const colClass = {
+    'TRUE':'sel-T','FALSE':'sel-F','NOT GIVEN':'sel-NG',
+    'YES':'sel-Y','NO':'sel-N'
+  }[val] || 'selected';
+  btn.classList.add(colClass);
+  // Mark nav answered
+  const nb = document.getElementById(`qb-${qid}`);
+  if (nb) nb.classList.add('answered');
+  // Store value
+  btn.closest('.tfng-item').dataset.answer = val;
+}
+
+/* ── Generic input tracking ── */
+function setupTracking() {
+  document.addEventListener('input', onAnyChange);
+  document.addEventListener('change', onAnyChange);
+}
+function onAnyChange(e) {
+  const el = e.target;
+  const qid = el.getAttribute('data-q');
+  if (!qid) return;
+  let answered = false;
+  if (el.type === 'text') answered = el.value.trim() !== '';
+  else if (el.type === 'radio') answered = el.checked;
+  else if (el.tagName === 'SELECT') answered = el.value !== '';
+  else if (el.type === 'checkbox') { markCheckboxGroup(el); return; }
+  const nb = document.getElementById(`qb-${qid}`);
+  if (nb) nb.classList.toggle('answered', answered);
+}
+function markCheckboxGroup(el) {
+  const pflIds = el.getAttribute('data-pfl');
+  if (pflIds) {
+    const checked = document.querySelectorAll(`[data-pfl="${pflIds}"]:checked`);
+    pflIds.split(',').forEach((id, i) => {
+      const nb = document.getElementById(`qb-${id}`);
+      if (nb) nb.classList.toggle('answered', i < checked.length);
+    });
+  }
+}
+
+/* ── Timer ── */
+let secondsLeft = 60 * 60;
+let timerRef = null;
+function startTimer() {
+  const el = document.getElementById('timer');
+  timerRef = setInterval(() => {
+    const m = String(Math.floor(secondsLeft / 60)).padStart(2,'0');
+    const s = String(secondsLeft % 60).padStart(2,'0');
+    el.textContent = `${m}:${s}`;
+    if (secondsLeft <= 300) el.classList.add('warn');
+    if (secondsLeft <= 0) { clearInterval(timerRef); submitTest(); }
+    secondsLeft--;
+  }, 1000);
+}
+
+/* ── Submit & Scoring ── */
+function getUserAnswer(id) {
+  // TFNG — stored in dataset
+  const tfngItem = document.querySelector(`.tfng-item[data-answer]`);
+  // Check all tfng items
+  const allTfng = document.querySelectorAll('.tfng-item');
+  for (const item of allTfng) {
+    const btns = item.querySelectorAll('.tfng-btn');
+    for (const btn of btns) {
+      if (btn.getAttribute('data-q') == id) {
+        return (item.dataset.answer || '').toLowerCase();
+      }
+    }
+  }
+  const text = document.querySelector(`input[type="text"][data-q="${id}"]`);
+  if (text) return text.value.trim().toLowerCase();
+  const radio = document.querySelector(`input[type="radio"][data-q="${id}"]:checked`);
+  if (radio) return radio.value.trim().toLowerCase();
+  const sel = document.querySelector(`select[data-q="${id}"]`);
+  if (sel) return sel.value.trim().toLowerCase();
+  return '';
+}
+
+function submitTest() {
+  clearInterval(timerRef);
+  const ids = collectAllQids();
+  let score = 0;
+  let log = '';
+
+  ids.forEach(id => {
+    const correct = ANSWER_KEY[id];
+    if (correct === undefined) return;
+    const userAns = getUserAnswer(id);
+    const correctLow = String(correct).toLowerCase();
+    const isOk = userAns === correctLow;
+    if (isOk) score++;
+    log += `<div class="report-row">
+      <span class="qn">${id}</span>
+      <span class="${isOk?'ok':'no'}">${isOk?'✓':'✗'}</span>
+      <span>Your: "<strong>${userAns||'[blank]'}</strong>"</span>
+      ${!isOk?`<span style="color:var(--muted)">| Correct: "<strong>${correct}</strong>"</span>`:''}
+    </div>`;
+  });
+
+  const total = ids.length;
+  const band = calcBand(score, total);
+  document.getElementById('modal-body').innerHTML = `
+    <p style="margin-bottom:8px">Score: <strong>${score} / ${total}</strong></p>
+    <div class="band-badge">Estimated Band: ${band}</div>
+    <h4 style="margin-bottom:12px;border-bottom:1px solid var(--rule);padding-bottom:5px;font-family:var(--mono);font-size:0.8rem;letter-spacing:0.06em">REVIEW LOG</h4>
+    ${log}
+  `;
+  document.getElementById('modal').classList.add('active');
+}
+
+function calcBand(score, total) {
+  const pct = score / total;
+  if (pct >= 0.975) return 9.0;
+  if (pct >= 0.925) return 8.5;
+  if (pct >= 0.875) return 8.0;
+  if (pct >= 0.800) return 7.5;
+  if (pct >= 0.750) return 7.0;
+  if (pct >= 0.650) return 6.5;
+  if (pct >= 0.575) return 6.0;
+  if (pct >= 0.450) return 5.5;
+  if (pct >= 0.350) return 5.0;
+  return 4.0;
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', () => {
+  buildAll();
+  buildDock();
+  setupTracking();
+  switchPassage(1);
+  startTimer();
+});
+</script>
+</body>
+</html>

@@ -24,10 +24,16 @@
   --panel-w:   48%;
   --header-h:  52px;
   --footer-h:  52px;
+
+  /* Highlight colors */
+  --hl-yellow: #fff176;
+  --hl-green:  #b9f6ca;
+  --hl-blue:   #bbdefb;
+  --hl-pink:   #f8bbd0;
+  --hl-orange: #ffe0b2;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html, body { height: 100%; overflow: hidden; }
 
 body {
@@ -62,10 +68,7 @@ header {
 }
 .logo em { color: var(--gold); font-style: normal; }
 
-.passage-tabs {
-  display: flex;
-  gap: 3px;
-}
+.passage-tabs { display: flex; gap: 3px; }
 .passage-tab {
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -96,6 +99,87 @@ header {
 }
 .timer.warn { background: #e05a2b; color: var(--white); }
 
+/* ══ TOOLBAR ══ */
+.toolbar {
+  height: 40px;
+  background: #1e2433;
+  border-bottom: 1px solid #2e3548;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 6px;
+  flex-shrink: 0;
+  z-index: 90;
+}
+.toolbar-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #6a7090;
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+.hl-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.12s;
+  flex-shrink: 0;
+  position: relative;
+}
+.hl-btn:hover { transform: scale(1.18); border-color: rgba(255,255,255,0.4); }
+.hl-btn.active { border-color: var(--white) !important; transform: scale(1.15); }
+.hl-btn[data-color="yellow"] { background: var(--hl-yellow); }
+.hl-btn[data-color="green"]  { background: var(--hl-green); }
+.hl-btn[data-color="blue"]   { background: var(--hl-blue); }
+.hl-btn[data-color="pink"]   { background: var(--hl-pink); }
+.hl-btn[data-color="orange"] { background: var(--hl-orange); }
+
+.tool-sep {
+  width: 1px;
+  height: 22px;
+  background: #3a4060;
+  margin: 0 6px;
+}
+
+.tb-btn {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: #2a2f3e;
+  color: #9aa0c0;
+  border: 1px solid #3a4060;
+  padding: 4px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.12s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.tb-btn:hover { background: #363c52; color: var(--white); }
+.tb-btn.active { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.tb-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+.notes-count {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  background: var(--gold);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 1px 5px;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: center;
+  display: none;
+}
+.notes-count.visible { display: inline-block; }
+
 /* ══ MAIN SPLIT PANE ══ */
 main {
   flex: 1;
@@ -114,15 +198,15 @@ main {
   flex-direction: column;
   overflow: hidden;
   border-right: 3px solid var(--gold);
+  position: relative;
 }
 .passage-panel-inner {
   flex: 1;
   overflow-y: auto;
   padding: 28px 32px 36px;
+  user-select: text;
 }
-.passage-header {
-  margin-bottom: 18px;
-}
+.passage-header { margin-bottom: 18px; }
 .passage-label {
   font-family: var(--mono);
   font-size: 0.7rem;
@@ -145,21 +229,13 @@ main {
   color: var(--muted);
   line-height: 1.4;
 }
-.passage-divider {
-  border: none;
-  border-top: 1.5px solid var(--rule);
-  margin: 16px 0;
-}
+.passage-divider { border: none; border-top: 1.5px solid var(--rule); margin: 16px 0; }
 .passage-body {
   font-size: 0.97rem;
   line-height: 1.82;
   color: var(--ink);
 }
-.passage-body p {
-  margin-bottom: 1.1em;
-  text-align: justify;
-  hyphens: auto;
-}
+.passage-body p { margin-bottom: 1.1em; text-align: justify; hyphens: auto; }
 .para-label {
   display: inline-block;
   font-family: var(--mono);
@@ -173,11 +249,23 @@ main {
   vertical-align: middle;
   letter-spacing: 0.06em;
 }
-.passage-body mark {
-  background: #fff3c4;
+.passage-body mark { background: #fff3c4; border-radius: 2px; padding: 0 2px; }
+
+/* Highlights */
+.hl {
   border-radius: 2px;
-  padding: 0 2px;
+  padding: 0 1px;
+  cursor: pointer;
+  position: relative;
+  transition: opacity 0.15s;
 }
+.hl:hover { opacity: 0.8; }
+.hl[data-color="yellow"] { background: var(--hl-yellow); }
+.hl[data-color="green"]  { background: var(--hl-green); }
+.hl[data-color="blue"]   { background: var(--hl-blue); }
+.hl[data-color="pink"]   { background: var(--hl-pink); }
+.hl[data-color="orange"] { background: var(--hl-orange); }
+.hl.has-note { border-bottom: 2px dotted #555; }
 
 /* ── Questions Panel ── */
 .questions-panel {
@@ -192,9 +280,7 @@ main {
   overflow-y: auto;
   padding: 24px 28px 36px;
 }
-.q-section {
-  margin-bottom: 32px;
-}
+.q-section { margin-bottom: 32px; }
 .q-instructions {
   background: var(--blue-pale);
   border-left: 4px solid var(--blue);
@@ -217,308 +303,309 @@ main {
   padding-bottom: 6px;
   border-bottom: 1px solid var(--rule);
 }
-.section-divider {
-  border: none;
-  border-top: 2px dashed var(--rule);
-  margin: 28px 0 22px;
-}
+.section-divider { border: none; border-top: 2px dashed var(--rule); margin: 28px 0 22px; }
 
-/* ── Q number badge ── */
 .qn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  min-width: 24px;
-  height: 20px;
-  padding: 0 5px;
-  background: var(--ink);
-  color: var(--white);
-  border-radius: 3px;
-  flex-shrink: 0;
-  letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 700;
+  min-width: 24px; height: 20px; padding: 0 5px;
+  background: var(--ink); color: var(--white); border-radius: 3px;
+  flex-shrink: 0; letter-spacing: 0.02em;
 }
 
-/* ── Text input ── */
 .input-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  border: 1.5px solid var(--rule);
-  background: var(--white);
-  border-radius: 4px;
-  padding: 2px 6px;
-  transition: border-color 0.15s;
+  display: inline-flex; align-items: center; gap: 5px;
+  border: 1.5px solid var(--rule); background: var(--white);
+  border-radius: 4px; padding: 2px 6px; transition: border-color 0.15s;
 }
 .input-wrap:focus-within { border-color: var(--blue); }
 input[type="text"] {
-  border: none;
-  outline: none;
-  font-family: var(--serif);
-  font-size: 0.95rem;
-  width: 160px;
-  padding: 4px 2px;
-  color: var(--blue);
-  font-weight: 600;
-  background: transparent;
+  border: none; outline: none; font-family: var(--serif);
+  font-size: 0.95rem; width: 160px; padding: 4px 2px;
+  color: var(--blue); font-weight: 600; background: transparent;
 }
 
-/* ── MCQ / Radio ── */
 .mc-item { margin-bottom: 20px; }
-.mc-q {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 9px;
-  font-size: 0.95rem;
-  line-height: 1.55;
-  font-weight: 600;
-}
+.mc-q { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 9px; font-size: 0.95rem; line-height: 1.55; font-weight: 600; }
 .options-list { margin-left: 32px; display: flex; flex-direction: column; gap: 7px; }
-.opt-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 0.93rem;
-  line-height: 1.5;
-}
-.opt-label input[type="radio"],
-.opt-label input[type="checkbox"] {
-  margin-top: 3px;
-  accent-color: var(--blue);
-  cursor: pointer;
-  flex-shrink: 0;
-  width: 15px;
-  height: 15px;
-}
+.opt-label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; font-size: 0.93rem; line-height: 1.5; }
+.opt-label input[type="radio"], .opt-label input[type="checkbox"] { margin-top: 3px; accent-color: var(--blue); cursor: pointer; flex-shrink: 0; width: 15px; height: 15px; }
 
-/* ── TFNG / YNNG ── */
-.tfng-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 14px;
-  font-size: 0.93rem;
-  line-height: 1.55;
-}
+.tfng-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; font-size: 0.93rem; line-height: 1.55; }
 .tfng-statement { flex: 1; }
-.tfng-radios {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
+.tfng-radios { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
 .tfng-btn {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 4px 9px;
-  border: 1.5px solid var(--rule);
-  border-radius: 3px;
-  cursor: pointer;
-  background: var(--white);
-  color: var(--muted);
-  transition: all 0.12s;
-  white-space: nowrap;
-  user-select: none;
+  font-family: var(--mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+  padding: 4px 9px; border: 1.5px solid var(--rule); border-radius: 3px; cursor: pointer;
+  background: var(--white); color: var(--muted); transition: all 0.12s; white-space: nowrap; user-select: none;
 }
 .tfng-btn:hover { border-color: var(--blue); color: var(--blue); }
-.tfng-btn.selected { background: var(--blue); color: var(--white); border-color: var(--blue); }
-.tfng-btn.sel-T { background: var(--green); border-color: var(--green); color: var(--white); }
-.tfng-btn.sel-F { background: var(--red); border-color: var(--red); color: var(--white); }
-.tfng-btn.sel-NG { background: #7a6e5f; border-color: #7a6e5f; color: var(--white); }
-.tfng-btn.sel-Y { background: var(--green); border-color: var(--green); color: var(--white); }
-.tfng-btn.sel-N { background: var(--red); border-color: var(--red); color: var(--white); }
+.tfng-btn.sel-T   { background: var(--green);  border-color: var(--green);  color: var(--white); }
+.tfng-btn.sel-F   { background: var(--red);    border-color: var(--red);    color: var(--white); }
+.tfng-btn.sel-NG  { background: #7a6e5f;       border-color: #7a6e5f;       color: var(--white); }
+.tfng-btn.sel-Y   { background: var(--green);  border-color: var(--green);  color: var(--white); }
+.tfng-btn.sel-N   { background: var(--red);    border-color: var(--red);    color: var(--white); }
 
-/* ── Matching headings / features / sentence endings ── */
-.match-pool {
-  background: var(--white);
-  border: 1.5px solid var(--rule);
-  border-radius: 6px;
-  padding: 12px 14px;
-  margin-bottom: 16px;
-  font-size: 0.88rem;
-  line-height: 1.7;
-}
-.match-pool-title {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
+.match-pool { background: var(--white); border: 1.5px solid var(--rule); border-radius: 6px; padding: 12px 14px; margin-bottom: 16px; font-size: 0.88rem; line-height: 1.7; }
+.match-pool-title { font-family: var(--mono); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
 .match-pool-item { margin: 3px 0; }
-.match-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 11px;
-  font-size: 0.93rem;
-  line-height: 1.5;
-}
+.match-row { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; font-size: 0.93rem; line-height: 1.5; }
 .match-label { flex: 1; }
-select.drop {
-  border: 1.5px solid var(--rule);
-  border-radius: 4px;
-  padding: 5px 10px;
-  font-family: var(--serif);
-  font-size: 0.88rem;
-  color: var(--blue);
-  font-weight: 600;
-  background: var(--white);
-  outline: none;
-  min-width: 110px;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
+select.drop { border: 1.5px solid var(--rule); border-radius: 4px; padding: 5px 10px; font-family: var(--serif); font-size: 0.88rem; color: var(--blue); font-weight: 600; background: var(--white); outline: none; min-width: 110px; cursor: pointer; transition: border-color 0.15s; }
 select.drop:focus { border-color: var(--blue); }
 
-/* ── Sentence endings ── */
-.sent-ending-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-size: 0.93rem;
-  line-height: 1.55;
-}
+.sent-ending-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; font-size: 0.93rem; line-height: 1.55; }
 .sent-stem { flex: 1; font-style: italic; }
 
-/* ── Summary / Note completion (inline) ── */
-.summary-block {
-  background: var(--white);
-  border: 1.5px solid var(--rule);
-  border-radius: 6px;
-  padding: 16px 18px;
-  font-size: 0.95rem;
-  line-height: 2.1;
-  margin-bottom: 8px;
-}
+.summary-block { background: var(--white); border: 1.5px solid var(--rule); border-radius: 6px; padding: 16px 18px; font-size: 0.95rem; line-height: 2.1; margin-bottom: 8px; }
 .summary-block p { margin-bottom: 0.5em; }
 
-/* ── Short answer ── */
-.short-a-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 14px;
-  font-size: 0.93rem;
-  line-height: 1.55;
-}
+.short-a-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; font-size: 0.93rem; line-height: 1.55; }
 .short-a-q { flex: 1; }
-.short-a-inputs { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
 
-/* ── Pick from list ── */
 .pick-list { display: flex; flex-direction: column; gap: 7px; margin: 6px 0 6px 4px; }
 
-/* ── Classification table ── */
-.class-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-  margin: 8px 0;
-}
-.class-table th {
-  background: var(--ink);
-  color: var(--white);
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 8px 10px;
-  text-align: left;
-}
-.class-table td {
-  border: 1.5px solid var(--rule);
-  padding: 8px 10px;
-  vertical-align: middle;
-}
+.class-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 8px 0; }
+.class-table th { background: var(--ink); color: var(--white); font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; padding: 8px 10px; text-align: left; }
+.class-table td { border: 1.5px solid var(--rule); padding: 8px 10px; vertical-align: middle; }
 .class-table tr:nth-child(even) td { background: #f7f5f0; }
 
-/* ── Diagram ── */
-.diagram-placeholder {
-  border: 2px dashed var(--rule);
-  border-radius: 6px;
-  padding: 28px;
-  text-align: center;
-  color: var(--muted);
-  margin: 10px 0 14px;
-  font-style: italic;
-  font-size: 0.88rem;
+/* ══ NOTES PANEL ══ */
+.notes-panel {
+  width: 0;
+  flex-shrink: 0;
+  background: #1a1f2e;
+  border-left: 3px solid #2e3548;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.25s ease;
 }
-.diagram-labels { margin: 6px 0; }
-.diagram-label-row {
+.notes-panel.open { width: 280px; }
+.notes-panel-head {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #2e3548;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.notes-panel-title {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.notes-close {
+  background: none;
+  border: none;
+  color: #6a7090;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: color 0.12s;
+}
+.notes-close:hover { color: var(--white); }
+
+.notes-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.note-card {
+  background: #242b3e;
+  border: 1px solid #2e3548;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  position: relative;
+}
+.note-card:hover { border-color: var(--gold); }
+.note-card-passage {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.note-card-quote {
+  font-size: 0.78rem;
+  color: #8a90b0;
+  font-style: italic;
+  margin-bottom: 6px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.note-card-text {
+  font-size: 0.82rem;
+  color: #c8ceee;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.note-card-delete {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: none;
+  border: none;
+  color: #4a5068;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: color 0.12s;
+  line-height: 1;
+}
+.note-card-delete:hover { color: var(--red); }
+.notes-empty {
+  padding: 20px 10px;
+  text-align: center;
+  color: #4a5068;
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ══ CONTEXT MENU ══ */
+.ctx-menu {
+  position: fixed;
+  background: #1e2433;
+  border: 1px solid #3a4060;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  z-index: 8000;
+  min-width: 180px;
+  padding: 6px 0;
+  display: none;
+}
+.ctx-menu.visible { display: block; }
+.ctx-section-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4a5068;
+  padding: 4px 14px 2px;
+}
+.ctx-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 8px 0;
-  font-size: 0.93rem;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #c8ceee;
+  font-family: var(--serif);
+  transition: background 0.1s;
 }
-.diag-pin {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 0.72rem;
-  background: var(--blue);
-  color: var(--white);
-  width: 24px;
-  height: 24px;
+.ctx-item:hover { background: #2a3050; }
+.ctx-dot {
+  width: 14px; height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.ctx-sep { border: none; border-top: 1px solid #2e3548; margin: 4px 0; }
+
+/* ══ NOTE EDITOR MODAL ══ */
+.note-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  flex-shrink: 0;
+  z-index: 9500;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.18s;
 }
-.diagram-label-row input[type="text"] { width: 180px; }
-
-/* ── Table completion ── */
-.comp-table {
+.note-modal-overlay.active { visibility: visible; opacity: 1; }
+.note-modal {
+  background: #1e2433;
+  border: 1px solid #3a4060;
+  border-radius: 8px;
+  width: 420px;
+  max-width: 90vw;
+  overflow: hidden;
+  box-shadow: 0 16px 60px rgba(0,0,0,0.7);
+  border-top: 3px solid var(--gold);
+}
+.note-modal-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid #2e3548;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.note-modal-title {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.note-modal-quote {
+  padding: 10px 18px;
+  background: #161b28;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #7a80a0;
+  line-height: 1.5;
+  border-bottom: 1px solid #2e3548;
+  max-height: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.note-modal-quote::before { content: '"'; color: var(--gold); margin-right: 2px; }
+.note-modal-quote::after  { content: '"'; color: var(--gold); margin-left: 2px; }
+.note-modal textarea {
+  display: block;
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-  margin: 8px 0;
+  padding: 14px 18px;
+  background: #1a1f2e;
+  border: none;
+  outline: none;
+  color: #e0e4f8;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  resize: none;
+  min-height: 100px;
 }
-.comp-table th {
-  background: var(--blue);
-  color: var(--white);
+.note-modal-foot {
+  padding: 10px 18px;
+  border-top: 1px solid #2e3548;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.note-modal-btn {
   font-family: var(--mono);
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 8px 10px;
-  text-align: center;
+  letter-spacing: 0.04em;
+  padding: 7px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.12s;
 }
-.comp-table td {
-  border: 1.5px solid var(--rule);
-  padding: 8px 10px;
-  vertical-align: middle;
-}
-.comp-table .mixed-cell { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
-
-/* ── Flowchart ── */
-.flowchart { display: flex; flex-direction: column; align-items: center; margin: 10px 0; gap: 0; }
-.flow-box {
-  background: var(--white);
-  border: 1.5px solid var(--rule);
-  border-radius: 6px;
-  padding: 10px 18px;
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 0.93rem;
-  line-height: 1.7;
-}
-.flow-box.decision { border-color: var(--gold); background: var(--gold-pale); border-radius: 50px; }
-.flow-arrow { font-size: 1.4rem; color: var(--muted); margin: 3px 0; line-height: 1; }
+.note-modal-btn.cancel { background: #2a2f3e; color: #9aa0c0; }
+.note-modal-btn.cancel:hover { background: #363c52; }
+.note-modal-btn.save { background: var(--gold); color: var(--ink); }
+.note-modal-btn.save:hover { background: #b8841f; }
 
 /* ══ FOOTER ══ */
 footer {
@@ -533,129 +620,56 @@ footer {
   flex-shrink: 0;
   z-index: 100;
 }
-.q-dock {
-  display: flex;
-  gap: 3px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  max-width: 65%;
-  padding: 2px 0;
-}
+.q-dock { display: flex; gap: 3px; flex-wrap: nowrap; overflow-x: auto; max-width: 65%; padding: 2px 0; }
 .q-btn {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  background: #2a2f3e;
-  color: #7a80a0;
-  border: none;
-  padding: 5px 7px;
-  border-radius: 3px;
-  cursor: pointer;
-  min-width: 28px;
-  text-align: center;
-  transition: all 0.12s;
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  background: #2a2f3e; color: #7a80a0; border: none;
+  padding: 5px 7px; border-radius: 3px; cursor: pointer;
+  min-width: 28px; text-align: center; transition: all 0.12s;
 }
 .q-btn:hover { background: #363c52; color: var(--white); }
 .q-btn.answered { background: var(--blue); color: var(--white); }
 .q-btn.current-passage { box-shadow: inset 0 0 0 2px var(--gold); }
 
 .submit-btn {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: 0.05em;
-  background: var(--green);
-  color: var(--white);
-  border: none;
-  padding: 9px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
+  font-family: var(--mono); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.05em;
+  background: var(--green); color: var(--white); border: none; padding: 9px 20px;
+  border-radius: 4px; cursor: pointer; white-space: nowrap; transition: background 0.15s;
 }
 .submit-btn:hover { background: #0b5226; }
 
-/* ══ MODAL ══ */
+/* ══ RESULTS MODAL ══ */
 .modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9000;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.2s;
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9000; visibility: hidden; opacity: 0; transition: all 0.2s;
 }
 .modal-overlay.active { visibility: visible; opacity: 1; }
 .modal-box {
-  background: var(--page);
-  width: 92%;
-  max-width: 640px;
-  max-height: 84vh;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-top: 4px solid var(--gold);
-  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  background: var(--page); width: 92%; max-width: 640px; max-height: 84vh;
+  border-radius: 8px; display: flex; flex-direction: column; overflow: hidden;
+  border-top: 4px solid var(--gold); box-shadow: 0 24px 80px rgba(0,0,0,0.5);
 }
-.modal-head {
-  background: var(--ink);
-  color: var(--white);
-  padding: 16px 22px;
-  font-family: var(--mono);
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
+.modal-head { background: var(--ink); color: var(--white); padding: 16px 22px; font-family: var(--mono); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.06em; }
 .modal-body { padding: 22px; overflow-y: auto; flex: 1; font-size: 0.9rem; line-height: 1.7; }
 .modal-foot { background: var(--cream); padding: 12px 22px; text-align: right; border-top: 1px solid var(--rule); }
-.modal-close {
-  background: var(--blue);
-  color: var(--white);
-  border: none;
-  padding: 8px 20px;
-  font-family: var(--mono);
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-}
-.band-badge {
-  background: var(--gold);
-  color: var(--ink);
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 1.3rem;
-  text-align: center;
-  padding: 12px;
-  border-radius: 5px;
-  margin-bottom: 18px;
-}
-.report-row {
-  margin-bottom: 7px;
-  padding-bottom: 7px;
-  border-bottom: 1px dashed var(--rule);
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 0.88rem;
-}
+.modal-close { background: var(--blue); color: var(--white); border: none; padding: 8px 20px; font-family: var(--mono); font-weight: 700; cursor: pointer; border-radius: 4px; font-size: 0.82rem; letter-spacing: 0.04em; }
+.band-badge { background: var(--gold); color: var(--ink); font-family: var(--mono); font-weight: 700; font-size: 1.3rem; text-align: center; padding: 12px; border-radius: 5px; margin-bottom: 18px; }
+.report-row { margin-bottom: 7px; padding-bottom: 7px; border-bottom: 1px dashed var(--rule); display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: 0.88rem; }
 .ok { color: var(--green); font-weight: 700; }
 .no { color: var(--red); font-weight: 700; }
 
-/* ── Scrollbar styling ── */
+/* Scrollbars */
 .passage-panel-inner::-webkit-scrollbar,
 .questions-panel-inner::-webkit-scrollbar,
+.notes-list::-webkit-scrollbar,
 .q-dock::-webkit-scrollbar { width: 5px; height: 5px; }
 .passage-panel-inner::-webkit-scrollbar-track,
-.questions-panel-inner::-webkit-scrollbar-track { background: transparent; }
+.questions-panel-inner::-webkit-scrollbar-track,
+.notes-list::-webkit-scrollbar-track { background: transparent; }
 .passage-panel-inner::-webkit-scrollbar-thumb,
 .questions-panel-inner::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+.notes-list::-webkit-scrollbar-thumb { background: #2e3548; border-radius: 4px; }
 .q-dock::-webkit-scrollbar-thumb { background: #2a2f3e; }
 </style>
 </head>
@@ -667,13 +681,87 @@ footer {
   <div class="timer" id="timer">60:00</div>
 </header>
 
-<main id="main-area"></main>
+<!-- Highlight + Notes Toolbar -->
+<div class="toolbar">
+  <span class="toolbar-label">Highlight</span>
+  <button class="hl-btn active" data-color="yellow" title="Yellow" onclick="setHLColor('yellow',this)"></button>
+  <button class="hl-btn" data-color="green"  title="Green"  onclick="setHLColor('green',this)"></button>
+  <button class="hl-btn" data-color="blue"   title="Blue"   onclick="setHLColor('blue',this)"></button>
+  <button class="hl-btn" data-color="pink"   title="Pink"   onclick="setHLColor('pink',this)"></button>
+  <button class="hl-btn" data-color="orange" title="Orange" onclick="setHLColor('orange',this)"></button>
+
+  <div class="tool-sep"></div>
+
+  <button class="tb-btn" id="erase-btn" title="Highlight o'chirish rejimi" onclick="toggleErase()">
+    <svg viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L5 7.293 1.854 4.146a.5.5 0 1 0-.707.707L4.293 8 .854 11.439a.5.5 0 0 0 0 .707l3 3a.5.5 0 0 0 .707 0L8 11.707l6.146 6.146a.5.5 0 0 0 .707-.707L2.707 4.854l9.293-9.293a.5.5 0 0 0 0-.708z"/></svg>
+    Erase
+  </button>
+
+  <div class="tool-sep"></div>
+
+  <button class="tb-btn" id="notes-toggle-btn" onclick="toggleNotesPanel()">
+    <svg viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm4 0v1h4V2H6zm-1 2a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2H5zm0 3a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2H5zm0 3a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2H5z"/></svg>
+    Notes
+    <span class="notes-count" id="notes-count">0</span>
+  </button>
+
+  <div class="tool-sep"></div>
+
+  <button class="tb-btn" title="Barcha highlight va noteslarni tozalash" onclick="clearAllAnnotations()">
+    <svg viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5z"/></svg>
+    Clear All
+  </button>
+</div>
+
+<main id="main-area">
+  <!-- Notes Panel (right side, initially hidden) -->
+  <div class="notes-panel" id="notes-panel">
+    <div class="notes-panel-head">
+      <div class="notes-panel-title">📝 My Notes</div>
+      <button class="notes-close" onclick="toggleNotesPanel()">✕</button>
+    </div>
+    <div class="notes-list" id="notes-list">
+      <div class="notes-empty">Select text in the passage and right-click to add a note.</div>
+    </div>
+  </div>
+</main>
 
 <footer>
   <div class="q-dock" id="q-dock"></div>
   <button class="submit-btn" onclick="submitTest()">Submit Test</button>
 </footer>
 
+<!-- Context menu -->
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-section-label">Highlight</div>
+  <div class="ctx-item" onclick="ctxHighlight('yellow')"><span class="ctx-dot" style="background:var(--hl-yellow)"></span>Yellow</div>
+  <div class="ctx-item" onclick="ctxHighlight('green')"><span class="ctx-dot" style="background:var(--hl-green)"></span>Green</div>
+  <div class="ctx-item" onclick="ctxHighlight('blue')"><span class="ctx-dot" style="background:var(--hl-blue)"></span>Blue</div>
+  <div class="ctx-item" onclick="ctxHighlight('pink')"><span class="ctx-dot" style="background:var(--hl-pink)"></span>Pink</div>
+  <div class="ctx-item" onclick="ctxHighlight('orange')"><span class="ctx-dot" style="background:var(--hl-orange)"></span>Orange</div>
+  <hr class="ctx-sep">
+  <div class="ctx-section-label">Actions</div>
+  <div class="ctx-item" onclick="ctxAddNote()">📝 Add Note</div>
+  <div class="ctx-item" onclick="ctxRemoveHighlight()" id="ctx-remove" style="display:none">🗑 Remove Highlight</div>
+</div>
+
+<!-- Note editor modal -->
+<div class="note-modal-overlay" id="note-modal-overlay">
+  <div class="note-modal">
+    <div class="note-modal-head">
+      <div class="note-modal-title">📝 Add Note</div>
+      <button class="notes-close" onclick="closeNoteModal()">✕</button>
+    </div>
+    <div class="note-modal-quote" id="note-modal-quote"></div>
+    <textarea id="note-textarea" placeholder="Write your note here..." rows="4"></textarea>
+    <div class="note-modal-foot">
+      <button class="note-modal-btn cancel" onclick="closeNoteModal()">Cancel</button>
+      <button class="note-modal-btn save" onclick="saveNote()">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- Results modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
     <div class="modal-head">TEST RESULTS SUMMARY</div>
@@ -685,37 +773,10 @@ footer {
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════════════
-   IELTS READING — DATA-DRIVEN ENGINE
-   
-   Each passage has:
-     - passage: { title, subtitle, body: [...] }   ← rendered left-pane
-     - sections: [...]                              ← rendered right-pane
-   
-   Section types supported:
-     "multiple-choice"    → Single MCQ (A/B/C/D)
-     "multi-select"       → Choose N from list (checkboxes)
-     "tfng"               → True / False / Not Given (button group)
-     "ynng"               → Yes / No / Not Given (button group)
-     "matching-headings"  → Match paragraph letters to heading list
-     "matching-features"  → Match statements to a list of features/people
-     "sentence-endings"   → Match sentence stems to correct endings
-     "summary-completion" → Fill-in-blank summary (inline or box)
-     "note-completion"    → Note/form fill (same as listening form)
-     "table-completion"   → Table with blank cells
-     "flowchart"          → Process/flowchart completion
-     "short-answer"       → WH-question text answers
-     "diagram-label"      → Label parts of a diagram (text or dropdown)
-     "pick-from-list"     → Select N items from a longer list
-     "classification"     → Classify items using a dropdown
-     "sentence-completion"→ Complete sentences with text input
-═══════════════════════════════════════════════════════════════════════ */
-
+/* ══════════════════════════════════════════════════════
+   PASSAGES DATA
+══════════════════════════════════════════════════════ */
 const PASSAGES = [
-
-  /* ══════════════════════════════════════════════════════
-     PASSAGE 1 — The Deep Ocean
-  ══════════════════════════════════════════════════════ */
   {
     id: 1,
     passage: {
@@ -750,16 +811,7 @@ const PASSAGES = [
         title: "Matching Headings",
         pool: {
           title: "List of Headings",
-          items: [
-            "i   A challenge to scientific orthodoxy",
-            "ii  The chemistry of darkness",
-            "iii Carbon storage and global consequences",
-            "iv  Life without sunlight: vent organisms",
-            "v   Light as a survival tool",
-            "vi  The monotonous but living abyss",
-            "vii The discovery of ocean heat",
-            "viii Diversity across ocean zones"
-          ]
+          items: ["i   A challenge to scientific orthodoxy","ii  The chemistry of darkness","iii Carbon storage and global consequences","iv  Life without sunlight: vent organisms","v   Light as a survival tool","vi  The monotonous but living abyss","vii The discovery of ocean heat","viii Diversity across ocean zones"]
         },
         items: [
           { id: 7,  label: "Paragraph B" },
@@ -771,10 +823,6 @@ const PASSAGES = [
       }
     ]
   },
-
-  /* ══════════════════════════════════════════════════════
-     PASSAGE 2 — The History of Glass
-  ══════════════════════════════════════════════════════ */
   {
     id: 2,
     passage: {
@@ -795,42 +843,19 @@ const PASSAGES = [
         instructions: "Questions 11–14: Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.",
         title: "Multiple Choice",
         items: [
-          {
-            id: 11,
-            question: "What is described as the key innovation that made glass vessels more affordable?",
-            options: ["A) The discovery of silica sand as a raw material", "B) The invention of glassblowing in Syria", "C) The Roman technique of making flat window glass", "D) The development of the float glass process"]
-          },
-          {
-            id: 12,
-            question: "What was the main limitation of glass produced by the crown glass process?",
-            options: ["A) It was too expensive for most builders", "B) It could only be made in small quantities", "C) Panes were restricted in size and sometimes distorted", "D) It shattered easily under wind pressure"]
-          },
-          {
-            id: 13,
-            question: "According to the passage, what distinguishes the float glass process?",
-            options: ["A) It uses centrifugal force to flatten molten glass", "B) It produces glass of uniform thickness and flatness", "C) It was developed in the nineteenth century", "D) It requires lower temperatures than earlier methods"]
-          },
-          {
-            id: 14,
-            question: "Which of the following is presented as an environmental ADVANTAGE of glass?",
-            options: ["A) It requires little energy to manufacture", "B) It is safe for wildlife", "C) It can be recycled without quality loss", "D) It is produced using sustainable raw materials"]
-          }
+          { id: 11, question: "What is described as the key innovation that made glass vessels more affordable?", options: ["A) The discovery of silica sand as a raw material","B) The invention of glassblowing in Syria","C) The Roman technique of making flat window glass","D) The development of the float glass process"] },
+          { id: 12, question: "What was the main limitation of glass produced by the crown glass process?", options: ["A) It was too expensive for most builders","B) It could only be made in small quantities","C) Panes were restricted in size and sometimes distorted","D) It shattered easily under wind pressure"] },
+          { id: 13, question: "According to the passage, what distinguishes the float glass process?", options: ["A) It uses centrifugal force to flatten molten glass","B) It produces glass of uniform thickness and flatness","C) It was developed in the nineteenth century","D) It requires lower temperatures than earlier methods"] },
+          { id: 14, question: "Which of the following is presented as an environmental ADVANTAGE of glass?", options: ["A) It requires little energy to manufacture","B) It is safe for wildlife","C) It can be recycled without quality loss","D) It is produced using sustainable raw materials"] }
         ]
       },
       {
         type: "matching-features",
-        instructions: "Questions 15–19: Look at the following statements and the list of people/periods below. Match each statement with the correct person or period, <strong>A–F</strong>. You may use any letter more than once.",
+        instructions: "Questions 15–19: Look at the following statements and the list of people/periods below. Match each statement with the correct person or period, <strong>A–F</strong>.",
         title: "Matching Features",
         pool: {
           title: "List of People / Periods",
-          items: [
-            "A — Ancient Mesopotamian craftsmen",
-            "B — Syrian glassmakers (~1st century BCE)",
-            "C — Roman glassmakers",
-            "D — Joseph Paxton",
-            "E — Alastair Pilkington",
-            "F — Galileo"
-          ]
+          items: ["A — Ancient Mesopotamian craftsmen","B — Syrian glassmakers (~1st century BCE)","C — Roman glassmakers","D — Joseph Paxton","E — Alastair Pilkington","F — Galileo"]
         },
         items: [
           { id: 15, statement: "First recognised that glass could be used to glaze windows." },
@@ -858,10 +883,6 @@ const PASSAGES = [
       }
     ]
   },
-
-  /* ══════════════════════════════════════════════════════
-     PASSAGE 3 — Urban Farming
-  ══════════════════════════════════════════════════════ */
   {
     id: 3,
     passage: {
@@ -880,7 +901,7 @@ const PASSAGES = [
     sections: [
       {
         type: "ynng",
-        instructions: "Questions 23–27: Do the following statements agree with the <em>claims of the writer</em> in the Reading Passage? Write <strong>YES</strong> if the statement agrees with the claims of the writer, <strong>NO</strong> if the statement contradicts the claims of the writer, or <strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this.",
+        instructions: "Questions 23–27: Do the following statements agree with the <em>claims of the writer</em>? Write <strong>YES</strong>, <strong>NO</strong>, or <strong>NOT GIVEN</strong>.",
         title: "Yes / No / Not Given",
         items: [
           { id: 23, statement: "Urban farming is capable of becoming the primary food source for most cities." },
@@ -892,19 +913,11 @@ const PASSAGES = [
       },
       {
         type: "sentence-endings",
-        instructions: "Questions 28–31: Complete each sentence with the correct ending, <strong>A–G</strong>, from the box below.",
+        instructions: "Questions 28–31: Complete each sentence with the correct ending, <strong>A–G</strong>.",
         title: "Sentence Endings",
         pool: {
           title: "List of Endings",
-          items: [
-            "A — is not viable for staple crops like wheat and rice at commercial scale.",
-            "B — were introduced as a response to a national food emergency.",
-            "C — can be worsened rather than solved by urban agriculture projects.",
-            "D — is largely determined by food type and farming method rather than transport distance.",
-            "E — have received large amounts of private investment.",
-            "F — would require policy support, funding and fair access to land.",
-            "G — uses an organic, low-technology approach very different from Western models."
-          ]
+          items: ["A — is not viable for staple crops like wheat and rice at commercial scale.","B — were introduced as a response to a national food emergency.","C — can be worsened rather than solved by urban agriculture projects.","D — is largely determined by food type and farming method rather than transport distance.","E — have received large amounts of private investment.","F — would require policy support, funding and fair access to land.","G — uses an organic, low-technology approach very different from Western models."]
         },
         items: [
           { id: 28, stem: "Vertical farms in the US, Japan and the Netherlands" },
@@ -927,9 +940,9 @@ const PASSAGES = [
       },
       {
         type: "classification",
-        instructions: "Questions 36–40 (Demo — Classification): Classify each statement as referring to <strong>A</strong> (Vertical Farms), <strong>B</strong> (Cuban Organoponicos) or <strong>C</strong> (Both).",
+        instructions: "Questions 36–40: Classify each statement as referring to <strong>A</strong> (Vertical Farms), <strong>B</strong> (Cuban Organoponicos) or <strong>C</strong> (Both).",
         title: "Classification",
-        categories: ["A — Vertical Farms", "B — Cuban Organoponicos", "C — Both"],
+        categories: ["A — Vertical Farms","B — Cuban Organoponicos","C — Both"],
         items: [
           { id: 36, label: "Located within city limits" },
           { id: 37, label: "Technology-intensive growing environment" },
@@ -942,26 +955,441 @@ const PASSAGES = [
   }
 ];
 
-/* ─── ANSWER KEY ─── */
 const ANSWER_KEY = {
-  // Passage 1
-  1: "TRUE", 2: "FALSE", 3: "NOT GIVEN", 4: "TRUE", 5: "TRUE", 6: "FALSE",
-  7: "i", 8: "iv", 9: "vi", 10: "v",
-  // Passage 2
-  11: "B", 12: "C", 13: "B", 14: "C",
-  15: "C", 16: "D", 17: "E", 18: "B", 19: "F",
-  20: "hazard", 21: "ultraviolet-patterned", 22: "recyclability",
-  // Passage 3
-  23: "NO", 24: "YES", 25: "NO", 26: "YES", 27: "NO",
-  28: "E", 29: "G", 30: "D", 31: "F",
-  32: "leafy greens", 33: "collapse of the soviet union", 34: "organoponicos", 35: "food deserts",
-  36: "C", 37: "A", 38: "A", 39: "A", 40: "B"
+  1:"TRUE",2:"FALSE",3:"NOT GIVEN",4:"TRUE",5:"TRUE",6:"FALSE",
+  7:"i",8:"iv",9:"vi",10:"v",
+  11:"B",12:"C",13:"B",14:"C",
+  15:"C",16:"D",17:"E",18:"B",19:"F",
+  20:"hazard",21:"ultraviolet-patterned",22:"recyclability",
+  23:"NO",24:"YES",25:"NO",26:"YES",27:"NO",
+  28:"E",29:"G",30:"D",31:"F",
+  32:"leafy greens",33:"collapse of the soviet union",34:"organoponicos",35:"food deserts",
+  36:"C",37:"A",38:"A",39:"A",40:"B"
 };
+
+/* ══════════════════════════════════════════════════════
+   HIGHLIGHT + NOTES STATE  (v2 — robust multi-node)
+══════════════════════════════════════════════════════ */
+const LS_HL    = 'ielts_highlights_v2';
+const LS_NOTES = 'ielts_notes_v2';
+
+let hlColor     = 'yellow';
+let eraseMode   = false;
+let ctxTargetHL = null;      // highlight span right-clicked
+let pendingRange = null;     // saved Range for context-menu actions
+
+// ── Storage ──
+function loadHighlights() { try { return JSON.parse(localStorage.getItem(LS_HL)||'[]'); } catch { return []; } }
+function saveHighlights(a) { localStorage.setItem(LS_HL, JSON.stringify(a)); }
+function loadNotes()       { try { return JSON.parse(localStorage.getItem(LS_NOTES)||'[]'); } catch { return []; } }
+function saveNotes(a)      { localStorage.setItem(LS_NOTES, JSON.stringify(a)); }
+function genId()           { return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+
+/* ── Serialise/deserialise a Range via text-offset within passage body ── */
+function serializeRange(range, passageBodyEl) {
+  const allText = getTextContent(passageBodyEl);
+  const preStart = getRangeOffset(range.startContainer, range.startOffset, passageBodyEl);
+  const preEnd   = getRangeOffset(range.endContainer,   range.endOffset,   passageBodyEl);
+  if (preStart < 0 || preEnd < 0) return null;
+  return { start: preStart, end: preEnd, text: allText.slice(preStart, preEnd).slice(0, 300) };
+}
+
+function getTextContent(node) {
+  // Collect text in tree order
+  let t = '';
+  const walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+  let n;
+  while ((n = walk.nextNode())) t += n.textContent;
+  return t;
+}
+
+function getRangeOffset(container, offset, root) {
+  let chars = 0;
+  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let n;
+  while ((n = walk.nextNode())) {
+    if (n === container) return chars + offset;
+    chars += n.textContent.length;
+  }
+  return -1;
+}
+
+function deserializeRange(serial, passageBodyEl) {
+  let chars = 0;
+  let startNode = null, startOff = 0, endNode = null, endOff = 0;
+  const walk = document.createTreeWalker(passageBodyEl, NodeFilter.SHOW_TEXT);
+  let n;
+  while ((n = walk.nextNode())) {
+    const len = n.textContent.length;
+    if (!startNode && chars + len > serial.start) {
+      startNode = n; startOff = serial.start - chars;
+    }
+    if (!endNode && chars + len >= serial.end) {
+      endNode = n; endOff = serial.end - chars; break;
+    }
+    chars += len;
+  }
+  if (!startNode || !endNode) return null;
+  try {
+    const r = document.createRange();
+    r.setStart(startNode, startOff);
+    r.setEnd(endNode, endOff);
+    return r;
+  } catch { return null; }
+}
+
+/* ── Wrap a range in highlight spans (handles multi-node ranges) ── */
+function wrapRange(range, color, hlId, hasNote) {
+  // Extract and re-insert wrapped content
+  const frag = range.extractContents();
+  const span = document.createElement('span');
+  span.className = 'hl' + (hasNote ? ' has-note' : '');
+  span.dataset.color  = color;
+  span.dataset.hlId   = hlId;
+  span.title = 'Right-click for options';
+  span.appendChild(frag);
+  range.insertNode(span);
+  attachHLListeners(span);
+  return span;
+}
+
+function attachHLListeners(span) {
+  span.addEventListener('contextmenu', onHLContextMenu);
+  span.addEventListener('click', onHLClick);
+}
+
+/* ── Apply stored highlight to DOM ── */
+function applyHighlightToDOM(hlData) {
+  // Make sure passage is in DOM (may be hidden but exists)
+  const bodyEl = document.querySelector(`#passage-view-${hlData.passageId} .passage-body`);
+  if (!bodyEl) return;
+  const range = deserializeRange(hlData.serial, bodyEl);
+  if (!range || range.collapsed) return;
+  try { wrapRange(range, hlData.color, hlData.id, hlData.hasNote); } catch {}
+}
+
+/* ── Main: highlight current selection ── */
+function doHighlight(color, savedRange) {
+  let range = savedRange;
+  if (!range) {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
+    range = sel.getRangeAt(0).cloneRange();
+    sel.removeAllRanges();
+  }
+
+  if (!range || range.collapsed) return;
+  const text = range.toString().trim();
+  if (!text) return;
+
+  // Must be inside a passage body
+  const bodyEl = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+    ? range.commonAncestorContainer.closest('.passage-body')
+    : range.commonAncestorContainer.parentElement?.closest('.passage-body');
+  if (!bodyEl) return;
+
+  const view = bodyEl.closest('[id^="passage-view-"]');
+  if (!view) return;
+  const passageId = parseInt(view.id.replace('passage-view-', ''));
+
+  const serial = serializeRange(range, bodyEl);
+  if (!serial) return;
+
+  const hlId = genId();
+  const hlData = { id: hlId, passageId, color, serial, hasNote: false };
+
+  try {
+    wrapRange(range, color, hlId, false);
+  } catch (e) {
+    console.warn('wrapRange failed:', e);
+    return;
+  }
+
+  const hls = loadHighlights();
+  hls.push(hlData);
+  saveHighlights(hls);
+}
+
+/* ── Remove highlight ── */
+function removeHighlightById(hlId) {
+  const span = document.querySelector(`.hl[data-hl-id="${hlId}"]`);
+  if (span) {
+    const parent = span.parentNode;
+    while (span.firstChild) parent.insertBefore(span.firstChild, span);
+    parent.removeChild(span);
+    parent.normalize();
+  }
+  saveHighlights(loadHighlights().filter(h => h.id !== hlId));
+  saveNotes(loadNotes().filter(n => n.hlId !== hlId));
+  updateNotesPanel();
+}
+
+/* ── HL event handlers ── */
+function onHLClick(e) {
+  if (!eraseMode) return;
+  e.preventDefault();
+  removeHighlightById(e.currentTarget.dataset.hlId);
+}
+
+function onHLContextMenu(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  ctxTargetHL = e.currentTarget;
+  pendingRange = null;
+  document.getElementById('ctx-remove').style.display = 'flex';
+  showCtxMenu(e.clientX, e.clientY);
+}
+
+/* ── Restore all highlights ── */
+function restoreHighlights() {
+  const notesByHlId = {};
+  loadNotes().forEach(n => { notesByHlId[n.hlId] = true; });
+  loadHighlights().forEach(hl => {
+    hl.hasNote = !!notesByHlId[hl.id];
+    applyHighlightToDOM(hl);
+  });
+}
+
+/* ── Toolbar ── */
+function setHLColor(color, btn) {
+  hlColor = color;
+  eraseMode = false;
+  document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('erase-btn').classList.remove('active');
+}
+
+function toggleErase() {
+  eraseMode = !eraseMode;
+  document.getElementById('erase-btn').classList.toggle('active', eraseMode);
+  if (eraseMode) {
+    document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
+  } else {
+    const activeBtn = document.querySelector(`.hl-btn[data-color="${hlColor}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+}
+
+function clearAllAnnotations() {
+  if (!confirm('Barcha highlight va noteslarni o\'chirmoqchimisiz?')) return;
+  localStorage.removeItem(LS_HL);
+  localStorage.removeItem(LS_NOTES);
+  document.querySelectorAll('.hl').forEach(span => {
+    const parent = span.parentNode;
+    while (span.firstChild) parent.insertBefore(span.firstChild, span);
+    parent.removeChild(span);
+    parent.normalize();
+  });
+  updateNotesPanel();
+}
+
+/* ── Context Menu ── */
+function showCtxMenu(x, y) {
+  const menu = document.getElementById('ctx-menu');
+  menu.classList.add('visible');
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const mw = 200, mh = 270;
+  menu.style.left = Math.min(x, vw - mw - 8) + 'px';
+  menu.style.top  = Math.min(y, vh - mh - 8) + 'px';
+}
+
+function hideCtxMenu() {
+  document.getElementById('ctx-menu').classList.remove('visible');
+  document.getElementById('ctx-remove').style.display = 'none';
+  ctxTargetHL = null;
+}
+
+function ctxHighlight(color) {
+  hideCtxMenu();
+  doHighlight(color, pendingRange);
+  pendingRange = null;
+}
+
+function ctxRemoveHighlight() {
+  hideCtxMenu();
+  if (ctxTargetHL) { removeHighlightById(ctxTargetHL.dataset.hlId); ctxTargetHL = null; }
+}
+
+function ctxAddNote() {
+  hideCtxMenu();
+  openNoteModal();
+}
+
+/* ── Mouse events on passage ── */
+document.addEventListener('mouseup', e => {
+  if (e.button !== 0) return;
+  // Don't trigger if inside context menu or modal
+  if (e.target.closest('#ctx-menu') || e.target.closest('.note-modal-overlay')) return;
+
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed || !sel.toString().trim()) return;
+
+  const range = sel.getRangeAt(0);
+  const inBody = (range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+    ? range.commonAncestorContainer
+    : range.commonAncestorContainer.parentElement)?.closest('.passage-body');
+  if (!inBody) return;
+
+  if (!eraseMode) {
+    doHighlight(hlColor, range.cloneRange());
+    sel.removeAllRanges();
+  }
+});
+
+document.addEventListener('contextmenu', e => {
+  const inBody = e.target.closest ? e.target.closest('.passage-body') : null;
+  if (!inBody) return;
+  if (e.target.closest('.hl')) return; // handled by span listener
+
+  e.preventDefault();
+  const sel = window.getSelection();
+  if (sel && !sel.isCollapsed && sel.toString().trim()) {
+    pendingRange = sel.getRangeAt(0).cloneRange();
+    sel.removeAllRanges();
+  } else {
+    pendingRange = null;
+  }
+  document.getElementById('ctx-remove').style.display = 'none';
+  showCtxMenu(e.clientX, e.clientY);
+});
+
+document.addEventListener('mousedown', e => {
+  if (!e.target.closest('#ctx-menu')) hideCtxMenu();
+});
+
+/* ══════════════════════════════════════════════════════
+   NOTES SYSTEM
+══════════════════════════════════════════════════════ */
+let pendingNoteHlId = null;
+let pendingNoteQuote = '';
+
+function openNoteModal(hlId, quote) {
+  if (hlId) {
+    pendingNoteHlId = hlId;
+    pendingNoteQuote = quote || '';
+  } else {
+    const hls = loadHighlights();
+    if (hls.length === 0) {
+      alert('Avval matnni belgilab oling, so\'ng note qo\'shing.');
+      return;
+    }
+    const last = hls[hls.length - 1];
+    pendingNoteHlId = last.id;
+    pendingNoteQuote = (last.serial && last.serial.text) ? last.serial.text : '';
+  }
+
+  document.getElementById('note-modal-quote').textContent = pendingNoteQuote.slice(0, 120);
+  document.getElementById('note-textarea').value = '';
+
+  // Pre-fill if note already exists
+  const notes = loadNotes();
+  const existing = notes.find(n => n.hlId === pendingNoteHlId);
+  if (existing) document.getElementById('note-textarea').value = existing.text;
+
+  document.getElementById('note-modal-overlay').classList.add('active');
+  setTimeout(() => document.getElementById('note-textarea').focus(), 100);
+}
+
+function closeNoteModal() {
+  document.getElementById('note-modal-overlay').classList.remove('active');
+  pendingNoteHlId = null;
+}
+
+function saveNote() {
+  const text = document.getElementById('note-textarea').value.trim();
+  if (!text || !pendingNoteHlId) { closeNoteModal(); return; }
+
+  const notes = loadNotes().filter(n => n.hlId !== pendingNoteHlId);
+  const hls = loadHighlights();
+  const hl = hls.find(h => h.id === pendingNoteHlId);
+
+  notes.push({
+    id: genId(),
+    hlId: pendingNoteHlId,
+    passageId: hl ? hl.passageId : currentPassage,
+    quote: pendingNoteQuote,
+    text
+  });
+  saveNotes(notes);
+
+  // Mark highlight as has-note
+  if (hl) {
+    hl.hasNote = true;
+    saveHighlights(hls);
+    const span = document.querySelector(`.hl[data-hl-id="${pendingNoteHlId}"]`);
+    if (span) span.classList.add('has-note');
+  }
+
+  updateNotesPanel();
+  closeNoteModal();
+
+  // Open notes panel if closed
+  document.getElementById('notes-panel').classList.add('open');
+  document.getElementById('notes-toggle-btn').classList.add('active');
+}
+
+function updateNotesPanel() {
+  const notes = loadNotes();
+  const count = notes.length;
+  const countEl = document.getElementById('notes-count');
+  countEl.textContent = count;
+  countEl.classList.toggle('visible', count > 0);
+
+  const list = document.getElementById('notes-list');
+  if (count === 0) {
+    list.innerHTML = '<div class="notes-empty">Select text in the passage and right-click to add a note.</div>';
+    return;
+  }
+
+  list.innerHTML = notes.map(n => `
+    <div class="note-card" onclick="jumpToHighlight('${n.hlId}')">
+      <div class="note-card-passage">Passage ${n.passageId}</div>
+      <div class="note-card-quote">${escHtml(n.quote)}</div>
+      <div class="note-card-text">${escHtml(n.text)}</div>
+      <button class="note-card-delete" onclick="deleteNote(event,'${n.id}','${n.hlId}')">✕</button>
+    </div>
+  `).join('');
+}
+
+function deleteNote(e, noteId, hlId) {
+  e.stopPropagation();
+  const notes = loadNotes().filter(n => n.id !== noteId);
+  saveNotes(notes);
+  // Update hl hasNote
+  const hls = loadHighlights();
+  const hl = hls.find(h => h.id === hlId);
+  if (hl) { hl.hasNote = false; saveHighlights(hls); }
+  const span = document.querySelector(`.hl[data-hl-id="${hlId}"]`);
+  if (span) span.classList.remove('has-note');
+  updateNotesPanel();
+}
+
+function jumpToHighlight(hlId) {
+  const span = document.querySelector(`.hl[data-hl-id="${hlId}"]`);
+  if (span) {
+    const view = span.closest('[id^="passage-view-"]');
+    if (view) {
+      const pid = parseInt(view.id.replace('passage-view-', ''));
+      if (pid !== currentPassage) switchPassage(pid);
+    }
+    setTimeout(() => span.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
+  }
+}
+
+function toggleNotesPanel() {
+  const panel = document.getElementById('notes-panel');
+  const btn = document.getElementById('notes-toggle-btn');
+  panel.classList.toggle('open');
+  btn.classList.toggle('active', panel.classList.contains('open'));
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 /* ══════════════════════════════════════════════════════
    RENDERING ENGINE
 ══════════════════════════════════════════════════════ */
-
 let currentPassage = 1;
 
 function buildInputWrap(id, width) {
@@ -969,7 +1397,6 @@ function buildInputWrap(id, width) {
   return `<span class="input-wrap"><span class="qn">${id}</span><input type="text" data-q="${id}" autocomplete="off" style="width:${w}px"></span>`;
 }
 
-/* ── Passage body ── */
 function renderPassageBody(body) {
   return body.map(p => {
     const label = p.para ? `<span class="para-label">${p.para}</span>` : '';
@@ -977,23 +1404,18 @@ function renderPassageBody(body) {
   }).join('');
 }
 
-/* ── Section renderers ── */
 function renderTFNG(sec) {
   const labels = sec.type === 'ynng'
     ? [['Y','YES'],['N','NO'],['NG','NOT GIVEN']]
     : [['T','TRUE'],['F','FALSE'],['NG','NOT GIVEN']];
-
   return sec.items.map(item => `
     <div class="tfng-item">
       <span class="qn">${item.id}</span>
       <span class="tfng-statement">${item.statement}</span>
       <div class="tfng-radios">
-        ${labels.map(([code, label]) =>
-          `<button class="tfng-btn" data-q="${item.id}" data-val="${label}" onclick="selectTFNG(this)">${label}</button>`
-        ).join('')}
+        ${labels.map(([code,label]) => `<button class="tfng-btn" data-q="${item.id}" data-val="${label}" onclick="selectTFNG(this)">${label}</button>`).join('')}
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function renderMultipleChoice(sec) {
@@ -1001,66 +1423,42 @@ function renderMultipleChoice(sec) {
     <div class="mc-item">
       <div class="mc-q"><span class="qn">${q.id}</span><span>${q.question}</span></div>
       <div class="options-list">
-        ${q.options.map(opt => `
-          <label class="opt-label">
-            <input type="radio" name="q_${q.id}" value="${opt[0]}" data-q="${q.id}">
-            <span>${opt}</span>
-          </label>
-        `).join('')}
+        ${q.options.map(opt => `<label class="opt-label"><input type="radio" name="q_${q.id}" value="${opt[0]}" data-q="${q.id}"><span>${opt}</span></label>`).join('')}
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function renderMatchingPool(pool, labels) {
-  return `<div class="match-pool">
-    <div class="match-pool-title">${pool.title}</div>
-    ${pool.items.map(i => `<div class="match-pool-item">${i}</div>`).join('')}
-  </div>`;
+function renderMatchingPool(pool) {
+  return `<div class="match-pool"><div class="match-pool-title">${pool.title}</div>${pool.items.map(i=>`<div class="match-pool-item">${i}</div>`).join('')}</div>`;
 }
 
 function renderMatchingHeadings(sec) {
-  let h = renderMatchingPool(sec.pool, sec.poolLabels);
+  let h = renderMatchingPool(sec.pool);
   h += sec.items.map(item => `
     <div class="match-row">
-      <span class="qn">${item.id}</span>
-      <span class="match-label">${item.label}</span>
-      <select class="drop" data-q="${item.id}">
-        <option value="">Select...</option>
-        ${sec.poolLabels.map(l => `<option value="${l}">${l}</option>`).join('')}
-      </select>
-    </div>
-  `).join('');
+      <span class="qn">${item.id}</span><span class="match-label">${item.label}</span>
+      <select class="drop" data-q="${item.id}"><option value="">Select...</option>${sec.poolLabels.map(l=>`<option value="${l}">${l}</option>`).join('')}</select>
+    </div>`).join('');
   return h;
 }
 
 function renderMatchingFeatures(sec) {
-  let h = renderMatchingPool(sec.pool, sec.poolLabels);
+  let h = renderMatchingPool(sec.pool);
   h += sec.items.map(item => `
     <div class="match-row">
-      <span class="qn">${item.id}</span>
-      <span class="match-label">${item.statement}</span>
-      <select class="drop" data-q="${item.id}">
-        <option value="">Select...</option>
-        ${sec.poolLabels.map(l => `<option value="${l}">${l}</option>`).join('')}
-      </select>
-    </div>
-  `).join('');
+      <span class="qn">${item.id}</span><span class="match-label">${item.statement}</span>
+      <select class="drop" data-q="${item.id}"><option value="">Select...</option>${sec.poolLabels.map(l=>`<option value="${l}">${l}</option>`).join('')}</select>
+    </div>`).join('');
   return h;
 }
 
 function renderSentenceEndings(sec) {
-  let h = renderMatchingPool(sec.pool, sec.poolLabels);
+  let h = renderMatchingPool(sec.pool);
   h += sec.items.map(item => `
     <div class="sent-ending-row">
-      <span class="qn">${item.id}</span>
-      <span class="sent-stem">${item.stem} ...</span>
-      <select class="drop" data-q="${item.id}">
-        <option value="">Select...</option>
-        ${sec.poolLabels.map(l => `<option value="${l}">${l}</option>`).join('')}
-      </select>
-    </div>
-  `).join('');
+      <span class="qn">${item.id}</span><span class="sent-stem">${item.stem} ...</span>
+      <select class="drop" data-q="${item.id}"><option value="">Select...</option>${sec.poolLabels.map(l=>`<option value="${l}">${l}</option>`).join('')}</select>
+    </div>`).join('');
   return h;
 }
 
@@ -1068,136 +1466,29 @@ function renderSummaryCompletion(sec) {
   let inner = sec.blocks.map(block => {
     if (block.type === 'text') return `<span>${block.content}</span>`;
     if (block.type === 'q') return buildInputWrap(block.id, block.width);
-    if (block.type === 'newline') return `<br>`;
     return '';
   }).join('');
-  return `<div class="summary-block"><p><strong>${sec.summaryTitle || ''}</strong></p><p style="margin-top:10px">${inner}</p></div>`;
-}
-
-function renderNoteCompletion(sec) {
-  return (sec.items || []).map(item => {
-    if (item.type === 'static') return `<div style="margin:7px 0;color:var(--muted);font-size:0.88rem">${item.text}</div>`;
-    if (item.type === 'divider') return `<hr style="border:none;border-top:1px dashed var(--rule);margin:10px 0">`;
-    if (item.type === 'q') return `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:9px 0;font-size:0.93rem">${item.prefix}${buildInputWrap(item.id)}${item.suffix}</div>`;
-    return '';
-  }).join('');
-}
-
-function renderTableCompletion(sec) {
-  let h = `<table class="comp-table"><thead><tr>`;
-  sec.headers.forEach(hd => { h += `<th>${hd}</th>`; });
-  h += `</tr></thead><tbody>`;
-  sec.rows.forEach(row => {
-    h += `<tr>`;
-    row.cells.forEach(cell => {
-      if (typeof cell === 'string') {
-        h += `<td>${cell}</td>`;
-      } else if (cell && cell.type === 'q') {
-        h += `<td><div class="mixed-cell">${cell.prefix || ''}${buildInputWrap(cell.id)}${cell.suffix || ''}</div></td>`;
-      }
-    });
-    h += `</tr>`;
-  });
-  h += `</tbody></table>`;
-  return h;
-}
-
-function renderFlowchart(sec) {
-  let h = `<div class="flowchart">`;
-  sec.steps.forEach((step, i) => {
-    const cls = step.decision ? 'flow-box decision' : 'flow-box';
-    if (step.type === 'static') {
-      h += `<div class="${cls}"><strong>${step.text}</strong></div>`;
-    } else if (step.type === 'q') {
-      h += `<div class="${cls}">${step.prefix || ''}${buildInputWrap(step.id)}${step.suffix || ''}</div>`;
-    }
-    if (i < sec.steps.length - 1) h += `<div class="flow-arrow">↓</div>`;
-  });
-  h += `</div>`;
-  return h;
+  return `<div class="summary-block"><p><strong>${sec.summaryTitle||''}</strong></p><p style="margin-top:10px">${inner}</p></div>`;
 }
 
 function renderShortAnswer(sec) {
   return sec.items.map(item => `
     <div class="short-a-item">
-      <span class="qn">${item.id}</span>
-      <span class="short-a-q">${item.question}</span>
+      <span class="qn">${item.id}</span><span class="short-a-q">${item.question}</span>
       ${buildInputWrap(item.id, 180)}
-    </div>
-  `).join('');
-}
-
-function renderDiagramLabel(sec) {
-  let h = '';
-  if (sec.diagramSrc) {
-    h += `<img src="${sec.diagramSrc}" alt="${sec.diagramAlt}" style="max-width:100%;border:1.5px solid var(--rule);border-radius:4px;display:block;margin-bottom:12px">`;
-  } else {
-    h += `<div class="diagram-placeholder">[Diagram: ${sec.diagramAlt || 'image placeholder'}]</div>`;
-  }
-  h += `<div class="diagram-labels">`;
-  sec.items.forEach(item => {
-    const choicesHtml = sec.labelChoices
-      ? `<select class="drop" data-q="${item.id}"><option value="">Select...</option>${sec.labelChoices.map(c=>`<option value="${c[0]}">${c}</option>`).join('')}</select>`
-      : buildInputWrap(item.id, 160);
-    h += `<div class="diagram-label-row">
-      <span class="diag-pin">${item.id}</span>
-      <span style="flex:1">${item.locationLabel}</span>
-      ${choicesHtml}
-    </div>`;
-  });
-  h += `</div>`;
-  return h;
-}
-
-function renderPickFromList(sec) {
-  const name = `pfl_${sec.ids.join('_')}`;
-  return `<p style="margin-bottom:10px;font-size:0.88rem;font-weight:600">Select ${sec.pickCount}:</p>
-    <div class="pick-list">
-      ${sec.options.map(opt => `
-        <label class="opt-label">
-          <input type="checkbox" name="${name}" value="${opt[0]}" data-pfl="${sec.ids.join(',')}">
-          <span>${opt}</span>
-        </label>
-      `).join('')}
-    </div>`;
-}
-
-function renderMultiSelect(sec) {
-  const name = `ms_${sec.questionId}`;
-  return `<p style="margin-bottom:10px;font-size:0.88rem;font-weight:600">Choose ${sec.pickCount} letters:</p>
-    <div class="pick-list">
-      ${sec.options.map(opt => `
-        <label class="opt-label">
-          <input type="checkbox" name="${name}" value="${opt[0]}" data-ms="${sec.questionId}">
-          <span>${opt}</span>
-        </label>
-      `).join('')}
-    </div>`;
+    </div>`).join('');
 }
 
 function renderClassification(sec) {
-  let h = `<div class="match-pool"><div class="match-pool-title">Categories</div>
-    ${sec.categories.map(c=>`<div class="match-pool-item">${c}</div>`).join('')}
-  </div>`;
+  let h = `<div class="match-pool"><div class="match-pool-title">Categories</div>${sec.categories.map(c=>`<div class="match-pool-item">${c}</div>`).join('')}</div>`;
   h += `<table class="class-table"><thead><tr><th>Item</th><th>Category</th></tr></thead><tbody>`;
   sec.items.forEach(item => {
-    h += `<tr><td><span class="qn">${item.id}</span> ${item.label}</td>
-    <td><select class="drop" data-q="${item.id}">
-      <option value="">Select...</option>
-      ${sec.categories.map(c=>`<option value="${c[0]}">${c}</option>`).join('')}
-    </select></td></tr>`;
+    h += `<tr><td><span class="qn">${item.id}</span> ${item.label}</td><td>
+      <select class="drop" data-q="${item.id}"><option value="">Select...</option>${sec.categories.map(c=>`<option value="${c[0]}">${c}</option>`).join('')}</select>
+    </td></tr>`;
   });
   h += `</tbody></table>`;
   return h;
-}
-
-function renderSentenceCompletion(sec) {
-  return sec.items.map(item => `
-    <div style="display:flex;align-items:flex-start;flex-wrap:wrap;gap:6px;margin:10px 0;font-size:0.93rem;line-height:1.7">
-      <span class="qn">${item.id}</span>
-      ${item.prefix || ''}${buildInputWrap(item.id)}${item.suffix || ''}
-    </div>
-  `).join('');
 }
 
 function renderSection(sec) {
@@ -1205,71 +1496,61 @@ function renderSection(sec) {
   if (sec.instructions) html += `<div class="q-instructions">${sec.instructions}</div>`;
   if (sec.title) html += `<div class="q-section-title">${sec.title}</div>`;
   switch (sec.type) {
-    case 'tfng':                html += renderTFNG(sec); break;
-    case 'ynng':                html += renderTFNG(sec); break;
-    case 'multiple-choice':     html += renderMultipleChoice(sec); break;
-    case 'matching-headings':   html += renderMatchingHeadings(sec); break;
-    case 'matching-features':   html += renderMatchingFeatures(sec); break;
-    case 'sentence-endings':    html += renderSentenceEndings(sec); break;
-    case 'summary-completion':  html += renderSummaryCompletion(sec); break;
-    case 'note-completion':     html += renderNoteCompletion(sec); break;
-    case 'table-completion':    html += renderTableCompletion(sec); break;
-    case 'flowchart':           html += renderFlowchart(sec); break;
-    case 'short-answer':        html += renderShortAnswer(sec); break;
-    case 'diagram-label':       html += renderDiagramLabel(sec); break;
-    case 'pick-from-list':      html += renderPickFromList(sec); break;
-    case 'multi-select':        html += renderMultiSelect(sec); break;
-    case 'classification':      html += renderClassification(sec); break;
-    case 'sentence-completion': html += renderSentenceCompletion(sec); break;
-    default: html += `<p style="color:var(--red)">Unknown type: ${sec.type}</p>`;
+    case 'tfng': case 'ynng':       html += renderTFNG(sec); break;
+    case 'multiple-choice':         html += renderMultipleChoice(sec); break;
+    case 'matching-headings':       html += renderMatchingHeadings(sec); break;
+    case 'matching-features':       html += renderMatchingFeatures(sec); break;
+    case 'sentence-endings':        html += renderSentenceEndings(sec); break;
+    case 'summary-completion':      html += renderSummaryCompletion(sec); break;
+    case 'short-answer':            html += renderShortAnswer(sec); break;
+    case 'classification':          html += renderClassification(sec); break;
+    default: html += `<p style="color:var(--red)">Unknown: ${sec.type}</p>`;
   }
   return html;
 }
 
 /* ── Build all passage views ── */
 function buildAll() {
-  const main = document.getElementById('main-area');
+  const mainArea = document.getElementById('main-area');
   const tabs = document.getElementById('passage-tabs');
-  main.innerHTML = '';
+  // Clear existing (keep notes-panel)
+  const notesPanel = document.getElementById('notes-panel');
+  mainArea.innerHTML = '';
+  mainArea.appendChild(notesPanel);
   tabs.innerHTML = '';
 
-  PASSAGES.forEach((p, idx) => {
-    /* Passage + questions wrapper */
+  PASSAGES.forEach(p => {
     const wrap = document.createElement('div');
     wrap.id = `passage-view-${p.id}`;
-    wrap.style.cssText = 'display:none;flex:1;overflow:hidden;';
-    wrap.style.flexDirection = 'row';
+    wrap.style.cssText = 'display:none;flex:1;overflow:hidden;flex-direction:row;';
 
-    /* Left: passage */
     const leftPane = document.createElement('div');
     leftPane.className = 'passage-panel';
     leftPane.innerHTML = `
-      <div class="passage-panel-inner">
+      <div class="passage-panel-inner" id="passage-body-${p.id}">
         <div class="passage-header">
           <div class="passage-label">Reading Passage ${p.id}</div>
           <div class="passage-title">${p.passage.title}</div>
           ${p.passage.subtitle ? `<div class="passage-subtitle">${p.passage.subtitle}</div>` : ''}
         </div>
-        <hr class="passage-divider">
+        <hr style="border:none;border-top:1.5px solid var(--rule);margin:16px 0">
         <div class="passage-body">${renderPassageBody(p.passage.body)}</div>
-      </div>
-    `;
+      </div>`;
 
-    /* Right: questions */
     const rightPane = document.createElement('div');
     rightPane.className = 'questions-panel';
     let qHtml = '';
     p.sections.forEach((sec, si) => {
-      if (si > 0) qHtml += `<hr class="section-divider">`;
+      if (si > 0) qHtml += `<hr style="border:none;border-top:2px dashed var(--rule);margin:28px 0 22px">`;
       qHtml += `<div class="q-section">${renderSection(sec)}</div>`;
     });
     rightPane.innerHTML = `<div class="questions-panel-inner">${qHtml}</div>`;
 
     wrap.appendChild(leftPane);
     wrap.appendChild(rightPane);
-    main.appendChild(wrap);
+    // Insert before notes-panel
+    mainArea.insertBefore(wrap, notesPanel);
 
-    /* Tab */
     const tab = document.createElement('button');
     tab.className = 'passage-tab';
     tab.id = `tab-${p.id}`;
@@ -1284,9 +1565,7 @@ function switchPassage(pid) {
   PASSAGES.forEach(p => {
     const view = document.getElementById(`passage-view-${p.id}`);
     const tab = document.getElementById(`tab-${p.id}`);
-    if (view) {
-      view.style.display = p.id === pid ? 'flex' : 'none';
-    }
+    if (view) view.style.display = p.id === pid ? 'flex' : 'none';
     if (tab) tab.classList.toggle('active', p.id === pid);
   });
   updateDock();
@@ -1295,33 +1574,23 @@ function switchPassage(pid) {
 /* ── Navigation dock ── */
 function collectAllQids() {
   const all = [];
-  PASSAGES.forEach(p => {
-    p.sections.forEach(sec => gatherIds(sec, all));
-  });
+  PASSAGES.forEach(p => p.sections.forEach(sec => gatherIds(sec, all)));
   return all;
 }
 
 function gatherIds(sec, arr) {
   const push = id => { if (!arr.includes(id)) arr.push(id); };
-  if (sec.type === 'tfng' || sec.type === 'ynng') sec.items.forEach(i => push(i.id));
-  else if (sec.type === 'multiple-choice') sec.items.forEach(i => push(i.id));
-  else if (sec.type === 'matching-headings' || sec.type === 'matching-features' || sec.type === 'sentence-endings') sec.items.forEach(i => push(i.id));
-  else if (sec.type === 'summary-completion') sec.blocks.filter(b=>b.type==='q').forEach(b=>push(b.id));
-  else if (sec.type === 'note-completion') (sec.items||[]).filter(i=>i.type==='q').forEach(i=>push(i.id));
-  else if (sec.type === 'table-completion') sec.rows.forEach(r=>r.cells.forEach(c=>{ if(c&&c.type==='q') push(c.id); }));
-  else if (sec.type === 'flowchart') sec.steps.forEach(s=>{ if(s.type==='q') push(s.id); });
-  else if (sec.type === 'short-answer') sec.items.forEach(i=>push(i.id));
-  else if (sec.type === 'diagram-label') sec.items.forEach(i=>push(i.id));
-  else if (sec.type === 'pick-from-list') sec.ids.forEach(id=>push(id));
-  else if (sec.type === 'multi-select') sec.ids.forEach(id=>push(id));
-  else if (sec.type === 'classification') sec.items.forEach(i=>push(i.id));
-  else if (sec.type === 'sentence-completion') sec.items.forEach(i=>push(i.id));
+  if (['tfng','ynng'].includes(sec.type)) sec.items.forEach(i=>push(i.id));
+  else if (sec.type==='multiple-choice') sec.items.forEach(i=>push(i.id));
+  else if (['matching-headings','matching-features','sentence-endings'].includes(sec.type)) sec.items.forEach(i=>push(i.id));
+  else if (sec.type==='summary-completion') sec.blocks.filter(b=>b.type==='q').forEach(b=>push(b.id));
+  else if (sec.type==='short-answer') sec.items.forEach(i=>push(i.id));
+  else if (sec.type==='classification') sec.items.forEach(i=>push(i.id));
 }
 
 function passageForQ(qid) {
   for (const p of PASSAGES) {
-    const ids = [];
-    p.sections.forEach(sec => gatherIds(sec, ids));
+    const ids = []; p.sections.forEach(sec=>gatherIds(sec,ids));
     if (ids.includes(qid)) return p.id;
   }
   return 1;
@@ -1332,9 +1601,7 @@ function buildDock() {
   dock.innerHTML = '';
   collectAllQids().forEach(id => {
     const b = document.createElement('button');
-    b.className = 'q-btn';
-    b.id = `qb-${id}`;
-    b.textContent = id;
+    b.className = 'q-btn'; b.id = `qb-${id}`; b.textContent = id;
     b.onclick = () => jumpToQ(id);
     dock.appendChild(b);
   });
@@ -1343,8 +1610,7 @@ function buildDock() {
 function updateDock() {
   collectAllQids().forEach(id => {
     const btn = document.getElementById(`qb-${id}`);
-    if (!btn) return;
-    btn.classList.toggle('current-passage', passageForQ(id) === currentPassage);
+    if (btn) btn.classList.toggle('current-passage', passageForQ(id) === currentPassage);
   });
 }
 
@@ -1353,32 +1619,24 @@ function jumpToQ(qid) {
   if (currentPassage !== pid) switchPassage(pid);
   setTimeout(() => {
     const el = document.querySelector(`[data-q="${qid}"]`);
-    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus && el.focus(); }
+    if (el) { el.scrollIntoView({ behavior:'smooth', block:'center' }); el.focus && el.focus(); }
   }, 80);
 }
 
-/* ── TFNG button handler ── */
+/* ── TFNG ── */
 function selectTFNG(btn) {
   const qid = btn.getAttribute('data-q');
-  const val = btn.getAttribute('data-val');
-  // Deselect siblings
   document.querySelectorAll(`.tfng-btn[data-q="${qid}"]`).forEach(b => {
-    b.classList.remove('selected','sel-T','sel-F','sel-NG','sel-Y','sel-N');
+    b.classList.remove('sel-T','sel-F','sel-NG','sel-Y','sel-N');
   });
-  // Colour by value
-  const colClass = {
-    'TRUE':'sel-T','FALSE':'sel-F','NOT GIVEN':'sel-NG',
-    'YES':'sel-Y','NO':'sel-N'
-  }[val] || 'selected';
+  const colClass = {'TRUE':'sel-T','FALSE':'sel-F','NOT GIVEN':'sel-NG','YES':'sel-Y','NO':'sel-N'}[btn.getAttribute('data-val')] || '';
   btn.classList.add(colClass);
-  // Mark nav answered
   const nb = document.getElementById(`qb-${qid}`);
   if (nb) nb.classList.add('answered');
-  // Store value
-  btn.closest('.tfng-item').dataset.answer = val;
+  btn.closest('.tfng-item').dataset.answer = btn.getAttribute('data-val');
 }
 
-/* ── Generic input tracking ── */
+/* ── Input tracking ── */
 function setupTracking() {
   document.addEventListener('input', onAnyChange);
   document.addEventListener('change', onAnyChange);
@@ -1388,34 +1646,80 @@ function onAnyChange(e) {
   const qid = el.getAttribute('data-q');
   if (!qid) return;
   let answered = false;
-  if (el.type === 'text') answered = el.value.trim() !== '';
-  else if (el.type === 'radio') answered = el.checked;
-  else if (el.tagName === 'SELECT') answered = el.value !== '';
-  else if (el.type === 'checkbox') { markCheckboxGroup(el); return; }
+  if (el.type==='text') answered = el.value.trim() !== '';
+  else if (el.type==='radio') answered = el.checked;
+  else if (el.tagName==='SELECT') answered = el.value !== '';
   const nb = document.getElementById(`qb-${qid}`);
   if (nb) nb.classList.toggle('answered', answered);
 }
-function markCheckboxGroup(el) {
-  const pflIds = el.getAttribute('data-pfl');
-  if (pflIds) {
-    const checked = document.querySelectorAll(`[data-pfl="${pflIds}"]:checked`);
-    pflIds.split(',').forEach((id, i) => {
-      const nb = document.getElementById(`qb-${id}`);
-      if (nb) nb.classList.toggle('answered', i < checked.length);
-    });
-  }
+
+/* ── Save / Restore answers ── */
+const LS_ANS = 'ielts_answers_v1';
+function saveAnswers() {
+  const data = {};
+  // Text inputs
+  document.querySelectorAll('input[type="text"][data-q]').forEach(el => {
+    if (el.value.trim()) data[el.getAttribute('data-q')] = { type:'text', val: el.value };
+  });
+  // Radios
+  document.querySelectorAll('input[type="radio"][data-q]:checked').forEach(el => {
+    data[el.getAttribute('data-q')] = { type:'radio', val: el.value };
+  });
+  // Selects
+  document.querySelectorAll('select[data-q]').forEach(el => {
+    if (el.value) data[el.getAttribute('data-q')] = { type:'select', val: el.value };
+  });
+  // TFNG
+  document.querySelectorAll('.tfng-item[data-answer]').forEach(el => {
+    const btn = el.querySelector('.tfng-btn[class*="sel-"]');
+    if (btn) data[btn.getAttribute('data-q')] = { type:'tfng', val: btn.getAttribute('data-val') };
+  });
+  localStorage.setItem(LS_ANS, JSON.stringify(data));
 }
 
+function restoreAnswers() {
+  try {
+    const data = JSON.parse(localStorage.getItem(LS_ANS) || '{}');
+    Object.entries(data).forEach(([qid, entry]) => {
+      if (entry.type === 'text') {
+        const el = document.querySelector(`input[type="text"][data-q="${qid}"]`);
+        if (el) { el.value = entry.val; const nb = document.getElementById(`qb-${qid}`); if (nb) nb.classList.add('answered'); }
+      } else if (entry.type === 'radio') {
+        const el = document.querySelector(`input[type="radio"][data-q="${qid}"][value="${entry.val}"]`);
+        if (el) { el.checked = true; const nb = document.getElementById(`qb-${qid}`); if (nb) nb.classList.add('answered'); }
+      } else if (entry.type === 'select') {
+        const el = document.querySelector(`select[data-q="${qid}"]`);
+        if (el) { el.value = entry.val; const nb = document.getElementById(`qb-${qid}`); if (nb) nb.classList.add('answered'); }
+      } else if (entry.type === 'tfng') {
+        const btn = document.querySelector(`.tfng-btn[data-q="${qid}"][data-val="${entry.val}"]`);
+        if (btn) selectTFNG(btn);
+      }
+    });
+  } catch {}
+}
+
+// Auto-save every 5 seconds
+setInterval(saveAnswers, 5000);
+// Also save on visibility change
+document.addEventListener('visibilitychange', saveAnswers);
+
 /* ── Timer ── */
+const LS_TIMER = 'ielts_timer_v1';
 let secondsLeft = 60 * 60;
 let timerRef = null;
+
 function startTimer() {
+  // Restore saved time
+  const saved = parseInt(localStorage.getItem(LS_TIMER) || '3600');
+  if (saved > 0 && saved <= 3600) secondsLeft = saved;
+
   const el = document.getElementById('timer');
   timerRef = setInterval(() => {
-    const m = String(Math.floor(secondsLeft / 60)).padStart(2,'0');
-    const s = String(secondsLeft % 60).padStart(2,'0');
+    const m = String(Math.floor(secondsLeft/60)).padStart(2,'0');
+    const s = String(secondsLeft%60).padStart(2,'0');
     el.textContent = `${m}:${s}`;
     if (secondsLeft <= 300) el.classList.add('warn');
+    localStorage.setItem(LS_TIMER, secondsLeft);
     if (secondsLeft <= 0) { clearInterval(timerRef); submitTest(); }
     secondsLeft--;
   }, 1000);
@@ -1423,16 +1727,11 @@ function startTimer() {
 
 /* ── Submit & Scoring ── */
 function getUserAnswer(id) {
-  // TFNG — stored in dataset
-  const tfngItem = document.querySelector(`.tfng-item[data-answer]`);
-  // Check all tfng items
   const allTfng = document.querySelectorAll('.tfng-item');
   for (const item of allTfng) {
     const btns = item.querySelectorAll('.tfng-btn');
     for (const btn of btns) {
-      if (btn.getAttribute('data-q') == id) {
-        return (item.dataset.answer || '').toLowerCase();
-      }
+      if (btn.getAttribute('data-q') == id) return (item.dataset.answer||'').toLowerCase();
     }
   }
   const text = document.querySelector(`input[type="text"][data-q="${id}"]`);
@@ -1446,16 +1745,14 @@ function getUserAnswer(id) {
 
 function submitTest() {
   clearInterval(timerRef);
+  saveAnswers();
   const ids = collectAllQids();
-  let score = 0;
-  let log = '';
-
+  let score = 0, log = '';
   ids.forEach(id => {
     const correct = ANSWER_KEY[id];
     if (correct === undefined) return;
     const userAns = getUserAnswer(id);
-    const correctLow = String(correct).toLowerCase();
-    const isOk = userAns === correctLow;
+    const isOk = userAns === String(correct).toLowerCase();
     if (isOk) score++;
     log += `<div class="report-row">
       <span class="qn">${id}</span>
@@ -1464,35 +1761,28 @@ function submitTest() {
       ${!isOk?`<span style="color:var(--muted)">| Correct: "<strong>${correct}</strong>"</span>`:''}
     </div>`;
   });
-
-  const total = ids.length;
-  const band = calcBand(score, total);
+  const band = calcBand(score, ids.length);
   document.getElementById('modal-body').innerHTML = `
-    <p style="margin-bottom:8px">Score: <strong>${score} / ${total}</strong></p>
+    <p style="margin-bottom:8px">Score: <strong>${score} / ${ids.length}</strong></p>
     <div class="band-badge">Estimated Band: ${band}</div>
-    <h4 style="margin-bottom:12px;border-bottom:1px solid var(--rule);padding-bottom:5px;font-family:var(--mono);font-size:0.8rem;letter-spacing:0.06em">REVIEW LOG</h4>
-    ${log}
-  `;
+    <h4 style="margin-bottom:12px;border-bottom:1px solid var(--rule);padding-bottom:5px;font-family:var(--mono);font-size:0.8rem;letter-spacing:0.06em">REVIEW LOG</h4>${log}`;
   document.getElementById('modal').classList.add('active');
 }
 
 function calcBand(score, total) {
-  const pct = score / total;
-  if (pct >= 0.975) return 9.0;
-  if (pct >= 0.925) return 8.5;
-  if (pct >= 0.875) return 8.0;
-  if (pct >= 0.800) return 7.5;
-  if (pct >= 0.750) return 7.0;
-  if (pct >= 0.650) return 6.5;
-  if (pct >= 0.575) return 6.0;
-  if (pct >= 0.450) return 5.5;
-  if (pct >= 0.350) return 5.0;
+  const p = score/total;
+  if (p>=0.975) return 9.0; if (p>=0.925) return 8.5; if (p>=0.875) return 8.0;
+  if (p>=0.800) return 7.5; if (p>=0.750) return 7.0; if (p>=0.650) return 6.5;
+  if (p>=0.575) return 6.0; if (p>=0.450) return 5.5; if (p>=0.350) return 5.0;
   return 4.0;
 }
 
-function closeModal() {
-  document.getElementById('modal').classList.remove('active');
-}
+function closeModal() { document.getElementById('modal').classList.remove('active'); }
+
+/* ── Keyboard shortcut: Escape closes context menu ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { hideCtxMenu(); closeNoteModal(); }
+});
 
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1501,6 +1791,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTracking();
   switchPassage(1);
   startTimer();
+  restoreAnswers();
+  restoreHighlights();
+  updateNotesPanel();
 });
 </script>
 </body>

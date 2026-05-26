@@ -1,3 +1,787 @@
-[index.html]
-[dashboard.html]
-bizga endi tashxis sahifasi ham kerak uyerda o'sha cardlardan biriga kirilgandagi holat boladi, asosiy bajarish mumkin bolgan amallar rasm yuklaydi va ostida agar desktop bolsa yonida natija rasm chiqadi, va eng ostida shu model bilan qilgan so'ngi amallari jadvali chiqadi.
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Rentgen tahlili — Tashxis</title>
+  <meta name="description" content="Sun'iy intellekt yordamida rentgen tasvirlarini tahlil qiling. Batafsil natijalar va tavsiyalar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg:           hsl(210, 20%, 98%);
+      --fg:           hsl(215, 35%, 12%);
+      --card:         hsl(0, 0%, 100%);
+      --primary:      hsl(162, 72%, 36%);
+      --primary-dark: hsl(162, 84%, 23%);
+      --primary-light: hsl(162, 60%, 92%);
+      --primary-soft: hsla(162, 72%, 36%, 0.12);
+      --accent:       hsl(200, 90%, 46%);
+      --accent-light: hsl(200, 80%, 93%);
+      --warning:      hsl(38, 92%, 50%);
+      --danger:       hsl(4, 74%, 55%);
+      --danger-light: hsla(4, 74%, 55%, 0.1);
+      --muted:        hsl(215, 20%, 94%);
+      --muted-fg:     hsl(215, 15%, 48%);
+      --border:       hsl(215, 20%, 88%);
+      --radius:       0.875rem;
+      --font:         'SF Pro Display', sans-serif;
+      --mono:         'JetBrains Mono', sans-serif;
+      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.08);
+      --shadow-md:    0 8px 28px -6px hsla(215,35%,12%,0.12);
+      --shadow-glow:  0 0 40px hsla(162,72%,36%,0.2);
+      --success:      hsl(145, 63%, 42%);
+    }
+
+    body {
+      font-family: var(--font);
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(162,72%,36%,0.06) 0%, transparent 70%),
+                  var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+    .container {
+      padding-top: 20px;
+      width: 100%;
+      max-width: 1280px;
+      margin-inline: auto;
+      padding-inline: 1.25rem;
+    }
+    @media (min-width: 640px) { .container { padding-inline: 2rem; } }
+
+    /* Navbar */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: hsla(210,20%,98%,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4rem; gap: 1rem;
+    }
+    .logo { display: flex; align-items: center; gap: 0.625rem; }
+    .logo-mark {
+      width: 2.4rem; height: 2.4rem;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-mark img {
+        width: -webkit-fill-available;
+    }
+    .logo-name { font-size: 1.125rem; font-weight: 700; letter-spacing: -.02em; }
+    .logo-version {
+      font-size: 0.65rem; font-family: var(--mono);
+      background: var(--primary-light); color: var(--primary);
+      padding: 2px 7px; border-radius: 20px; font-weight: 500;
+    }
+    .nav-right { display: flex; align-items: center; gap: 0.5rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      font-size: 0.875rem; font-weight: 500; border-radius: calc(var(--radius) - 2px);
+      transition: background .15s, transform .1s;
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-ghost { padding: .45rem .75rem; color: var(--muted-fg); }
+    .btn-ghost:hover { background: var(--muted); color: var(--fg); }
+    .btn-outline {
+      padding: .45rem .9rem;
+      border: 1px solid var(--border);
+      background: var(--card); color: var(--fg);
+    }
+    .btn-outline:hover { background: var(--muted); }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      padding: .6rem 1.2rem;
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .nav-label { display: none; }
+    @media (min-width: 540px) { .nav-label { display: inline; } }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--muted-fg);
+    }
+    .breadcrumb a { color: var(--primary); }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* Main layout */
+    .analysis-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .analysis-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    /* Upload Card */
+    .upload-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-title svg {
+      color: var(--primary);
+    }
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1rem;
+    }
+    .upload-area:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .upload-area.drag-over {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .upload-icon {
+      width: 3rem;
+      height: 3rem;
+      margin: 0 auto 0.75rem;
+      color: var(--muted-fg);
+    }
+    .upload-area p {
+      font-size: 0.875rem;
+      color: var(--muted-fg);
+    }
+    .upload-area .small {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    #fileInput {
+      display: none;
+    }
+    .image-preview {
+      margin-top: 1rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--muted);
+      display: none;
+    }
+    .image-preview img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+    }
+    .analyze-btn {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--primary);
+      color: white;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .analyze-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Result Card */
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .diagnosis-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .diagnosis-normal {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .diagnosis-warning {
+      background: hsl(38, 92%, 90%);
+      color: hsl(38, 85%, 38%);
+    }
+    .diagnosis-danger {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+    .confidence-bar {
+      background: var(--muted);
+      border-radius: 10px;
+      height: 8px;
+      overflow: hidden;
+      margin: 0.5rem 0 1rem;
+    }
+    .confidence-fill {
+      background: var(--primary);
+      height: 100%;
+      width: 0%;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+    .finding-list {
+      margin: 1rem 0;
+      padding-left: 1.25rem;
+    }
+    .finding-list li {
+      margin: 0.5rem 0;
+      font-size: 0.875rem;
+    }
+    .recommendation {
+      background: var(--primary-light);
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+    }
+    .recommendation p {
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    /* History Table */
+    .history-section {
+      margin-top: 2rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .history-table th {
+      text-align: left;
+      padding: 0.75rem 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--muted-fg);
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--border);
+    }
+    .history-table td {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .history-table tr:hover {
+      background-color: var(--muted);
+    }
+    .history-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .loading-spinner {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid var(--muted);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--card);
+      padding-block: 1.75rem;
+      margin-top: 2rem;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .footer-inner span {
+      font-size: .875rem;
+      color: var(--muted-fg);
+    }
+
+    @media (max-width: 768px) {
+      .upload-card, .result-card {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a class="logo" href="./index.html">
+      <div class="logo-mark">
+        <img src="./logo.svg" alt="">
+      </div>
+      <span class="logo-name">Tash<span>xis</span></span>
+      <span class="logo-version">v0.1</span>
+    </a>
+    <div class="nav-right">
+      <a href="./index.html#scan">
+        <button class="btn btn-ghost">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          <span class="nav-label">Tahlil turlari</span>
+        </button>
+      </a>
+      <a href="./pricing.html">
+        <button class="btn btn-ghost" style="color: hsl(40, 90%, 55%);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/>
+            <path d="M5 21h14"/>
+          </svg>
+          <span class="nav-label">Narxlar</span>
+        </button>
+      </a>
+      <a href="./dashboard.html">
+        <button class="btn btn-outline">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="7" height="9" x="3" y="3" rx="1"/>
+            <rect width="7" height="5" x="14" y="3" rx="1"/>
+            <rect width="7" height="9" x="14" y="12" rx="1"/>
+            <rect width="7" height="5" x="3" y="16" rx="1"/>
+          </svg>
+          <span class="nav-label">Kabinet</span>
+        </button>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="./index.html">Bosh sahifa</a>
+      <span>/</span>
+      <span>Rentgen tahlili</span>
+    </div>
+
+    <div class="analysis-layout">
+      <!-- Chap: Yuklash qismi -->
+      <div class="upload-card">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Rasm yuklash
+        </div>
+        
+        <div class="upload-area" id="dropZone">
+          <div class="upload-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <p>Rasmni shu yerga torting yoki <strong>yuklash</strong> tugmasini bosing</p>
+          <p class="small">DICOM, PNG, JPG, JPEG (max 15MB)</p>
+          <input type="file" id="fileInput" accept="image/*">
+        </div>
+        <button class="btn btn-primary analyze-btn" id="analyzeBtn" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          AI tahlil qilish
+        </button>
+        <div class="image-preview" id="imagePreview">
+          <img id="previewImg" alt="Yuklangan rasm">
+        </div>
+      </div>
+
+      <!-- O'ng: Natijalar -->
+      <div class="result-card" id="resultCard">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          Tahlil natijasi
+        </div>
+        <div id="resultContent">
+          <div style="text-align: center; padding: 2rem 0; color: var(--muted-fg);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 12h6M12 9v6"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+            <p style="margin-top: 1rem;">Rasm yuklang va tahlilni boshlang</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tahlil tarixi -->
+    <div class="history-section">
+      <div class="card-title" style="margin-bottom: 1rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        So'nggi tahlillar
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="history-table" id="historyTable">
+          <thead>
+            <tr>
+              <th>Sana</th>
+              <th>Tahlil turi</th>
+              <th>Natija</th>
+              <th>Ishonch</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--muted-fg);">Hali tahlillar mavjud emas</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner">
+    <div class="spinner"></div>
+    <p>AI tahlil qilmoqda...</p>
+    <p style="font-size: 0.75rem; color: var(--muted-fg); margin-top: 0.5rem;">Bu bir necha soniya davom etishi mumkin</p>
+  </div>
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <span>© Tashxis 2026 · Andijon viloyati AI Hackathon</span>
+  </div>
+</footer>
+
+<script>
+  // Demo tahlil natijalari (real API o'rniga)
+  const DEMO_RESULTS = [
+    {
+      diagnosis: "Normal",
+      diagnosisType: "normal",
+      confidence: 96.8,
+      findings: [
+        "O'pka maydonlari shaffof, patologik soyalar aniqlanmadi",
+        "Yurak soyasi normal o'lchamda",
+        "Ko'krak qafasi skeletida o'zgarishlar yo'q"
+      ],
+      recommendation: "Hech qanday patologiya aniqlanmadi. Muntazam tekshiruvlarni davom ettiring."
+    },
+    {
+      diagnosis: "E'tibor talab — Pnevmoniya",
+      diagnosisType: "warning",
+      confidence: 87.2,
+      findings: [
+        "O'ng o'pkaning pastki bo'lagida infiltrativ soyalar kuzatilmoqda",
+        "Bronxial naqsh kuchaygan",
+        "Subfebril holat bilan kechishi mumkin"
+      ],
+      recommendation: "Klinik ko'rinish bilan solishtirish tavsiya etiladi. Antibiotik terapiyani ko'rib chiqing va 5-7 kundan keyin nazorat rentgenogrammasini o'tkazing."
+    },
+    {
+      diagnosis: "Patologiya — O'pka o'smasi shubhasi",
+      diagnosisType: "danger",
+      confidence: 83.5,
+      findings: [
+        "O'ng o'pkaning yuqori bo'lagida notekis konturli, 3.5 sm li o'sma shubhali shakllanish",
+        "Qo'shni limfa tugunlari kattalashgan",
+        "Plevral effuziya kuzatilmoqda"
+      ],
+      recommendation: "Zudlik bilan onkolog va pulmonolog konsultatsiyasi. KT bilan qo'shimcha tekshiruv o'tkazish tavsiya etiladi."
+    },
+    {
+      diagnosis: "Osteoporoz belgilari",
+      diagnosisType: "warning",
+      confidence: 91.3,
+      findings: [
+        "Umurtqa tanachalarida suyak zichligi pasaygan",
+        "Kortikal qavat yupqalashgan",
+        "Ko'krak umurtqalarida klinovida deformatsiya"
+      ],
+      recommendation: "Densitometriya o'tkazish tavsiya etiladi. Kaltsiy va D vitamini qabul qilishni ko'rib chiqing."
+    },
+    {
+      diagnosis: "Kardiomegaliya",
+      diagnosisType: "warning",
+      confidence: 89.7,
+      findings: [
+        "Yurak soyasi kengaygan (kardiotorakal indeks > 0.55)",
+        "O'pka ildizlari kengaygan",
+        "Qon aylanishining o'pka bosimi oshgan"
+      ],
+      recommendation: "Echokardiografiya o'tkazish tavsiya etiladi. Kardiolog konsultatsiyasi va qon bosimini nazorat qilish."
+    }
+  ];
+
+  let currentImage = null;
+  let history = [];
+
+  // Load history from localStorage
+  function loadHistory() {
+    const saved = localStorage.getItem('tashxis_analysis_history');
+    if (saved) {
+      history = JSON.parse(saved);
+      renderHistory();
+    }
+  }
+
+  function saveHistory() {
+    localStorage.setItem('tashxis_analysis_history', JSON.stringify(history.slice(0, 10)));
+  }
+
+  function addToHistory(analysisType, result, confidence) {
+    const now = new Date();
+    const formattedDate = `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    
+    history.unshift({
+      id: Date.now(),
+      date: formattedDate,
+      type: analysisType,
+      result: result.diagnosis,
+      resultType: result.diagnosisType,
+      confidence: result.confidence,
+      details: result
+    });
+    
+    if (history.length > 10) history = history.slice(0, 10);
+    saveHistory();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const tbody = document.getElementById('historyBody');
+    if (history.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-fg);">Hali tahlillar mavjud emas</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = history.map(item => {
+      let badgeClass = '';
+      if (item.resultType === 'normal') badgeClass = 'history-badge';
+      else if (item.resultType === 'warning') badgeClass = 'history-badge';
+      else badgeClass = 'history-badge';
+      
+      let badgeStyle = '';
+      if (item.resultType === 'normal') badgeStyle = 'background: var(--primary-light); color: var(--primary);';
+      else if (item.resultType === 'warning') badgeStyle = 'background: hsl(38, 92%, 90%); color: hsl(38, 85%, 38%);';
+      else badgeStyle = 'background: var(--danger-light); color: var(--danger);';
+      
+      return `
+        <tr onclick="viewHistoryDetail(${item.id})" style="cursor: pointer;">
+          <td>${item.date}</td>
+          <td>${item.type}</td>
+          <td><span class="history-badge" style="${badgeStyle}">${item.result}</span></td>
+          <td>${item.confidence}%</td>
+          <td><a href="#" onclick="event.stopPropagation(); viewHistoryDetail(${item.id})" style="color: var(--primary);">Batafsil</a></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function viewHistoryDetail(id) {
+    const item = history.find(h => h.id === id);
+    if (item && item.details) {
+      displayResult(item.details);
+    }
+  }
+
+  function getRandomResult() {
+    const randomIndex = Math.floor(Math.random() * DEMO_RESULTS.length);
+    return JSON.parse(JSON.stringify(DEMO_RESULTS[randomIndex]));
+  }
+
+  function displayResult(result) {
+    const resultContent = document.getElementById('resultContent');
+    
+    let badgeClass = '';
+    let badgeText = '';
+    if (result.diagnosisType === 'normal') {
+      badgeClass = 'diagnosis-normal';
+      badgeText = '✅ Normal';
+    } else if (result.diagnosisType === 'warning') {
+      badgeClass = 'diagnosis-warning';
+      badgeText = '⚠️ ' + result.diagnosis;
+    } else {
+      badgeClass = 'diagnosis-danger';
+      badgeText = '🔴 ' + result.diagnosis;
+    }
+    
+    resultContent.innerHTML = `
+      <div>
+        <span class="diagnosis-badge ${badgeClass}">${badgeText}</span>
+        <div class="confidence-bar">
+          <div class="confidence-fill" style="width: ${result.confidence}%"></div>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--muted-fg); margin-bottom: 1rem;">Ishonch darajasi: ${result.confidence}%</p>
+        
+        <h4 style="font-size: 0.875rem; margin-bottom: 0.5rem;">🔍 Aniqlangan patologiyalar</h4>
+        <ul class="finding-list">
+          ${result.findings.map(f => `<li>• ${f}</li>`).join('')}
+        </ul>
+        
+        <div class="recommendation">
+          <strong>📋 Tavsiyalar</strong>
+          <p style="margin-top: 0.5rem;">${result.recommendation}</p>
+        </div>
+        
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted-fg);">
+          <span>⚠️ Bu natija AI modeli tomonidan yaratilgan va shifokor maslahatini o'rnini bosa olmaydi</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // Upload handling
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const imagePreview = document.getElementById('imagePreview');
+  const previewImg = document.getElementById('previewImg');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+  });
+  
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFile(files[0]);
+    }
+  });
+  
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      handleFile(e.target.files[0]);
+    }
+  });
+  
+  function handleFile(file) {
+    if (!file.type.startsWith('image/')) {
+      alert('Faqat rasm fayllarini yuklang!');
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      currentImage = e.target.result;
+      previewImg.src = currentImage;
+      imagePreview.style.display = 'block';
+      analyzeBtn.disabled = false;
+    };
+    reader.readAsDataURL(file);
+  }
+  
+  analyzeBtn.addEventListener('click', async () => {
+    if (!currentImage) return;
+    
+    loadingOverlay.style.display = 'flex';
+    analyzeBtn.disabled = true;
+    
+    // Simulate AI analysis delay
+    setTimeout(() => {
+      const result = getRandomResult();
+      displayResult(result);
+      
+      // Add to history
+      addToHistory('Rentgen (Ko\'krak qafasi)', result, result.confidence);
+      
+      loadingOverlay.style.display = 'none';
+      analyzeBtn.disabled = false;
+    }, 2000);
+  });
+  
+  // Initialize
+  loadHistory();
+  
+  // Make viewHistoryDetail global
+  window.viewHistoryDetail = viewHistoryDetail;
+</script>
+</body>
+</html>

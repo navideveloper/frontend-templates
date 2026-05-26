@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kabinet — Tashxis</title>
+  <meta name="description" content="Tashxis tizimida shaxsiy kabinet — tahlillar tarixi, balans va reyting" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg:           hsl(210, 20%, 98%);
+      --fg:           hsl(215, 35%, 12%);
+      --card:         hsl(0, 0%, 100%);
+      --primary:      hsl(162, 72%, 36%);
+      --primary-dark: hsl(162, 84%, 23%);
+      --primary-light: hsl(162, 60%, 92%);
+      --primary-soft: hsla(162, 72%, 36%, 0.12);
+      --accent:       hsl(200, 90%, 46%);
+      --accent-light: hsl(200, 80%, 93%);
+      --warning:      hsl(38, 92%, 50%);
+      --danger:       hsl(4, 74%, 55%);
+      --muted:        hsl(215, 20%, 94%);
+      --muted-fg:     hsl(215, 15%, 48%);
+      --border:       hsl(215, 20%, 88%);
+      --radius:       0.875rem;
+      --font:         'SF Pro Display', sans-serif;
+      --mono:         'JetBrains Mono', sans-serif;
+      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.08);
+      --shadow-md:    0 8px 28px -6px hsla(215,35%,12%,0.12);
+      --shadow-glow:  0 0 40px hsla(162,72%,36%,0.2);
+      --success:      hsl(145, 63%, 42%);
+    }
+
+    body {
+      font-family: var(--font);
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(162,72%,36%,0.08) 0%, transparent 70%),
+                  var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+    .container {
+      width: 100%;
+      max-width: 1160px;
+      margin-inline: auto;
+      padding-inline: 1.25rem;
+    }
+    @media (min-width: 640px) { .container { padding-inline: 2rem; } }
+
+    /* Navbar */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: hsla(210,20%,98%,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4rem; gap: 1rem;
+    }
+    .logo { display: flex; align-items: center; gap: 0.625rem; }
+    .logo-mark {
+      width: 2.4rem; height: 2.4rem;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-mark img {
+        width: -webkit-fill-available;
+    }
+    .logo-name { font-size: 1.125rem; font-weight: 700; letter-spacing: -.02em; }
+    .logo-name span { color: var(--primary); }
+    .logo-version {
+      font-size: 0.65rem; font-family: var(--mono);
+      background: var(--primary-light); color: var(--primary);
+      padding: 2px 7px; border-radius: 20px; font-weight: 500;
+    }
+    .nav-right { display: flex; align-items: center; gap: 0.5rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      font-size: 0.875rem; font-weight: 500; border-radius: calc(var(--radius) - 2px);
+      transition: background .15s, color .15s, transform .1s;
+      white-space: nowrap; cursor: pointer;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-ghost { padding: .45rem .75rem; color: var(--muted-fg); }
+    .btn-ghost:hover { background: var(--muted); color: var(--fg); }
+    .btn-outline {
+      padding: .45rem .9rem;
+      border: 1px solid var(--border);
+      background: var(--card); color: var(--fg);
+    }
+    .btn-outline:hover { background: var(--muted); }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      padding: .45rem .9rem;
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .nav-label { display: none; }
+    @media (min-width: 540px) { .nav-label { display: inline; } }
+
+    /* Main content */
+    .page-container { min-height: calc(100vh - 4rem); }
+    .content-container { padding-block: 2rem; }
+    @media (min-width: 768px) { .content-container { padding-block: 3rem; } }
+
+    /* Dashboard header */
+    .dashboard-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: 640px) {
+      .dashboard-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .dashboard-header h1 {
+      font-size: 1.875rem;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -.03em;
+    }
+    .dashboard-header p {
+      color: var(--muted-fg);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Balance Card */
+    .balance-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .balance-card-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    @media (min-width: 768px) {
+      .balance-card-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .balance-info {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+    }
+    .balance-icon-wrapper {
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: calc(var(--radius) + 4px);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .balance-icon-wrapper svg {
+      width: 1.6rem;
+      height: 1.6rem;
+      color: white;
+    }
+    .balance-details h3 {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted-fg);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+    .balance-amount {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--fg);
+    }
+    .balance-amount .currency {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--muted-fg);
+      margin-left: 0.25rem;
+    }
+    .balance-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    @media (min-width: 480px) {
+      .balance-actions {
+        flex-direction: row;
+      }
+    }
+    .btn-balance {
+      padding: 0.65rem 1.35rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: calc(var(--radius) + 4px);
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .btn-topup {
+      background: linear-gradient(135deg, var(--success), hsl(145, 55%, 38%));
+      color: #fff;
+    }
+    .btn-topup:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .btn-history {
+      border: 1px solid var(--border);
+      background-color: var(--card);
+      color: var(--fg);
+    }
+    .btn-history:hover {
+      background-color: var(--muted);
+      border-color: var(--primary);
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: 640px) {
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .stat-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover {
+      border-color: var(--primary);
+    }
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      font-family: var(--mono);
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted-fg);
+      margin-top: 0.25rem;
+    }
+
+    /* Section Card */
+    .section-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+    .section-title svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--primary);
+    }
+
+    /* Analysis History Table */
+    .table-wrapper {
+      overflow-x: auto;
+    }
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .history-table th {
+      text-align: left;
+      padding: 0.75rem 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--muted-fg);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--border);
+    }
+    .history-table td {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .history-table tr:hover {
+      background-color: var(--muted);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .badge-success {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .badge-warning {
+      background: hsl(38, 92%, 90%);
+      color: hsl(38, 85%, 38%);
+    }
+    .badge-danger {
+      background: hsla(4, 74%, 55%, 0.1);
+      color: var(--danger);
+    }
+    .view-link {
+      color: var(--primary);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .view-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Leaderboard */
+    .leaderboard-filters {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .leaderboard-filters {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .filter-selects {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .filter-select {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--border);
+      background-color: var(--bg);
+      padding: 0.5rem 0.75rem;
+      border-radius: calc(var(--radius) + 4px);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .filter-select:hover {
+      background-color: var(--muted);
+      border-color: var(--primary);
+    }
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .leaderboard-table th {
+      padding: 0.625rem 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--muted-fg);
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--border);
+      text-align: left;
+    }
+    .leaderboard-table th:first-child { width: 50px; text-align: center; }
+    .leaderboard-table td {
+      padding: 0.625rem 0.5rem;
+      font-size: 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .leaderboard-table td:first-child { text-align: center; }
+    .leaderboard-table tr:hover { background-color: var(--muted); }
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .rank-badge.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #7c2d12; }
+    .rank-badge.silver { background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: #1e293b; }
+    .rank-badge.bronze { background: linear-gradient(135deg, #fdba74, #f97316); color: #7c2d12; }
+    .rank-badge.default { background-color: var(--muted); color: var(--muted-fg); }
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .avatar {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 10px;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .stat-cell { font-weight: 500; }
+    .stat-cell.high { color: var(--primary); font-weight: 700; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding-block: 2rem;
+    }
+    .empty-icon {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 9999px;
+      background-color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .empty-icon svg {
+      width: 2rem;
+      height: 2rem;
+      color: var(--muted-fg);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--card);
+      padding-block: 1.75rem;
+    }
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .footer-brand span {
+      font-size: .875rem;
+      color: var(--muted-fg);
+    }
+
+    /* Animations */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate { animation: fadeSlideUp 0.4s ease-out forwards; }
+    .delay-1 { animation-delay: 0.05s; opacity: 0; }
+    .delay-2 { animation-delay: 0.1s; opacity: 0; }
+    .delay-3 { animation-delay: 0.15s; opacity: 0; }
+    .delay-4 { animation-delay: 0.2s; opacity: 0; }
+    .text-nowrap {
+        white-space: nowrap !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" aria-label="Asosiy navigatsiya">
+  <div class="container navbar-inner">
+    <a class="logo" href="#" aria-label="Tashxis bosh sahifasi">
+      <div class="logo-mark">
+        <img src="./logo.svg" alt="">
+      </div>
+        <span class="logo-name">Tashxis
+        <!-- <span>xis</span> -->
+        </span>
+        <span class="logo-version">v0.1</span>
+    </a>
+    <div class="nav-right">
+      <a href="./index.html#scan">
+        <button class="btn btn-ghost" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          <span class="nav-label">Tahlil turlari</span>
+        </button>
+      </a>
+      <a href="./pricing.html">
+        <button class="btn btn-ghost" type="button" style="color: hsl(40, 90%, 55%);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/>
+            <path d="M5 21h14"/>
+          </svg>
+          <span class="nav-label">Narxlar</span>
+        </button>
+      </a>
+      <a href="./auth.html">
+        <button class="btn btn-outline" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+          Chiqish
+        </button>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="page-container">
+    <div class="container content-container">
+
+      <!-- Dashboard Header -->
+      <div class="dashboard-header animate">
+        <div>
+          <h1>Mening kabinetim</h1>
+          <p>Salom, <strong>Dr. Aziz Rakhimov</strong> — xush kelibsiz</p>
+        </div>
+        <div>
+          <a href="./index.html">
+            <button class="btn btn-outline" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              Yangi tahlil
+            </button>
+          </a>
+        </div>
+      </div>
+
+      <!-- Balance Card -->
+      <div class="balance-card animate delay-1">
+        <div class="balance-card-inner">
+          <div class="balance-info">
+            <div class="balance-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <div class="balance-details">
+              <h3>Hisobingizdagi balans</h3>
+              <div class="balance-amount">
+                185,000<span class="currency">so'm</span>
+              </div>
+            </div>
+          </div>
+          <div class="balance-actions">
+            <button class="btn btn-balance btn-topup" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              Balansni to'ldirish
+            </button>
+            <button class="btn btn-balance btn-history" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Hisob tarixi
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card animate delay-2">
+          <div class="stat-value">24</div>
+          <div class="stat-label">Jami tahlillar</div>
+        </div>
+        <div class="stat-card animate delay-2">
+          <div class="stat-value">96.4%</div>
+          <div class="stat-label">O'rtacha aniqlik</div>
+        </div>
+        <div class="stat-card animate delay-2">
+          <div class="stat-value">12</div>
+          <div class="stat-label">Bu oy</div>
+        </div>
+        <div class="stat-card animate delay-2">
+          <div class="stat-value">4</div>
+          <div class="stat-label">Yo'nalishlar</div>
+        </div>
+      </div>
+
+      <!-- Analysis History -->
+      <div class="section-card animate delay-3">
+        <div class="section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Oxirgi tahlillar
+        </div>
+        <div class="table-wrapper">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Sana</th>
+                <th class="text-nowrap">Tahlil turi</th>
+                <th class="text-nowrap">Natija</th>
+                <th>Ishonch</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>15.05.2026</td>
+                <td class="text-nowrap">Rentgen (Ko'krak qafasi)</td>
+                <td><span class="badge badge-success">Normal</span></td>
+                <td>98%</td>
+                <td><a href="#" class="view-link">Batafsil</a></td>
+              </tr>
+              <tr>
+                <td>10.05.2026</td>
+                <td class="text-nowrap">KT (O'pka)</td>
+                <td class="text-nowrap"><span class="badge badge-warning">Eʼtibor talab</span></td>
+                <td>94%</td>
+                <td><a href="#" class="view-link">Batafsil</a></td>
+              </tr>
+              <tr>
+                <td>05.05.2026</td>
+                <td>Suyak sinishi</td>
+                <td><span class="badge badge-danger">Patologiya</span></td>
+                <td>89%</td>
+                <td><a href="#" class="view-link">Batafsil</a></td>
+              </tr>
+              <tr>
+                <td>28.04.2026</td>
+                <td>MRI (Miya)</td>
+                <td><span class="badge badge-success">Normal</span></td>
+                <td>97%</td>
+                <td><a href="#" class="view-link">Batafsil</a></td>
+              </tr>
+              <tr>
+                <td>20.04.2026</td>
+                <td>Rentgen (O'pka)</td>
+                <td><span class="badge badge-warning">Eʼtibor talab</span></td>
+                <td>91%</td>
+                <td><a href="#" class="view-link">Batafsil</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="section-card animate delay-4">
+        <div class="leaderboard-filters">
+          <div class="section-title" style="margin-bottom: 0;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            Reyting jadvali
+          </div>
+          <div class="filter-selects">
+            <button class="filter-select" type="button">
+              <span>Barcha tahlillar</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+            <button class="filter-select" type="button">
+              <span>Bu oy</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>O'rin</th>
+                <th>Foydalanuvchi</th>
+                <th>Tahlillar</th>
+                <th class="text-nowrap">O'rtacha aniqlik</th>
+                <th class="text-nowrap">Eng yuqori</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="rank-badge gold">1</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">D</div><span>Dr. Davron</span></div></td>
+                <td>156</td>
+                <td class="stat-cell high">97.8%</td>
+                <td class="stat-cell high">99.2%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge silver">2</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">M</div><span>Prof. Malika</span></div></td>
+                <td>142</td>
+                <td class="stat-cell high">97.1%</td>
+                <td>98.5%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge bronze">3</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">J</div><span>Dr. Jahongir</span></div></td>
+                <td>128</td>
+                <td class="stat-cell high">96.5%</td>
+                <td>98.9%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">4</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">N</div><span>Dr. Nilufar</span></div></td>
+                <td>115</td>
+                <td>95.8%</td>
+                <td>97.3%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">5</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">A</div><span><strong>Dr. Aziz</strong></span></div></td>
+                <td>89</td>
+                <td>94.9%</td>
+                <td>96.4%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">6</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">S</div><span>Dr. Sarvar</span></div></td>
+                <td>82</td>
+                <td>94.2%</td>
+                <td>96.1%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">7</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">G</div><span>Dr. Gulnora</span></div></td>
+                <td>76</td>
+                <td>93.7%</td>
+                <td>95.5%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">8</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">B</div><span>Dr. Botir</span></div></td>
+                <td>68</td>
+                <td>92.8%</td>
+                <td>94.9%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">9</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">Z</div><span>Dr. Zuhra</span></div></td>
+                <td>61</td>
+                <td>92.1%</td>
+                <td>94.2%</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">10</span></td>
+                <td class="text-nowrap"><div class="user-cell"><div class="avatar">R</div><span>Dr. Rustam</span></div></td>
+                <td>54</td>
+                <td class="stat-cell">91.3%</td>
+                <td>93.7%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer aria-label="Sayt haqida">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9c0-1.042-.133-2.052-.382-3.016z"/>
+      </svg>
+      <span>© Tashxis 2026 · Andijon viloyati AI Hackathon</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

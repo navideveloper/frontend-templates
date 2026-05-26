@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kirish | Ro'yxatdan o'tish — Tashxis</title>
+  <meta name="description" content="Tashxis tizimiga kiring yoki ro'yxatdan o'ting. Rentgen va KT tasvirlarini AI bilan tahlil qiling." />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg:           hsl(210, 20%, 98%);
+      --fg:           hsl(215, 35%, 12%);
+      --card:         hsl(0, 0%, 100%);
+      --primary:      hsl(162, 72%, 36%);
+      --primary-dark: hsl(162, 84%, 23%);
+      --primary-light: hsl(162, 60%, 92%);
+      --primary-soft: hsla(162, 72%, 36%, 0.12);
+      --accent:       hsl(200, 90%, 46%);
+      --accent-light: hsl(200, 80%, 93%);
+      --warning:      hsl(38, 92%, 50%);
+      --danger:       hsl(4, 74%, 55%);
+      --muted:        hsl(215, 20%, 94%);
+      --muted-fg:     hsl(215, 15%, 48%);
+      --border:       hsl(215, 20%, 88%);
+      --radius:       0.875rem;
+      --font:         'SF Pro Display', sans-serif;
+      --mono:         'JetBrains Mono', sans-serif;
+      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.08);
+      --shadow-md:    0 8px 28px -6px hsla(215,35%,12%,0.12);
+      --shadow-glow:  0 0 40px hsla(162,72%,36%,0.2);
+      --price-accent: hsl(40, 90%, 55%);
+    }
+
+    body {
+      font-family: var(--font);
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(162,72%,36%,0.08) 0%, transparent 70%),
+                  var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* back link to homepage */
+    .back-home {
+      position: fixed;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--card);
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--fg);
+      font-weight: 500;
+      font-size: 0.875rem;
+      backdrop-filter: blur(8px);
+      background: hsla(0, 0%, 100%, 0.9);
+      transition: all 0.2s;
+    }
+    .back-home:hover {
+      border-color: var(--primary);
+      transform: translateX(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    .back-home i {
+      color: var(--primary);
+    }
+
+    /* auth card — matches main site design */
+    .auth-card {
+      width: 100%;
+      max-width: 500px;
+      background-color: var(--card);
+      border-radius: calc(var(--radius) + 12px);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.2s;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background-color: var(--card);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 1.2rem 0.5rem;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.2px;
+      color: var(--muted-fg);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab:hover:not(.active) {
+      color: var(--fg);
+      background-color: var(--muted);
+    }
+
+    /* content panels */
+    .tab-content {
+      display: none;
+      padding: 2rem 1.8rem;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeSlideUp 0.35s ease;
+    }
+
+    /* header */
+    .form-header {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .form-header h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--fg), var(--primary));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-header p {
+      color: var(--muted-fg);
+      font-size: 0.9rem;
+    }
+
+    /* form fields */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.2px;
+      color: var(--fg);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-control, .city-search-input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      background-color: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      font-size: 1rem;
+      color: var(--fg);
+      transition: all 0.2s;
+      outline: none;
+      font-family: var(--font);
+    }
+
+    .form-control:focus, .city-search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+
+    .form-control.error, .city-search-input.error {
+      border-color: var(--danger);
+      background-color: hsla(4, 74%, 55%, 0.05);
+    }
+
+    .form-control.success, .city-search-input.success {
+      border-color: var(--primary);
+    }
+
+    /* phone prefix indicator */
+    .phone-prefix-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+    .phone-input {
+      padding-left: 3.8rem;
+    }
+
+    /* password toggle */
+    .password-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted-fg);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .password-toggle:hover {
+      color: var(--primary);
+    }
+
+    .error-message {
+      font-size: 0.75rem;
+      color: var(--danger);
+      margin-top: 6px;
+      display: none;
+      padding-left: 6px;
+    }
+
+    /* city dropdown */
+    .city-search-container {
+      position: relative;
+    }
+    .city-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      max-height: 240px;
+      overflow-y: auto;
+      z-index: 30;
+      display: none;
+      box-shadow: var(--shadow-md);
+    }
+    .city-dropdown.active {
+      display: block;
+    }
+    .city-option {
+      padding: 0.8rem 1rem;
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    .city-option:hover {
+      background-color: var(--muted);
+    }
+    .no-results {
+      padding: 1rem;
+      text-align: center;
+      color: var(--muted-fg);
+    }
+    .search-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted-fg);
+      pointer-events: none;
+    }
+
+    /* buttons */
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(105deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border: none;
+      padding: 0.9rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      margin-top: 0.5rem;
+      box-shadow: 0 6px 14px hsla(162, 72%, 36%, 0.2);
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px hsla(162, 72%, 36%, 0.25);
+    }
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    .forgot-link {
+      text-align: center;
+      margin-top: 1.2rem;
+    }
+    .forgot-link a {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+    .forgot-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* success message */
+    .success-message {
+      background-color: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      padding: 0.8rem 1rem;
+      border-radius: 16px;
+      margin-top: 1.2rem;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--primary-dark);
+    }
+    .success-message i {
+      font-size: 1.1rem;
+    }
+
+    /* MODAL (OTP) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-container {
+      background: var(--card);
+      border-radius: 32px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: var(--shadow-glow);
+      border: 1px solid var(--border);
+      animation: modalPop 0.25s ease;
+    }
+    .modal-header {
+      padding: 1.5rem 1.5rem 0.5rem;
+      text-align: center;
+    }
+    .modal-header h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+    .modal-header p {
+      color: var(--muted-fg);
+      font-size: 0.85rem;
+    }
+    .otp-inputs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    .otp-input {
+      width: 52px;
+      height: 58px;
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      color: var(--fg);
+      font-family: var(--mono);
+    }
+    .otp-input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+    .timer {
+      text-align: center;
+      font-weight: 500;
+      color: var(--muted-fg);
+      margin: 0.5rem 0 1rem;
+    }
+    .timer span {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .modal-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 1.5rem 1.2rem;
+    }
+    .btn-primary {
+      background: var(--primary);
+      border: none;
+      padding: 0.8rem;
+      border-radius: 40px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      background: var(--primary-dark);
+    }
+    .btn-secondary {
+      background: var(--muted);
+      border: none;
+      padding: 0.8rem;
+      border-radius: 40px;
+      font-weight: 600;
+      color: var(--fg);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+    .modal-footer {
+      text-align: center;
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+    .modal-footer a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .modal-footer a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 540px) {
+      .tab-content { padding: 1.5rem; }
+      .otp-input { width: 44px; height: 50px; font-size: 1.3rem; }
+      .back-home { top: 1rem; left: 1rem; padding: 0.5rem 1rem; font-size: 0.75rem; }
+      body { padding: 5rem 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="./index.html" class="back-home">
+  <i class="fas fa-arrow-left"></i>
+  <span>Bosh sahifa</span>
+</a>
+
+<div class="auth-card">
+  <div class="tabs">
+    <div class="tab active" data-tab="login">Kirish</div>
+    <div class="tab" data-tab="register">Ro'yxatdan o'tish</div>
+  </div>
+
+  <!-- Login panel -->
+  <div class="tab-content active" id="loginPanel">
+    <div class="form-header">
+      <h2>Xush kelibsiz</h2>
+      <p>Tashxis tizimiga kiring va davom eting</p>
+    </div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Telefon raqami</label>
+        <div class="input-wrapper">
+          <span class="phone-prefix-icon">+998</span>
+          <input type="tel" id="loginPhone" class="form-control phone-input" placeholder="90 123 45 67" autocomplete="off">
+        </div>
+        <div class="error-message" id="loginPhoneError">Telefon raqam (9 raqam) kiriting</div>
+      </div>
+      <div class="form-group">
+        <label>Parol</label>
+        <div class="input-wrapper">
+          <input type="password" id="loginPassword" class="form-control" placeholder="Parolingiz">
+          <i class="fas fa-eye-slash password-toggle" id="toggleLoginPass"></i>
+        </div>
+        <div class="error-message" id="loginPassError">Parolni kiriting</div>
+      </div>
+      <button type="submit" class="submit-btn"><i class="fas fa-arrow-right-to-bracket"></i> Kirish</button>
+      <div class="forgot-link"><a href="#" id="forgotBtn">Parolni unutdingizmi?</a></div>
+      <div class="success-message" id="loginSuccessMsg"><i class="fas fa-circle-check"></i> <span>Tizimga muvaffaqiyatli kirdingiz!</span></div>
+    </form>
+  </div>
+
+  <!-- Register panel -->
+  <div class="tab-content" id="registerPanel">
+    <div class="form-header">
+      <h2>Hisob yaratish</h2>
+      <p>AI tahlil imkoniyatlaridan foydalanish uchun ro'yxatdan o'ting</p>
+    </div>
+    <form id="registerForm">
+      <div class="form-group">
+        <label>Shahar / Universitet</label>
+        <div class="city-search-container">
+          <input type="text" id="citySearchInput" class="city-search-input" placeholder="Shaharni qidiring..." autocomplete="off">
+          <i class="fas fa-search search-icon"></i>
+          <div class="city-dropdown" id="cityDropdown"></div>
+          <input type="hidden" id="cityHidden" value="">
+        </div>
+        <div class="error-message" id="cityError">Shaharni tanlang</div>
+      </div>
+      <div class="form-group">
+        <label>To'liq ism</label>
+        <input type="text" id="fullName" class="form-control" placeholder="Ism Familiya">
+        <div class="error-message" id="nameError">Ism va familiyangizni kiriting</div>
+      </div>
+      <div class="form-group">
+        <label>Telefon raqami</label>
+        <div class="input-wrapper">
+          <span class="phone-prefix-icon">+998</span>
+          <input type="tel" id="regPhone" class="form-control phone-input" placeholder="90 123 45 67">
+        </div>
+        <div class="error-message" id="regPhoneError">9 xonali telefon raqami (masalan: 901234567)</div>
+      </div>
+      <div class="form-group">
+        <label>Parol</label>
+        <div class="input-wrapper">
+          <input type="password" id="regPassword" class="form-control" placeholder="Kamida 8 belgi">
+          <i class="fas fa-eye-slash password-toggle" id="toggleRegPass"></i>
+        </div>
+        <div class="error-message" id="regPassError">Parol kamida 8 belgidan iborat bo‘lishi kerak</div>
+      </div>
+      <button type="submit" class="submit-btn"><i class="fas fa-user-plus"></i> Ro'yxatdan o'tish</button>
+      <div class="success-message" id="regSuccessMsg"><i class="fas fa-check-circle"></i> <span>Hisob yaratildi! Tasdiqlang.</span></div>
+    </form>
+  </div>
+</div>
+
+<!-- OTP Modal -->
+<div class="modal-overlay" id="otpModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3><i class="fas fa-mobile-alt"></i> Tasdiqlash</h3>
+      <p>Telegram bot orqali kelgan 6 xonali kod</p>
+    </div>
+    <div class="otp-inputs" id="otpContainer">
+      <input type="text" maxlength="1" class="otp-input" data-otp="0">
+      <input type="text" maxlength="1" class="otp-input" data-otp="1">
+      <input type="text" maxlength="1" class="otp-input" data-otp="2">
+      <input type="text" maxlength="1" class="otp-input" data-otp="3">
+      <input type="text" maxlength="1" class="otp-input" data-otp="4">
+      <input type="text" maxlength="1" class="otp-input" data-otp="5">
+    </div>
+    <div class="timer"><i class="far fa-clock"></i> Kod amal qilish muddati: <span id="timerDisplay">02:00</span></div>
+    <div class="modal-buttons">
+      <button class="btn-primary" id="verifyOtpBtn"><i class="fas fa-check-circle"></i> Tasdiqlash</button>
+      <button class="btn-secondary" id="goToBotBtn"><i class="fab fa-telegram"></i> Telegram botga o'tish</button>
+    </div>
+    <div class="modal-footer">
+      Kod kelmadi? <a href="#" id="resendCodeBtn">Qayta yuborish</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab');
+    const loginPanel = document.getElementById('loginPanel');
+    const registerPanel = document.getElementById('registerPanel');
+    
+    function switchTab(tabId) {
+      tabs.forEach(t => t.classList.remove('active'));
+      if (tabId === 'login') {
+        document.querySelector('.tab[data-tab="login"]').classList.add('active');
+        loginPanel.classList.add('active');
+        registerPanel.classList.remove('active');
+      } else {
+        document.querySelector('.tab[data-tab="register"]').classList.add('active');
+        registerPanel.classList.add('active');
+        loginPanel.classList.remove('active');
+      }
+      document.getElementById('loginSuccessMsg').style.display = 'none';
+      document.getElementById('regSuccessMsg').style.display = 'none';
+    }
+    tabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const target = tab.getAttribute('data-tab');
+        if (target === 'login') switchTab('login');
+        else switchTab('register');
+      });
+    });
+
+    // UTILS
+    function showError(input, errorEl, msg) {
+      input.classList.add('error');
+      input.classList.remove('success');
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    }
+    function showSuccess(input, errorEl) {
+      input.classList.remove('error');
+      input.classList.add('success');
+      errorEl.style.display = 'none';
+    }
+    function validatePhone(phoneStr) {
+      const digits = phoneStr.replace(/\D/g, '');
+      return digits.length === 9;
+    }
+    function formatPhoneOnInput(el) {
+      let val = el.value.replace(/\D/g, '');
+      if (val.length > 9) val = val.slice(0,9);
+      let formatted = '';
+      if (val.length > 0) {
+        if (val.length <= 2) formatted = val;
+        else if (val.length <= 5) formatted = val.slice(0,2) + ' ' + val.slice(2);
+        else if (val.length <= 7) formatted = val.slice(0,2) + ' ' + val.slice(2,5) + ' ' + val.slice(5);
+        else formatted = val.slice(0,2) + ' ' + val.slice(2,5) + ' ' + val.slice(5,7) + ' ' + val.slice(7,9);
+      }
+      el.value = formatted;
+    }
+    function validateFullName(name) { return name.trim().split(/\s+/).length >= 2 && name.trim().length > 3; }
+
+    // City data
+    const cityList = [
+      { id: 'toshkent', name: 'Toshkent shahri', abbr: 'TOSHKENT' },
+      { id: 'andijon', name: 'Andijon viloyati', abbr: 'ANDIJON' },
+      { id: 'samarqand', name: 'Samarqand viloyati', abbr: 'SAMARQAND' },
+      { id: 'buxoro', name: 'Buxoro viloyati', abbr: 'BUXORO' },
+      { id: 'namangan', name: 'Namangan viloyati', abbr: 'NAMANGAN' },
+      { id: 'qashqadaryo', name: 'Qashqadaryo', abbr: 'QASHQA' }
+    ];
+    let selectedCity = null;
+    const cityInput = document.getElementById('citySearchInput');
+    const cityHidden = document.getElementById('cityHidden');
+    const cityDropdown = document.getElementById('cityDropdown');
+    
+    cityInput.addEventListener('focus', () => { renderDropdown(filterCities('')); });
+    function filterCities(query) {
+      const q = query.toLowerCase();
+      return cityList.filter(c => c.name.toLowerCase().includes(q) || c.abbr.toLowerCase().includes(q));
+    }
+    function renderDropdown(results) {
+      cityDropdown.innerHTML = '';
+      if (!results.length) {
+        cityDropdown.innerHTML = '<div class="no-results">❌ Shahar topilmadi</div>';
+        cityDropdown.classList.add('active');
+        return;
+      }
+      results.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'city-option';
+        div.innerHTML = `<strong>${c.name}</strong> <span style="font-size:12px; color:var(--muted-fg)">(${c.abbr})</span>`;
+        div.addEventListener('click', () => {
+          selectedCity = c;
+          cityInput.value = c.name;
+          cityHidden.value = c.id;
+          cityDropdown.classList.remove('active');
+          showSuccess(cityInput, document.getElementById('cityError'));
+        });
+        cityDropdown.appendChild(div);
+      });
+      cityDropdown.classList.add('active');
+    }
+    cityInput.addEventListener('input', (e) => {
+      const val = e.target.value;
+      if (val.trim() === '') {
+        selectedCity = null;
+        cityHidden.value = '';
+        cityDropdown.classList.remove('active');
+      } else {
+        renderDropdown(filterCities(val));
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (!cityInput.contains(e.target) && !cityDropdown.contains(e.target)) cityDropdown.classList.remove('active');
+    });
+
+    // Password toggles
+    const toggleLogin = document.getElementById('toggleLoginPass');
+    const loginPass = document.getElementById('loginPassword');
+    toggleLogin?.addEventListener('click', () => {
+      const type = loginPass.type === 'password' ? 'text' : 'password';
+      loginPass.type = type;
+      toggleLogin.classList.toggle('fa-eye');
+      toggleLogin.classList.toggle('fa-eye-slash');
+    });
+    const toggleReg = document.getElementById('toggleRegPass');
+    const regPass = document.getElementById('regPassword');
+    toggleReg?.addEventListener('click', () => {
+      const type = regPass.type === 'password' ? 'text' : 'password';
+      regPass.type = type;
+      toggleReg.classList.toggle('fa-eye');
+      toggleReg.classList.toggle('fa-eye-slash');
+    });
+
+    // Phone formatting
+    const loginPhone = document.getElementById('loginPhone');
+    const regPhone = document.getElementById('regPhone');
+    [loginPhone, regPhone].forEach(inp => {
+      inp.addEventListener('input', function() { formatPhoneOnInput(this); });
+    });
+
+    // LOGIN
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+      if (!validatePhone(loginPhone.value)) { showError(loginPhone, document.getElementById('loginPhoneError'), 'Telefon raqam 9 raqam bo‘lishi kerak'); valid = false; }
+      else showSuccess(loginPhone, document.getElementById('loginPhoneError'));
+      if (loginPassword.value.trim() === '') { showError(loginPassword, document.getElementById('loginPassError'), 'Parolni kiriting'); valid = false; }
+      else showSuccess(loginPassword, document.getElementById('loginPassError'));
+      if (valid) {
+        document.getElementById('loginSuccessMsg').style.display = 'flex';
+        setTimeout(() => { 
+          document.getElementById('loginSuccessMsg').style.display = 'none';
+          loginForm.reset();
+        }, 2500);
+      }
+    });
+
+    // REGISTER with OTP
+    const regForm = document.getElementById('registerForm');
+    const fullNameInp = document.getElementById('fullName');
+    const regPassInp = document.getElementById('regPassword');
+    let timerInterval, timeLeft = 120;
+    const timerSpan = document.getElementById('timerDisplay');
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timeLeft = 120;
+      timerSpan.style.color = '';
+      timerInterval = setInterval(() => {
+        if (timeLeft <= 0) { 
+          clearInterval(timerInterval); 
+          timerSpan.innerText = '00:00'; 
+          timerSpan.style.color = 'var(--danger)';
+        } else {
+          const mins = Math.floor(timeLeft / 60);
+          const secs = timeLeft % 60;
+          timerSpan.innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+          timeLeft--;
+        }
+      }, 1000);
+    }
+
+    const otpModal = document.getElementById('otpModal');
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const verifyBtn = document.getElementById('verifyOtpBtn');
+    const goBot = document.getElementById('goToBotBtn');
+    const resendBtn = document.getElementById('resendCodeBtn');
+
+    function setupOtpNavigation() {
+      otpInputs.forEach((input, idx) => {
+        input.addEventListener('input', (e) => {
+          if (e.target.value.length === 1 && idx < 5) otpInputs[idx+1].focus();
+        });
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && input.value === '' && idx > 0) otpInputs[idx-1].focus();
+        });
+      });
+    }
+    setupOtpNavigation();
+
+    regForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
+      if (!selectedCity) { showError(cityInput, document.getElementById('cityError'), 'Shaharni tanlang'); isValid = false; }
+      else showSuccess(cityInput, document.getElementById('cityError'));
+      if (!validateFullName(fullNameInp.value)) { showError(fullNameInp, document.getElementById('nameError'), 'Ism va familiya kiriting'); isValid = false; }
+      else showSuccess(fullNameInp, document.getElementById('nameError'));
+      if (!validatePhone(regPhone.value)) { showError(regPhone, document.getElementById('regPhoneError'), '9 xonali raqam'); isValid = false; }
+      else showSuccess(regPhone, document.getElementById('regPhoneError'));
+      if (regPassInp.value.length < 8) { showError(regPassInp, document.getElementById('regPassError'), 'Kamida 8 belgi'); isValid = false; }
+      else showSuccess(regPassInp, document.getElementById('regPassError'));
+      if (isValid) {
+        otpModal.style.display = 'flex';
+        startTimer();
+        otpInputs.forEach(i => i.value = '');
+        if(otpInputs[0]) otpInputs[0].focus();
+      }
+    });
+
+    verifyBtn.addEventListener('click', () => {
+      let otpCode = '';
+      otpInputs.forEach(inp => otpCode += inp.value);
+      if (otpCode.length !== 6) { alert('Kod 6 xonali bo‘lishi kerak'); return; }
+      if (otpCode === '123456') {
+        otpModal.style.display = 'none';
+        document.getElementById('regSuccessMsg').style.display = 'flex';
+        regForm.reset();
+        cityInput.value = ''; cityHidden.value = ''; selectedCity = null;
+        setTimeout(() => {
+          document.getElementById('regSuccessMsg').style.display = 'none';
+          switchTab('login');
+        }, 2500);
+        if(timerInterval) clearInterval(timerInterval);
+      } else {
+        alert('Noto‘g‘ri kod! Demo uchun sinov kodi: 123456');
+      }
+    });
+    goBot.addEventListener('click', () => { window.open('https://t.me/', '_blank'); });
+    resendBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      startTimer();
+      alert('Yangi kod telegram botga yuborildi (demo: 123456)');
+    });
+    document.getElementById('forgotBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Parolni tiklash havolasi demo rejimda, tez orada qo‘shiladi.');
+    });
+    window.onclick = (e) => { if (e.target === otpModal) otpModal.style.display = 'none'; };
+  })();
+</script>
+</body>
+</html>

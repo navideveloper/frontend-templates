@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tashxis — Rentgen va KT tahlili</title>
+  <meta name="description" content="Sun'iy intellekt yordamida rentgen va KT tasvirlarini soniyalar ichida tahlil qiling." />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;family=Tajawal:wght@400;500;700&amp;display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           hsl(210, 20%, 98%);
+      --fg:           hsl(215, 35%, 12%);
+      --card:         hsl(0, 0%, 100%);
+      --primary:      hsl(162, 72%, 36%);
+      --primary-light:hsl(162, 60%, 92%);
+      --primary-fg:   hsl(0, 0%, 100%);
+      --accent:       hsl(200, 90%, 46%);
+      --accent-light: hsl(200, 80%, 93%);
+      --warning:      hsl(38, 92%, 50%);
+      --danger:       hsl(4, 74%, 55%);
+      --muted:        hsl(215, 20%, 94%);
+      --muted-fg:     hsl(215, 15%, 48%);
+      --border:       hsl(215, 20%, 88%);
+      --radius:       0.875rem;
+      --font:         'SF Pro Display', sans-serif;
+      --mono:         'JetBrains Mono', sans-serif;
+      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.08);
+      --shadow-md:    0 8px 28px -6px hsla(215,35%,12%,0.12);
+      --shadow-glow:  0 0 40px hsla(162,72%,36%,0.2);
+      --price-accent: hsl(40, 90%, 55%);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    img, svg { display: block; max-width: 100%; }
+
+    .container { width: 100%; max-width: 1160px; margin-inline: auto; padding-inline: 1.25rem; }
+    @media (min-width: 640px) { .container { padding-inline: 2rem; } }
+
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: hsla(210,20%,98%,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4rem; gap: 1rem;
+    }
+    .logo { display: flex; align-items: center; gap: 0.625rem; }
+    .logo-mark {
+      width: 2.4rem; height: 2.4rem;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-mark svg { width: 1.2rem; height: 1.2rem; color: #fff; }
+    .logo-name { font-size: 1.125rem; font-weight: 700; letter-spacing: -.02em; }
+    .logo-name span { color: var(--primary); }
+    .logo-version {
+      font-size: 0.65rem; font-family: var(--mono);
+      background: var(--primary-light); color: var(--primary);
+      padding: 2px 7px; border-radius: 20px; font-weight: 500;
+    }
+    .nav-right { display: flex; align-items: center; gap: 0.5rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      font-size: 0.875rem; font-weight: 500; border-radius: calc(var(--radius) - 2px);
+      transition: background .15s, color .15s, transform .1s;
+      white-space: nowrap; cursor: pointer;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-ghost { padding: .45rem .75rem; color: var(--muted-fg); }
+    .btn-ghost:hover { background: var(--muted); color: var(--fg); }
+    .btn-outline {
+      padding: .45rem .9rem;
+      border: 1px solid var(--border);
+      background: var(--card); color: var(--fg);
+    }
+    .btn-outline:hover { background: var(--muted); }
+    .nav-label { display: none; }
+    @media (min-width: 540px) { .nav-label { display: inline; } }
+    
+    /* Special price link style */
+    .price-link {
+      color: var(--price-accent);
+    }
+    .price-link .btn-ghost {
+      color: var(--price-accent);
+    }
+    .price-link .btn-ghost:hover {
+      background: rgba(255, 185, 55, 0.12);
+      color: hsl(40, 95%, 48%);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: calc(100vh - 4rem);
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(162,72%,36%,0.12) 0%, transparent 70%),
+                  var(--bg);
+      display: flex; flex-direction: column;
+    }
+    .hero-inner { padding-block: 4.5rem 5rem; flex: 1; }
+    @media (min-width: 768px) { .hero-inner { padding-block: 6rem 5.5rem; } }
+
+    /* Badge */
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.9rem; font-family: var(--mono); font-weight: 600;
+      background: var(--primary-light); color: var(--primary);
+      border: 1px solid hsl(162,60%,78%);
+      padding: 5px 12px; border-radius: 20px;
+      margin-bottom: 1.5rem; animation: fadeDown .5s ease-out forwards;
+    }
+    .badge-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
+
+    /* Heading */
+    .hero-heading { text-align: center; margin-bottom: 3.5rem; }
+    .hero-heading h1 {
+      font-size: clamp(2.1rem, 5vw, 4rem);
+      font-weight: 800; line-height: 1.13;
+      letter-spacing: -.035em; margin-bottom: 1.25rem;
+    }
+    .h1-line2 { display: block; }
+    .highlight {
+      background: linear-gradient(120deg, var(--primary) 20%, var(--accent));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-heading p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted-fg); max-width: 36rem; margin-inline: auto; line-height: 1.7;
+    }
+    .hero-heading { animation: fadeDown .5s .1s ease-out both; }
+
+    /* Scan cards */
+    .scan-grid {
+      display: grid; gap: 1.25rem;
+      max-width: 52rem; margin-inline: auto; margin-bottom: 5rem;
+    }
+    @media (min-width: 640px) { .scan-grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 900px) { .scan-grid { grid-template-columns: repeat(4,1fr); gap: 1rem; } }
+    .scan-card {
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column; align-items: center;
+      gap: .875rem; padding: 1.5rem 1rem 1.25rem;
+      border: 1.5px solid var(--border);
+      border-radius: calc(var(--radius) + 4px);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      opacity: 0; animation: slideUp .5s ease-out forwards;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+    }
+    .scan-card:nth-child(1){animation-delay:.15s}
+    .scan-card:nth-child(2){animation-delay:.25s}
+    .scan-card:nth-child(3){animation-delay:.35s}
+    .scan-card:nth-child(4){animation-delay:.45s}
+    .scan-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow), var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    .scan-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, hsla(162,72%,36%,0.04) 0%, transparent 60%);
+      opacity: 0; transition: opacity .2s;
+    }
+    .scan-card:hover::before { opacity: 1; }
+
+    .scan-icon {
+      width: 3.5rem; height: 3.5rem;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .scan-icon svg { width: 2rem; height: 2rem; }
+    .icon-green { background: var(--primary-light); color: var(--primary); }
+    .icon-blue  { background: var(--accent-light);  color: var(--accent); }
+    .icon-amber { background: hsl(38,92%,92%);       color: hsl(38,85%,38%); }
+    .icon-red   { background: hsl(4,74%,93%);        color: hsl(4,74%,45%); }
+
+    .scan-card h3 { font-size: 1rem; font-weight: 700; text-align: center; }
+    .scan-card p  { font-size: 0.875rem; color: var(--muted-fg); text-align: center; line-height: 1.5; }
+
+    .scan-tag {
+      font-size: .7rem; font-family: var(--mono); font-weight: 500;
+      background: var(--muted); color: var(--muted-fg);
+      padding: 2px 8px; border-radius: 20px; margin-top: .25rem;
+    }
+
+    /* Arrow */
+    .card-arrow {
+      position: absolute; top: 12px; right: 12px;
+      width: 22px; height: 22px; border-radius: 6px;
+      background: var(--muted); display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .2s;
+    }
+    .card-arrow svg { width: 12px; height: 12px; color: var(--muted-fg); }
+    .scan-card:hover .card-arrow { opacity: 1; }
+
+    /* ── Stats strip ── */
+    .stats-strip {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 0 3rem; margin-bottom: 5rem;
+      animation: fadeDown .5s .5s ease-out both;
+    }
+    .stat-item { text-align: center; padding: .5rem 0; }
+    .stat-num {
+      font-size: 1.75rem; font-weight: 800; letter-spacing: -.04em;
+      color: var(--primary);
+    }
+    .stat-label { font-size: .8rem; color: var(--muted-fg); margin-top: 2px; }
+
+    /* ── Features ── */
+    .features-row {
+      display: grid; gap: 1.5rem; text-align: center;
+      max-width: 44rem; margin-inline: auto;
+    }
+    @media (min-width: 640px) { .features-row { grid-template-columns: repeat(3,1fr); } }
+
+    .feat {
+      opacity: 0; animation: slideUp .5s ease-out forwards;
+    }
+    .feat:nth-child(1){animation-delay:.55s}
+    .feat:nth-child(2){animation-delay:.65s}
+    .feat:nth-child(3){animation-delay:.75s}
+
+    .feat-icon {
+      width: 3.25rem; height: 3.25rem; border-radius: 14px;
+      margin-inline: auto; margin-bottom: .875rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feat-icon svg { width: 1.5rem; height: 1.5rem; }
+    .fi-teal   { background: var(--primary-light); color: var(--primary); }
+    .fi-blue   { background: var(--accent-light);  color: var(--accent); }
+    .fi-yellow { background: hsl(38,92%,90%);       color: hsl(38,80%,38%); }
+    .feat h3 { font-size: .95rem; font-weight: 700; margin-bottom: .35rem; }
+    .feat p  { font-size: .82rem; color: var(--muted-fg); line-height: 1.6; }
+
+    /* ── Section label ── */
+    .section-label {
+      text-align: center; margin-bottom: 2rem;
+      font-size: 1rem; font-family: var(--mono); font-weight: 600;
+      letter-spacing: .1em; color: var(--muted-fg);
+      text-transform: uppercase;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--card); padding-block: 1.75rem;
+    }
+    .footer-inner {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 1rem;
+    }
+    .footer-brand { display: flex; align-items: center; gap: .5rem; }
+    .footer-brand svg { width: 1rem; height: 1rem; color: var(--primary); }
+    .footer-brand span { font-size: .875rem; color: var(--muted-fg); justify-content: center; }
+    .footer-links { display: flex; gap: 1.25rem; }
+    .footer-links a { font-size: .82rem; color: var(--muted-fg); transition: color .15s; }
+    .footer-links a:hover { color: var(--primary); }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    @media (max-width: 768px) {
+    .card-arrow {
+        opacity: 1;
+    }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ (No Boshlash button, no dark mode switcher) -->
+<nav class="navbar" aria-label="Asosiy navigatsiya">
+  <div class="container navbar-inner">
+    <a class="logo" href="#" aria-label="Tashxis bosh sahifasi">
+      <div class="logo-mark">
+        <img src="./logo.svg" alt="">
+      </div>
+        <span class="logo-name">Tashxis
+        <!-- <span>xis</span> -->
+        </span>
+        <span class="logo-version">v0.1</span>
+    </a>
+
+    <div class="nav-right">
+      <!-- Tahlil turlari link -->
+      <a href="#scan"><button class="btn btn-ghost" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <span class="nav-label">Tahlil turlari</span>
+      </button></a>
+
+      <!-- Narxlar with custom icon & color (hsl(40, 90%, 55%)) -->
+      <a href="./pricing.html" class="price-link">
+        <button class="btn btn-ghost" type="button" style="color: hsl(40, 90%, 55%);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path>
+            <path d="M5 21h14"></path>
+          </svg>
+          <span class="nav-label">Narxlar</span>
+        </button>
+      </a>
+
+      <!-- Kirish button (only) -->
+      <a href="./auth.html">
+        <button class="btn btn-outline" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Kirish
+        </button>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ (Demo-upload section removed) -->
+<main>
+  <section class="hero">
+    <div class="container hero-inner">
+
+      <!-- Badge -->
+      <div style="text-align:center">
+        <div class="hero-badge">
+          <div class="badge-dot"></div>
+          AI tahlil tizimi
+        </div>
+      </div>
+
+      <!-- Heading -->
+      <div class="hero-heading">
+        <h1>
+          Rentgen va KT tasvirlarini
+          <span class="h1-line2"><span class="highlight">AI bilan tahlil qiling</span></span>
+        </h1>
+        <p>Shifokorlar va radiologlar uchun sun'iy intellekt asosidagi tezkor yordamchi — patologiyalarni soniyalar ichida aniqlab beradi</p>
+      </div>
+
+      <!-- Scan type cards -->
+      <div id="scan" class="scan-grid">
+
+        <!-- X-ray -->
+        <a class="scan-card" href="./xray.html">
+          <div class="card-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="scan-icon icon-green">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>
+              <path d="M7 12h10M12 7v10"/>
+            </svg>
+          </div>
+          <h3>Rentgen (X-ray)</h3>
+          <p>O'pka, ko'krak qafasi va boshqa a'zolar uchun avtomatik tahlil</p>
+          <span class="scan-tag">pnevmoniya · effuziya</span>
+        </a>
+
+        <!-- CT scan -->
+        <a class="scan-card" href="./ct.html">
+          <div class="card-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="scan-icon icon-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>
+            </svg>
+          </div>
+          <h3>KT (CT Scan)</h3>
+          <p>Ko'p qatlamli KT tasvirlarini 3D rekonstruksiya bilan tahlil qilish</p>
+          <span class="scan-tag">o'simta · infarkt</span>
+        </a>
+
+        <!-- Bone -->
+        <a class="scan-card" href="./bone.html">
+          <div class="card-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="scan-icon icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18.2 2c-1.3 0-2.4.5-3.2 1.3L3.3 15c-.8.8-1.3 1.9-1.3 3.2C2 20.8 3.2 22 5.8 22c1.3 0 2.4-.5 3.2-1.3L20.7 9c.8-.8 1.3-1.9 1.3-3.2C22 3.2 20.8 2 18.2 2z"/>
+              <path d="m10 6 4 4M6 10l4 4"/>
+            </svg>
+          </div>
+          <h3>Suyak sinishi</h3>
+          <p>Suyak va bo'g'inlardagi sinishlar, yoriqlar va anomaliyalarni aniqlash</p>
+          <span class="scan-tag">sinish · osteoporoz</span>
+        </a>
+
+        <!-- MRI -->
+        <a class="scan-card" href="./mri.html">
+          <div class="card-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="scan-icon icon-red">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
+              <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>
+            </svg>
+          </div>
+          <h3>MRI (MRT)</h3>
+          <p>Miya, orqa miya va yumshoq to'qimalar uchun magnit-rezonans tahlili</p>
+          <span class="scan-tag">insult · o'simta</span>
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-strip">
+        <div class="stat-item">
+          <div class="stat-num">96.4%</div>
+          <div class="stat-label">Aniqlik darajasi</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">&lt; 5s</div>
+          <div class="stat-label">Tahlil vaqti</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">1,200+</div>
+          <div class="stat-label">Tahlil qilingan</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4</div>
+          <div class="stat-label">Tahlil yo'nalishi</div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <p class="section-label">Nima uchun Tashxis?</p>
+      <div class="features-row">
+        <div class="feat">
+          <div class="feat-icon fi-teal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3>Aniq natija</h3>
+          <p>Har bir ko'nikma bo'yicha batafsil tahlil va ishonch darajasi ko'rsatiladi</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon fi-yellow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3>Tez tahlil</h3>
+          <p>O'rtacha 4.2 soniyada natija — shifokorning qaror qabul qilishini tezlashtiradi</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon fi-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Ishonchli tizim</h3>
+          <p>Transfer learning va ochiq tibbiy datasetlar asosida o'qitilgan model</p>
+        </div>
+      </div>
+
+      <!-- No demo-band / Sinab ko'ring section: completely removed -->
+    </div>
+  </section>
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer aria-label="Sayt haqida">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9c0-1.042-.133-2.052-.382-3.016z"/>
+      </svg>
+      <span>© Tashxis 2026 · Andijon viloyati AI Hackathon</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

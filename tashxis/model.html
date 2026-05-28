@@ -10,41 +10,33 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:           hsl(210, 20%, 98%);
-      --fg:           hsl(215, 35%, 12%);
-      --card:         hsl(0, 0%, 100%);
-      --primary:      hsl(162, 72%, 36%);
-      --primary-dark: hsl(162, 84%, 23%);
+      --bg:            hsl(210, 20%, 98%);
+      --fg:            hsl(215, 35%, 12%);
+      --card:          hsl(0, 0%, 100%);
+      --primary:       hsl(162, 72%, 36%);
+      --primary-dark:  hsl(162, 84%, 23%);
       --primary-light: hsl(162, 60%, 92%);
-      --primary-soft: hsla(162, 72%, 36%, 0.12);
-      --accent:       hsl(200, 90%, 46%);
-      --accent-light: hsl(200, 80%, 93%);
-      --warning:      hsl(38, 92%, 50%);
-      --danger:       hsl(4, 74%, 55%);
-      --danger-light: hsla(4, 74%, 55%, 0.1);
-      --muted:        hsl(215, 20%, 94%);
-      --muted-fg:     hsl(215, 15%, 48%);
-      --border:       hsl(215, 20%, 88%);
-      --radius:       0.875rem;
-      --font:         'SF Pro Display', sans-serif;
-      --mono:         'JetBrains Mono', sans-serif;
-      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.08);
-      --shadow-md:    0 8px 28px -6px hsla(215,35%,12%,0.12);
-      --shadow-glow:  0 0 40px hsla(162,72%,36%,0.2);
-      --success:      hsl(145, 63%, 42%);
+      --primary-soft:  hsla(162, 72%, 36%, 0.12);
+      --accent:        hsl(200, 90%, 46%);
+      --warning:       hsl(38, 92%, 50%);
+      --warning-light: hsl(38, 92%, 95%);
+      --danger:        hsl(4, 74%, 55%);
+      --danger-light:  hsla(4, 74%, 55%, 0.1);
+      --muted:         hsl(215, 20%, 94%);
+      --muted-fg:      hsl(215, 15%, 48%);
+      --border:        hsl(215, 20%, 88%);
+      --radius:        0.875rem;
+      --font:          'SF Pro Display', sans-serif;
+      --mono:          'JetBrains Mono', sans-serif;
+      --shadow-sm:     0 2px 8px -2px hsla(215,35%,12%,0.08);
     }
 
     body {
       font-family: var(--font);
-      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(162,72%,36%,0.06) 0%, transparent 70%),
-                  var(--bg);
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(162,72%,36%,0.06) 0%, transparent 70%), var(--bg);
       color: var(--fg);
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
@@ -53,13 +45,7 @@
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 
-    .container {
-      padding-top: 20px;
-      width: 100%;
-      max-width: 1280px;
-      margin-inline: auto;
-      padding-inline: 1.25rem;
-    }
+    .container { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: 1.25rem; }
     @media (min-width: 640px) { .container { padding-inline: 2rem; } }
 
     /* Navbar */
@@ -69,218 +55,263 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-    .navbar-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 4rem; gap: 1rem;
-    }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 4rem; gap: 1rem; }
     .logo { display: flex; align-items: center; gap: 0.625rem; }
-    .logo-mark {
-      width: 2.4rem; height: 2.4rem;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .logo-mark img {
-        width: -webkit-fill-available;
-    }
+    .logo-mark { width: 2.4rem; height: 2.4rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .logo-mark img { width: -webkit-fill-available; }
     .logo-name { font-size: 1.125rem; font-weight: 700; letter-spacing: -.02em; }
-    .logo-version {
-      font-size: 0.65rem; font-family: var(--mono);
-      background: var(--primary-light); color: var(--primary);
-      padding: 2px 7px; border-radius: 20px; font-weight: 500;
-    }
+    .logo-version { font-size: 0.65rem; font-family: var(--mono); background: var(--primary-light); color: var(--primary); padding: 2px 7px; border-radius: 20px; font-weight: 500; }
     .nav-right { display: flex; align-items: center; gap: 0.5rem; }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
-      font-size: 0.875rem; font-weight: 500; border-radius: calc(var(--radius) - 2px);
-      transition: background .15s, transform .1s;
-      white-space: nowrap;
-    }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; font-size: 0.875rem; font-weight: 500; border-radius: calc(var(--radius) - 2px); transition: background .15s, transform .1s; white-space: nowrap; }
     .btn:active { transform: scale(0.97); }
     .btn-ghost { padding: .45rem .75rem; color: var(--muted-fg); }
     .btn-ghost:hover { background: var(--muted); color: var(--fg); }
-    .btn-outline {
-      padding: .45rem .9rem;
-      border: 1px solid var(--border);
-      background: var(--card); color: var(--fg);
-    }
+    .btn-outline { padding: .45rem .9rem; border: 1px solid var(--border); background: var(--card); color: var(--fg); }
     .btn-outline:hover { background: var(--muted); }
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      padding: .6rem 1.2rem;
-    }
+    .btn-primary { background: var(--primary); color: white; padding: .6rem 1.2rem; }
     .btn-primary:hover { background: var(--primary-dark); }
     .nav-label { display: none; }
     @media (min-width: 540px) { .nav-label { display: inline; } }
 
     /* Breadcrumb */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      font-size: 0.875rem;
-      color: var(--muted-fg);
-    }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--muted-fg); }
     .breadcrumb a { color: var(--primary); }
     .breadcrumb a:hover { text-decoration: underline; }
 
     /* Main layout */
+    main { padding-top: 20px; }
+
     .analysis-layout {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 1.5rem;
     }
     @media (min-width: 768px) {
-      .analysis-layout {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-      }
+      .analysis-layout { grid-template-columns: 1fr 1fr; }
     }
 
-    /* Upload Card */
-    .upload-card {
+    /* Card base */
+    .upload-card, .result-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 1.5rem;
       box-shadow: var(--shadow-sm);
     }
-    .card-title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
+
+    /* O'zgarish: O'ng panel tarkibini to'liq bo'yi bo'ylab markazlashtirish */
+    .result-card {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      flex-direction: column;
     }
-    .card-title svg {
-      color: var(--primary);
+    .result-card #resultContent {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
+
+    .card-title {
+      font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .card-title svg { color: var(--primary); }
+
+    /* ── Upload Area ── */
     .upload-area {
+      position: relative;
       border: 2px dashed var(--border);
       border-radius: var(--radius);
-      padding: 2rem;
-      text-align: center;
       cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
+      overflow: hidden;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.5rem;
       margin-bottom: 1rem;
     }
-    .upload-area:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .upload-area.drag-over {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .upload-icon {
-      width: 3rem;
-      height: 3rem;
-      margin: 0 auto 0.75rem;
-      color: var(--muted-fg);
-    }
-    .upload-area p {
-      font-size: 0.875rem;
-      color: var(--muted-fg);
-    }
-    .upload-area .small {
-      font-size: 0.75rem;
-      margin-top: 0.5rem;
-    }
-    #fileInput {
+    .upload-area:hover { border-color: var(--primary); background: var(--primary-light); }
+    .upload-area.drag-over { border-color: var(--primary); background: var(--primary-light); }
+    .upload-area.has-image { padding: 0; border-style: solid; border-color: var(--border); cursor: default; }
+    .upload-area.has-image:hover { background: transparent; border-color: var(--border); }
+
+    .upload-placeholder { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; pointer-events: none; }
+    .upload-placeholder svg { color: var(--muted-fg); }
+    .upload-placeholder p { font-size: 0.875rem; color: var(--muted-fg); }
+    .upload-placeholder .small { font-size: 0.75rem; }
+
+    /* O'zgarish: Orqa fon qoradan yumshoq ochiq-kulrang/hira ko'k rangga o'zgardi */
+    .upload-area-image {
       display: none;
-    }
-    .image-preview {
-      margin-top: 1rem;
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: var(--muted);
-      display: none;
-    }
-    .image-preview img {
       width: 100%;
-      max-height: 300px;
-      object-fit: contain;
+      height: 100%;
+      position: absolute;
+      inset: 0;
     }
+    .upload-area-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: hsl(210, 20%, 94%);
+      min-height: 260px;
+    }
+
+    /* X cancel button */
+    .cancel-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: hsla(0,0%,0%,0.55);
+      color: white;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .cancel-btn:hover { background: hsla(4,74%,55%,0.85); transform: scale(1.1); }
+    .cancel-btn svg { pointer-events: none; }
+
+    #fileInput { display: none; }
+
+    /* Analyze button */
     .analyze-btn {
       width: 100%;
-      margin-top: 1rem;
       padding: 0.75rem;
       background: var(--primary);
       color: white;
       border-radius: var(--radius);
       font-weight: 600;
       font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.15s, transform 0.1s;
     }
-    .analyze-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    .analyze-btn:hover:not(:disabled) { background: var(--primary-dark); }
+    .analyze-btn:active:not(:disabled) { transform: scale(0.98); }
+    .analyze-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ── Result Card ── */
+    .result-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 0;
+      color: var(--muted-fg);
+      gap: 1rem;
+      text-align: center;
     }
 
-    /* Result Card */
-    .result-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow-sm);
+    .result-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
     }
+
+    /* O'zgarish: Natija rasmi foni ham qoradan yumshoq rangga o'tkazildi */
+    .result-image-wrap {
+      border-radius: calc(var(--radius) - 4px);
+      overflow: hidden;
+      background: hsl(210, 20%, 94%);
+      flex-shrink: 0;
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .result-image-wrap img {
+      width: 100%;
+      height: 260px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .result-info { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    /* O'zgarish: UI Kit uslubidagi zamonaviy kontur va tekis status nishonlari */
     .diagnosis-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
       font-weight: 600;
-      margin-bottom: 1rem;
+      width: fit-content;
+      border: 1px solid transparent;
     }
-    .diagnosis-normal {
-      background: var(--primary-light);
-      color: var(--primary);
+    
+    /* UI Kit dizayniga mos ranglar palitrasi (chegarali va yengil fonli) */
+    .diagnosis-normal  { 
+      background: hsl(162, 60%, 96%); 
+      color: hsl(162, 84%, 23%); 
+      border-color: hsl(162, 70%, 80%);
     }
-    .diagnosis-warning {
-      background: hsl(38, 92%, 90%);
-      color: hsl(38, 85%, 38%);
+    .diagnosis-warning { 
+      background: hsl(38, 92%, 96%); 
+      color: hsl(38, 90%, 30%); 
+      border-color: hsl(38, 90%, 80%);
     }
-    .diagnosis-danger {
-      background: var(--danger-light);
-      color: var(--danger);
+    .diagnosis-danger  { 
+      background: hsl(4, 74%, 96%); 
+      color: hsl(4, 74%, 35%); 
+      border-color: hsl(4, 74%, 85%);
+    }
+    .diagnosis-badge svg {
+      flex-shrink: 0;
+    }
+
+    .confidence-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
     .confidence-bar {
+      flex: 1;
       background: var(--muted);
       border-radius: 10px;
-      height: 8px;
+      height: 7px;
       overflow: hidden;
-      margin: 0.5rem 0 1rem;
     }
     .confidence-fill {
       background: var(--primary);
       height: 100%;
       width: 0%;
       border-radius: 10px;
-      transition: width 0.5s ease;
+      transition: width 0.6s cubic-bezier(.4,0,.2,1);
     }
-    .finding-list {
-      margin: 1rem 0;
-      padding-left: 1.25rem;
-    }
-    .finding-list li {
-      margin: 0.5rem 0;
-      font-size: 0.875rem;
-    }
-    .recommendation {
-      background: var(--primary-light);
-      padding: 1rem;
-      border-radius: var(--radius);
-      margin-top: 1rem;
-    }
-    .recommendation p {
-      font-size: 0.875rem;
-      line-height: 1.5;
+    .confidence-label {
+      font-size: 0.75rem;
+      font-family: var(--mono);
+      color: var(--muted-fg);
+      white-space: nowrap;
     }
 
-    /* History Table */
+    .result-note {
+      font-size: 0.875rem;
+      color: var(--fg);
+      line-height: 1.5;
+    }
+    .result-disclaimer {
+      font-size: 0.75rem;
+      color: var(--muted-fg);
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* History */
     .history-section {
       margin-top: 2rem;
       background: var(--card);
@@ -289,88 +320,42 @@
       padding: 1.5rem;
       box-shadow: var(--shadow-sm);
     }
-    .history-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    .history-table { width: 100%; border-collapse: collapse; }
     .history-table th {
-      text-align: left;
-      padding: 0.75rem 0.5rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--muted-fg);
-      text-transform: uppercase;
-      border-bottom: 2px solid var(--border);
+      text-align: left; padding: 0.75rem 0.5rem;
+      font-size: 0.7rem; font-weight: 600; color: var(--muted-fg);
+      text-transform: uppercase; border-bottom: 2px solid var(--border);
     }
-    .history-table td {
-      padding: 0.75rem 0.5rem;
-      font-size: 0.8rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .history-table tr:hover {
-      background-color: var(--muted);
-    }
-    .history-badge {
-      display: inline-block;
-      padding: 0.2rem 0.5rem;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
+    .history-table td { padding: 0.75rem 0.5rem; font-size: 0.8rem; border-bottom: 1px solid var(--border); }
+    .history-table tr:hover { background-color: var(--muted); }
+    .history-badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
 
-    /* Loading overlay */
+    /* Loading */
     .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,0.5);
       backdrop-filter: blur(4px);
       display: none;
-      align-items: center;
-      justify-content: center;
+      align-items: center; justify-content: center;
       z-index: 1000;
     }
-    .loading-spinner {
-      background: var(--card);
-      padding: 2rem;
-      border-radius: var(--radius);
-      text-align: center;
-    }
+    .loading-spinner { background: var(--card); padding: 2rem; border-radius: var(--radius); text-align: center; }
     .spinner {
-      width: 50px;
-      height: 50px;
+      width: 50px; height: 50px;
       border: 3px solid var(--muted);
       border-top-color: var(--primary);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       margin: 0 auto 1rem;
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    footer {
-      border-top: 1px solid var(--border);
-      background: var(--card);
-      padding-block: 1.75rem;
-      margin-top: 2rem;
-    }
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .footer-inner span {
-      font-size: .875rem;
-      color: var(--muted-fg);
-    }
+    footer { border-top: 1px solid var(--border); background: var(--card); padding-block: 1.75rem; margin-top: 2rem; }
+    .footer-inner { display: flex; align-items: center; justify-content: center; }
+    .footer-inner span { font-size: .875rem; color: var(--muted-fg); }
 
     @media (max-width: 768px) {
-      .upload-card, .result-card {
-        padding: 1rem;
-      }
+      .upload-card, .result-card { padding: 1rem; }
     }
   </style>
 </head>
@@ -427,7 +412,7 @@
     </div>
 
     <div class="analysis-layout">
-      <!-- Chap: Yuklash qismi -->
+
       <div class="upload-card">
         <div class="card-title">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -437,32 +422,41 @@
           </svg>
           Rasm yuklash
         </div>
-        
+
         <div class="upload-area" id="dropZone">
-          <div class="upload-icon">
+          <div class="upload-placeholder" id="uploadPlaceholder">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
               <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
               <polyline points="21 15 16 10 5 21"/>
             </svg>
+            <p>Rasmni shu yerga torting yoki <strong>yuklash</strong> uchun bosing</p>
+            <p class="small">DICOM, PNG, JPG, JPEG (max 15MB)</p>
           </div>
-          <p>Rasmni shu yerga torting yoki <strong>yuklash</strong> tugmasini bosing</p>
-          <p class="small">DICOM, PNG, JPG, JPEG (max 15MB)</p>
-          <input type="file" id="fileInput" accept="image/*">
+
+          <div class="upload-area-image" id="uploadAreaImage">
+            <img id="previewImg" alt="Yuklangan rasm">
+          </div>
+
+          <button class="cancel-btn" id="cancelBtn" title="Rasmni o'chirish">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
-        <button class="btn btn-primary analyze-btn" id="analyzeBtn" disabled>
+
+        <input type="file" id="fileInput" accept="image/*">
+
+        <button class="analyze-btn" id="analyzeBtn" disabled>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
             <path d="M12 16v-4M12 8h.01"/>
           </svg>
           AI tahlil qilish
         </button>
-        <div class="image-preview" id="imagePreview">
-          <img id="previewImg" alt="Yuklangan rasm">
-        </div>
       </div>
 
-      <!-- O'ng: Natijalar -->
       <div class="result-card" id="resultCard">
         <div class="card-title">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -470,19 +464,20 @@
           </svg>
           Tahlil natijasi
         </div>
+
         <div id="resultContent">
-          <div style="text-align: center; padding: 2rem 0; color: var(--muted-fg);">
+          <div class="result-empty">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M9 12h6M12 9v6"/>
               <circle cx="12" cy="12" r="10"/>
             </svg>
-            <p style="margin-top: 1rem;">Rasm yuklang va tahlilni boshlang</p>
+            <p>Rasm yuklang va tahlilni boshlang</p>
           </div>
         </div>
       </div>
+
     </div>
 
-    <!-- Tahlil tarixi -->
     <div class="history-section">
       <div class="card-title" style="margin-bottom: 1rem;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -515,7 +510,6 @@
   </div>
 </main>
 
-<!-- Loading overlay -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner">
     <div class="spinner"></div>
@@ -531,256 +525,206 @@
 </footer>
 
 <script>
-  // Demo tahlil natijalari (real API o'rniga)
   const DEMO_RESULTS = [
     {
       diagnosis: "Normal",
       diagnosisType: "normal",
       confidence: 96.8,
-      findings: [
-        "O'pka maydonlari shaffof, patologik soyalar aniqlanmadi",
-        "Yurak soyasi normal o'lchamda",
-        "Ko'krak qafasi skeletida o'zgarishlar yo'q"
-      ],
-      recommendation: "Hech qanday patologiya aniqlanmadi. Muntazam tekshiruvlarni davom ettiring."
+      shortNote: "Patologik o'zgarishlar aniqlanmadi.",
     },
     {
-      diagnosis: "E'tibor talab — Pnevmoniya",
+      diagnosis: "Pnevmoniya shubhasi",
       diagnosisType: "warning",
       confidence: 87.2,
-      findings: [
-        "O'ng o'pkaning pastki bo'lagida infiltrativ soyalar kuzatilmoqda",
-        "Bronxial naqsh kuchaygan",
-        "Subfebril holat bilan kechishi mumkin"
-      ],
-      recommendation: "Klinik ko'rinish bilan solishtirish tavsiya etiladi. Antibiotik terapiyani ko'rib chiqing va 5-7 kundan keyin nazorat rentgenogrammasini o'tkazing."
+      shortNote: "O'ng o'pkaning pastki bo'lagida infiltrativ soyalar kuzatilmoqda.",
     },
     {
-      diagnosis: "Patologiya — O'pka o'smasi shubhasi",
+      diagnosis: "O'pka o'smasi shubhasi",
       diagnosisType: "danger",
       confidence: 83.5,
-      findings: [
-        "O'ng o'pkaning yuqori bo'lagida notekis konturli, 3.5 sm li o'sma shubhali shakllanish",
-        "Qo'shni limfa tugunlari kattalashgan",
-        "Plevral effuziya kuzatilmoqda"
-      ],
-      recommendation: "Zudlik bilan onkolog va pulmonolog konsultatsiyasi. KT bilan qo'shimcha tekshiruv o'tkazish tavsiya etiladi."
+      shortNote: "O'ng o'pkada 3.5 sm notekis konturli shakllanish aniqlandi.",
     },
     {
       diagnosis: "Osteoporoz belgilari",
       diagnosisType: "warning",
       confidence: 91.3,
-      findings: [
-        "Umurtqa tanachalarida suyak zichligi pasaygan",
-        "Kortikal qavat yupqalashgan",
-        "Ko'krak umurtqalarida klinovida deformatsiya"
-      ],
-      recommendation: "Densitometriya o'tkazish tavsiya etiladi. Kaltsiy va D vitamini qabul qilishni ko'rib chiqing."
+      shortNote: "Umurtqa tanachalarida suyak zichligi pasaygan.",
     },
     {
       diagnosis: "Kardiomegaliya",
       diagnosisType: "warning",
       confidence: 89.7,
-      findings: [
-        "Yurak soyasi kengaygan (kardiotorakal indeks > 0.55)",
-        "O'pka ildizlari kengaygan",
-        "Qon aylanishining o'pka bosimi oshgan"
-      ],
-      recommendation: "Echokardiografiya o'tkazish tavsiya etiladi. Kardiolog konsultatsiyasi va qon bosimini nazorat qilish."
+      shortNote: "Yurak soyasi kengaygan (kardiotorakal indeks > 0.55).",
     }
   ];
 
   let currentImage = null;
   let history = [];
 
-  // Load history from localStorage
+  /* ── History ── */
   function loadHistory() {
     const saved = localStorage.getItem('tashxis_analysis_history');
-    if (saved) {
-      history = JSON.parse(saved);
-      renderHistory();
-    }
+    if (saved) { history = JSON.parse(saved); renderHistory(); }
   }
-
   function saveHistory() {
     localStorage.setItem('tashxis_analysis_history', JSON.stringify(history.slice(0, 10)));
   }
-
-  function addToHistory(analysisType, result, confidence) {
+  function addToHistory(analysisType, result) {
     const now = new Date();
-    const formattedDate = `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-    
-    history.unshift({
-      id: Date.now(),
-      date: formattedDate,
-      type: analysisType,
-      result: result.diagnosis,
-      resultType: result.diagnosisType,
-      confidence: result.confidence,
-      details: result
-    });
-    
+    const pad = n => n.toString().padStart(2, '0');
+    const formattedDate = `${pad(now.getDate())}.${pad(now.getMonth()+1)}.${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    history.unshift({ id: Date.now(), date: formattedDate, type: analysisType, result: result.diagnosis, resultType: result.diagnosisType, confidence: result.confidence, details: result });
     if (history.length > 10) history = history.slice(0, 10);
     saveHistory();
     renderHistory();
   }
-
   function renderHistory() {
     const tbody = document.getElementById('historyBody');
-    if (history.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-fg);">Hali tahlillar mavjud emas</td></tr>';
+    if (!history.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted-fg);">Hali tahlillar mavjud emas</td></tr>';
       return;
     }
-    
     tbody.innerHTML = history.map(item => {
-      let badgeClass = '';
-      if (item.resultType === 'normal') badgeClass = 'history-badge';
-      else if (item.resultType === 'warning') badgeClass = 'history-badge';
-      else badgeClass = 'history-badge';
-      
-      let badgeStyle = '';
-      if (item.resultType === 'normal') badgeStyle = 'background: var(--primary-light); color: var(--primary);';
-      else if (item.resultType === 'warning') badgeStyle = 'background: hsl(38, 92%, 90%); color: hsl(38, 85%, 38%);';
-      else badgeStyle = 'background: var(--danger-light); color: var(--danger);';
-      
-      return `
-        <tr onclick="viewHistoryDetail(${item.id})" style="cursor: pointer;">
-          <td>${item.date}</td>
-          <td>${item.type}</td>
-          <td><span class="history-badge" style="${badgeStyle}">${item.result}</span></td>
-          <td>${item.confidence}%</td>
-          <td><a href="#" onclick="event.stopPropagation(); viewHistoryDetail(${item.id})" style="color: var(--primary);">Batafsil</a></td>
-        </tr>
-      `;
+      let s = '';
+      if (item.resultType === 'normal')  s = 'background:hsl(162, 60%, 92%);color:hsl(162, 84%, 23%);border:1px solid hsl(162, 70%, 80%);';
+      else if (item.resultType === 'warning') s = 'background:hsl(38, 92%, 92%);color:hsl(38, 90%, 30%);border:1px solid hsl(38, 90%, 80%);';
+      else s = 'background:hsl(4, 74%, 92%);color:hsl(4, 74%, 35%);border:1px solid hsl(4, 74%, 85%);';
+      return `<tr onclick="viewHistoryDetail(${item.id})" style="cursor:pointer;">
+        <td>${item.date}</td>
+        <td>${item.type}</td>
+        <td><span class="history-badge" style="${s} padding: 0.2rem 0.6rem; border-radius: 8px;">${item.result}</span></td>
+        <td>${item.confidence}%</td>
+        <td><a href="#" onclick="event.stopPropagation();viewHistoryDetail(${item.id})" style="color:var(--primary);">Batafsil</a></td>
+      </tr>`;
     }).join('');
   }
-
   function viewHistoryDetail(id) {
     const item = history.find(h => h.id === id);
-    if (item && item.details) {
-      displayResult(item.details);
-    }
+    if (item && item.details) displayResult(item.details);
   }
 
-  function getRandomResult() {
-    const randomIndex = Math.floor(Math.random() * DEMO_RESULTS.length);
-    return JSON.parse(JSON.stringify(DEMO_RESULTS[randomIndex]));
-  }
-
+  /* ── O'zgarish: Emojilar SVG ikonkalarga almashtirildi va zamonaviy UI Badge hosil qilindi ── */
   function displayResult(result) {
-    const resultContent = document.getElementById('resultContent');
+    const src = currentImage || (history.find(h => h.details === result)?.imageSrc) || '';
+    let badgeClass = 'diagnosis-' + result.diagnosisType;
     
-    let badgeClass = '';
-    let badgeText = '';
+    // Har bir holat uchun mos SVG ikonka chizish
+    let iconSvg = '';
     if (result.diagnosisType === 'normal') {
-      badgeClass = 'diagnosis-normal';
-      badgeText = '✅ Normal';
+      iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>`;
     } else if (result.diagnosisType === 'warning') {
-      badgeClass = 'diagnosis-warning';
-      badgeText = '⚠️ ' + result.diagnosis;
+      iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
     } else {
-      badgeClass = 'diagnosis-danger';
-      badgeText = '🔴 ' + result.diagnosis;
+      iconSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
     }
-    
-    resultContent.innerHTML = `
-      <div>
-        <span class="diagnosis-badge ${badgeClass}">${badgeText}</span>
-        <div class="confidence-bar">
-          <div class="confidence-fill" style="width: ${result.confidence}%"></div>
+
+    document.getElementById('resultContent').innerHTML = `
+      <div class="result-body">
+        ${src ? `<div class="result-image-wrap"><img src="${src}" alt="Tahlil rasmi"></div>` : ''}
+        <div class="result-info">
+          <div>
+            <span class="diagnosis-badge ${badgeClass}">${iconSvg}${result.diagnosis}</span>
+          </div>
+          <div class="confidence-row">
+            <div class="confidence-bar">
+              <div class="confidence-fill" id="confFill" style="width:0%"></div>
+            </div>
+            <span class="confidence-label">${result.confidence}%</span>
+          </div>
+          <p class="result-note">${result.shortNote}</p>
+          <p class="result-disclaimer">⚠️ Bu natija AI tonidan kutilgan. Shifokor maslahatini o'rnini bosa olmaydi.</p>
         </div>
-        <p style="font-size: 0.75rem; color: var(--muted-fg); margin-bottom: 1rem;">Ishonch darajasi: ${result.confidence}%</p>
-        
-        <h4 style="font-size: 0.875rem; margin-bottom: 0.5rem;">🔍 Aniqlangan patologiyalar</h4>
-        <ul class="finding-list">
-          ${result.findings.map(f => `<li>• ${f}</li>`).join('')}
-        </ul>
-        
-        <div class="recommendation">
-          <strong>📋 Tavsiyalar</strong>
-          <p style="margin-top: 0.5rem;">${result.recommendation}</p>
-        </div>
-        
-        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted-fg);">
-          <span>⚠️ Bu natija AI modeli tomonidan yaratilgan va shifokor maslahatini o'rnini bosa olmaydi</span>
-        </div>
-      </div>
-    `;
+      </div>`;
+
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const fill = document.getElementById('confFill');
+        if (fill) fill.style.width = result.confidence + '%';
+      }, 50);
+    });
   }
 
-  // Upload handling
-  const dropZone = document.getElementById('dropZone');
-  const fileInput = document.getElementById('fileInput');
-  const analyzeBtn = document.getElementById('analyzeBtn');
-  const imagePreview = document.getElementById('imagePreview');
-  const previewImg = document.getElementById('previewImg');
+  /* ── Upload Handling ── */
+  const dropZone    = document.getElementById('dropZone');
+  const fileInput   = document.getElementById('fileInput');
+  const analyzeBtn  = document.getElementById('analyzeBtn');
+  const cancelBtn   = document.getElementById('cancelBtn');
+  const placeholder = document.getElementById('uploadPlaceholder');
+  const areaImage   = document.getElementById('uploadAreaImage');
+  const previewImg  = document.getElementById('previewImg');
   const loadingOverlay = document.getElementById('loadingOverlay');
 
-  dropZone.addEventListener('click', () => fileInput.click());
-  
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('drag-over');
+  dropZone.addEventListener('click', (e) => {
+    if (e.target === cancelBtn || cancelBtn.contains(e.target)) return;
+    if (!currentImage) fileInput.click();
   });
-  
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('drag-over');
-  });
-  
+
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropZone.classList.remove('drag-over');
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleFile(files[0]);
-    }
+    if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
   });
-  
+
   fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) {
-      handleFile(e.target.files[0]);
-    }
+    if (e.target.files.length > 0) handleFile(e.target.files[0]);
   });
-  
+
   function handleFile(file) {
-    if (!file.type.startsWith('image/')) {
-      alert('Faqat rasm fayllarini yuklang!');
-      return;
-    }
-    
+    if (!file.type.startsWith('image/')) { alert('Faqat rasm fayllarini yuklang!'); return; }
     const reader = new FileReader();
     reader.onload = (e) => {
       currentImage = e.target.result;
       previewImg.src = currentImage;
-      imagePreview.style.display = 'block';
+
+      areaImage.style.display = 'block';
+      placeholder.style.display = 'none';
+      cancelBtn.style.display = 'flex';
+      dropZone.classList.add('has-image');
+
       analyzeBtn.disabled = false;
     };
     reader.readAsDataURL(file);
   }
-  
-  analyzeBtn.addEventListener('click', async () => {
+
+  cancelBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentImage = null;
+    previewImg.src = '';
+    fileInput.value = '';
+
+    areaImage.style.display = 'none';
+    placeholder.style.display = 'flex';
+    cancelBtn.style.display = 'none';
+    dropZone.classList.remove('has-image');
+
+    analyzeBtn.disabled = true;
+    document.getElementById('resultContent').innerHTML = `
+      <div class="result-empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 12h6M12 9v6"/>
+          <circle cx="12" cy="12" r="10"/>
+        </svg>
+        <p>Rasm yuklang va tahlilni boshlang</p>
+      </div>`;
+  });
+
+  analyzeBtn.addEventListener('click', () => {
     if (!currentImage) return;
-    
     loadingOverlay.style.display = 'flex';
     analyzeBtn.disabled = true;
-    
-    // Simulate AI analysis delay
+
     setTimeout(() => {
-      const result = getRandomResult();
+      const result = JSON.parse(JSON.stringify(DEMO_RESULTS[Math.floor(Math.random() * DEMO_RESULTS.length)]));
       displayResult(result);
-      
-      // Add to history
-      addToHistory('Rentgen (Ko\'krak qafasi)', result, result.confidence);
-      
+      addToHistory("Rentgen (Ko'krak qafasi)", result);
       loadingOverlay.style.display = 'none';
       analyzeBtn.disabled = false;
     }, 2000);
   });
-  
-  // Initialize
+
   loadHistory();
-  
-  // Make viewHistoryDetail global
   window.viewHistoryDetail = viewHistoryDetail;
 </script>
 </body>

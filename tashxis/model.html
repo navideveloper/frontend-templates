@@ -8,30 +8,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:            hsl(210, 20%, 98%);
-      --fg:            hsl(215, 35%, 12%);
-      --card:          hsl(0, 0%, 100%);
-      --primary:       hsl(162, 72%, 36%);
-      --primary-dark:  hsl(162, 84%, 23%);
-      --primary-light: hsl(162, 60%, 92%);
-      --primary-soft:  hsla(162, 72%, 36%, 0.12);
-      --accent:        hsl(200, 90%, 46%);
-      --warning:       hsl(38, 92%, 50%);
-      --warning-light: hsl(38, 92%, 95%);
-      --danger:        hsl(4, 74%, 55%);
-      --danger-light:  hsla(4, 74%, 55%, 0.1);
-      --muted:         hsl(215, 20%, 94%);
-      --muted-fg:      hsl(215, 15%, 48%);
-      --border:        hsl(215, 20%, 88%);
-      --radius:        0.875rem;
-      --font:          'SF Pro Display', sans-serif;
-      --mono:          'JetBrains Mono', sans-serif;
-      --shadow-sm:     0 2px 8px -2px hsla(215,35%,12%,0.08);
+      --bg:           hsl(210, 20%, 98%);
+      --fg:           hsl(215, 35%, 12%);
+      --card:         hsl(0, 0%, 100%);
+      --primary:      hsl(162, 72%, 36%);
+      --primary-light:hsl(162, 60%, 92%);
+      --primary-fg:   hsl(0, 0%, 100%);
+      --accent:       hsl(200, 90%, 46%);
+      --accent-light: hsl(200, 80%, 93%);
+      --warning:      hsl(38, 92%, 50%);
+      --danger:       hsl(4, 74%, 55%);
+      --muted:        hsl(215, 20%, 94%);
+      --muted-fg:     hsl(215, 15%, 48%);
+      --border:       hsl(215, 20%, 88%);
+      --radius:       0.875rem;
+      --font:         'DM Sans', sans-serif;
+      --mono:         'JetBrains Mono', sans-serif;
+      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.08);
+      --shadow-md:    0 8px 28px -6px hsla(215,35%,12%,0.12);
+      --shadow-glow:  0 0 40px hsla(162,72%,36%,0.2);
+      --price-accent: hsl(40, 90%, 55%);
     }
 
     body {

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SinoMed — Shifoxona Admin Paneli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           hsl(210, 20%, 98%);
+      --fg:           hsl(215, 35%, 12%);
+      --card:         hsl(0, 0%, 100%);
+      --primary:      hsl(162, 72%, 36%);
+      --primary-light:hsl(162, 60%, 92%);
+      --primary-fg:   hsl(0, 0%, 100%);
+      --accent:       hsl(200, 90%, 46%);
+      --accent-light: hsl(200, 80%, 93%);
+      --warning:      hsl(38, 92%, 50%);
+      --danger:       hsl(4, 74%, 55%);
+      --muted:        hsl(215, 20%, 94%);
+      --muted-fg:     hsl(215, 15%, 48%);
+      --border:       hsl(215, 20%, 88%);
+      --radius:       0.875rem;
+      --font:         'Inter', sans-serif; /* Asosiy shrift Inter ga o'zgardi */
+      --mono:         'JetBrains Mono', sans-serif;
+      --sidebar-w:    260px;
+      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.05);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-header {
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      padding-inline: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      gap: 0.5rem;
+    }
+    .logo-mark {
+      width: 2rem; height: 2rem;
+      background: var(--primary);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-mark svg { width: 1.1rem; height: 1.1rem; color: #fff; }
+    .logo-name { font-size: 1.125rem; font-weight: 700; letter-spacing: -.03em; }
+    .logo-name span { color: var(--primary); }
+
+    .nav-list { list-style: none; padding: 1rem; flex: 1; overflow-y: auto; }
+    .nav-item { margin-bottom: 0.25rem; }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0.875rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted-fg);
+      border-radius: calc(var(--radius) - 2px);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .nav-link svg { width: 1.25rem; height: 1.25rem; transition: stroke .15s; }
+    .nav-link:hover, .nav-link.active {
+      background: var(--bg);
+      color: var(--fg);
+    }
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .nav-link.active svg { stroke: var(--primary); }
+    
+    .nav-link.logout-link { color: var(--danger); }
+    .nav-link.logout-link:hover { background: hsl(4, 74%, 96%); color: var(--danger); }
+
+    .badge-count {
+      margin-left: auto;
+      background: var(--danger);
+      color: #fff;
+      font-size: 0.7rem;
+      font-family: var(--mono);
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .sidebar-bottom-group {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      background: hsla(210, 20%, 98%, 0.5);
+    }
+    .license-badge {
+      margin: 1rem;
+      padding: 0.75rem;
+      background: var(--primary-light);
+      border-radius: calc(var(--radius) - 4px);
+      border: 1px solid hsl(162,60%,80%);
+    }
+    .license-title { font-size: 0.65rem; font-family: var(--mono); color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .license-org { font-size: 0.85rem; font-weight: 600; margin-top: 2px; letter-spacing: -.01em; }
+
+    .sidebar-footer {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted-fg);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      transition: margin-left 0.3s ease;
+    }
+
+    .topbar {
+      height: 4rem;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: 2rem;
+      position: sticky; top: 0; z-index: 5;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 1rem; }
+    .page-title { font-size: 1.125rem; font-weight: 600; letter-spacing: -.02em; }
+    
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--fg);
+    }
+    .menu-toggle svg { width: 1.5rem; height: 1.5rem; }
+
+    .admin-profile { display: flex; align-items: center; gap: 0.75rem; }
+    .admin-avatar {
+      width: 2.25rem; height: 2.25rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 0.85rem;
+    }
+    .admin-info p { font-size: 0.875rem; font-weight: 600; letter-spacing: -.01em; }
+    .admin-info span { font-size: 0.75rem; color: var(--muted-fg); display: block; }
+
+    .content-body { padding: 2rem; flex: 1; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+
+    /* ── STATS CARDS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-header { display: flex; justify-content: space-between; align-items: center; color: var(--muted-fg); margin-bottom: 0.5rem;}
+    .stat-header svg { width: 1.25rem; height: 1.25rem; }
+    .stat-title { font-size: 0.85rem; font-weight: 500; }
+    .stat-value { font-size: 1.625rem; font-weight: 700; letter-spacing: -.03em; }
+    .stat-desc { font-size: 0.75rem; color: var(--muted-fg); margin-top: 4px; }
+    .text-green { color: var(--primary); }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 8px; border-radius: 12px;
+      font-size: 0.75rem; font-weight: 500; font-family: var(--font); /* Badge matnlari ham Inter bo'ldi */
+    }
+    .badge-success { background: var(--primary-light); color: var(--primary); }
+    .badge-warning { background: hsl(38, 92%, 92%); color: hsl(38, 85%, 38%); }
+    .badge-danger { background: hsl(4, 74%, 93%); color: hsl(4, 74%, 45%); }
+
+    /* ── TABLES ── */
+    .card-table {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-table-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-table-header h3 { font-size: 0.95rem; font-weight: 600; letter-spacing: -.01em; }
+    
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+    th {
+      background: var(--bg);
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      color: var(--muted-fg);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
+
+    /* VAQT UCHUN WRAP HUJAYRASI */
+    .datetime-cell {
+      white-space: normal !important;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    .datetime-cell span {
+      display: block;
+      color: var(--muted-fg);
+      font-size: 0.75rem;
+      font-family: var(--mono);
+      margin-top: 2px;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.75rem; font-size: 0.8rem; font-weight: 500;
+      border-radius: 6px; border: 1px solid var(--border); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 4px; transition: background 0.1s; font-family: inherit;
+    }
+    .btn-sm:active { transform: scale(0.97); }
+    .btn-approve { background: var(--primary); color: #fff; border: none; }
+    .btn-approve:hover { background: hsl(162, 72%, 30%); }
+    .btn-reject { background: #fff; color: var(--danger); border-color: hsl(4, 74%, 90%); }
+    .btn-reject:hover { background: hsl(4, 74%, 97%); }
+
+    .dashboard-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1.25rem; }
+
+    /* ── FORMS ── */
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; }
+    .form-control {
+      width: 100%; padding: 0.625rem 0.875rem; font-size: 0.875rem; font-family: inherit;
+      border: 1px solid var(--border); border-radius: calc(var(--radius) - 2px);
+      background: var(--bg); outline: none; transition: border-color 0.15s;
+    }
+    .form-control:focus { border-color: var(--primary); background: #fff; }
+    .btn-save {
+      background: var(--primary); color: #fff; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 500;
+      border-radius: calc(var(--radius) - 2px);
+    }
+    .btn-save:hover { background: hsl(162, 72%, 30%); }
+
+    .sidebar-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4); z-index: 90;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ════════ RESPONSIVE MEDIA QUERIES ════════ */
+    @media (max-width: 992px) {
+      .dashboard-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      
+      .main-content { margin-left: 0; }
+      .topbar { padding-inline: 1rem; }
+      .admin-info { display: none; }
+      .page-title { font-size: 1rem; }
+      .content-body { padding: 1rem; }
+      
+      th, td { padding: 0.75rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <aside class="sidebar" id="sidebarMenu">
+    <div class="sidebar-header">
+      <div class="logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </div>
+      <span class="logo-name">SinoMed<span>.admin</span></span>
+    </div>
+
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a class="nav-link active" data-tab="dashboard">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-tab="approvals">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg>
+          Tasdiqlashlar
+          <span class="badge-count" id="approval-badge">2</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-tab="doctors">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Shifokorlar ro'yxati
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-tab="analyses">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+          Tahlillar tarixi
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-tab="settings">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Sozlamalar
+        </a>
+      </li>
+      <li class="nav-item" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.5rem;">
+        <a class="nav-link logout-link" onclick="if(confirm('Tizimdan chiqmoqchimisiz?')) alert('Tizimdan chiqildi.');">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Chiqish
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-bottom-group">
+      <div class="license-badge">
+        <div class="license-title">Faol Litsenziya</div>
+        <div class="license-org">Akfa Medline MK</div>
+      </div>
+      <div class="sidebar-footer">
+        <span>SinoMed</span>
+        <span>v0.1 · 2026</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
+        <div class="page-title" id="page-title-text">Dashboard — Umumiy tahlil</div>
+      </div>
+      <div class="admin-profile">
+        <div class="admin-info" style="text-align: right;">
+          <p>Diyorbek Kurbanov</p>
+          <span>Bosh Ma'mur</span>
+        </div>
+        <div class="admin-avatar">DK</div>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <section id="dashboard-tab" class="tab-content active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Jami Shifokorlar</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+            <div class="stat-value">24 nafar</div>
+            <div class="stat-desc text-green">▲ 2 ta litsenziya kutilmoqda</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Jami Tahlillar (Oydagi)</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="stat-value">412 ta</div>
+            <div class="stat-desc">O'rtacha tezlik: 4.2s</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Litsenziya Limiti</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="stat-value">42 / 100</div>
+            <div class="stat-desc">Yana 58 shifokor joy bor</div>
+          </div>
+        </div>
+
+        <div class="dashboard-row">
+          <div class="card-table">
+            <div class="card-table-header">
+              <h3>Oxirgi AI Tahlillari</h3>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Shifokor</th>
+                    <th>Turi</th>
+                    <th>Natija / Patologiya</th>
+                    <th>Vaqt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Dr. Jamshid Axmedov</strong></td>
+                    <td><span class="badge badge-success">X-Ray</span></td>
+                    <td>Pnevmoniya (94.2%)</td>
+                    <td class="datetime-cell">Bugun, <span>18:42</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Dr. Malika Toirova</strong></td>
+                    <td><span class="badge badge-success">X-Ray</span></td>
+                    <td>Norma (98.1%)</td>
+                    <td class="datetime-cell">Bugun, <span>16:15</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Dr. Sardor Rahimov</strong></td>
+                    <td><span class="badge badge-danger">MRT</span></td>
+                    <td>Insult belgilari (89%)</td>
+                    <td class="datetime-cell">Kecha, <span>11:20</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="stat-card" style="display:flex; flex-direction:column; justify-content: space-between;">
+            <div>
+              <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; letter-spacing: -.01em;">Litsenziya Holati</h3>
+              <p style="font-size: 0.875rem; color: var(--muted-fg); line-height: 1.6; margin-bottom: 1rem;">
+                Muassasangiz uchun ajratilgan litsenziya muddati faol.
+              </p>
+              <div style="background: var(--bg); padding: 1rem; border-radius: var(--radius); font-size: 0.85rem;">
+                <p><strong>Paket:</strong> Korporativ Pro</p>
+                <p style="margin-top: 4px;"><strong>Muddati:</strong> 15.12.2026</p>
+              </div>
+            </div>
+            <button class="btn-sm btn-approve" style="width: 100%; justify-content: center; padding: 0.6rem; margin-top: 1rem;">
+              Uzytirish
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="approvals-tab" class="tab-content">
+        <div class="card-table">
+          <div class="card-table-header">
+            <h3>Kutilayotgan Ro'yxatdan o'tishlar</h3>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Foydalanuvchi</th>
+                  <th>Mutaxassisligi</th>
+                  <th>Aloqa</th>
+                  <th>Sana</th>
+                  <th style="text-align: right;">Amallar</th>
+                </tr>
+              </thead>
+              <tbody id="approvals-list">
+                <tr id="req-1">
+                  <td><strong>Dr. Elyor Alimov</strong></td>
+                  <td>Radiolog</td>
+                  <td>e.alimov@email.com</td>
+                  <td class="datetime-cell">Bugun, <span>14:02</span></td>
+                  <td style="text-align: right;">
+                    <button class="btn-sm btn-approve" onclick="handleRequest('req-1', 'tasdiqlandi')">Tasdiqlash</button>
+                    <button class="btn-sm btn-reject" onclick="handleRequest('req-1', 'rad etildi')">Rad etish</button>
+                  </td>
+                </tr>
+                <tr id="req-2">
+                  <td><strong>Dr. Nozima Olimova</strong></td>
+                  <td>Pulmonolog</td>
+                  <td>+998 (90) 123-45-67</td>
+                  <td class="datetime-cell">Kecha, <span>09:54</span></td>
+                  <td style="text-align: right;">
+                    <button class="btn-sm btn-approve" onclick="handleRequest('req-2', 'tasdiqlandi')">Tasdiqlash</button>
+                    <button class="btn-sm btn-reject" onclick="handleRequest('req-2', 'rad etildi')">Rad etish</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="doctors-tab" class="tab-content">
+        <div class="card-table">
+          <div class="card-table-header">
+            <h3>Tizimdagi Shifokorlar</h3>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Foydalanuvchi ismi</th>
+                  <th>Lavozimi / Sohasi</th>
+                  <th>Tahlillar soni</th>
+                  <th>Holati</th>
+                  <th>Sana</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Dr. Jamshid Axmedov</strong></td>
+                  <td>Bosh Radiolog</td>
+                  <td>184 ta tahlil</td>
+                  <td><span class="badge badge-success">Faol</span></td>
+                  <td class="datetime-cell">12.01.2026 <span>08:30</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Dr. Malika Toirova</strong></td>
+                  <td>Rentgenolog</td>
+                  <td>142 ta tahlil</td>
+                  <td><span class="badge badge-success">Faol</span></td>
+                  <td class="datetime-cell">15.01.2026 <span>10:15</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="analyses-tab" class="tab-content">
+        <div class="card-table">
+          <div class="card-table-header">
+            <h3>Barcha tahlillar va AI loglari</h3>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Shifokor</th>
+                  <th>Rasm turi</th>
+                  <th>AI Natijasi</th>
+                  <th>Ishonch %</th>
+                  <th>Sana / Vaqt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-family: var(--mono); font-size: 0.8rem;">#SN-9821</td>
+                  <td><strong>Dr. Jamshid Axmedov</strong></td>
+                  <td><span class="badge badge-success">X-Ray</span></td>
+                  <td>Pnevmoniya</td>
+                  <td><strong>94.2%</strong></td>
+                  <td class="datetime-cell">Bugun, <span>18:42</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings-tab" class="tab-content">
+        <div class="stat-card" style="max-width: 500px;">
+          <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1.25rem; letter-spacing: -.01em;">Muassasa profili</h3>
+          <form onsubmit="event.preventDefault(); alert('Sozlamalar saqlandi!');">
+            <div class="form-group">
+              <label>Shifoxona nomi</label>
+              <input type="text" class="form-control" value="Akfa Medline Klinikasi">
+            </div>
+            <div class="form-group">
+              <label>Mas'ul shaxs (Admin)</label>
+              <input type="text" class="form-control" value="Diyorbek Kurbanov">
+            </div>
+            <button class="btn-save" type="submit">Saqlash</button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebarMenu');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
+
+    document.querySelectorAll('.nav-link:not(.logout-link)').forEach(link => {
+      link.addEventListener('click', function() {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+
+        const tabId = this.getAttribute('data-tab');
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+
+        const tabNames = {
+          'dashboard': 'Dashboard — Umumiy tahlil',
+          'approvals': 'Tasdiqlashlar — Arizalar',
+          'doctors': 'Shifokorlar ro\'yxati',
+          'analyses': 'Tahlillar tarixi va AI loglari',
+          'settings': 'Tizim sozlamalari'
+        };
+        document.getElementById('page-title-text').innerText = tabNames[tabId];
+
+        if(window.innerWidth <= 768) {
+          toggleSidebar();
+        }
+      });
+    });
+
+    let pendingCount = 2;
+    function handleRequest(rowId, status) {
+      alert(`Shifokor so'rovi ${status}!`);
+      document.getElementById(rowId).remove();
+      pendingCount--;
+      
+      const badge = document.getElementById('approval-badge');
+      if(pendingCount > 0) {
+        if(badge) badge.innerText = pendingCount;
+      } else {
+        if(badge) badge.remove();
+      }
+    }
+  </script>
+</body>
+</html>

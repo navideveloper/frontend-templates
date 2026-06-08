@@ -3,38 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SinoMed — Rentgen va KT tahlili</title>
-  <meta name="description" content="Sun'iy intellekt yordamida rentgen va KT tasvirlarini soniyalar ichida tahlil qiling." />
+  <title>Mock — Tilini bilish darajangizni aniqlang</title>
+  <meta name="description" content="IELTS, CEFR va At-tanal al-arobi standartlari bo'yicha tilini bilish darajangizni aniqlang." />
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-  <!-- <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;family=Tajawal:wght@400;500;700&amp;display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:           hsl(210, 20%, 98%);
-      --fg:           hsl(215, 35%, 12%);
-      --card:         hsl(0, 0%, 100%);
-      --primary:      hsl(162, 72%, 36%);
-      --primary-light:hsl(162, 60%, 92%);
-      --primary-fg:   hsl(0, 0%, 100%);
-      --accent:       hsl(200, 90%, 46%);
-      --accent-light: hsl(200, 80%, 93%);
-      --warning:      hsl(38, 92%, 50%);
-      --danger:       hsl(4, 74%, 55%);
-      --muted:        hsl(215, 20%, 94%);
-      --muted-fg:     hsl(215, 15%, 48%);
-      --border:       hsl(215, 20%, 88%);
-      --radius:       0.875rem;
-      --font:         'DM Sans', sans-serif;
-      --mono:         'JetBrains Mono', sans-serif;
-      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.08);
-      --shadow-md:    0 8px 28px -6px hsla(215,35%,12%,0.12);
-      --shadow-glow:  0 0 40px hsla(162,72%,36%,0.2);
-      --price-accent: hsl(40, 90%, 55%);
+      --bg:            hsl(210, 20%, 98%);
+      --fg:            hsl(215, 35%, 12%);
+      --card:          hsl(0, 0%, 100%);
+      --primary:       hsl(351, 71%, 60%);
+      --primary-light: hsl(351, 60%, 93%);
+      --primary-fg:    hsl(0, 0%, 100%);
+      --accent:        hsl(200, 90%, 46%);
+      --accent-light:  hsl(200, 80%, 93%);
+      --secondary:     hsl(38, 92%, 50%);
+      --muted:         hsl(215, 20%, 94%);
+      --muted-fg:      hsl(215, 15%, 48%);
+      --border:        hsl(215, 20%, 88%);
+      --radius:        0.875rem;
+      --font:          'DM Sans', sans-serif;
+      --mono:          'JetBrains Mono', monospace;
+      --shadow-sm:     0 2px 8px -2px hsla(215,35%,12%,0.08);
+      --shadow-md:     0 8px 28px -6px hsla(215,35%,12%,0.12);
+      --shadow-glow:   0 0 40px hsla(351,71%,60%,0.2);
+      --price-accent:  hsl(40, 90%, 55%);
     }
+
+    .dark {
+      --bg:            hsl(220, 25%, 8%);
+      --fg:            hsl(45, 20%, 95%);
+      --card:          hsl(220, 25%, 12%);
+      --primary-light: hsl(351, 45%, 22%);
+      --muted:         hsl(220, 20%, 18%);
+      --muted-fg:      hsl(45, 15%, 60%);
+      --border:        hsl(220, 20%, 20%);
+      --accent-light:  hsl(200, 50%, 18%);
+      --shadow-sm:     0 2px 8px -2px rgba(0,0,0,0.3);
+      --shadow-md:     0 8px 28px -6px rgba(0,0,0,0.4);
+      --shadow-glow:   0 0 40px hsla(351,65%,55%,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--font);
@@ -42,6 +56,7 @@
       color: var(--fg);
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
     }
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
@@ -50,12 +65,16 @@
     .container { width: 100%; max-width: 1160px; margin-inline: auto; padding-inline: 1.25rem; }
     @media (min-width: 640px) { .container { padding-inline: 2rem; } }
 
+    /* ── Navbar ── */
     .navbar {
       position: sticky; top: 0; z-index: 100;
       background: hsla(210,20%,98%,0.92);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      transition: background-color 0.3s;
     }
+    .dark .navbar { background: hsla(220,25%,8%,0.92); }
+
     .navbar-inner {
       display: flex; align-items: center; justify-content: space-between;
       height: 4rem; gap: 1rem;
@@ -64,18 +83,19 @@
     .logo-mark {
       width: 2.4rem; height: 2.4rem;
       border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), hsl(351,71%,72%));
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .logo-mark svg { width: 1.2rem; height: 1.2rem; color: #fff; }
+    .logo-mark span { font-size: 1.1rem; font-weight: 800; color: #fff; }
     .logo-name { font-size: 1.125rem; font-weight: 700; letter-spacing: -.02em; }
-    .logo-name span { color: var(--primary); }
     .logo-version {
       font-size: 0.65rem; font-family: var(--mono);
       background: var(--primary-light); color: var(--primary);
       padding: 2px 7px; border-radius: 20px; font-weight: 500;
     }
     .nav-right { display: flex; align-items: center; gap: 0.5rem; }
+
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
       font-size: 0.875rem; font-weight: 500; border-radius: calc(var(--radius) - 2px);
@@ -91,25 +111,19 @@
       background: var(--card); color: var(--fg);
     }
     .btn-outline:hover { background: var(--muted); }
+    .btn-icon { width: 2.25rem; height: 2.25rem; padding: 0; border-radius: calc(var(--radius) - 2px); }
+    .btn-icon:hover { background: var(--muted); }
+
     .nav-label { display: none; }
     @media (min-width: 540px) { .nav-label { display: inline; } }
-    
-    /* Special price link style */
-    .price-link {
-      color: var(--price-accent);
-    }
-    .price-link .btn-ghost {
-      color: var(--price-accent);
-    }
-    .price-link .btn-ghost:hover {
-      background: rgba(255, 185, 55, 0.12);
-      color: hsl(40, 95%, 48%);
-    }
+
+    .price-link .btn-ghost { color: var(--price-accent); }
+    .price-link .btn-ghost:hover { background: rgba(255,185,55,.12); color: hsl(40,95%,48%); }
 
     /* ── Hero ── */
     .hero {
       min-height: calc(100vh - 4rem);
-      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(162,72%,36%,0.12) 0%, transparent 70%),
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(351,71%,60%,0.1) 0%, transparent 70%),
                   var(--bg);
       display: flex; flex-direction: column;
     }
@@ -121,10 +135,11 @@
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 0.9rem; font-family: var(--mono); font-weight: 600;
       background: var(--primary-light); color: var(--primary);
-      border: 1px solid hsl(162,60%,78%);
+      border: 1px solid hsl(351,55%,78%);
       padding: 5px 12px; border-radius: 20px;
       margin-bottom: 1.5rem; animation: fadeDown .5s ease-out forwards;
     }
+    .dark .hero-badge { border-color: hsl(351,45%,35%); }
     .badge-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
 
@@ -137,7 +152,7 @@
     }
     .h1-line2 { display: block; }
     .highlight {
-      background: linear-gradient(120deg, var(--primary) 20%, var(--accent));
+      background: linear-gradient(120deg, var(--primary) 20%, hsl(351,71%,72%));
       -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -147,13 +162,14 @@
     }
     .hero-heading { animation: fadeDown .5s .1s ease-out both; }
 
-    /* Scan cards */
+    /* Scan / CTA grid */
     .scan-grid {
       display: grid; gap: 1.25rem;
-      max-width: 52rem; margin-inline: auto; margin-bottom: 5rem;
+      max-width: 56rem; margin-inline: auto; margin-bottom: 5rem;
     }
     @media (min-width: 640px) { .scan-grid { grid-template-columns: 1fr 1fr; } }
     @media (min-width: 900px) { .scan-grid { grid-template-columns: repeat(4,1fr); gap: 1rem; } }
+
     .scan-card {
       position: relative; overflow: hidden;
       display: flex; flex-direction: column; align-items: center;
@@ -177,7 +193,7 @@
     }
     .scan-card::before {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, hsla(162,72%,36%,0.04) 0%, transparent 60%);
+      background: linear-gradient(135deg, hsla(351,71%,60%,0.04) 0%, transparent 60%);
       opacity: 0; transition: opacity .2s;
     }
     .scan-card:hover::before { opacity: 1; }
@@ -189,10 +205,13 @@
       flex-shrink: 0;
     }
     .scan-icon svg { width: 2rem; height: 2rem; }
-    .icon-green { background: var(--primary-light); color: var(--primary); }
-    .icon-blue  { background: var(--accent-light);  color: var(--accent); }
-    .icon-amber { background: hsl(38,92%,92%);       color: hsl(38,85%,38%); }
-    .icon-red   { background: hsl(4,74%,93%);        color: hsl(4,74%,45%); }
+    .icon-red    { background: var(--primary-light); color: var(--primary); }
+    .icon-blue   { background: var(--accent-light);  color: var(--accent); }
+    .icon-amber  { background: hsl(38,92%,92%);      color: hsl(38,85%,38%); }
+    .icon-purple { background: hsl(260,60%,92%);     color: hsl(260,65%,50%); }
+
+    .dark .icon-amber  { background: hsl(38,70%,20%);  color: hsl(38,92%,65%); }
+    .dark .icon-purple { background: hsl(260,45%,20%); color: hsl(260,65%,72%); }
 
     .scan-card h3 { font-size: 1rem; font-weight: 700; text-align: center; }
     .scan-card p  { font-size: 0.875rem; color: var(--muted-fg); text-align: center; line-height: 1.5; }
@@ -203,7 +222,6 @@
       padding: 2px 8px; border-radius: 20px; margin-top: .25rem;
     }
 
-    /* Arrow */
     .card-arrow {
       position: absolute; top: 12px; right: 12px;
       width: 22px; height: 22px; border-radius: 6px;
@@ -212,8 +230,9 @@
     }
     .card-arrow svg { width: 12px; height: 12px; color: var(--muted-fg); }
     .scan-card:hover .card-arrow { opacity: 1; }
+    @media (max-width: 768px) { .card-arrow { opacity: 1; } }
 
-    /* ── Stats strip ── */
+    /* ── Stats ── */
     .stats-strip {
       display: flex; flex-wrap: wrap; justify-content: center;
       gap: 0 3rem; margin-bottom: 5rem;
@@ -233,9 +252,7 @@
     }
     @media (min-width: 640px) { .features-row { grid-template-columns: repeat(3,1fr); } }
 
-    .feat {
-      opacity: 0; animation: slideUp .5s ease-out forwards;
-    }
+    .feat { opacity: 0; animation: slideUp .5s ease-out forwards; }
     .feat:nth-child(1){animation-delay:.55s}
     .feat:nth-child(2){animation-delay:.65s}
     .feat:nth-child(3){animation-delay:.75s}
@@ -246,13 +263,14 @@
       display: flex; align-items: center; justify-content: center;
     }
     .feat-icon svg { width: 1.5rem; height: 1.5rem; }
-    .fi-teal   { background: var(--primary-light); color: var(--primary); }
+    .fi-red    { background: var(--primary-light); color: var(--primary); }
     .fi-blue   { background: var(--accent-light);  color: var(--accent); }
     .fi-yellow { background: hsl(38,92%,90%);       color: hsl(38,80%,38%); }
+    .dark .fi-yellow { background: hsl(38,70%,20%); color: hsl(38,92%,65%); }
+
     .feat h3 { font-size: .95rem; font-weight: 700; margin-bottom: .35rem; }
     .feat p  { font-size: .82rem; color: var(--muted-fg); line-height: 1.6; }
 
-    /* ── Section label ── */
     .section-label {
       text-align: center; margin-bottom: 2rem;
       font-size: 1rem; font-family: var(--mono); font-weight: 600;
@@ -271,10 +289,7 @@
     }
     .footer-brand { display: flex; align-items: center; gap: .5rem; }
     .footer-brand svg { width: 1rem; height: 1rem; color: var(--primary); }
-    .footer-brand span { font-size: .875rem; color: var(--muted-fg); justify-content: center; }
-    .footer-links { display: flex; gap: 1.25rem; }
-    .footer-links a { font-size: .82rem; color: var(--muted-fg); transition: color .15s; }
-    .footer-links a:hover { color: var(--primary); }
+    .footer-brand span { font-size: .875rem; color: var(--muted-fg); }
 
     /* ── Animations ── */
     @keyframes fadeDown {
@@ -291,54 +306,48 @@
         transition-duration: 0.01ms !important;
       }
     }
-    @media (max-width: 768px) {
-    .card-arrow {
-        opacity: 1;
-    }
-    }
   </style>
 </head>
 <body>
 
-<!-- ═══ NAVBAR ═══ (No Boshlash button, no dark mode switcher) -->
+<!-- ═══ NAVBAR ═══ -->
 <nav class="navbar" aria-label="Asosiy navigatsiya">
   <div class="container navbar-inner">
-    <a class="logo" href="#" aria-label="SinoMed bosh sahifasi">
+    <a class="logo" href="/" aria-label="Mock bosh sahifasi">
       <div class="logo-mark">
-        <img src="./logo.svg" alt="">
+        <span>M</span>
       </div>
-        <span class="logo-name">SinoMed
-        <!-- <span>xis</span> -->
-        </span>
-        <span class="logo-version">v0.1</span>
+      <span class="logo-name">Mock</span>
+      <span class="logo-version">v1.0</span>
     </a>
 
     <div class="nav-right">
-      <!-- Tahlil turlari link -->
-      <a href="#scan"><button class="btn btn-ghost" type="button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-        </svg>
-        <span class="nav-label">Tahlil turlari</span>
-      </button></a>
-
-      <!-- Narxlar with custom icon & color (hsl(40, 90%, 55%)) -->
-      <a href="./pricing.html" class="price-link">
-        <button class="btn btn-ghost" type="button" style="color: hsl(40, 90%, 55%);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path>
-            <path d="M5 21h14"></path>
+      <!-- Narxlar -->
+      <a href="./pages/pricing.html" class="price-link">
+        <button class="btn btn-ghost" type="button" style="color: var(--price-accent);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/>
+            <path d="M5 21h14"/>
           </svg>
           <span class="nav-label">Narxlar</span>
         </button>
       </a>
 
-      <!-- Kirish button (only) -->
+      <!-- Dark mode toggle -->
+      <button class="btn btn-icon" id="theme-toggle" type="button" aria-label="Tungi rejimga o'tish">
+        <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
+      <!-- Kirish -->
       <a href="./auth.html">
         <button class="btn btn-outline" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
           </svg>
           Kirish
@@ -348,7 +357,7 @@
   </div>
 </nav>
 
-<!-- ═══ MAIN ═══ (Demo-upload section removed) -->
+<!-- ═══ MAIN ═══ -->
 <main>
   <section class="hero">
     <div class="container hero-inner">
@@ -357,113 +366,117 @@
       <div style="text-align:center">
         <div class="hero-badge">
           <div class="badge-dot"></div>
-          AI tahlil tizimi
+          AI baholash tizimi
         </div>
       </div>
 
       <!-- Heading -->
       <div class="hero-heading">
         <h1>
-          Rentgen va KT tasvirlarini
-          <span class="h1-line2"><span class="highlight">AI bilan tahlil qiling</span></span>
+          Tilini bilish darajangizni
+          <span class="h1-line2"><span class="highlight">aniqlang</span></span>
         </h1>
-        <p>Shifokorlar va radiologlar uchun sun'iy intellekt asosidagi tezkor yordamchi — patologiyalarni soniyalar ichida aniqlab beradi</p>
+        <p>IELTS, CEFR va At-tanal al-arobi standartlari bo'yicha o'z darajangizni sinab ko'ring</p>
       </div>
 
-      <!-- Scan type cards -->
+      <!-- CTA Cards -->
       <div id="scan" class="scan-grid">
 
-        <!-- X-ray -->
-        <a class="scan-card" href="./xray.html">
-          <div class="card-arrow">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-          </div>
-          <div class="scan-icon icon-green">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>
-              <path d="M7 12h10M12 7v10"/>
-            </svg>
-          </div>
-          <h3>Rentgen (X-ray)</h3>
-          <p>O'pka, ko'krak qafasi va boshqa a'zolar uchun avtomatik tahlil</p>
-          <span class="scan-tag">pnevmoniya · effuziya</span>
-        </a>
-
-        <!-- CT scan -->
-        <a class="scan-card" href="./ct.html">
-          <div class="card-arrow">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-          </div>
-          <div class="scan-icon icon-blue">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9"/>
-              <circle cx="12" cy="12" r="4"/>
-              <path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>
-            </svg>
-          </div>
-          <h3>KT (CT Scan)</h3>
-          <p>Ko'p qatlamli KT tasvirlarini 3D rekonstruksiya bilan tahlil qilish</p>
-          <span class="scan-tag">o'simta · infarkt</span>
-        </a>
-
-        <!-- Bone -->
-        <a class="scan-card" href="./bone.html">
-          <div class="card-arrow">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-          </div>
-          <div class="scan-icon icon-amber">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18.2 2c-1.3 0-2.4.5-3.2 1.3L3.3 15c-.8.8-1.3 1.9-1.3 3.2C2 20.8 3.2 22 5.8 22c1.3 0 2.4-.5 3.2-1.3L20.7 9c.8-.8 1.3-1.9 1.3-3.2C22 3.2 20.8 2 18.2 2z"/>
-              <path d="m10 6 4 4M6 10l4 4"/>
-            </svg>
-          </div>
-          <h3>Suyak sinishi</h3>
-          <p>Suyak va bo'g'inlardagi sinishlar, yoriqlar va anomaliyalarni aniqlash</p>
-          <span class="scan-tag">sinish · osteoporoz</span>
-        </a>
-
-        <!-- MRI -->
-        <a class="scan-card" href="./mri.html">
+        <!-- IELTS -->
+        <a class="scan-card" href="./pages/ielts.html">
           <div class="card-arrow">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
           </div>
           <div class="scan-icon icon-red">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
-              <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
             </svg>
           </div>
-          <h3>MRI (MRT)</h3>
-          <p>Miya, orqa miya va yumshoq to'qimalar uchun magnit-rezonans tahlili</p>
-          <span class="scan-tag">insult · o'simta</span>
+          <h3>IELTS</h3>
+          <p>Xalqaro ingliz tili malaka testi bo'yicha baholash</p>
+          <span class="scan-tag">reading · writing · speaking</span>
         </a>
+
+        <!-- CEFR -->
+        <a class="scan-card" href="./pages/cefr.html">
+          <div class="card-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="scan-icon icon-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+              <path d="M22 10v6"/>
+              <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+            </svg>
+          </div>
+          <h3>CEFR</h3>
+          <p>Davlat standarti bo'yicha til darajasini baholash</p>
+          <span class="scan-tag">A1 · B2 · C1</span>
+        </a>
+
+        <!-- At-tanal al-arobi -->
+        <a class="scan-card" href="./pages/attanal.html">
+          <div class="card-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="scan-icon icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+          </div>
+          <h3>At-tanal al-arobi</h3>
+          <p>Xalqaro arab tili standart bo'yicha baholash</p>
+          <span class="scan-tag">arab tili · standart</span>
+        </a>
+
+        <!-- SAT -->
+        <a class="scan-card" href="./pages/sat.html">
+          <div class="card-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+          <div class="scan-icon icon-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"/>
+              <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+            </svg>
+          </div>
+          <h3>SAT Matematika</h3>
+          <p>Xalqaro matematika standartlari bo'yicha baholash</p>
+          <span class="scan-tag">algebra · geometriya</span>
+        </a>
+
       </div>
 
       <!-- Stats -->
       <div class="stats-strip">
         <div class="stat-item">
-          <div class="stat-num">96.4%</div>
-          <div class="stat-label">Aniqlik darajasi</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">&lt; 5s</div>
-          <div class="stat-label">Tahlil vaqti</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">1,200+</div>
-          <div class="stat-label">Tahlil qilingan</div>
-        </div>
-        <div class="stat-item">
           <div class="stat-num">4</div>
-          <div class="stat-label">Tahlil yo'nalishi</div>
+          <div class="stat-label">Test yo'nalishi</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">20–30</div>
+          <div class="stat-label">Daqiqa / test</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Xalqaro standart</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">Bepul</div>
+          <div class="stat-label">Boshlash uchun</div>
         </div>
       </div>
 
       <!-- Features -->
-      <p class="section-label">Nima uchun SinoMed?</p>
+      <p class="section-label">Nima uchun Mock?</p>
       <div class="features-row">
         <div class="feat">
-          <div class="feat-icon fi-teal">
+          <div class="feat-icon fi-red">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
             </svg>
@@ -477,21 +490,23 @@
               <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
             </svg>
           </div>
-          <h3>Tez tahlil</h3>
-          <p>O'rtacha 4.2 soniyada natija — shifokorning qaror qabul qilishini tezlashtiradi</p>
+          <h3>Tez sinov</h3>
+          <p>Har bir test 20–30 daqiqa davom etadi — shifodat qilmaydi, vaqtni tejaydi</p>
         </div>
         <div class="feat">
           <div class="feat-icon fi-blue">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
             </svg>
           </div>
-          <h3>Ishonchli tizim</h3>
-          <p>Transfer learning va ochiq tibbiy datasetlar asosida o'qitilgan model</p>
+          <h3>Professional</h3>
+          <p>Xalqaro standartlarga mos testlar asosida tayyorlangan savollar</p>
         </div>
       </div>
 
-      <!-- No demo-band / Sinab ko'ring section: completely removed -->
     </div>
   </section>
 </main>
@@ -503,10 +518,45 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9c0-1.042-.133-2.052-.382-3.016z"/>
       </svg>
-      <span>© SinoMed 2026 · Andijon viloyati AI Hackathon</span>
+      <span>© Salokhiddinov 2026 · Barcha huquqlar himoyalangan</span>
     </div>
   </div>
 </footer>
 
+<script>
+  (function() {
+    const html = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('icon-sun');
+    const moonIcon = document.getElementById('icon-moon');
+
+    const setTheme = (theme) => {
+      if (theme === 'dark') {
+        html.classList.add('dark');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+        toggle.setAttribute('aria-label', "Kunduzgi rejimga o'tish");
+      } else {
+        html.classList.remove('dark');
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+        toggle.setAttribute('aria-label', "Tungi rejimga o'tish");
+      }
+    };
+
+    const stored = localStorage.getItem('theme');
+    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+
+    toggle.addEventListener('click', () => {
+      const isDark = html.classList.contains('dark');
+      setTheme(isDark ? 'light' : 'dark');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    });
+  })();
+</script>
 </body>
 </html>

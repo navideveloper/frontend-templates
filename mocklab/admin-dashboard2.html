@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock — Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Light theme */
+      --bg:            hsl(210, 20%, 97%);
+      --bg2:           hsl(0, 0%, 100%);
+      --bg3:           hsl(210, 18%, 94%);
+      --fg:            hsl(220, 30%, 12%);
+      --fg2:           hsl(220, 15%, 40%);
+      --card:          hsl(0, 0%, 100%);
+      --border:        hsl(215, 20%, 88%);
+      --primary:       hsl(351, 71%, 60%);
+      --primary-light: hsl(351, 70%, 93%);
+      --primary-fg:    #fff;
+      --accent:        hsl(200, 85%, 50%);
+      --accent-light:  hsl(200, 80%, 92%);
+      --amber:         hsl(38, 85%, 45%);
+      --amber-light:   hsl(38, 92%, 92%);
+      --green:         hsl(152, 55%, 38%);
+      --green-light:   hsl(152, 60%, 90%);
+      --purple:        hsl(260, 60%, 58%);
+      --purple-light:  hsl(260, 65%, 93%);
+      --muted:         hsl(215, 20%, 92%);
+      --muted-fg:      hsl(215, 15%, 50%);
+      --radius:        0.75rem;
+      --font:          'DM Sans', sans-serif;
+      --mono:          'JetBrains Mono', monospace;
+      --sidebar-w:     15rem;
+      --topbar-h:      3.75rem;
+      --shadow:        0 4px 20px -4px rgba(0,0,0,0.08);
+      --shadow-glow:   0 0 30px hsla(351,71%,60%,0.2);
+    }
+
+    .dark {
+      --bg:            hsl(220, 22%, 9%);
+      --bg2:           hsl(220, 20%, 12%);
+      --bg3:           hsl(220, 18%, 15%);
+      --fg:            hsl(220, 15%, 92%);
+      --fg2:           hsl(220, 12%, 60%);
+      --card:          hsl(220, 20%, 13%);
+      --border:        hsl(220, 18%, 20%);
+      --primary-light: hsl(351, 45%, 22%);
+      --accent-light:  hsl(200, 50%, 18%);
+      --amber:         hsl(38, 92%, 55%);
+      --amber-light:   hsl(38, 70%, 18%);
+      --green:         hsl(152, 60%, 45%);
+      --green-light:   hsl(152, 45%, 15%);
+      --purple:        hsl(260, 65%, 65%);
+      --purple-light:  hsl(260, 45%, 20%);
+      --muted:         hsl(220, 18%, 20%);
+      --muted-fg:      hsl(220, 12%, 55%);
+      --shadow:        0 4px 20px -4px rgba(0,0,0,0.4);
+    }
+
+    html { transition: background-color .25s, color .25s; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      font-size: 15px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    img, svg { display: block; max-width: 100%; }
+    input, select, textarea { font-family: inherit; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      height: 100vh;
+      position: fixed; left: 0; top: 0;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      z-index: 200;
+      transition: transform 0.3s;
+    }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 0.625rem;
+      padding: 0 1.25rem;
+      height: var(--topbar-h);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .logo-mark {
+      width: 2rem; height: 2rem; border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), hsl(351,71%,72%));
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-mark span { font-size: .9rem; font-weight: 800; color: #fff; }
+    .logo-name { font-size: 1rem; font-weight: 700; letter-spacing: -.02em; }
+    .logo-badge {
+      font-size: .6rem; font-family: var(--mono);
+      background: var(--primary-light); color: var(--primary);
+      padding: 2px 6px; border-radius: 12px; font-weight: 600;
+      margin-left: auto;
+    }
+
+    .sidebar-nav {
+      flex: 1; overflow-y: auto; padding: 0.75rem 0.625rem;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .nav-section-label {
+      font-size: .65rem; font-family: var(--mono); font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted-fg); padding: .75rem .625rem .35rem;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 0.625rem;
+      padding: .6rem .75rem;
+      border-radius: calc(var(--radius) - 2px);
+      font-size: .925rem; font-weight: 500;
+      color: var(--fg2);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      position: relative;
+    }
+    .nav-item svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+    .nav-item:hover { background: var(--bg3); color: var(--fg); }
+    .nav-item.active { background: var(--primary-light); color: var(--primary); }
+    .nav-item.active svg { color: var(--primary); }
+
+    .nav-badge {
+      margin-left: auto;
+      font-size: .65rem; font-family: var(--mono); font-weight: 600;
+      background: var(--muted); color: var(--muted-fg);
+      padding: 1px 6px; border-radius: 10px;
+    }
+    .nav-item.active .nav-badge { background: var(--primary-light); color: var(--primary); }
+
+    .sidebar-footer {
+      padding: .875rem .625rem;
+      border-top: 1px solid var(--border);
+    }
+    .admin-profile {
+      display: flex; align-items: center; gap: .625rem;
+      padding: .5rem .625rem; border-radius: var(--radius);
+      cursor: pointer; transition: background .15s;
+    }
+    .admin-profile:hover { background: var(--bg3); }
+    .avatar {
+      width: 2rem; height: 2rem; border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), hsl(351,71%,72%));
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .admin-info { flex: 1; min-width: 0; }
+    .admin-name { font-size: .8rem; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .admin-role { font-size: .7rem; color: var(--muted-fg); font-family: var(--mono); }
+
+    /* ── Main layout ── */
+    .main-wrap {
+      margin-left: var(--sidebar-w);
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; gap: 1rem;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: .75rem; }
+    .page-title { font-size: 1rem; font-weight: 700; }
+    .page-sub { font-size: .8rem; color: var(--muted-fg); font-family: var(--mono); }
+
+    .topbar-right { display: flex; align-items: center; gap: .5rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+      font-size: .8rem; font-weight: 600; border-radius: calc(var(--radius) - 2px);
+      transition: background .15s, color .15s, transform .1s, box-shadow .15s;
+      white-space: nowrap; cursor: pointer; padding: .45rem .875rem;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn svg { width: .875rem; height: .875rem; }
+
+    .btn-primary {
+      background: var(--primary); color: #fff;
+    }
+    .btn-primary:hover { background: hsl(351,71%,52%); box-shadow: var(--shadow-glow); }
+
+    .btn-ghost { color: var(--muted-fg); }
+    .btn-ghost:hover { background: var(--bg3); color: var(--fg); }
+
+    .btn-outline {
+      border: 1px solid var(--border); background: var(--bg3); color: var(--fg);
+    }
+    .btn-outline:hover { background: var(--muted); }
+
+    .btn-danger { background: hsl(4,70%,25%); color: hsl(4,70%,75%); }
+    .btn-danger:hover { background: hsl(4,70%,30%); }
+
+    .btn-sm { padding: .3rem .6rem; font-size: .75rem; }
+    .btn-icon { width: 2.1rem; height: 2.1rem; padding: 0; }
+
+    /* ── Content ── */
+    .content {
+      flex: 1; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
+      overflow-y: auto;
+    }
+
+    /* ── Panels / views ── */
+    .panel { display: none; flex-direction: column; gap: 1.5rem; animation: fadeUp .3s ease-out; }
+    .panel.active { display: flex; }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+
+    /* ── Stat cards ── */
+    .stats-grid {
+      display: grid; gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.125rem 1.25rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .stat-card:hover { border-color: var(--primary); box-shadow: var(--shadow-glow); }
+    .stat-card-top { display: flex; align-items: center; justify-content: space-between; }
+    .stat-label { font-size: .75rem; color: var(--muted-fg); font-family: var(--mono); font-weight: 500; }
+    .stat-icon {
+      width: 2rem; height: 2rem; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stat-icon svg { width: 1rem; height: 1rem; }
+    .si-red    { background: var(--primary-light); color: var(--primary); }
+    .si-blue   { background: var(--accent-light);  color: var(--accent); }
+    .si-amber  { background: var(--amber-light);   color: var(--amber); }
+    .si-green  { background: var(--green-light);   color: var(--green); }
+    .si-purple { background: var(--purple-light);  color: var(--purple); }
+
+    .stat-val { font-size: 1.6rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+    .stat-change { font-size: .72rem; font-family: var(--mono); }
+    .stat-change.up   { color: var(--green); }
+    .stat-change.down { color: var(--primary); }
+
+    /* ── Section header ── */
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .section-title { font-size: .95rem; font-weight: 700; }
+    .section-sub { font-size: .78rem; color: var(--muted-fg); margin-top: 2px; }
+
+    /* ── Table ── */
+    .table-wrap {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .table-toolbar {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .875rem 1.125rem; border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .search-box {
+      display: flex; align-items: center; gap: .5rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px); padding: .4rem .75rem;
+      flex: 1; min-width: 10rem; max-width: 18rem;
+    }
+    .search-box svg { width: .875rem; height: .875rem; color: var(--muted-fg); flex-shrink: 0; }
+    .search-box input {
+      background: none; border: none; outline: none;
+      font-size: .8rem; color: var(--fg); width: 100%;
+    }
+    .search-box input::placeholder { color: var(--muted-fg); }
+
+    .filter-select {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px); padding: .4rem .75rem;
+      font-size: .8rem; color: var(--fg); cursor: pointer; outline: none;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { border-bottom: 1px solid var(--border); }
+    thead th {
+      text-align: left; padding: .625rem 1.125rem;
+      font-size: .72rem; font-family: var(--mono); font-weight: 600;
+      color: var(--muted-fg); letter-spacing: .06em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td {
+      padding: .75rem 1.125rem;
+      font-size: .82rem; vertical-align: middle;
+    }
+
+    .user-cell { display: flex; align-items: center; gap: .625rem; }
+    .user-avatar {
+      width: 1.875rem; height: 1.875rem; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .ua-1 { background: linear-gradient(135deg, hsl(351,71%,55%), hsl(351,71%,72%)); }
+    .ua-2 { background: linear-gradient(135deg, hsl(200,85%,45%), hsl(200,85%,62%)); }
+    .ua-3 { background: linear-gradient(135deg, hsl(38,92%,48%), hsl(38,92%,65%)); }
+    .ua-4 { background: linear-gradient(135deg, hsl(260,65%,58%), hsl(260,65%,72%)); }
+    .ua-5 { background: linear-gradient(135deg, hsl(152,60%,40%), hsl(152,60%,58%)); }
+
+    .user-name { font-weight: 600; font-size: .83rem; }
+    .user-email { font-size: .72rem; color: var(--muted-fg); font-family: var(--mono); }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: .7rem; font-family: var(--mono); font-weight: 600;
+      padding: 3px 8px; border-radius: 20px;
+    }
+    .badge-dot-sm { width: 5px; height: 5px; border-radius: 50%; }
+    .badge-green  { background: var(--green-light);  color: var(--green); }
+    .badge-amber  { background: var(--amber-light);  color: var(--amber); }
+    .badge-red    { background: var(--primary-light);color: var(--primary); }
+    .badge-blue   { background: var(--accent-light); color: var(--accent); }
+    .badge-purple { background: var(--purple-light); color: var(--purple); }
+    .badge-muted  { background: var(--muted); color: var(--muted-fg); }
+
+    .table-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .75rem 1.125rem; border-top: 1px solid var(--border);
+      font-size: .75rem; color: var(--muted-fg); font-family: var(--mono);
+      flex-wrap: wrap; gap: .5rem;
+    }
+    .pagination { display: flex; gap: .25rem; }
+    .page-btn {
+      width: 1.875rem; height: 1.875rem;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px; font-size: .75rem; font-family: var(--mono); font-weight: 500;
+      cursor: pointer; transition: background .15s, color .15s;
+      color: var(--muted-fg);
+    }
+    .page-btn:hover { background: var(--bg3); color: var(--fg); }
+    .page-btn.active { background: var(--primary-light); color: var(--primary); }
+
+    /* ── Test cards grid ── */
+    .tests-grid {
+      display: grid; gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    }
+    .test-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem;
+      display: flex; flex-direction: column; gap: .875rem;
+      transition: border-color .2s, box-shadow .2s;
+      animation: fadeUp .3s ease-out;
+    }
+    .test-card:hover { border-color: var(--primary); box-shadow: var(--shadow-glow); }
+    .test-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; }
+    .test-type-icon {
+      width: 2.5rem; height: 2.5rem; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .test-type-icon svg { width: 1.2rem; height: 1.2rem; }
+
+    .test-card-actions { display: flex; gap: .25rem; }
+    .test-title { font-size: .9rem; font-weight: 700; line-height: 1.35; }
+    .test-meta { display: flex; flex-wrap: wrap; gap: .375rem; }
+    .test-stat {
+      display: flex; align-items: center; gap: 4px;
+      font-size: .72rem; font-family: var(--mono); color: var(--muted-fg);
+    }
+    .test-stat svg { width: .75rem; height: .75rem; }
+    .test-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: .625rem; border-top: 1px solid var(--border);
+      gap: .5rem;
+    }
+
+    /* ── Create test modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 4px);
+      width: 100%; max-width: 36rem;
+      max-height: 90vh; overflow-y: auto;
+      animation: modalIn .25s ease-out;
+    }
+    @keyframes modalIn { from { opacity:0; transform: scale(.96) translateY(10px); } to { opacity:1; transform: none; } }
+
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .modal-title { font-size: 1rem; font-weight: 700; }
+    .modal-sub { font-size: .78rem; color: var(--muted-fg); margin-top: 2px; }
+
+    .modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.125rem; }
+    .modal-footer {
+      display: flex; align-items: center; justify-content: flex-end; gap: .625rem;
+      padding: 1.125rem 1.5rem; border-top: 1px solid var(--border);
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .875rem; }
+    .form-label { font-size: .78rem; font-weight: 600; color: var(--fg2); font-family: var(--mono); }
+    .form-input, .form-select, .form-textarea {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px); padding: .55rem .875rem;
+      font-size: .85rem; color: var(--fg); outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      width: 100%;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px hsla(351,71%,60%,.15);
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--muted-fg); }
+    .form-textarea { resize: vertical; min-height: 5rem; line-height: 1.5; }
+    .form-select { cursor: pointer; }
+
+    /* ── Schedule modal ── */
+    .schedule-list { display: flex; flex-direction: column; gap: .625rem; }
+    .schedule-item {
+      display: flex; align-items: center; gap: .875rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: .875rem 1rem;
+      transition: border-color .2s;
+    }
+    .schedule-item:hover { border-color: var(--primary); }
+    .schedule-time {
+      font-family: var(--mono); font-size: .78rem; font-weight: 600;
+      color: var(--amber); min-width: 6.5rem;
+    }
+    .schedule-info { flex: 1; }
+    .schedule-name { font-size: .85rem; font-weight: 600; }
+    .schedule-meta { font-size: .72rem; color: var(--muted-fg); font-family: var(--mono); margin-top: 2px; }
+
+    /* ── Questions section inside test ── */
+    .question-list { display: flex; flex-direction: column; gap: .5rem; }
+    .q-item {
+      display: flex; align-items: center; gap: .75rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px); padding: .75rem 1rem;
+    }
+    .q-num {
+      width: 1.5rem; height: 1.5rem; border-radius: 6px;
+      background: var(--muted); color: var(--muted-fg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-family: var(--mono); font-weight: 700; flex-shrink: 0;
+    }
+    .q-text { flex: 1; font-size: .82rem; line-height: 1.4; }
+    .q-type { font-size: .68rem; font-family: var(--mono); color: var(--muted-fg); flex-shrink: 0; }
+
+    /* ── Activity feed ── */
+    .activity-list { display: flex; flex-direction: column; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: .875rem;
+      padding: .875rem 0; border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 2rem; height: 2rem; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: .1rem;
+    }
+    .activity-dot svg { width: .875rem; height: .875rem; }
+    .activity-content { flex: 1; }
+    .activity-text { font-size: .82rem; line-height: 1.45; }
+    .activity-text strong { font-weight: 600; color: var(--fg); }
+    .activity-time { font-size: .7rem; color: var(--muted-fg); font-family: var(--mono); margin-top: 3px; }
+
+    /* ── Mini chart bars ── */
+    .mini-chart {
+      display: flex; align-items: flex-end; gap: 3px; height: 2.5rem;
+    }
+    .bar {
+      flex: 1; border-radius: 3px 3px 0 0;
+      background: var(--primary-light);
+      transition: background .2s;
+      min-width: 0;
+    }
+    .bar:hover { background: var(--primary); }
+    .bar.today { background: var(--primary); }
+
+    /* ── Tabs ── */
+    .tabs { display: flex; gap: 2px; background: var(--bg3); border-radius: var(--radius); padding: 3px; }
+    .tab {
+      padding: .4rem .875rem; border-radius: calc(var(--radius) - 4px);
+      font-size: .8rem; font-weight: 500; cursor: pointer;
+      color: var(--muted-fg); transition: background .15s, color .15s;
+    }
+    .tab.active { background: var(--bg2); color: var(--fg); box-shadow: var(--shadow); }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── Responsive ── */
+    .hamburger { display: none; }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-wrap { margin-left: 0; }
+      .hamburger { display: flex; }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,.5); z-index: 199;
+      }
+      .sidebar-overlay.open { display: block; }
+      .form-row { grid-template-columns: 1fr; }
+      .tests-grid { grid-template-columns: 1fr; }
+    }
+
+    /* toast */
+    .toast-container { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 9999; display: flex; flex-direction: column; gap: .5rem; }
+    .toast {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: .75rem 1rem;
+      font-size: .82rem; display: flex; align-items: center; gap: .625rem;
+      box-shadow: var(--shadow); min-width: 14rem;
+      animation: toastIn .3s ease-out;
+    }
+    .toast.success { border-color: var(--green); }
+    .toast.success svg { color: var(--green); }
+    @keyframes toastIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: none; } }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark"><span>M</span></div>
+    <span class="logo-name">Mock</span>
+    <span class="logo-badge">Admin</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <span class="nav-section-label">Asosiy</span>
+
+    <div class="nav-item active" onclick="showPanel('overview')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Umumiy ko'rinish
+    </div>
+
+    <div class="nav-item" onclick="showPanel('tests')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Testlar
+      <span class="nav-badge">12</span>
+    </div>
+
+    <div class="nav-item" onclick="showPanel('schedule')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Jadval
+      <span class="nav-badge">3</span>
+    </div>
+
+    <div class="nav-item" onclick="showPanel('users')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Foydalanuvchilar
+      <span class="nav-badge">248</span>
+    </div>
+
+    <div class="nav-item" onclick="showPanel('results')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+      Natijalar
+    </div>
+
+    <span class="nav-section-label">Sozlamalar</span>
+
+    <div class="nav-item" onclick="showToast('Sozlamalar tez orada qo\'shiladi', 'info')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 17.66l-1.41 1.41M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M5.34 6.34l-1.41-1.41M12 20v2M12 2v2"/></svg>
+      Sozlamalar
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="admin-profile">
+      <div class="avatar">A</div>
+      <div class="admin-info">
+        <div class="admin-name">Administrator</div>
+        <div class="admin-role">super·admin</div>
+      </div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted-fg)"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main-wrap">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="btn btn-ghost btn-icon hamburger" onclick="openSidebar()" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <div class="page-title" id="pageTitle">Umumiy ko'rinish</div>
+        <div class="page-sub" id="pageSub">mock.admin · panel</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-icon" onclick="showToast('Bildirishnomalar', 'info')" aria-label="Bildirishnomalar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <button class="btn btn-primary" onclick="openModal('createTest')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Yangi test
+      </button>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    <div class="panel active" id="panel-overview">
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-label">Foydalanuvchilar</span>
+            <div class="stat-icon si-red">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+          </div>
+          <div class="stat-val">248</div>
+          <div class="stat-change up">↑ +12 bu hafta</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-label">Jami testlar</span>
+            <div class="stat-icon si-blue">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            </div>
+          </div>
+          <div class="stat-val">12</div>
+          <div class="stat-change up">↑ +2 bu oy</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-label">Topshirilgan</span>
+            <div class="stat-icon si-green">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+          <div class="stat-val">1,047</div>
+          <div class="stat-change up">↑ +89 bu hafta</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-label">O'rtacha ball</span>
+            <div class="stat-icon si-amber">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <div class="stat-val">6.8</div>
+          <div class="stat-change down">↓ −0.2 bu oy</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-label">Rejalashtirilgan</span>
+            <div class="stat-icon si-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+          <div class="stat-val">3</div>
+          <div class="stat-change up">↑ kelgusi 7 kun</div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="charts-row">
+        <div class="table-wrap" style="padding:1.25rem">
+          <div class="section-head" style="margin-bottom:1rem">
+            <div>
+              <div class="section-title">Haftalik faollik</div>
+              <div class="section-sub">So'nggi 7 kun</div>
+            </div>
+          </div>
+          <div class="mini-chart">
+            <div class="bar" style="height:35%"></div>
+            <div class="bar" style="height:55%"></div>
+            <div class="bar" style="height:48%"></div>
+            <div class="bar" style="height:72%"></div>
+            <div class="bar" style="height:60%"></div>
+            <div class="bar" style="height:88%"></div>
+            <div class="bar today" style="height:100%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:.5rem;font-size:.68rem;font-family:var(--mono);color:var(--muted-fg);">
+            <span>Du</span><span>Se</span><span>Ch</span><span>Pa</span><span>Ju</span><span>Sh</span><span>Ya</span>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="padding:1.25rem">
+          <div class="section-head" style="margin-bottom:1rem">
+            <div>
+              <div class="section-title">Test taqsimoti</div>
+              <div class="section-sub">Tur bo'yicha</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:.625rem">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem"><span>IELTS</span><span style="font-family:var(--mono);color:var(--primary)">42%</span></div>
+              <div style="background:var(--bg3);border-radius:4px;height:6px"><div style="background:var(--primary);height:100%;width:42%;border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem"><span>CEFR</span><span style="font-family:var(--mono);color:var(--accent)">28%</span></div>
+              <div style="background:var(--bg3);border-radius:4px;height:6px"><div style="background:var(--accent);height:100%;width:28%;border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem"><span>SAT</span><span style="font-family:var(--mono);color:var(--amber)">18%</span></div>
+              <div style="background:var(--bg3);border-radius:4px;height:6px"><div style="background:var(--amber);height:100%;width:18%;border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem"><span>At-tanal</span><span style="font-family:var(--mono);color:var(--purple)">12%</span></div>
+              <div style="background:var(--bg3);border-radius:4px;height:6px"><div style="background:var(--purple);height:100%;width:12%;border-radius:4px"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="table-wrap" style="padding:1.25rem">
+        <div class="section-head" style="margin-bottom:1rem">
+          <div><div class="section-title">So'nggi faoliyat</div></div>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-dot si-green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Aziz Karimov</strong> ro'yxatdan o'tdi</div>
+              <div class="activity-time">2 daqiqa avval</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot si-blue"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Malika Yusupova</strong> IELTS testini yakunladi — <strong style="color:var(--green)">7.0 ball</strong></div>
+              <div class="activity-time">15 daqiqa avval</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot si-amber"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="activity-content">
+              <div class="activity-text">CEFR Mock 3 testi <strong>rejalashtirildi</strong> — 15-iyun, 14:00</div>
+              <div class="activity-time">1 soat avval</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot si-red"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>
+            <div class="activity-content">
+              <div class="activity-text">Yangi test yaratildi: <strong>SAT Matematika — Amaliyot 4</strong></div>
+              <div class="activity-time">3 soat avval</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ TESTS ═══ -->
+    <div class="panel" id="panel-tests">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Testlar boshqaruvi</div>
+          <div class="section-sub">Barcha mavjud testlar</div>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+          <div class="tabs">
+            <div class="tab active" onclick="filterTests('all',this)">Barchasi</div>
+            <div class="tab" onclick="filterTests('ielts',this)">IELTS</div>
+            <div class="tab" onclick="filterTests('cefr',this)">CEFR</div>
+            <div class="tab" onclick="filterTests('sat',this)">SAT</div>
+            <div class="tab" onclick="filterTests('attanal',this)">At-tanal</div>
+          </div>
+          <button class="btn btn-primary" onclick="openModal('createTest')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Yaratish
+          </button>
+        </div>
+      </div>
+
+      <div class="tests-grid" id="testsGrid">
+        <!-- cards injected by JS -->
+      </div>
+    </div>
+
+    <!-- ═══ SCHEDULE ═══ -->
+    <div class="panel" id="panel-schedule">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Test jadvali</div>
+          <div class="section-sub">Kelgusi va o'tgan sessiyalar</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('scheduleTest')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Rejalashtirish
+        </button>
+      </div>
+
+      <div class="table-wrap" style="padding:1.25rem">
+        <div class="schedule-list" id="scheduleList">
+          <!-- injected -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ USERS ═══ -->
+    <div class="panel" id="panel-users">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Foydalanuvchilar</div>
+          <div class="section-sub">Ro'yxatdan o'tganlar</div>
+        </div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn btn-outline" onclick="showToast('CSV yuklab olindi', 'success')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Ism yoki email bo'yicha qidirish…" id="userSearch" oninput="filterUsers()">
+          </div>
+          <select class="filter-select" onchange="filterUsers()" id="statusFilter">
+            <option value="all">Barcha holat</option>
+            <option value="active">Faol</option>
+            <option value="new">Yangi</option>
+            <option value="inactive">Nofaol</option>
+          </select>
+          <select class="filter-select" onchange="filterUsers()" id="testFilter">
+            <option value="all">Barcha test</option>
+            <option value="IELTS">IELTS</option>
+            <option value="CEFR">CEFR</option>
+            <option value="SAT">SAT</option>
+            <option value="At-tanal">At-tanal</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Foydalanuvchi</th>
+                <th>Holat</th>
+                <th>Test turi</th>
+                <th>So'nggi faollik</th>
+                <th>Ball</th>
+                <th>Amallar</th>
+              </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span id="userCount">0 ta foydalanuvchi</span>
+          <div class="pagination">
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">3</div>
+            <div class="page-btn">…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RESULTS ═══ -->
+    <div class="panel" id="panel-results">
+      <div class="section-head">
+        <div><div class="section-title">Test natijalari</div><div class="section-sub">Barcha topshirilgan testlar</div></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Qidirish…">
+          </div>
+          <select class="filter-select">
+            <option>Barcha testlar</option>
+            <option>IELTS</option>
+            <option>CEFR</option>
+            <option>SAT</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Foydalanuvchi</th>
+                <th>Test</th>
+                <th>Sana</th>
+                <th>Vaqt</th>
+                <th>Ball</th>
+                <th>Daraja</th>
+                <th>Holat</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══ CREATE TEST MODAL ═══ -->
+<div class="modal-overlay" id="modal-createTest">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Yangi test yaratish</div>
+        <div class="modal-sub">Test parametrlarini to'ldiring</div>
+      </div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('createTest')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Test nomi *</label>
+        <input class="form-input" type="text" placeholder="Masalan: IELTS Mock Test 5" id="testName">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Test turi *</label>
+          <select class="form-select" id="testType">
+            <option value="">Tanlang…</option>
+            <option value="ielts">IELTS</option>
+            <option value="cefr">CEFR</option>
+            <option value="sat">SAT Matematika</option>
+            <option value="attanal">At-tanal al-arobi</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Daraja</label>
+          <select class="form-select" id="testLevel">
+            <option value="">Ixtiyoriy</option>
+            <option>Beginner (A1–A2)</option>
+            <option>Intermediate (B1–B2)</option>
+            <option>Advanced (C1–C2)</option>
+            <option>All Levels</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Savollar soni *</label>
+          <input class="form-input" type="number" placeholder="40" id="testQCount" min="1" max="200">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Vaqt (daqiqa) *</label>
+          <input class="form-input" type="number" placeholder="60" id="testDuration" min="5">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tavsif</label>
+        <textarea class="form-textarea" placeholder="Test haqida qisqacha ma'lumot…" id="testDesc"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Holati</label>
+          <select class="form-select" id="testStatus">
+            <option value="draft">Qoralama</option>
+            <option value="active">Faol</option>
+            <option value="scheduled">Rejalashtirilgan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Urinishlar</label>
+          <input class="form-input" type="number" placeholder="3" id="testAttempts" min="1">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('createTest')">Bekor qilish</button>
+      <button class="btn btn-outline" onclick="saveTestDraft()">Qoralama saqlash</button>
+      <button class="btn btn-primary" onclick="createTest()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Yaratish
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCHEDULE MODAL ═══ -->
+<div class="modal-overlay" id="modal-scheduleTest">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Test rejalashtirish</div>
+        <div class="modal-sub">Sana va vaqtni belgilang</div>
+      </div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('scheduleTest')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Test tanlang *</label>
+        <select class="form-select" id="scheduleTestSelect">
+          <option value="">Tanlang…</option>
+          <option>IELTS Mock Test 1</option>
+          <option>IELTS Mock Test 2</option>
+          <option>CEFR B2 Sertifikatsiya</option>
+          <option>SAT Matematika — Amaliyot 4</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Sana *</label>
+          <input class="form-input" type="date" id="scheduleDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Vaqt *</label>
+          <input class="form-input" type="time" id="scheduleTime">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Max ishtirokchilar</label>
+          <input class="form-input" type="number" placeholder="50" id="scheduleMax">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Xona / kanal</label>
+          <input class="form-input" type="text" placeholder="Online / Xona 3-A" id="scheduleRoom">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Eslatma</label>
+        <textarea class="form-textarea" placeholder="Qo'shimcha ma'lumot…" id="scheduleNote" style="min-height:3.5rem"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('scheduleTest')">Bekor qilish</button>
+      <button class="btn btn-primary" onclick="scheduleTest()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Rejalashtirish
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VIEW TEST MODAL ═══ -->
+<div class="modal-overlay" id="modal-viewTest">
+  <div class="modal" style="max-width:42rem">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="viewTestTitle">Test nomi</div>
+        <div class="modal-sub" id="viewTestSub">test · details</div>
+      </div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('viewTest')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="viewTestBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('viewTest')">Yopish</button>
+      <button class="btn btn-outline" onclick="showToast('Tahrirlovchi tez orada', 'info')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Tahrirlash
+      </button>
+      <button class="btn btn-primary" onclick="openModal('scheduleTest');closeModal('viewTest')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Rejalashtirish
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── Data ──────────────────────────────────────────────
+const tests = [
+  { id:1, name:'IELTS Mock Test 1', type:'ielts', label:'IELTS', level:'All Levels', questions:40, duration:60, status:'active', attempts:3, submissions:89, avgScore:6.8 },
+  { id:2, name:'IELTS Mock Test 2', type:'ielts', label:'IELTS', level:'B2–C1', questions:40, duration:60, status:'active', attempts:3, submissions:64, avgScore:7.1 },
+  { id:3, name:'CEFR B2 Sertifikatsiya', type:'cefr', label:'CEFR', level:'B2', questions:50, duration:45, status:'scheduled', attempts:2, submissions:31, avgScore:5.4 },
+  { id:4, name:'CEFR C1 — Ilg\'or', type:'cefr', label:'CEFR', level:'C1', questions:50, duration:50, status:'draft', attempts:2, submissions:0, avgScore:0 },
+  { id:5, name:'SAT Matematika — Amaliyot 4', type:'sat', label:'SAT', level:'Advanced', questions:58, duration:70, status:'active', attempts:5, submissions:42, avgScore:680 },
+  { id:6, name:'At-tanal al-arobi Boshlang\'ich', type:'attanal', label:'At-tanal', level:'A1–A2', questions:35, duration:40, status:'active', attempts:3, submissions:28, avgScore:72 },
+];
+
+const users = [
+  { name:'Aziz Karimov',     email:'aziz@example.com',   status:'new',      test:'IELTS',    lastSeen:'2 daqiqa avval', score:'—',   av:'ua-1' },
+  { name:'Malika Yusupova',  email:'malika@example.com', status:'active',   test:'IELTS',    lastSeen:'15 daqiqa avval', score:'7.0', av:'ua-2' },
+  { name:'Jasur Toshmatov',  email:'jasur@example.com',  status:'active',   test:'CEFR',     lastSeen:'1 soat avval',   score:'B2',  av:'ua-3' },
+  { name:'Nodira Rahimova',  email:'nodira@example.com', status:'active',   test:'SAT',      lastSeen:'3 soat avval',   score:'690', av:'ua-4' },
+  { name:'Sherzod Aliyev',   email:'sherzod@example.com',status:'inactive', test:'At-tanal', lastSeen:'2 kun avval',    score:'68',  av:'ua-5' },
+  { name:'Gulnora Mirzayeva',email:'gulnora@example.com',status:'active',   test:'IELTS',    lastSeen:'5 soat avval',   score:'6.5', av:'ua-1' },
+  { name:'Bobur Xasanov',    email:'bobur@example.com',  status:'active',   test:'CEFR',     lastSeen:'1 kun avval',    score:'C1',  av:'ua-3' },
+  { name:'Zulfiya Ergasheva',email:'zulfiya@example.com',status:'new',      test:'SAT',      lastSeen:'30 daqiqa avval',score:'—',   av:'ua-2' },
+];
+
+const schedule = [
+  { date:'2026-06-10', time:'09:00', test:'IELTS Mock Test 1',        participants:34, max:50, room:'Online', status:'upcoming' },
+  { date:'2026-06-12', time:'14:00', test:'CEFR B2 Sertifikatsiya',   participants:18, max:30, room:'Xona 3-A', status:'upcoming' },
+  { date:'2026-06-15', time:'10:30', test:'SAT Matematika — Amaliyot 4', participants:9, max:40, room:'Online', status:'upcoming' },
+  { date:'2026-06-05', time:'11:00', test:'IELTS Mock Test 2',        participants:28, max:40, room:'Online', status:'past' },
+];
+
+const results = [
+  { user:'Malika Yusupova', test:'IELTS Mock Test 1', date:'08-iyun', time:'42 daq', score:'7.0', level:'B2+', status:'passed', av:'ua-2' },
+  { user:'Jasur Toshmatov', test:'CEFR B2',           date:'07-iyun', time:'38 daq', score:'B2',  level:'B2',  status:'passed', av:'ua-3' },
+  { user:'Nodira Rahimova', test:'SAT Matematika',    date:'06-iyun', time:'55 daq', score:'690', level:'—',   status:'passed', av:'ua-4' },
+  { user:'Sherzod Aliyev',  test:'At-tanal Boshlang\'ich', date:'04-iyun', time:'35 daq', score:'68', level:'A2', status:'failed', av:'ua-5' },
+  { user:'Gulnora Mirzayeva',test:'IELTS Mock Test 2',date:'03-iyun', time:'58 daq', score:'6.5', level:'B2',  status:'passed', av:'ua-1' },
+];
+
+// ── Type config ──
+const typeConf = {
+  ielts:   { color:'si-red',    label:'IELTS',    icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
+  cefr:    { color:'si-blue',   label:'CEFR',     icon:'<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>' },
+  sat:     { color:'si-amber',  label:'SAT',      icon:'<path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>' },
+  attanal: { color:'si-purple', label:'At-tanal', icon:'<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>' },
+};
+
+const statusBadge = {
+  active:    '<span class="badge badge-green"><span class="badge-dot-sm" style="background:var(--green)"></span>Faol</span>',
+  draft:     '<span class="badge badge-muted">Qoralama</span>',
+  scheduled: '<span class="badge badge-amber"><span class="badge-dot-sm" style="background:var(--amber)"></span>Rejalashtirilgan</span>',
+};
+const userStatusBadge = {
+  active:   '<span class="badge badge-green"><span class="badge-dot-sm" style="background:var(--green)"></span>Faol</span>',
+  new:      '<span class="badge badge-blue"><span class="badge-dot-sm" style="background:var(--accent)"></span>Yangi</span>',
+  inactive: '<span class="badge badge-muted">Nofaol</span>',
+};
+
+// ── Render tests ──
+function renderTests(filter='all') {
+  const grid = document.getElementById('testsGrid');
+  const filtered = filter === 'all' ? tests : tests.filter(t => t.type === filter);
+  grid.innerHTML = filtered.map(t => {
+    const conf = typeConf[t.type];
+    return `
+    <div class="test-card">
+      <div class="test-card-head">
+        <div class="test-type-icon ${conf.color}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${conf.icon}</svg>
+        </div>
+        <div class="test-card-actions">
+          ${statusBadge[t.status]}
+        </div>
+      </div>
+      <div>
+        <div class="test-title">${t.name}</div>
+      </div>
+      <div class="test-meta">
+        <span class="test-stat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${t.duration} daq</span>
+        <span class="test-stat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>${t.questions} savol</span>
+        <span class="test-stat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${t.submissions} topshirilgan</span>
+      </div>
+      <div class="test-card-footer">
+        <span style="font-size:.72rem;font-family:var(--mono);color:var(--muted-fg)">${t.level}</span>
+        <div style="display:flex;gap:.375rem">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="deleteTest(${t.id})" title="O'chirish">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="viewTest(${t.id})">Ko'rish</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('scheduleTest')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Rejalashtir
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterTests(type, el) {
+  document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderTests(type);
+}
+
+function deleteTest(id) {
+  showToast('Test o\'chirildi', 'success');
+}
+
+function viewTest(id) {
+  const t = tests.find(x=>x.id===id);
+  const conf = typeConf[t.type];
+  document.getElementById('viewTestTitle').textContent = t.name;
+  document.getElementById('viewTestSub').textContent = `${conf.label} · ${t.questions} savol · ${t.duration} daqiqa`;
+  document.getElementById('viewTestBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem">
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:.875rem">
+        <div style="font-size:.7rem;font-family:var(--mono);color:var(--muted-fg);margin-bottom:.3rem">HOLAT</div>
+        <div>${statusBadge[t.status]}</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:.875rem">
+        <div style="font-size:.7rem;font-family:var(--mono);color:var(--muted-fg);margin-bottom:.3rem">O'RTACHA BALL</div>
+        <div style="font-size:1.2rem;font-weight:700">${t.avgScore || '—'}</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:.875rem">
+        <div style="font-size:.7rem;font-family:var(--mono);color:var(--muted-fg);margin-bottom:.3rem">TOPSHIRILGAN</div>
+        <div style="font-size:1.2rem;font-weight:700">${t.submissions}</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:.875rem">
+        <div style="font-size:.7rem;font-family:var(--mono);color:var(--muted-fg);margin-bottom:.3rem">MAX URINISH</div>
+        <div style="font-size:1.2rem;font-weight:700">${t.attempts}</div>
+      </div>
+    </div>
+    <div style="font-size:.78rem;font-weight:600;color:var(--fg2);font-family:var(--mono);margin-bottom:.625rem">NAMUNAVIY SAVOLLAR</div>
+    <div class="question-list">
+      <div class="q-item"><div class="q-num">1</div><div class="q-text">The passage mainly discusses the impact of climate change on Arctic ecosystems.</div><div class="q-type">MCQ</div></div>
+      <div class="q-item"><div class="q-num">2</div><div class="q-text">Choose the correct word form to complete the sentence: "The government __ new policies last year."</div><div class="q-type">Gap fill</div></div>
+      <div class="q-item"><div class="q-num">3</div><div class="q-text">According to the graph, which year showed the highest increase in CO₂ emissions?</div><div class="q-type">Graph</div></div>
+    </div>
+  `;
+  openModal('viewTest');
+}
+
+// ── Render schedule ──
+function renderSchedule() {
+  const list = document.getElementById('scheduleList');
+  list.innerHTML = schedule.map(s => {
+    const isPast = s.status === 'past';
+    return `
+    <div class="schedule-item" style="${isPast?'opacity:.55':''}">
+      <div class="schedule-time">${s.date.split('-').slice(1).join('-')} / ${s.time}</div>
+      <div class="schedule-info">
+        <div class="schedule-name">${s.test}</div>
+        <div class="schedule-meta">${s.room} · ${s.participants}/${s.max} ishtirokchi</div>
+      </div>
+      <span class="badge ${isPast?'badge-muted':'badge-amber'}">${isPast?'O\'tib ketdi':'Kutilmoqda'}</span>
+      ${!isPast ? `<button class="btn btn-ghost btn-sm btn-icon" onclick="showToast('Sessiya bekor qilindi','success')" title="Bekor qilish"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── Render users ──
+function renderUsers(data) {
+  const tbody = document.getElementById('usersTable');
+  tbody.innerHTML = data.map(u => `
+    <tr>
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar ${u.av}">${u.name.charAt(0)}</div>
+          <div><div class="user-name">${u.name}</div><div class="user-email">${u.email}</div></div>
+        </div>
+      </td>
+      <td>${userStatusBadge[u.status]}</td>
+      <td><span class="badge badge-muted">${u.test}</span></td>
+      <td style="font-size:.78rem;color:var(--muted-fg);font-family:var(--mono)">${u.lastSeen}</td>
+      <td style="font-family:var(--mono);font-weight:600;font-size:.82rem">${u.score}</td>
+      <td>
+        <div style="display:flex;gap:.25rem">
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="showToast('${u.name} — profil', 'info')" title="Ko'rish">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="showToast('Xabar yuborildi','success')" title="Xabar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`).join('');
+  document.getElementById('userCount').textContent = `${data.length} ta foydalanuvchi`;
+}
+
+function filterUsers() {
+  const q = document.getElementById('userSearch').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  const test = document.getElementById('testFilter').value;
+  let filtered = users.filter(u => {
+    const matchQ = u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+    const matchS = status === 'all' || u.status === status;
+    const matchT = test === 'all' || u.test === test;
+    return matchQ && matchS && matchT;
+  });
+  renderUsers(filtered);
+}
+
+// ── Render results ──
+function renderResults() {
+  const tbody = document.getElementById('resultsTable');
+  tbody.innerHTML = results.map(r => `
+    <tr>
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar ${r.av}">${r.user.charAt(0)}</div>
+          <div class="user-name">${r.user}</div>
+        </div>
+      </td>
+      <td style="font-size:.82rem">${r.test}</td>
+      <td style="font-size:.78rem;font-family:var(--mono);color:var(--muted-fg)">${r.date}</td>
+      <td style="font-size:.78rem;font-family:var(--mono);color:var(--muted-fg)">${r.time}</td>
+      <td style="font-family:var(--mono);font-weight:700">${r.score}</td>
+      <td><span class="badge badge-muted">${r.level}</span></td>
+      <td><span class="badge ${r.status==='passed'?'badge-green':'badge-red'}">${r.status==='passed'?'O\'tdi':'O\'tmadi'}</span></td>
+    </tr>`).join('');
+}
+
+// ── Navigation ──
+const panelMeta = {
+  overview: { title: "Umumiy ko'rinish",   sub: 'mock.admin · overview' },
+  tests:    { title: 'Testlar',             sub: 'mock.admin · tests' },
+  schedule: { title: 'Test jadvali',        sub: 'mock.admin · schedule' },
+  users:    { title: 'Foydalanuvchilar',    sub: 'mock.admin · users' },
+  results:  { title: 'Natijalar',           sub: 'mock.admin · results' },
+};
+
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.textContent.trim().startsWith(panelMeta[name].title.substring(0,4))) n.classList.add('active');
+  });
+  const meta = panelMeta[name];
+  document.getElementById('pageTitle').textContent = meta.title;
+  document.getElementById('pageSub').textContent = meta.sub;
+  closeSidebar();
+}
+
+// ── Modals ──
+function openModal(id) { document.getElementById('modal-'+id).classList.add('open'); }
+function closeModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ── Actions ──
+function createTest() {
+  const name = document.getElementById('testName').value.trim();
+  const type = document.getElementById('testType').value;
+  if (!name || !type) { showToast('Iltimos, majburiy maydonlarni to\'ldiring', 'error'); return; }
+  closeModal('createTest');
+  showToast(`"${name}" testi yaratildi`, 'success');
+  document.getElementById('testName').value = '';
+  document.getElementById('testType').value = '';
+}
+
+function saveTestDraft() {
+  const name = document.getElementById('testName').value.trim() || 'Nomsiz test';
+  closeModal('createTest');
+  showToast(`"${name}" qoralama sifatida saqlandi`, 'success');
+}
+
+function scheduleTest() {
+  const test = document.getElementById('scheduleTestSelect').value;
+  const date = document.getElementById('scheduleDate').value;
+  const time = document.getElementById('scheduleTime').value;
+  if (!test || !date || !time) { showToast('Iltimos, barcha maydonlarni to\'ldiring', 'error'); return; }
+  closeModal('scheduleTest');
+  showToast(`Test rejalashtirildi: ${date} / ${time}`, 'success');
+}
+
+// ── Toast ──
+function showToast(msg, type='success') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      ${type==='success' ? '<polyline points="20 6 9 17 4 12"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'}
+    </svg>
+    <span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='.3s'; setTimeout(()=>t.remove(),300); }, 2800);
+}
+
+// ── Sidebar mobile ──
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
+
+// ── Init ──
+renderTests();
+renderSchedule();
+renderUsers(users);
+renderResults();
+
+// Set today as default for schedule date
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('scheduleDate').value = today;
+</script>
+</body>
+</html>

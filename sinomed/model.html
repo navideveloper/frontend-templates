@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Rentgen tahlili — Tashxis</title>
+  <title>Rentgen tahlili — SinoMed</title>
   <meta name="description" content="Sun'iy intellekt yordamida rentgen tasvirlarini tahlil qiling. Batafsil natijalar va tavsiyalar." />
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -368,7 +368,7 @@
       <div class="logo-mark">
         <img src="./logo.svg" alt="">
       </div>
-      <span class="logo-name">Tash<span>xis</span></span>
+      <span class="logo-name">SinoMed</span>
       <span class="logo-version">v0.1</span>
     </a>
     <div class="nav-right">
@@ -521,7 +521,7 @@
 
 <footer>
   <div class="container footer-inner">
-    <span>© Tashxis 2026 · Andijon viloyati AI Hackathon</span>
+    <span>© Fedora-team 2026 · Andijon viloyati AI Hackathon</span>
   </div>
 </footer>
 
@@ -564,11 +564,11 @@
 
   /* ── History ── */
   function loadHistory() {
-    const saved = localStorage.getItem('tashxis_analysis_history');
+    const saved = localStorage.getItem('SinoMed_analysis_history');
     if (saved) { history = JSON.parse(saved); renderHistory(); }
   }
   function saveHistory() {
-    localStorage.setItem('tashxis_analysis_history', JSON.stringify(history.slice(0, 10)));
+    localStorage.setItem('SinoMed_analysis_history', JSON.stringify(history.slice(0, 10)));
   }
   function addToHistory(analysisType, result) {
     const now = new Date();

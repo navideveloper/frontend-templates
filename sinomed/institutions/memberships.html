@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SinoMed — Shifokorlar Ro'yxati</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           hsl(210, 20%, 98%);
+      --fg:           hsl(215, 35%, 12%);
+      --card:         hsl(0, 0%, 100%);
+      --primary:      hsl(162, 72%, 36%);
+      --primary-light:hsl(162, 60%, 92%);
+      --primary-fg:   hsl(0, 0%, 100%);
+      --accent:       hsl(200, 90%, 46%);
+      --accent-light: hsl(200, 80%, 93%);
+      --warning:      hsl(38, 92%, 50%);
+      --danger:       hsl(4, 74%, 55%);
+      --muted:        hsl(215, 20%, 94%);
+      --muted-fg:     hsl(215, 15%, 48%);
+      --border:       hsl(215, 20%, 88%);
+      --radius:       0.875rem;
+      --font:         'Inter', sans-serif;
+      --mono:         'JetBrains Mono', sans-serif;
+      --sidebar-w:    260px;
+      --shadow-sm:    0 2px 8px -2px hsla(215,35%,12%,0.05);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-header {
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      padding-inline: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      gap: 0.5rem;
+    }
+    .logo-mark {
+      width: 2rem; height: 2rem;
+      background: var(--primary);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-mark svg { width: 1.1rem; height: 1.1rem; color: #fff; }
+    .logo-name { font-size: 1.125rem; font-weight: 700; letter-spacing: -.03em; }
+    .logo-name span { color: var(--primary); }
+
+    .nav-list { list-style: none; padding: 1rem; flex: 1; overflow-y: auto; }
+    .nav-item { margin-bottom: 0.25rem; }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0.875rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted-fg);
+      border-radius: calc(var(--radius) - 2px);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .nav-link svg { width: 1.25rem; height: 1.25rem; }
+    .nav-link:hover, .nav-link.active { background: var(--bg); color: var(--fg); }
+    .nav-link.active { background: var(--primary-light); color: var(--primary); }
+    
+    .nav-link.logout-link { color: var(--danger); }
+    .nav-link.logout-link:hover { background: hsl(4, 74%, 96%); color: var(--danger); }
+
+    .badge-count {
+      margin-left: auto;
+      background: var(--danger);
+      color: #fff;
+      font-size: 0.7rem;
+      font-family: var(--mono);
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .sidebar-bottom-group {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      background: hsla(210, 20%, 98%, 0.5);
+    }
+    .license-badge {
+      margin: 1rem; padding: 0.75rem;
+      background: var(--primary-light);
+      border-radius: calc(var(--radius) - 4px);
+      border: 1px solid hsl(162,60%,80%);
+    }
+    .license-title { font-size: 0.65rem; font-family: var(--mono); color: var(--primary); font-weight: 600; text-transform: uppercase; }
+    .license-org { font-size: 0.85rem; font-weight: 600; margin-top: 2px; }
+    .sidebar-footer { padding: 0.75rem 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted-fg); display: flex; justify-content: space-between; }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 4rem;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: 2rem;
+      position: sticky; top: 0; z-index: 5;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 1rem; }
+    .page-title { font-size: 1.125rem; font-weight: 600; }
+    
+    .menu-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--fg); }
+    .menu-toggle svg { width: 1.5rem; height: 1.5rem; }
+
+    .admin-profile { display: flex; align-items: center; gap: 0.75rem; }
+    .admin-avatar { width: 2.25rem; height: 2.25rem; background: var(--accent-light); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; }
+
+    .content-body { padding: 2rem; flex: 1; }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .mini-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.25rem; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 1rem;
+    }
+    .card-icon { width: 2.75rem; height: 2.75rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .icon-doctors { background: var(--primary-light); color: var(--primary); }
+    .icon-active { background: hsl(200, 80%, 93%); color: var(--accent); }
+    .card-data h3 { font-size: 0.8rem; font-weight: 500; color: var(--muted-fg); text-transform: uppercase; letter-spacing: .05em; }
+    .card-data p { font-size: 1.5rem; font-weight: 700; }
+
+    /* ── FILTERS ── */
+    .filter-bar {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem; flex-wrap: wrap; box-shadow: var(--shadow-sm);
+    }
+    .search-box { position: relative; flex: 1; max-width: 320px; min-width: 200px; }
+    .search-box input { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.25rem; font-size: 0.875rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); outline: none; font-family: inherit; }
+    .search-box input:focus { border-color: var(--primary); background: #fff; }
+    .search-box svg { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); width: 1rem; height: 1rem; color: var(--muted-fg); }
+
+    .tabs-filter { display: flex; gap: 0.5rem; background: var(--bg); padding: 4px; border-radius: 8px; border: 1px solid var(--border); }
+    .tab-btn { padding: 0.4rem 1rem; font-size: 0.85rem; font-weight: 500; border: none; background: transparent; border-radius: 6px; cursor: pointer; color: var(--muted-fg); transition: all 0.15s; }
+    .tab-btn.active { background: var(--card); color: var(--fg); box-shadow: var(--shadow-sm); }
+
+    /* ── TABLES ── */
+    .main-table-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
+    .table-responsive { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+    th { background: var(--bg); padding: 0.85rem 1.5rem; font-weight: 600; color: var(--muted-fg); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+    td { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
+    tr.hidden-row { display: none; }
+
+    .doc-profile-cell { display: flex; align-items: center; gap: 0.75rem; }
+    .doc-avatar { width: 2.5rem; height: 2.5rem; background: var(--accent-light); color: var(--accent); font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+    .doc-meta h4 { font-size: 0.9rem; font-weight: 600; }
+    .doc-meta p { font-size: 0.8rem; color: var(--fg); font-weight: 500; margin-top: 2px; }
+
+    /* Badges */
+    .badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
+    .badge-active { background: var(--primary-light); color: var(--primary); }
+    .badge-blocked { background: hsl(4, 74%, 93%); color: hsl(4, 74%, 45%); }
+
+    .datetime-cell { font-size: 0.8rem; font-weight: 500; }
+    .datetime-cell span { display: block; color: var(--muted-fg); font-size: 0.75rem; font-family: var(--mono); margin-top: 2px;}
+
+    /* ── ACTION BADGE BUTTONS (NO WRAP) ── */
+    .actions-cell { 
+      display: flex; 
+      gap: 0.5rem; 
+      justify-content: flex-end; 
+      white-space: nowrap !important; 
+      flex-wrap: nowrap;
+    }
+    
+    .btn-badge {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .btn-badge svg { width: 1.1rem; height: 1.1rem; }
+    
+    .btn-badge-edit { background: var(--accent-light); color: var(--accent); }
+    .btn-badge-edit:hover { background: var(--accent); color: #fff; }
+    
+    .btn-badge-block { background: hsl(38, 92%, 92%); color: var(--warning); }
+    .btn-badge-block:hover { background: var(--warning); color: #fff; }
+    
+    .btn-badge-unblock { background: var(--primary-light); color: var(--primary); }
+    .btn-badge-unblock:hover { background: var(--primary); color: #fff; }
+
+    .empty-state { padding: 3rem; text-align: center; color: var(--muted-fg); display: none; }
+    .empty-state svg { width: 3rem; height: 3rem; margin-bottom: 1rem; color: var(--border); }
+
+    .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 90; }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .main-content { margin-left: 0; }
+      .topbar { padding-inline: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ═══ SIDEBAR NAVIGATION ═══ -->
+  <aside class="sidebar" id="sidebarMenu">
+    <div class="sidebar-header">
+      <div class="logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </div>
+      <span class="logo-name">SinoMed<span>.admin</span></span>
+    </div>
+
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg>
+          Tasdiqlashlar
+          <span class="badge-count">3</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Shifokorlar ro'yxati
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+          Tahlillar tarixi
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Sozlamalar
+        </a>
+      </li>
+      <li class="nav-item" style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.5rem;">
+        <a class="nav-link logout-link" onclick="if(confirm('Tizimdan chiqmoqchimisiz?')) alert('Tizimdan chiqildi.');">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Chiqish
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-bottom-group">
+      <div class="license-badge">
+        <div class="license-title">Faol Litsenziya</div>
+        <div class="license-org">Akfa Medline MK</div>
+      </div>
+      <div class="sidebar-footer">
+        <span>SinoMed</span>
+        <span>v0.1 · 2026</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN PANELI ═══ -->
+  <main class="main-content">
+    
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
+        <div class="page-title">Shifokorlar Ro'yxati</div>
+      </div>
+      <div class="admin-profile">
+        <div class="admin-avatar">DK</div>
+      </div>
+    </header>
+
+    <div class="content-body">
+      
+      <!-- STATS ROW -->
+      <div class="stats-row">
+        <div class="mini-card">
+          <div class="card-icon icon-doctors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="card-data">
+            <h3>Jami Shifokorlar</h3>
+            <p id="count-total">42 nafar</p>
+          </div>
+        </div>
+        <div class="mini-card">
+          <div class="card-icon icon-active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="card-data">
+            <h3>Faol Shifokorlar</h3>
+            <p id="count-active">40 nafar</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="search-box">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="searchInp" placeholder="Ism yoki telefon bo'yicha qidirish..." oninput="filterRows()">
+        </div>
+
+        <div class="tabs-filter">
+          <button class="tab-btn active" onclick="filterStatus('all', this)">Barchasi</button>
+          <button class="tab-btn" onclick="filterStatus('active', this)">Faollar</button>
+          <button class="tab-btn" onclick="filterStatus('blocked', this)">Bloklanganlar</button>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="main-table-card">
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Shifokor / Telefon</th>
+                <th>Rol</th>
+                <th>Ro'yxatdan o'tgan sana</th>
+                <th>Holat</th>
+                <th style="text-align: right;">Amallar</th>
+              </tr>
+            </thead>
+            <tbody id="doctors-tbody">
+              
+              <!-- Shifokor 1 -->
+              <tr data-status="active" id="doc-row-1">
+                <td>
+                  <div class="doc-profile-cell">
+                    <div class="doc-avatar">JS</div>
+                    <div class="doc-meta">
+                      <h4>Dr. Javohir Sultanov</h4>
+                      <p>+998 (91) 456-11-22</p>
+                    </div>
+                  </div>
+                </td>
+                <td><strong>Shifokor</strong></td>
+                <td class="datetime-cell">14.05.2026, <span>09:15</span></td>
+                <td><span class="badge badge-active">Faol</span></td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="btn-badge btn-badge-edit" title="Tahrirlash" onclick="alert('Tahrirlash oynasi ochilmoqda...')">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button class="btn-badge btn-badge-block" id="block-btn-1" title="Bloklash" onclick="toggleBlock('doc-row-1', 'block-btn-1')">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Shifokor 2 -->
+              <tr data-status="active" id="doc-row-2">
+                <td>
+                  <div class="doc-profile-cell">
+                    <div class="doc-avatar" style="background-color: hsl(200, 80%, 93%); color: var(--accent);">MN</div>
+                    <div class="doc-meta">
+                      <h4>Dr. Malika Nabiyeva</h4>
+                      <p>+998 (93) 777-44-55</p>
+                    </div>
+                  </div>
+                </td>
+                <td><strong>Shifokor</strong></td>
+                <td class="datetime-cell">28.04.2026, <span>16:40</span></td>
+                <td><span class="badge badge-active">Faol</span></td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="btn-badge btn-badge-edit" title="Tahrirlash" onclick="alert('Tahrirlash oynasi ochilmoqda...')">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button class="btn-badge btn-badge-block" id="block-btn-2" title="Bloklash" onclick="toggleBlock('doc-row-2', 'block-btn-2')">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Shifokor 3 -->
+              <tr data-status="blocked" id="doc-row-3">
+                <td>
+                  <div class="doc-profile-cell">
+                    <div class="doc-avatar">OH</div>
+                    <div class="doc-meta">
+                      <h4>Dr. Otabek Hasanov</h4>
+                      <p>+998 (90) 115-88-99</p>
+                    </div>
+                  </div>
+                </td>
+                <td><strong>Klinika Admini</strong></td>
+                <td class="datetime-cell">03.02.2026, <span>11:20</span></td>
+                <td><span class="badge badge-blocked">Bloklangan</span></td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="btn-badge btn-badge-edit" title="Tahrirlash" onclick="alert('Tahrirlash oynasi ochilmoqda...')">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button class="btn-badge btn-badge-unblock" id="block-btn-3" title="Blokdan ochish" onclick="toggleBlock('doc-row-3', 'block-btn-3')">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <div class="empty-state" id="emptyState">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636" />
+            </svg>
+            <p>Shifokorlar topilmadi.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentTab = 'all';
+
+    function toggleSidebar() {
+      document.getElementById('sidebarMenu').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+
+    // Bloklash yoki Blokdan chiqarish logikasi
+    function toggleBlock(rowId, btnId) {
+      const row = document.getElementById(rowId);
+      const btn = document.getElementById(btnId);
+      if (!row || !btn) return;
+
+      const currentStatus = row.getAttribute('data-status');
+      const statusCell = row.cells[3];
+
+      if (currentStatus === 'active') {
+        if(confirm("Ushbu shifokorni bloklamoqchimisiz?")) {
+          row.setAttribute('data-status', 'blocked');
+          statusCell.innerHTML = '<span class="badge badge-blocked">Bloklangan</span>';
+          
+          // Tugmani unblock rejimiga o'tkazish
+          btn.className = 'btn-badge btn-badge-unblock';
+          btn.title = 'Blokdan ochish';
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+        }
+      } else {
+        if(confirm("Shifokorni blokdan chiqarishni xohlaysizmi?")) {
+          row.setAttribute('data-status', 'active');
+          statusCell.innerHTML = '<span class="badge badge-active">Faol</span>';
+          
+          // Tugmani bloklash rejimiga o'tkazish
+          btn.className = 'btn-badge btn-badge-block';
+          btn.title = 'Bloklash';
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>';
+        }
+      }
+
+      recalculateStats();
+      filterRows();
+    }
+
+    function recalculateStats() {
+      const rows = document.querySelectorAll('#doctors-tbody tr');
+      let total = rows.length;
+      let active = 0;
+
+      rows.forEach(row => {
+        if (row.getAttribute('data-status') === 'active') active++;
+      });
+
+      document.getElementById('count-total').innerText = `${total + 39} nafar`; // Loyihaviy statik ko'rsatkich qo'shilgan
+      document.getElementById('count-active').innerText = `${active + 38} nafar`;
+    }
+
+    function filterStatus(status, btnElement) {
+      currentTab = status;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      filterRows();
+    }
+
+    function filterRows() {
+      const searchVal = document.getElementById('searchInp').value.toLowerCase();
+      const rows = document.querySelectorAll('#doctors-tbody tr');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const status = row.getAttribute('data-status');
+        const textContent = row.innerText.toLowerCase();
+
+        const matchesSearch = textContent.includes(searchVal);
+        const matchesTab = (currentTab === 'all' || status === currentTab);
+
+        if (matchesSearch && matchesTab) {
+          row.classList.remove('hidden-row');
+          visibleCount++;
+        } else {
+          row.classList.add('hidden-row');
+        }
+      });
+
+      document.getElementById('emptyState').style.display = (visibleCount === 0) ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>

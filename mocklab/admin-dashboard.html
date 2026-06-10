@@ -3,756 +3,533 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard — Mock boshqaruv paneli</title>
-  <meta name="description" content="Mock admin paneli - Tekshiruvchilar, hisob to'ldirishlar, testlar va foydalanuvchilarni boshqarish" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Mock — Umumiy ko'rinish</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         hsl(45, 30%, 98%);
-      --fg:         hsl(200, 25%, 15%);
-      --card:       hsl(0, 0%, 100%);
-      --primary:    hsl(351.69deg, 71.14%, 59.59%);
-      --primary-fg: hsl(0, 0%, 100%);
-      --secondary:  hsl(40, 90%, 55%);
-      --muted:      hsl(45, 20%, 92%);
-      --muted-fg:   hsl(200, 15%, 45%);
-      --border:     hsl(200, 15%, 88%);
-      --accent:     hsl(351.69deg, 60%, 92%);
-      --radius:     0.75rem;
-      --success:    hsl(145, 63%, 42%);
-      --warning:    hsl(35, 90%, 50%);
-      --info:       hsl(210, 90%, 50%);
-      --purple:     hsl(270, 60%, 55%);
-      --shadow-soft: 0 4px 20px -4px hsla(200, 25%, 15%, 0.08);
-      --shadow-card: 0 8px 30px -8px hsla(200, 25%, 15%, 0.12);
-      --shadow-glow: 0 0 40px hsla(351.69deg, 71.14%, 59.59%, 0.25);
-      --font-body:   'Poppins', system-ui, -apple-system, sans-serif;
-      --font-arabic: 'Tajawal', system-ui, sans-serif;
-      --destructive: hsl(0, 84%, 60%);
-    }
-
-    .dark {
-      --bg:         hsl(220, 25%, 8%);
-      --fg:         hsl(45, 20%, 95%);
-      --card:       hsl(220, 25%, 12%);
-      --muted:      hsl(220, 20%, 18%);
-      --muted-fg:   hsl(45, 15%, 60%);
-      --border:     hsl(220, 20%, 20%);
-      --accent:     hsl(351.69deg, 45%, 25%);
-      --shadow-soft: 0 4px 20px -4px rgba(0, 0, 0, 0.3);
-      --shadow-card: 0 8px 30px -8px rgba(0, 0, 0, 0.4);
-      --shadow-glow: 0 0 40px hsla(351.69deg, 65%, 55%, 0.25);
-    }
-
-    html {
-      scroll-behavior: smooth;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      --bg:            hsl(210, 20%, 97%);
+      --bg2:           hsl(0, 0%, 100%);
+      --bg3:           hsl(210, 18%, 94%);
+      --fg:            hsl(220, 30%, 12%);
+      --fg2:           hsl(220, 15%, 40%);
+      --card:          hsl(0, 0%, 100%);
+      --border:        hsl(215, 20%, 88%);
+      --primary:       hsl(351, 71%, 60%);
+      --primary-light: hsl(351, 70%, 93%);
+      --accent:        hsl(200, 85%, 50%);
+      --accent-light:  hsl(200, 80%, 92%);
+      --amber:         hsl(38, 85%, 45%);
+      --amber-light:   hsl(38, 92%, 92%);
+      --green:         hsl(152, 55%, 38%);
+      --green-light:   hsl(152, 60%, 90%);
+      --purple:        hsl(260, 60%, 58%);
+      --purple-light:  hsl(260, 65%, 93%);
+      --muted:         hsl(215, 20%, 92%);
+      --muted-fg:      hsl(215, 15%, 50%);
+      --radius:        0.75rem;
+      --font:          'DM Sans', sans-serif;
+      --mono:          'JetBrains Mono', monospace;
+      --sidebar-w:     15rem;
+      --topbar-h:      3.75rem;
+      --shadow:        0 4px 20px -4px rgba(0,0,0,0.08);
+      --shadow-glow:   0 0 30px hsla(351,71%,60%,0.2);
     }
 
     body {
-      font-family: var(--font-body);
-      background-color: var(--bg);
+      font-family: var(--font);
+      background: var(--bg);
       color: var(--fg);
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      line-height: 1.5;
       min-height: 100vh;
-      font-weight: 400;
+      display: flex;
+      font-size: 15px;
     }
 
-    img, svg { display: block; max-width: 100%; }
-    a { color: inherit; text-decoration: none; }
+    a { color: inherit; text-decoration: none; display: block; }
     button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    img, svg { display: block; max-width: 100%; }
 
-    .admin-layout { display: flex; min-height: 100vh; }
-
-    /* ─── Sidebar ──────────────────────────────────────── */
+    /* ── Sidebar ── */
     .sidebar {
-      width: 260px;
-      background-color: var(--card);
+      width: var(--sidebar-w);
+      height: 100vh;
+      position: fixed; left: 0; top: 0;
+      background: var(--bg2);
       border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0; left: 0; bottom: 0;
-      z-index: 40;
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar-header {
-      padding: 1.25rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-      flex-shrink: 0;
+      display: flex; flex-direction: column;
+      z-index: 200;
+      transition: transform 0.3s;
     }
 
     .sidebar-logo {
-      width: 2.5rem; height: 2.5rem;
-      border-radius: calc(var(--radius) + 4px);
-      background: linear-gradient(135deg, var(--primary), hsl(351.69deg, 71.14%, 70%));
+      display: flex; align-items: center; gap: 0.625rem;
+      padding: 0 1.25rem;
+      height: var(--topbar-h);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .logo-mark {
+      width: 2rem; height: 2rem; border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), hsl(351,71%,72%));
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-
-    .sidebar-logo span {
-      font-size: 1.2rem; font-weight: 700;
-      color: var(--primary-fg);
-    }
-
-    .sidebar-brand {
-      font-weight: 700; font-size: 1rem;
-      color: var(--fg); line-height: 1.2;
-    }
-
-    .sidebar-brand small {
-      display: block; font-size: 0.675rem;
-      font-weight: 500; color: var(--muted-fg);
-      text-transform: uppercase; letter-spacing: 0.05em;
+    .logo-mark span { font-size: .9rem; font-weight: 800; color: #fff; }
+    .logo-name { font-size: 1rem; font-weight: 700; letter-spacing: -.02em; }
+    .logo-badge {
+      font-size: .6rem; font-family: var(--mono);
+      background: var(--primary-light); color: var(--primary);
+      padding: 2px 6px; border-radius: 12px; font-weight: 600;
+      margin-left: auto;
     }
 
     .sidebar-nav {
-      flex: 1; overflow-y: auto;
-      padding: 1rem 0.75rem;
-      display: flex; flex-direction: column; gap: 0.25rem;
+      flex: 1; overflow-y: auto; padding: 0.75rem 0.625rem;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .nav-section-label {
+      font-size: .65rem; font-family: var(--mono); font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted-fg); padding: .75rem .625rem .35rem;
     }
 
-    .sidebar-nav a {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.625rem 0.875rem;
-      border-radius: calc(var(--radius) + 4px);
-      font-size: 0.85rem; font-weight: 500;
-      color: var(--muted-fg);
-      transition: all 0.15s ease;
-      white-space: nowrap;
+    .nav-item {
+      display: flex; align-items: center; gap: 0.625rem;
+      padding: .6rem .75rem;
+      border-radius: calc(var(--radius) - 2px);
+      font-size: .925rem; font-weight: 500;
+      color: var(--fg2);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      position: relative;
     }
+    .nav-item svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+    .nav-item:hover { background: var(--bg3); color: var(--fg); }
+    .nav-item.active { background: var(--primary-light); color: var(--primary); }
+    .nav-item.active svg { color: var(--primary); }
 
-    .sidebar-nav a:hover { background-color: var(--muted); color: var(--fg); }
-
-    .sidebar-nav a.active {
-      background: linear-gradient(135deg, var(--primary), hsl(351.69deg, 71.14%, 65%));
-      color: var(--primary-fg); font-weight: 600;
-      box-shadow: 0 4px 12px hsla(351.69deg, 71.14%, 55%, 0.3);
+    .nav-badge {
+      margin-left: auto;
+      font-size: .65rem; font-family: var(--mono); font-weight: 600;
+      background: var(--muted); color: var(--muted-fg);
+      padding: 1px 6px; border-radius: 10px;
     }
-
-    .sidebar-nav a svg { width: 1.15rem; height: 1.15rem; flex-shrink: 0; }
-
-    .sidebar-nav .nav-section {
-      font-size: 0.65rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      color: var(--muted-fg);
-      padding: 1rem 0.875rem 0.375rem;
-    }
+    .nav-item.active .nav-badge { background: var(--primary-light); color: var(--primary); }
 
     .sidebar-footer {
-      padding: 0.75rem;
+      padding: .875rem .625rem;
       border-top: 1px solid var(--border);
-      flex-shrink: 0;
     }
-
-    .sidebar-footer a {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.625rem 0.875rem;
-      border-radius: calc(var(--radius) + 4px);
-      font-size: 0.85rem; font-weight: 500;
-      color: var(--muted-fg);
-      transition: all 0.15s ease;
+    .admin-profile {
+      display: flex; align-items: center; gap: .625rem;
+      padding: .5rem .625rem; border-radius: var(--radius);
+      cursor: pointer; transition: background .15s;
     }
+    .admin-profile:hover { background: var(--bg3); }
+    .avatar {
+      width: 2rem; height: 2rem; border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), hsl(351,71%,72%));
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .admin-info { flex: 1; min-width: 0; }
+    .admin-name { font-size: .8rem; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .admin-role { font-size: .7rem; color: var(--muted-fg); font-family: var(--mono); }
 
-    .sidebar-footer a:hover { background-color: var(--muted); color: var(--destructive); }
-    .sidebar-footer svg { width: 1.2rem; }
-
-    /* ─── Main Content ─────────────────────────────────── */
-    .main-content {
-      flex: 1; margin-left: 260px;
+    /* ── Main layout ── */
+    .main-wrap {
+      margin-left: var(--sidebar-w);
+      flex: 1; min-width: 0;
       display: flex; flex-direction: column;
-      min-width: 0;
     }
 
-    /* ─── Topbar ───────────────────────────────────────── */
+    /* ── Topbar ── */
     .topbar {
-      position: sticky; top: 0; z-index: 30;
-      background-color: hsla(45, 30%, 98%, 0.95);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      height: var(--topbar-h);
+      background: var(--bg2);
       border-bottom: 1px solid var(--border);
-      padding: 0 1.5rem; height: 4rem;
       display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; gap: 1rem;
+      position: sticky; top: 0; z-index: 100;
     }
+    .topbar-left { display: flex; align-items: center; gap: .75rem; }
+    .page-title { font-size: 1rem; font-weight: 700; }
+    .page-sub { font-size: .8rem; color: var(--muted-fg); font-family: var(--mono); }
 
-    .dark .topbar { background-color: hsla(220, 25%, 8%, 0.95); }
-
-    .topbar-left { display: flex; align-items: center; gap: 0.75rem; }
-
-    .menu-toggle {
-      display: none; width: 2.5rem; height: 2.5rem;
-      align-items: center; justify-content: center;
-      border-radius: calc(var(--radius) + 4px);
-      color: var(--muted-fg);
-    }
-    .menu-toggle:hover { background-color: var(--muted); }
-
-    .topbar-title { font-size: 1.1rem; font-weight: 700; }
-
-    .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
-
-    .btn-icon {
-      width: 2.5rem; height: 2.5rem;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: calc(var(--radius) + 4px);
-      color: var(--muted-fg); transition: background-color 0.15s;
-    }
-    .btn-icon:hover { background-color: var(--muted); color: var(--fg); }
-
-    .admin-badge {
-      background: linear-gradient(135deg, var(--purple), hsl(270, 55%, 45%));
-      color: #fff; font-size: 0.7rem; font-weight: 700;
-      padding: 0.25rem 0.6rem; border-radius: 9999px;
-      letter-spacing: 0.03em;
-    }
-
-    /* ─── Content ──────────────────────────────────────── */
-    .content { padding: 1.5rem; flex: 1; min-width: 0; }
-
-    /* ─── Stat Cards ───────────────────────────────────── */
-    .stat-grid {
-      display: grid; gap: 1rem; margin-bottom: 2rem;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 480px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1024px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
-
-    .stat-card {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 1rem;
-      display: flex; align-items: flex-start; gap: 0.75rem;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    @media (min-width: 480px) { .stat-card { padding: 1.25rem; gap: 0.875rem; } }
-
-    .stat-card:hover {
-      border-color: hsla(351.69deg, 71.14%, 59.59%, 0.4);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .stat-icon {
-      width: 2.5rem; height: 2.5rem;
-      border-radius: calc(var(--radius) + 4px);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    @media (min-width: 480px) { .stat-icon { width: 3rem; height: 3rem; } }
-
-    .stat-icon.primary {
-      background: linear-gradient(135deg, var(--primary), hsl(351.69deg, 71.14%, 70%));
-      color: #fff; box-shadow: 0 4px 12px hsla(351.69deg, 71.14%, 55%, 0.3);
-    }
-    .stat-icon.success {
-      background: linear-gradient(135deg, var(--success), hsl(145, 55%, 38%));
-      color: #fff; box-shadow: 0 4px 12px hsla(145, 63%, 42%, 0.3);
-    }
-    .stat-icon.warning {
-      background: linear-gradient(135deg, var(--warning), hsl(35, 80%, 45%));
-      color: #fff; box-shadow: 0 4px 12px hsla(35, 90%, 50%, 0.3);
-    }
-    .stat-icon.purple {
-      background: linear-gradient(135deg, var(--purple), hsl(270, 55%, 45%));
-      color: #fff; box-shadow: 0 4px 12px hsla(270, 60%, 55%, 0.3);
-    }
-
-    .stat-icon svg { width: 1.2rem; height: 1.2rem; }
-    @media (min-width: 480px) { .stat-icon svg { width: 1.4rem; height: 1.4rem; } }
-
-    .stat-info h4 {
-      font-size: 0.7rem; font-weight: 600;
-      color: var(--muted-fg); text-transform: uppercase;
-      letter-spacing: 0.05em; margin-bottom: 0.25rem;
-    }
-
-    .stat-value { font-size: 1.5rem; font-weight: 800; line-height: 1; color: var(--fg); }
-    @media (min-width: 480px) { .stat-value { font-size: 1.75rem; } }
-
-    .stat-change { font-size: 0.7rem; font-weight: 600; margin-top: 0.25rem; }
-    .stat-change.up { color: var(--success); }
-    .stat-change.down { color: var(--destructive); }
-
-    /* ─── Section Card ─────────────────────────────────── */
-    .section-card {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-    }
-
-    .section-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.875rem 1rem;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap; gap: 0.75rem;
-    }
-    @media (min-width: 640px) { .section-header { padding: 1rem 1.25rem; } }
-
-    .section-header h3 {
-      font-size: 0.9rem; font-weight: 700;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    @media (min-width: 640px) { .section-header h3 { font-size: 1rem; } }
-
-    .section-header h3 svg { width: 1.1rem; height: 1.1rem; color: var(--primary); flex-shrink: 0; }
-
-    .section-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .topbar-right { display: flex; align-items: center; gap: .5rem; }
 
     .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 0.4rem; font-size: 0.75rem; font-weight: 600;
-      border-radius: calc(var(--radius) + 4px);
-      padding: 0.45rem 0.75rem;
-      transition: all 0.15s ease;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+      font-size: .8rem; font-weight: 600; border-radius: calc(var(--radius) - 2px);
+      transition: background .15s, color .15s, transform .1s, box-shadow .15s;
+      white-space: nowrap; cursor: pointer; padding: .45rem .875rem;
     }
-    @media (min-width: 640px) { .btn { font-size: 0.8rem; padding: 0.5rem 0.875rem; } }
+    .btn:active { transform: scale(0.97); }
+    .btn svg { width: .875rem; height: .875rem; }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), hsl(351.69deg, 71.14%, 65%));
-      color: var(--primary-fg);
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: hsl(351,71%,52%); box-shadow: var(--shadow-glow); }
+
+    .btn-ghost { color: var(--muted-fg); }
+    .btn-ghost:hover { background: var(--bg3); color: var(--fg); }
+
+    .btn-icon { width: 2.1rem; height: 2.1rem; padding: 0; }
+
+    /* ── Content ── */
+    .content {
+      flex: 1; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
+      overflow-y: auto;
     }
-    .btn-primary:hover { opacity: 0.9; box-shadow: 0 4px 12px hsla(351.69deg, 71.14%, 55%, 0.35); }
 
-    .btn-outline { border: 1px solid var(--border); background-color: var(--card); color: var(--fg); }
-    .btn-outline:hover { background-color: var(--muted); }
-
-    .btn-success { background: linear-gradient(135deg, var(--success), hsl(145, 55%, 38%)); color: #fff; }
-    .btn-success:hover { opacity: 0.9; }
-
-    .btn-destructive { background-color: var(--destructive); color: #fff; }
-    .btn-destructive:hover { opacity: 0.9; }
-
-    .btn-sm {
-      padding: 0.3rem 0.55rem; font-size: 0.7rem;
-      border-radius: calc(var(--radius) + 2px);
+    /* ── Stat cards ── */
+    .stats-grid {
+      display: grid; gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
     }
-    @media (min-width: 640px) { .btn-sm { padding: 0.35rem 0.65rem; font-size: 0.75rem; } }
-
-    .section-body { padding: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-    /* ─── Table ────────────────────────────────────────── */
-    .data-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-
-    .data-table thead th {
-      padding: 0.6rem 0.75rem;
-      font-size: 0.65rem; font-weight: 600;
-      color: var(--muted-fg); text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 2px solid var(--border);
-      text-align: left; white-space: nowrap;
-      background-color: var(--card);
-      position: sticky; top: 0;
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.125rem 1.25rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      transition: border-color .2s, box-shadow .2s;
     }
-    @media (min-width: 640px) { .data-table thead th { padding: 0.7rem 1rem; font-size: 0.7rem; } }
-
-    .data-table tbody td {
-      padding: 0.65rem 0.75rem;
-      font-size: 0.75rem;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle; white-space: nowrap;
-    }
-    @media (min-width: 640px) { .data-table tbody td { padding: 0.75rem 1rem; font-size: 0.8rem; } }
-
-    .data-table tbody tr { transition: background-color 0.15s; }
-    .data-table tbody tr:hover { background-color: var(--muted); }
-
-    .user-cell { display: flex; align-items: center; gap: 0.4rem; }
-    @media (min-width: 640px) { .user-cell { gap: 0.5rem; } }
-
-    .avatar-sm {
-      width: 1.75rem; height: 1.75rem;
-      border-radius: 7px;
-      background: linear-gradient(135deg, hsl(351.69deg, 60%, 92%), hsl(351.69deg, 50%, 85%));
+    .stat-card:hover { border-color: var(--primary); box-shadow: var(--shadow-glow); }
+    .stat-card-top { display: flex; align-items: center; justify-content: space-between; }
+    .stat-label { font-size: .75rem; color: var(--muted-fg); font-family: var(--mono); font-weight: 500; }
+    .stat-icon {
+      width: 2rem; height: 2rem; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 0.65rem; font-weight: 700;
-      color: var(--primary);
     }
-    @media (min-width: 640px) { .avatar-sm { width: 2rem; height: 2rem; border-radius: 8px; font-size: 0.7rem; } }
+    .stat-icon svg { width: 1rem; height: 1rem; }
+    .si-red    { background: var(--primary-light); color: var(--primary); }
+    .si-blue   { background: var(--accent-light);  color: var(--accent); }
+    .si-amber  { background: var(--amber-light);   color: var(--amber); }
+    .si-green  { background: var(--green-light);   color: var(--green); }
+    .si-purple { background: var(--purple-light);  color: var(--purple); }
 
-    .dark .avatar-sm {
-      background: linear-gradient(135deg, hsl(351.69deg, 45%, 25%), hsl(351.69deg, 40%, 20%));
+    .stat-val { font-size: 1.6rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+    .stat-change { font-size: .72rem; font-family: var(--mono); }
+    .stat-change.up   { color: var(--green); }
+    .stat-change.down { color: var(--primary); }
+
+    /* ── Section header ── */
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .section-title { font-size: .95rem; font-weight: 700; }
+    .section-sub { font-size: .78rem; color: var(--muted-fg); margin-top: 2px; }
+
+    /* ── Table Container (used for charts/lists) ── */
+    .table-wrap {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
     }
 
-    .badge {
-      display: inline-flex; align-items: center;
-      padding: 0.18rem 0.5rem; border-radius: 9999px;
-      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.02em;
+    /* ── Activity feed ── */
+    .activity-list { display: flex; flex-direction: column; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: .875rem;
+      padding: .875rem 0; border-bottom: 1px solid var(--border);
     }
-    @media (min-width: 640px) { .badge { padding: 0.2rem 0.6rem; font-size: 0.7rem; } }
-
-    .badge-success { background-color: hsla(145, 63%, 42%, 0.12); color: var(--success); }
-    .badge-warning { background-color: hsla(35, 90%, 50%, 0.12); color: var(--warning); }
-    .badge-info { background-color: hsla(210, 90%, 50%, 0.12); color: var(--info); }
-    .badge-purple { background-color: hsla(270, 60%, 55%, 0.12); color: var(--purple); }
-    .badge-primary { background-color: hsla(351.69deg, 71.14%, 59.59%, 0.12); color: var(--primary); }
-
-    .text-right { text-align: right; }
-    .text-muted { color: var(--muted-fg); font-size: 0.7rem; }
-    @media (min-width: 640px) { .text-muted { font-size: 0.75rem; } }
-
-    .font-mono {
-      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-      font-weight: 600; font-size: 0.75rem;
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 2rem; height: 2rem; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: .1rem;
     }
-    @media (min-width: 640px) { .font-mono { font-size: 0.8rem; } }
+    .activity-dot svg { width: .875rem; height: .875rem; }
+    .activity-content { flex: 1; }
+    .activity-text { font-size: .82rem; line-height: 1.45; }
+    .activity-text strong { font-weight: 600; color: var(--fg); }
+    .activity-time { font-size: .7rem; color: var(--muted-fg); font-family: var(--mono); margin-top: 3px; }
 
-    .text-success { color: var(--success); font-weight: 600; }
-    .text-danger { color: var(--destructive); font-weight: 600; }
-
-    /* ─── Footer ───────────────────────────────────────── */
-    footer {
-      border-top: 1px solid var(--border);
-      background-color: var(--card);
-      padding: 0.75rem 1rem;
-      font-size: 0.75rem; color: var(--muted-fg);
-      text-align: center;
+    /* ── Mini chart bars ── */
+    .mini-chart {
+      display: flex; align-items: flex-end; gap: 3px; height: 2.5rem;
     }
-    @media (min-width: 640px) { footer { padding: 1rem 1.5rem; font-size: 0.8rem; } }
+    .bar {
+      flex: 1; border-radius: 3px 3px 0 0;
+      background: var(--primary-light);
+      transition: background .2s;
+      min-width: 0;
+    }
+    .bar:hover { background: var(--primary); }
+    .bar.today { background: var(--primary); }
 
-    /* ─── Mobile Responsive ────────────────────────────── */
-    @media (max-width: 1023px) {
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── Responsive ── */
+    .hamburger { display: none; }
+    @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
-      .main-content { margin-left: 0; }
-      .menu-toggle { display: flex; }
-
+      .main-wrap { margin-left: 0; }
+      .hamburger { display: flex; }
       .sidebar-overlay {
         display: none; position: fixed; inset: 0;
-        background: rgba(0, 0, 0, 0.45); z-index: 35;
+        background: rgba(0,0,0,.5); z-index: 199;
       }
-      .sidebar-overlay.active { display: block; }
-
-      .topbar { padding: 0 1rem; }
-      .content { padding: 1rem; }
-
-      .topbar-title { font-size: 1rem; }
-      .admin-badge { font-size: 0.65rem; padding: 0.2rem 0.5rem; }
-
-      /* Stack header actions on small screens */
-      .section-header { flex-direction: column; align-items: flex-start; }
-      .section-actions { width: 100%; justify-content: flex-start; }
-    }
-
-    @media (max-width: 480px) {
-      .stat-card { flex-direction: row; align-items: flex-start; gap: 0.8rem; }
-      .btn { width: 100%; justify-content: center; }
-      .section-actions { flex-direction: row; width: 100%; }
-      .section-actions .btn { width: 100%; }
-      .topbar-right { gap: 0.25rem; }
-      .admin-badge { display: none; }
-    }
-
-    /* ─── Animations ───────────────────────────────────── */
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
-    .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
-    .animate-slide-up { opacity: 0; animation: slideUp 0.4s ease-out forwards; }
-    .delay-100 { animation-delay: 100ms; }
-    .delay-200 { animation-delay: 200ms; }
-    .delay-300 { animation-delay: 300ms; }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
+      .sidebar-overlay.open { display: block; }
+      .charts-row { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
-
 <body>
 
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-  <div class="admin-layout">
-
-    <!-- ═══════ SIDEBAR ═══════ -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-logo"><span>M</span></div>
-        <div class="sidebar-brand">Mock<small>Admin Panel</small></div>
-      </div>
-
-      <nav class="sidebar-nav">
-  <div class="nav-section">Asosiy</div>
-  <a href="#" class="active" data-page="overview">
-    <!-- Layout Dashboard Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
-    </svg>
-    Dashboard
-  </a>
-
-  <div class="nav-section">Boshqaruv</div>
-  <a href="#" data-page="teachers" data-link="page-teachers.html">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/>
-    <path d="M12 17v4"/>
-    <path d="M9 21h6"/>
-    <path d="M8 7h8"/>
-    <path d="M8 11h5"/>
-  </svg>
-  Tekshiruvchilar
-</a>
-  <a href="#" data-page="users" data-link="page-users.html">
-    <!-- Users Group Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-    </svg>
-    Foydalanuvchilar
-  </a>
-
-  <div class="nav-section">Moliya</div>
-  <a href="#" data-page="topups" data-link="page-topups.html">
-    <!-- Wallet / Topup Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
-      <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
-    </svg>
-    Hisob to'ldirishlar
-  </a>
-  <a href="#" data-page="earnings" data-link="page-earnings.html">
-    <!-- Trending Up / Earnings Analytics Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-      <path d="M3 20h18"/>
-    </svg>
-    Tushumlar
-  </a>
-</nav>
-
-      <div class="sidebar-footer">
-        <a href="./dashboard.html">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
-          </svg>
-          Saytga qaytish
-        </a>
-      </div>
-    </aside>
-
-    <!-- ═══════ MAIN CONTENT ═══════ -->
-    <div class="main-content">
-
-      <header class="topbar">
-        <div class="topbar-left">
-          <button class="menu-toggle" id="menuToggle" aria-label="Menyuni ochish">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-          </button>
-          <span class="topbar-title" id="pageTitle">Dashboard</span>
-        </div>
-        <div class="topbar-right">
-          <span class="admin-badge">ADMIN</span>
-          <button class="btn-icon" id="themeToggle" aria-label="Tungi rejim" title="Tungi rejim">
-            <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-            </svg>
-            <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-          </button>
-        </div>
-      </header>
-
-      <div class="content" id="contentArea">
-
-        <!-- ========== DASHBOARD ========== -->
-        <div id="page-overview">
-          <div class="stat-grid">
-            <div class="stat-card animate-slide-up delay-100">
-              <div class="stat-icon primary">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-              </div>
-              <div class="stat-info">
-                <h4>Foydalanuvchilar</h4>
-                <div class="stat-value">1,248</div>
-                <div class="stat-change up">↑ 12% bu oyda</div>
-              </div>
-            </div>
-            <div class="stat-card animate-slide-up delay-200">
-              <div class="stat-icon success">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                </svg>
-              </div>
-              <div class="stat-info">
-                <h4>Jami to'lovlar</h4>
-                <div class="stat-value">45.8M</div>
-                <div class="stat-change up">↑ 18% bu oyda</div>
-              </div>
-            </div>
-            <div class="stat-card animate-slide-up delay-300">
-              <div class="stat-icon warning">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
-                </svg>
-              </div>
-              <div class="stat-info">
-                <h4>Testlar soni</h4>
-                <div class="stat-value">3,842</div>
-                <div class="stat-change up">↑ 24% bu oyda</div>
-              </div>
-            </div>
-            <div class="stat-card animate-slide-up delay-300">
-              <div class="stat-icon purple">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                </svg>
-              </div>
-              <div class="stat-info">
-                <h4>Tekshiruvchilar</h4>
-                <div class="stat-value">32</div>
-                <div class="stat-change up">↑ 3 ta yangi</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="section-card animate-slide-up delay-200">
-            <div class="section-header">
-              <h3>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                </svg>
-                So'nggi faollik
-              </h3>
-            </div>
-            <div class="section-body">
-              <table class="data-table">
-                <thead>
-                  <tr><th>Foydalanuvchi</th><th>Telefon raqam</th><th>Harakat</th><th>Summa</th><th>Sana</th><th>Holat</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td><div class="user-cell"><div class="avatar-sm">M</div>Malika S.</div></td><td>+998 90 123 45 67</td><td>Hisob to'ldirish</td><td class="text-success font-mono">+50,000</td><td class="text-muted">15:32, 23-may</td><td><span class="badge badge-success">Bajarildi</span></td></tr>
-                  <tr><td><div class="user-cell"><div class="avatar-sm">A</div>Aziz K.</div></td><td>+998 91 234 56 78</td><td>CEFR test</td><td class="text-danger font-mono">-25,000</td><td class="text-muted">14:10, 23-may</td><td><span class="badge badge-primary">Test</span></td></tr>
-                  <tr><td><div class="user-cell"><div class="avatar-sm">D</div>Dildora N.</div></td><td>+998 93 345 67 89</td><td>Hisob to'ldirish</td><td class="text-success font-mono">+100,000</td><td class="text-muted">11:45, 23-may</td><td><span class="badge badge-success">Bajarildi</span></td></tr>
-                  <tr><td><div class="user-cell"><div class="avatar-sm">S</div>Sardor R.</div></td><td>+998 94 456 78 90</td><td>Attanal test</td><td class="text-danger font-mono">-25,000</td><td class="text-muted">09:20, 23-may</td><td><span class="badge badge-primary">Test</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <footer><p>© Salokhiddinov 2026. Barcha huquqlar himoyalangan.</p></footer>
-    </div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark"><span>M</span></div>
+    <span class="logo-name">Mock</span>
+    <span class="logo-badge">Admin</span>
   </div>
 
-  <script>
-    (function() {
-      const html = document.documentElement;
-      const themeToggle = document.getElementById('themeToggle');
-      const sunIcon = document.getElementById('iconSun');
-      const moonIcon = document.getElementById('iconMoon');
+  <nav class="sidebar-nav">
+    <span class="nav-section-label">Asosiy</span>
 
-      const setTheme = (t) => {
-        if (t === 'dark') {
-          html.classList.add('dark');
-          sunIcon.style.display = 'none';
-          moonIcon.style.display = 'block';
-        } else {
-          html.classList.remove('dark');
-          sunIcon.style.display = 'block';
-          moonIcon.style.display = 'none';
-        }
-      };
+    <a href="index.html" class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Umumiy ko'rinish
+    </a>
 
-      const stored = localStorage.getItem('theme');
-      setTheme(stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+    <a href="tests.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Testlar
+      <span class="nav-badge">12</span>
+    </a>
 
-      themeToggle.addEventListener('click', () => {
-        const isDark = html.classList.contains('dark');
-        setTheme(isDark ? 'light' : 'dark');
-        localStorage.setItem('theme', isDark ? 'light' : 'dark');
-      });
+    <a href="schedule.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Jadval
+      <span class="nav-badge">3</span>
+    </a>
 
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      const menuToggle = document.getElementById('menuToggle');
+    <a href="users.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Foydalanuvchilar
+      <span class="nav-badge">248</span>
+    </a>
 
-      menuToggle.addEventListener('click', () => {
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-      });
-      overlay.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-      });
+    <a href="results.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+      Natijalar
+    </a>
 
-      // Navigation: faqat Dashboard o'zi qoladi, qolganlari boshqa fayllarga o'tadi
-      const navLinks = document.querySelectorAll('.sidebar-nav a[data-page]');
-      const pageTitle = document.getElementById('pageTitle');
-      const pageTitles = {
-        overview: 'Dashboard',
-        teachers: "Tekshiruvchilar",
-        users: 'Foydalanuvchilar',
-        topups: "Hisob to'ldirishlar",
-        earnings: 'Tushumlar'
-      };
+    <span class="nav-section-label">Sozlamalar</span>
 
-      // Dashboard sahifasini ko'rsatish
-      const dashboardDiv = document.getElementById('page-overview');
-      dashboardDiv.style.display = 'block';
+    <a href="settings.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 17.66l-1.41 1.41M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M5.34 6.34l-1.41-1.41M12 20v2M12 2v2"/></svg>
+      Sozlamalar
+    </a>
+  </nav>
 
-      navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const page = link.getAttribute('data-page');
-          
-          // Agar Dashboard bo'lsa - hech qayerga ketmaydi, faqat style o'zgaradi
-          if (page === 'overview') {
-            navLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            
-            // Boshqa sahifalarni yashirib, faqat Dashboardni ko'rsat
-            document.querySelectorAll('[id^="page-"]').forEach(p => p.style.display = 'none');
-            dashboardDiv.style.display = 'block';
-            pageTitle.textContent = pageTitles[page] || page;
-            
-            // Sidebarni yopish (mobilda)
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-            return;
-          }
-          
-          // Boshqa sahifalar (tekshiruvchilar, foydalanuvchilar, hisob to'ldirishlar, tushumlar)
-          // Ular alohida fayllarga o'tadi
-          const targetFile = link.getAttribute('data-link');
-          if (targetFile) {
-            window.location.href = targetFile;
-          }
-        });
-      });
-    })();
-  </script>
+  <div class="sidebar-footer">
+    <div class="admin-profile">
+      <div class="avatar">A</div>
+      <div class="admin-info">
+        <div class="admin-name">Administrator</div>
+        <div class="admin-role">super·admin</div>
+      </div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted-fg)"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    </div>
+  </div>
+</aside>
+
+<div class="main-wrap">
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="btn btn-ghost btn-icon hamburger" onclick="openSidebar()" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <div class="page-title">Umumiy ko'rinish</div>
+        <div class="page-sub">mock.admin · overview</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-icon" aria-label="Bildirishnomalar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <a href="create-test.html" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Yangi test
+      </a>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-top">
+          <span class="stat-label">Foydalanuvchilar</span>
+          <div class="stat-icon si-red">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div class="stat-val">248</div>
+        <div class="stat-change up">↑ +12 bu hafta</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-top">
+          <span class="stat-label">Jami testlar</span>
+          <div class="stat-icon si-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+          </div>
+        </div>
+        <div class="stat-val">12</div>
+        <div class="stat-change up">↑ +2 bu oy</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-top">
+          <span class="stat-label">Topshirilgan</span>
+          <div class="stat-icon si-green">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+        <div class="stat-val">1,047</div>
+        <div class="stat-change up">↑ +89 bu hafta</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-top">
+          <span class="stat-label">O'rtacha ball</span>
+          <div class="stat-icon si-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+        <div class="stat-val">6.8</div>
+        <div class="stat-change down">↓ −0.2 bu oy</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-top">
+          <span class="stat-label">Rejalashtirilgan</span>
+          <div class="stat-icon si-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+        </div>
+        <div class="stat-val">3</div>
+        <div class="stat-change up">↑ kelgusi 7 kun</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" class="charts-row">
+      <div class="table-wrap" style="padding:1.25rem">
+        <div class="section-head" style="margin-bottom:1rem">
+          <div>
+            <div class="section-title">Haftalik faollik</div>
+            <div class="section-sub">So'nggi 7 kun</div>
+          </div>
+        </div>
+        <div class="mini-chart">
+          <div class="bar" style="height:35%"></div>
+          <div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:48%"></div>
+          <div class="bar" style="height:72%"></div>
+          <div class="bar" style="height:60%"></div>
+          <div class="bar" style="height:88%"></div>
+          <div class="bar today" style="height:100%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:.5rem;font-size:.68rem;font-family:var(--mono);color:var(--muted-fg);">
+          <span>Du</span><span>Se</span><span>Ch</span><span>Pa</span><span>Ju</span><span>Sh</span><span>Ya</span>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="padding:1.25rem">
+        <div class="section-head" style="margin-bottom:1rem">
+          <div>
+            <div class="section-title">Test taqsimoti</div>
+            <div class="section-sub">Tur bo'yicha</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.625rem">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem"><span>IELTS</span><span style="font-family:var(--mono);color:var(--primary)">42%</span></div>
+            <div style="background:var(--bg3);border-radius:4px;height:6px"><div style="background:var(--primary);height:100%;width:42%;border-radius:4px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem"><span>CEFR</span><span style="font-family:var(--mono);color:var(--accent)">28%</span></div>
+            <div style="background:var(--bg3);border-radius:4px;height:6px"><div style="background:var(--accent);height:100%;width:28%;border-radius:4px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem"><span>SAT</span><span style="font-family:var(--mono);color:var(--amber)">18%</span></div>
+            <div style="background:var(--bg3);border-radius:4px;height:6px"><div style="background:var(--amber);height:100%;width:18%;border-radius:4px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem"><span>At-tanal</span><span style="font-family:var(--mono);color:var(--purple)">12%</span></div>
+            <div style="background:var(--bg3);border-radius:4px;height:6px"><div style="background:var(--purple);height:100%;width:12%;border-radius:4px"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="padding:1.25rem">
+      <div class="section-head" style="margin-bottom:1rem">
+        <div><div class="section-title">So'nggi faoliyat</div></div>
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-dot si-green"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="activity-content">
+            <div class="activity-text"><strong>Aziz Karimov</strong> ro'yxatdan o'tdi</div>
+            <div class="activity-time">2 daqiqa avval</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot si-blue"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="activity-content">
+            <div class="activity-text"><strong>Malika Yusupova</strong> IELTS testini yakunladi — <strong style="color:var(--green)">7.0 ball</strong></div>
+            <div class="activity-time">15 daqiqa avval</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot si-amber"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div class="activity-content">
+            <div class="activity-text">CEFR Mock 3 testi <strong>rejalashtirildi</strong> — 15-iyun, 14:00</div>
+            <div class="activity-time">1 soat avval</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot si-red"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>
+          <div class="activity-content">
+            <div class="activity-text">Yangi test yaratildi: <strong>SAT Matematika — Amaliyot 4</strong></div>
+            <div class="activity-time">3 soat avval</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // ── Faqat mobil qurilmalardagi menyuni boshqarish uchun minimal JS ──
+  function openSidebar()  { 
+    document.getElementById('sidebar').classList.add('open'); 
+    document.getElementById('sidebarOverlay').classList.add('open'); 
+  }
+  function closeSidebar() { 
+    document.getElementById('sidebar').classList.remove('open'); 
+    document.getElementById('sidebarOverlay').classList.remove('open'); 
+  }
+</script>
 </body>
 </html>

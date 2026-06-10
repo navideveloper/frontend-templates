@@ -2,23 +2,470 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" 
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <title>LesAiles - PWA</title>
-    <link rel="stylesheet" href="./assets/css/PWA/style.css">
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --ios-system-body-background: #f5f5f7;
+            --ios-system-primary: #e82656;
+            --ios-system-gray: #8E8E93;
+            --ios-system-gray2: #AEAEB2;
+            --ios-system-gray6: #F2F2F7;
+            --ios-system-gray0: #1d1d1d;
+            --ios-system-btn-active: #34a99d;
+            --ios-label-primary: #222222;
+            --ios-label-secondary: #3C3C4399;
+            --ios-system-background: #FFFFFF;
+            --ios-card-background: rgba(255, 255, 255, 0.8);
+            --ios-blur-intensity: 10px;
+        }
+
+        .darkmode {
+            --ios-system-body-background: black;
+            --ios-system-primary: #e82656;
+            --ios-system-gray: #8E8E93;
+            --ios-system-gray2: #636366;
+            --ios-system-gray6: #252525;
+            --ios-system-btn-active: #3db9d3;
+            --ios-label-primary: #9f9f9fcf;
+            --ios-label-secondary: #b4b4b4cf;
+            --ios-system-background: #121212;
+            --ios-card-background: rgba(30, 30, 30, 0.8);
+        }
+
+        /* --- GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--ios-system-body-background);
+            color: var(--ios-label-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .ios-app-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--ios-card-background);
+            min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        .ios-app-header {
+            padding: 8px 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--ios-system-background);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .branch-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .branch-info span {
+            font-size: 14px;
+            color: var(--ios-system-gray);
+        }
+
+        /* --- CART BUTTON --- */
+        .cart-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: white;
+            background-color: var(--ios-system-primary);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .cart-button .cart-icon {
+            font-size: 1.2rem;
+            transform: rotateY(180deg);
+        }
+
+        .cart-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- SLIDER / BANNER --- */
+        .slider-wrapper {
+            max-width: 1100px;
+            margin: 12px auto;
+            padding: 0 16px;
+        }
+
+        .slider-header {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: medium;
+        }
+
+        .slider-shell {
+            position: relative;
+        }
+
+        .slider {
+            display: flex;
+            align-items: stretch;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 2px 0 10px 2px;
+            margin: 0 -2px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .slider[data-hide-scrollbar="true"]::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide {
+            flex: 0 0 calc(50% - 8px);
+            aspect-ratio: 16 / 9;
+            border-radius: 18px;
+            background: #222;
+            overflow: hidden;
+            position: relative;
+            scroll-snap-align: start;
+        }
+
+        .slide a {
+            position: absolute;
+            inset: 0;
+            display: block;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .label {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 13px;
+            color: white;
+            background: rgba(0,0,0,.38);
+            backdrop-filter: blur(8px);
+        }
+
+        /* --- CATEGORIES --- */
+        .category-scroller {
+            padding: 5px 0 15px 0;
+            border-radius: 12px;
+            background-color: color-mix(in srgb, var(--ios-system-gray6) 95%, transparent);
+            backdrop-filter: blur(8px) saturate(180%);
+            position: sticky;
+            bottom: -1px;
+            z-index: 10;
+        }
+
+        .category-badges {
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px;
+            overflow-x: auto;
+        }
+
+        .category-badges::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .category-badges::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .category-badges::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        .category-badge {
+            background-color: color-mix(in srgb, var(--ios-system-background) 15%, transparent);
+            border: 1px solid var(--ios-system-gray2);
+            color: var(--ios-system-gray);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .category-badge.active {
+            background-color: color-mix(in srgb, var(--ios-system-primary) 15%, transparent);
+            color: var(--ios-system-primary);
+            border-color: var(--ios-system-primary);
+        }
+
+        .category-badge:not(.active):active {
+            background-color: var(--ios-system-gray6);
+        }
+
+        .category-badge.active:active {
+            background-color: color-mix(in srgb, var(--ios-system-primary) 10%, transparent);
+        }
+
+        /* --- PRODUCT CONTAINERS --- */
+        .product-row-container, .product-grid-container {
+            padding: 16px;
+        }
+
+        .ios-product-row {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-right: 16px;
+        }
+
+        .ios-product-row > * {
+            flex: 0 0 calc((100% - 16px) / 2);
+            scroll-snap-align: start;
+        }
+
+        .ios-product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        /* --- PRODUCT CARD --- */
+        .ios-product-card {
+            background-color: var(--ios-card-background);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .ios-product-card.disabled::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.05) 10px,
+                rgba(0,0,0,0.05) 20px
+            );
+            pointer-events: none;
+        }
+
+        .product-image-container {
+            height: 120px;
+            overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-details {
+            padding: 12px;
+        }
+
+        .product-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .product-description {
+            font-size: 13px;
+            color: var(--ios-label-secondary);
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-footer {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.77rem;
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ios-system-primary);
+        }
+
+        /* --- QUANTITY CONTROL --- */
+        .ios-quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--ios-system-gray6);
+            border-radius: 25px;
+            padding: 0.25rem 0.4rem;
+            width: fit-content;
+            height: 2.2rem;
+            margin-bottom: 0.7rem;
+            align-self: center;
+        }
+
+        .quantity-btn {
+            background: white;
+            border: none;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            transition: 0.15s;
+        }
+
+        .quantity-btn:hover {
+            background: #e8e8ed;
+        }
+
+        .quantity-btn:active {
+            background-color: color-mix(in srgb, var(--ios-system-primary) 10%, transparent);
+        }
+
+        .quantity-value {
+            font-weight: 650;
+            min-width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* --- ADD BUTTON --- */
+        .ios-add-button {
+            width: 100%;
+            background-color: var(--ios-system-primary);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .ios-add-button.disabled {
+            background-color: var(--ios-system-gray);
+        }
+
+        .ios-add-button:active {
+            background-color: color-mix(in srgb, var(--ios-system-primary) 60%, transparent);
+        }
+
+        svg {
+            color: var(--ios-system-gray);
+        }
+
+        /* --- RESPONSIVE STYLES --- */
+        @media (max-width: 540px) {
+            .slide { flex-basis: calc(50% - 10px); }
+        }
+
+        @media (max-width: 400px) {
+            .ios-product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            .brand-name {
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
-<body class="">
+<body>
     <div class="app-container">
         <div class="blur-background"></div>
         
         <div class="ios-app-wrapper">
-            <!-- Header with prominent cart -->
             <header class="ios-app-header">
                 <div class="header-content">
                     <div class="brand-info">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGcPqHMcNLmnj7fnztINLAhs1zk2lHqaUx2A&s" draggable="false" alt="Chopar Pizza" class="brand-logo">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGcPqHMcNLmnj7fnztINLAhs1zk2lHqaUx2A&s" draggable="false" alt="LesAiles" class="brand-logo">
                         <div class="branch-info">
                             <h1 class="brand-name">LesAiles</h1>
                             <span>Toshkent, Qoratosh ko'chasi, 5A</span>
@@ -30,39 +477,38 @@
                     </a>
                 </div>
             </header>
+
             <div class="slider-wrapper">
-                    <div class="slider-header">
-                        <h3>Chegirmalar</h3>
-                    </div>
-                    <div class="slider-shell slider-mask">
-                        <div class="slider" data-hide-scrollbar="true">
-                            <div class="slide">
+                <div class="slider-header">
+                    <h3>Chegirmalar</h3>
+                </div>
+                <div class="slider-shell slider-mask">
+                    <div class="slider" data-hide-scrollbar="true">
+                        <div class="slide">
                             <a href="#banner-1" aria-label="Banner 1"></a>
-                            <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1600&auto=format&fit=crop" alt="Sneakers on colorful background" />
+                            <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1600&auto=format&fit=crop" alt="Sneakers" />
                             <span class="label">Summer Sale</span>
-                            </div>
-
-                            <div class="slide">
+                        </div>
+                        <div class="slide">
                             <a href="#banner-2" aria-label="Banner 2"></a>
-                            <img src="https://images.unsplash.com/photo-1491555103944-7c647fd857e6?q=80&w=1600&auto=format&fit=crop" alt="Streetwear jacket" />
+                            <img src="https://images.unsplash.com/photo-1491555103944-7c647fd857e6?q=80&w=1600&auto=format&fit=crop" alt="Jacket" />
                             <span class="label">New Arrivals</span>
-                            </div>
-
-                            <div class="slide">
+                        </div>
+                        <div class="slide">
                             <a href="#banner-6" aria-label="Banner 6"></a>
                             <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1600&auto=format&fit=crop" alt="Sneakers lifestyle" />
                             <span class="label">Editors’ Choice</span>
-                            </div>
                         </div>
                     </div>
+                </div>
             </div>
-            <!-- Combo row with iOS cards -->
+
             <main class="product-row-container">
                 <div class="slider-header">
                     <h3>Combolar</h3>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"><path d="M9.583 27.182C7.867 28.354 7.009 30.293 7.009 33c0 4.06 4.991 11 9.492 11h11.515c4.405 0 7.08-3.85 7.08-6.94V24.6a3.253 3.253 0 0 0-3.243-3.253a3.235 3.235 0 0 0-3.245 3.226v.11"/><path d="M10.981 29.445V7.662a3.217 3.217 0 0 1 6.435 0v15.986"/><path stroke-linejoin="round" d="M17.416 24v-4.192a2.804 2.804 0 0 1 5.608 0v4.62"/><path stroke-linejoin="round" d="M23 24.658v-2.85a2.804 2.804 0 0 1 5.608 0v3.195"/><path d="M11 8h30"/><path stroke-linejoin="round" d="m36 12.5l1.667-1.5L41 8l-3.333-3L36 3.5"/></g></svg>
                 </div>
-                <div class="ios-product-row ">
+                <div class="ios-product-row">
                     <article class="ios-product-card">
                         <div class="product-image-container">
                             <img src="https://www.portablepress.com/wp-content/uploads/2017/10/Fast-food-combo-meal.jpg" alt="GamBurger" draggable="false" class="product-image">
@@ -75,7 +521,7 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
@@ -83,7 +529,6 @@
                         </div>
                     </article>
 
-                    <!-- Product 2 -->
                     <article class="ios-product-card disabled">
                         <div class="product-image-container">
                             <img src="./assets/images/bigburger.avif" alt="Big Burger" draggable="false" class="product-image">
@@ -96,15 +541,14 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
-                            <button class="ios-add-button disabled">Savatda mavjud</button>
+                            <button class="ios-add-button disabled" disabled>Savatda mavjud</button>
                         </div>
                     </article>
 
-                    <!-- Product 3 -->
                     <article class="ios-product-card">
                         <div class="product-image-container">
                             <img src="./assets/images/pizza.jpg" alt="Milliy Pizza" draggable="false" class="product-image">
@@ -117,7 +561,7 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
@@ -125,7 +569,6 @@
                         </div>
                     </article>
 
-                    <!-- Product 4 -->
                     <article class="ios-product-card">
                         <div class="product-image-container">
                             <img src="./assets/images/drink.jpg" alt="Cola" draggable="false" class="product-image">
@@ -138,7 +581,7 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
@@ -146,7 +589,6 @@
                         </div>
                     </article>
 
-                    <!-- Product 5 -->
                     <article class="ios-product-card">
                         <div class="product-image-container">
                             <img src="./assets/images/chips.avif" alt="Chipslar" draggable="false" class="product-image">
@@ -159,7 +601,7 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
@@ -168,7 +610,7 @@
                     </article>
                 </div>
             </main>
-            <!-- Product grid with iOS cards -->
+
             <main class="product-grid-container">
                 <div class="slider-header">
                     <h3>Mahsulotlar</h3>
@@ -187,7 +629,7 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
@@ -195,7 +637,6 @@
                         </div>
                     </article>
 
-                    <!-- Product 2 -->
                     <article class="ios-product-card disabled">
                         <div class="product-image-container">
                             <img src="./assets/images/bigburger.avif" alt="Big Burger" draggable="false" class="product-image">
@@ -208,15 +649,14 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
-                            <button class="ios-add-button disabled">Savatda mavjud</button>
+                            <button class="ios-add-button disabled" disabled>Savatda mavjud</button>
                         </div>
                     </article>
 
-                    <!-- Product 3 -->
                     <article class="ios-product-card">
                         <div class="product-image-container">
                             <img src="./assets/images/pizza.jpg" alt="Milliy Pizza" draggable="false" class="product-image">
@@ -229,7 +669,7 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
@@ -237,7 +677,6 @@
                         </div>
                     </article>
 
-                    <!-- Product 4 -->
                     <article class="ios-product-card">
                         <div class="product-image-container">
                             <img src="./assets/images/drink.jpg" alt="Cola" draggable="false" class="product-image">
@@ -250,7 +689,7 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
@@ -258,7 +697,6 @@
                         </div>
                     </article>
 
-                    <!-- Product 5 -->
                     <article class="ios-product-card">
                         <div class="product-image-container">
                             <img src="./assets/images/chips.avif" alt="Chipslar" draggable="false" class="product-image">
@@ -271,7 +709,7 @@
                                 <div class="ios-quantity-control">
                                     <button class="quantity-btn decrease">−</button>
                                     <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" id="quantity-hidden" value="0">
+                                    <input type="hidden" name="quantity" value="0">
                                     <button class="quantity-btn increase">+</button>
                                 </div>
                             </div>
@@ -280,7 +718,7 @@
                     </article>
                 </div>
             </main>
-            <!-- Horizontal scrollable category badges -->
+
             <section class="category-scroller">
                 <div class="category-badges">
                     <button class="category-badge active">Barchasi</button>
@@ -295,47 +733,7 @@
             </section>
         </div>
     </div>
-    <style>
-        .ios-quantity-control {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: #f5f5f7;
-      border-radius: 25px;
-      padding: 0.25rem 0.4rem;
-      width: fit-content;
-      height: fit-content;
-      margin-bottom: 0.7rem;
-    }
 
-    .quantity-btn {
-      background: white;
-      border: none;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1d1d1f;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-      transition: 0.15s;
-    }
-
-    .quantity-btn:hover {
-      background: #e8e8ed;
-    }
-
-    .quantity-value {
-      font-weight: 650;
-      min-width: 20px;
-      text-align: center;
-      font-size: 1rem;
-    }
-    </style>
     <script src="./assets/js/PWA/menu.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

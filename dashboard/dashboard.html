@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Adaptive Bento Dashboard</title>
+    <!-- Google Fonts: DM Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 Stable -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ========= THEME VARIABLES ========= */
+        :root {
+            /* Default Dark Mode (AMOLED Pitch Black) */
+            --bg-main: #000000;
+            --card-bg: #121212;
+            --sidebar-bg: #0a0a0a;
+            --border-line: rgba(255, 255, 255, 0.08);
+            
+            --text-primary: #ffffff;
+            --text-secondary: #8e8e93;
+            
+            --accent-blue: #0a84ff;
+            --accent-green: #30d158;
+            --accent-orange: #ff9f0a;
+            --accent-red: #ff453a;
+
+            --nav-item-color: #a1a1a6;
+            --nav-item-icon: #515156;
+            --nav-item-hover: rgba(255, 255, 255, 0.03);
+            --nav-item-active: rgba(255, 255, 255, 0.07);
+            --card-hover-shadow: rgba(0, 0, 0, 0.6);
+            --activity-icon-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        body.light-theme {
+            /* Premium Light Mode (Apple-esque Aesthetic) */
+            --bg-main: #f5f5f7;
+            --card-bg: #ffffff;
+            --sidebar-bg: #ffffff;
+            --border-line: rgba(0, 0, 0, 0.06);
+            
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            
+            --accent-blue: #0071e3;
+            --accent-green: #24b14b;
+            --accent-orange: #ff9500;
+            --accent-red: #ff3b30;
+
+            --nav-item-color: #424245;
+            --nav-item-icon: #86868b;
+            --nav-item-hover: rgba(0, 0, 0, 0.03);
+            --nav-item-active: rgba(0, 0, 0, 0.05);
+            --card-hover-shadow: rgba(0, 0, 0, 0.04);
+            --activity-icon-bg: rgba(0, 0, 0, 0.02);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========= FULL SCREEN STRUCTURE ========= */
+        .dashboard-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ========= FIXED SIDEBAR (NO-SCROLL) ========= */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-line);
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            flex-shrink: 0;
+            overflow: hidden; /* Sidebar ichida scroll butunlay taqiqlandi */
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 8px;
+        }
+
+        .logo-icon {
+            font-size: 22px;
+            color: var(--accent-blue);
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 19px;
+            color: var(--text-primary);
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--nav-item-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            color: var(--nav-item-icon);
+            transition: color 0.2s ease;
+        }
+
+        .nav-item.active {
+            background: var(--nav-item-active);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .nav-item.active i {
+            color: var(--accent-blue);
+        }
+
+        .nav-item:not(.active):hover {
+            background: var(--nav-item-hover);
+            color: var(--text-primary);
+        }
+
+        .bottom-links {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-top: 1px solid var(--border-line);
+            padding-top: 20px;
+        }
+
+        /* Mode Switcher Button */
+        .theme-toggle-btn {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--text-primary);
+            color: var(--bg-main);
+            transition: opacity 0.2s ease;
+        }
+        
+        .theme-toggle-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* ========= MAIN SCROLLABLE CONTENT ========= */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Faqat o'ng tomon bento-grid qismi scroll bo'ladi */
+        }
+
+        /* Top Bar Header */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 36px;
+        }
+
+        .page-title h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .search-box {
+            background: var(--nav-item-hover);
+            border-radius: 8px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border-line);
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            width: 220px;
+            color: var(--text-primary);
+        }
+
+        .search-box input::placeholder {
+            color: var(--nav-item-icon);
+        }
+
+        .search-box i {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* ========= BENTO GRID LAYOUT ========= */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .bento-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-line);
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+        }
+
+        .bento-box:hover {
+            border-color: rgba(10, 132, 255, 0.3);
+            box-shadow: 0 8px 30px var(--card-hover-shadow);
+        }
+
+        /* Stat Grid Components */
+        .stat-card { grid-column: span 1; }
+
+        .stat-header {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-footer {
+            font-size: 13px;
+            margin-top: 12px;
+            font-weight: 600;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Chart Area */
+        .chart-box {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .box-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-primary);
+        }
+
+        .live-badge {
+            font-size: 11px;
+            background: rgba(10, 132, 255, 0.08);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            border: 1px solid rgba(10, 132, 255, 0.15);
+        }
+
+        /* Activity Logs Components */
+        .activity-box {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-line);
+        }
+
+        .activity-item:last-child { border: none; }
+
+        .item-details {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .item-icon-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            background: var(--activity-icon-bg);
+            border: 1px solid var(--border-line);
+        }
+
+        .item-text h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .item-text p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .item-status {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--activity-icon-bg);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-line);
+        }
+
+        /* Operators Panel Component */
+        .team-box { grid-column: span 4; }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-top: 4px;
+        }
+
+        .team-card {
+            background: var(--nav-item-hover);
+            border: 1px solid var(--border-line);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .member-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--activity-icon-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            border: 1px solid var(--border-line);
+        }
+
+        .member-name h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .member-name p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .member-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            background: rgba(10, 132, 255, 0.07);
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(10, 132, 255, 0.15);
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        /* Responsive Adaptive Layout */
+        @media (max-width: 1200px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .chart-box, .activity-box, .team-box { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .stat-card, .chart-box, .activity-box, .team-box { grid-column: span 1; }
+            .main-content { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    
+    <!-- Sidebar Pane (Fixed & Non-Scrollable) -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-bolt logo-icon"></i>
+            <span class="logo-text">Aura Node</span>
+        </div>
+        
+        <div class="nav-items">
+            <div class="nav-item active">
+                <i class="fa-solid fa-border-all"></i>
+                <span>Overview</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-chart-bar"></i>
+                <span>Metrics</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-fingerprint"></i>
+                <span>Security</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+        
+        <div class="bottom-links">
+            <!-- Theme Switcher Button -->
+            <div class="theme-toggle-btn" id="themeToggleBtn">
+                <i class="fa-solid fa-sun"></i>
+                <span>Light Mode</span>
+            </div>
+            
+            <div class="nav-item" style="padding: 12px 16px; margin: 0;">
+                <i class="fa-solid fa-code"></i>
+                <span>Developer Desk</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace Canvas (Scrollable) -->
+    <div class="main-content">
+        <!-- Sub Header -->
+        <div class="top-bar">
+            <div class="page-title">
+                <h1>Overview</h1>
+                <p>System infrastructure optimized for pure screen performance</p>
+            </div>
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search systems...">
+            </div>
+        </div>
+
+        <!-- Bento Grid Structure -->
+        <div class="bento-grid">
+            
+            <!-- Bento Mini Box Components -->
+            <div class="bento-box stat-card">
+                <div class="stat-header">Revenue</div>
+                <div class="stat-number">$48.2k</div>
+                <div class="stat-footer"><i class="fa-solid fa-arrow-trend-up"></i> 12.4%</div>
+            </div>
+
+            <div class="bento-box stat-card">
+                <div class="stat-header">Sessions</div>
+                <div class="stat-number">2,847</div>
+                <div class="stat-footer"><i class="fa-solid fa-arrow-trend-up"></i> 8.4%</div>
+            </div>
+
+            <div class="bento-box stat-card">
+                <div class="stat-header">Latency</div>
+                <div class="stat-number">24ms</div>
+                <div class="stat-footer" style="color: var(--accent-red);"><i class="fa-solid fa-arrow-trend-down"></i> 1.2%</div>
+            </div>
+
+            <div class="bento-box stat-card">
+                <div class="stat-header">Core Load</div>
+                <div class="stat-number">14%</div>
+                <div class="stat-footer" style="color: var(--accent-orange);"><i class="fa-solid fa-circle-check"></i> Nominal</div>
+            </div>
+
+            <!-- Bento Premium Chart Box -->
+            <div class="bento-box chart-box">
+                <div class="box-title">
+                    <span>Performance Dynamics</span>
+                    <span class="live-badge">Live Feed</span>
+                </div>
+                <div style="height: 200px; width:100%;">
+                    <canvas id="adaptiveChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Bento Event Logs Box -->
+            <div class="bento-box activity-box">
+                <div class="box-title">Network Events</div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="item-details">
+                            <div class="item-icon-wrap" style="color: var(--accent-blue);"><i class="fa-solid fa-terminal"></i></div>
+                            <div class="item-text">
+                                <h4>Deployment complete</h4>
+                                <p>Production environment build v4.0.2 active</p>
+                            </div>
+                        </div>
+                        <div class="item-status">12m ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-details">
+                            <div class="item-icon-wrap" style="color: var(--accent-orange);"><i class="fa-solid fa-key"></i></div>
+                            <div class="item-text">
+                                <h4>API Tokens Rotated</h4>
+                                <p>Infrastructure clearance level authorization refreshed</p>
+                            </div>
+                        </div>
+                        <div class="item-status">3h ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-details">
+                            <div class="item-icon-wrap" style="color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div class="item-text">
+                                <h4>Firewall Audit Complete</h4>
+                                <p>0 architectural network leaks discovered</p>
+                            </div>
+                        </div>
+                        <div class="item-status">1d ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bento Full Width Operator Block -->
+            <div class="bento-box team-box">
+                <div class="box-title" style="margin-bottom: 16px;">Active Infrastructure Operators</div>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="member-info">
+                            <div class="member-avatar">JD</div>
+                            <div class="member-name">
+                                <h4>Jessica Dan</h4>
+                                <p>Infrastructure Director</p>
+                            </div>
+                        </div>
+                        <div class="member-tag">Active</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="member-info">
+                            <div class="member-avatar">MC</div>
+                            <div class="member-name">
+                                <h4>Marcus Chen</h4>
+                                <p>Security Operations</p>
+                            </div>
+                        </div>
+                        <div class="member-tag" style="color: var(--accent-orange); background: rgba(255, 159, 10, 0.07); border-color: rgba(255, 159, 10, 0.15);">On Call</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="member-info">
+                            <div class="member-avatar">SW</div>
+                            <div class="member-name">
+                                <h4>Sophia Williams</h4>
+                                <p>Lead Architect</p>
+                            </div>
+                        </div>
+                        <div class="member-tag" style="color: var(--text-secondary); background: var(--activity-icon-bg); border-color: var(--border-line);">Standby</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            AURA NODE CORE ARCHITECTURE • SYSTEM ADAPTIVE ENGINE
+        </footer>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const ctx = document.getElementById('adaptiveChart').getContext('2d');
+        
+        // Linear Gradient Setup
+        const gradientFill = ctx.createLinearGradient(0, 0, 0, 200);
+        gradientFill.addColorStop(0, 'rgba(10, 132, 255, 0.12)');
+        gradientFill.addColorStop(1, 'rgba(10, 132, 255, 0.0)');
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    data: [410, 490, 440, 610, 530, 720, 810],
+                    borderColor: '#0a84ff', 
+                    borderWidth: 2.5, 
+                    pointRadius: 0, 
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: '#0a84ff',
+                    pointHoverBorderWidth: 2,
+                    tension: 0.35, 
+                    fill: true,
+                    backgroundColor: gradientFill
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: true,
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        font: { family: 'DM Sans', size: 13 }
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: { color: '#8e8e93', font: { family: 'DM Sans', size: 11 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#8e8e93', font: { family: 'DM Sans', size: 11 } }
+                    }
+                }
+            }
+        });
+
+        // Toggle Theme Action
+        const toggleBtn = document.getElementById('themeToggleBtn');
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            const isLight = document.body.classList.contains('light-theme');
+            
+            // UI Button elements update
+            toggleBtn.querySelector('span').textContent = isLight ? 'Dark Mode' : 'Light Mode';
+            toggleBtn.querySelector('i').className = isLight ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+            
+            // Dynamic Chart updates based on context
+            const tickColor = isLight ? '#6e6e73' : '#8e8e93';
+            const gridColor = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.03)';
+            
+            chart.options.scales.y.ticks.color = tickColor;
+            chart.options.scales.x.ticks.color = tickColor;
+            chart.options.scales.y.grid.color = gridColor;
+            chart.update();
+        });
+
+        // Interactive Navigation Logic
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    })();
+</script>
+</body>
+</html>

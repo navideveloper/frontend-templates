@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>macOS Premium Bento Dashboard</title>
+    <!-- Google Fonts: DM Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 Stable -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* macOS Native System Colors */
+        :root {
+            --mac-window-bg: rgba(255, 255, 255, 0.65);
+            --mac-sidebar-bg: rgba(246, 246, 246, 0.6);
+            --mac-card-bg: rgba(255, 255, 255, 0.75);
+            --mac-border: rgba(0, 0, 0, 0.08);
+            --mac-inner-border: rgba(255, 255, 255, 0.5);
+            
+            --text-main: #1d1d1f;
+            --text-sub: #6e6e73;
+            
+            /* Apple Semantic Palette */
+            --apple-blue: #007aff;
+            --apple-green: #34c759;
+            --apple-orange: #ff9500;
+            --apple-red: #ff3b30;
+            --apple-graph-grad: rgba(0, 122, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.015em;
+        }
+
+        body {
+            /* Premium macOS Abstract Mesh Background */
+            background: radial-gradient(circle at 10% 20%, rgba(239, 243, 248, 1) 0%, rgba(220, 231, 247, 1) 90%);
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        /* Main macOS App Window Container */
+        .mac-app-window {
+            width: 100%;
+            max-width: 1440px;
+            height: 90vh;
+            background: var(--mac-window-bg);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid var(--mac-inner-border);
+            border-radius: 20px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.2);
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ========= SIDEBAR (macOS Finder Style) ========= */
+        .sidebar {
+            width: 250px;
+            background: var(--mac-sidebar-bg);
+            border-right: 1px solid var(--mac-border);
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* macOS Window Traffic Lights Control */
+        .traffic-lights {
+            display: flex;
+            gap: 8px;
+            padding-left: 8px;
+            margin-bottom: 4px;
+        }
+
+        .traffic-lights span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+        }
+
+        .traffic-lights .close { background: var(--apple-red); border: 0.5px solid rgba(0,0,0,0.1); }
+        .traffic-lights .minimize { background: var(--apple-orange); border: 0.5px solid rgba(0,0,0,0.1); }
+        .traffic-lights .zoom { background: var(--apple-green); border: 0.5px solid rgba(0,0,0,0.1); }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 8px;
+        }
+
+        .logo-icon {
+            font-size: 20px;
+            color: var(--apple-blue);
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-main);
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #4a4a4c;
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            color: var(--apple-blue);
+        }
+
+        .nav-item.active {
+            background: rgba(0, 122, 255, 0.12);
+            color: var(--apple-blue);
+            font-weight: 600;
+        }
+
+        .nav-item:not(.active):hover {
+            background: rgba(0, 0, 0, 0.04);
+            color: var(--text-main);
+        }
+
+        .bottom-links {
+            margin-top: auto;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 16px;
+        }
+
+        /* ========= MAIN CANVAS ========= */
+        .main-content {
+            flex: 1;
+            padding: 32px 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Style */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .page-title h1 {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.03em;
+        }
+
+        .page-title p {
+            font-size: 15px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        .mac-search {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--mac-border);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .mac-search input {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            width: 200px;
+            color: var(--text-main);
+        }
+
+        .mac-search i {
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        /* ========= BENTO GRID LAYOUT ========= */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .bento-box {
+            background: var(--mac-card-bg);
+            border: 1px solid var(--mac-border);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .bento-box:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Stat Grid Elements */
+        .stat-card { grid-column: span 1; }
+
+        .stat-header {
+            color: var(--text-sub);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .stat-footer {
+            font-size: 13px;
+            margin-top: 10px;
+            font-weight: 600;
+            color: var(--apple-green);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Chart Canvas Area */
+        .chart-box {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .box-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-main);
+        }
+
+        .time-badge {
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        /* List Layout Elements */
+        .activity-box {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .activity-item:last-child { border: none; }
+
+        .item-details {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-icon-wrap {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .item-text h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .item-text p {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-top: 1px;
+        }
+
+        .item-status {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-sub);
+            background: rgba(0,0,0,0.04);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        /* Operators Panel */
+        .team-box { grid-column: span 4; }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-top: 6px;
+        }
+
+        .team-card {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0,0,0,0.02);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .member-avatar {
+            width: 36px;
+            height: 36px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid var(--mac-border);
+            color: var(--text-main);
+        }
+
+        .member-name h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .member-name p {
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        .member-tag {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--apple-blue);
+            background: #ffffff;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 24px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-sub);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1150px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .chart-box, .activity-box, .team-box { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .stat-card, .chart-box, .activity-box, .team-box { grid-column: span 1; }
+            .mac-app-window { height: 95vh; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="mac-app-window">
+    
+    <!-- macOS Sidebar Pane -->
+    <div class="sidebar">
+        <!-- Traffic Control Buttons -->
+        <div class="traffic-lights">
+            <span class="close"></span>
+            <span class="minimize"></span>
+            <span class="zoom"></span>
+        </div>
+        
+        <div class="logo-area">
+            <i class="fa-solid fa-compass logo-icon"></i>
+            <span class="logo-text">Nexus Analytics</span>
+        </div>
+        
+        <div class="nav-items">
+            <div class="nav-item active">
+                <i class="fa-solid fa-house"></i>
+                <span>Overview</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Metrics</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Security</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+        
+        <div class="bottom-links">
+            <div class="nav-item">
+                <i class="fa-solid fa-user-gear" style="color: var(--text-sub);"></i>
+                <span style="color: var(--text-sub);">Developer Desk</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace Canvas -->
+    <div class="main-content">
+        <!-- Dashboard Sub-Header -->
+        <div class="top-bar">
+            <div class="page-title">
+                <h1>Overview</h1>
+                <p>Environment health metrics are fully operational</p>
+            </div>
+            <div class="mac-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search components...">
+            </div>
+        </div>
+
+        <!-- Bento Layout Structure -->
+        <div class="bento-grid">
+            
+            <!-- Bento Mini Boxes -->
+            <div class="bento-box stat-card">
+                <div class="stat-header">Revenue</div>
+                <div class="stat-number">$48.2k</div>
+                <div class="stat-footer"><i class="fa-solid fa-chevron-up"></i> 12.4%</div>
+            </div>
+
+            <div class="bento-box stat-card">
+                <div class="stat-header">Active Sessions</div>
+                <div class="stat-number">2,847</div>
+                <div class="stat-footer"><i class="fa-solid fa-chevron-up"></i> 8.4%</div>
+            </div>
+
+            <div class="bento-box stat-card">
+                <div class="stat-header">Core Latency</div>
+                <div class="stat-number">24ms</div>
+                <div class="stat-footer" style="color: var(--apple-red);"><i class="fa-solid fa-chevron-down"></i> 1.2%</div>
+            </div>
+
+            <div class="bento-box stat-card">
+                <div class="stat-header">Cluster Load</div>
+                <div class="stat-number">14%</div>
+                <div class="stat-footer" style="color: var(--apple-orange);"><i class="fa-solid fa-circle-check"></i> Stable</div>
+            </div>
+
+            <!-- Bento Premium Graph Box -->
+            <div class="bento-box chart-box">
+                <div class="box-title">
+                    <span>Performance Dynamics</span>
+                    <span class="time-badge">Realtime Stream</span>
+                </div>
+                <div style="height: 200px; width:100%;">
+                    <canvas id="macOSPremiumChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Bento Events Logs Box -->
+            <div class="bento-box activity-box">
+                <div class="box-title">System Activity Logs</div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="item-details">
+                            <div class="item-icon-wrap" style="color: var(--apple-blue); background: rgba(0, 122, 255, 0.08);"><i class="fa-solid fa-server"></i></div>
+                            <div class="item-text">
+                                <h4>Main Environment Deployed</h4>
+                                <p>Build sequence v4.0.2 successful</p>
+                            </div>
+                        </div>
+                        <div class="item-status">12m ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-details">
+                            <div class="item-icon-wrap" style="color: var(--apple-orange); background: rgba(255, 149, 0, 0.08);"><i class="fa-solid fa-key"></i></div>
+                            <div class="item-text">
+                                <h4>API Certificates Rotated</h4>
+                                <p>System encryption security keys refreshed</p>
+                            </div>
+                        </div>
+                        <div class="item-status">3h ago</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-details">
+                            <div class="item-icon-wrap" style="color: var(--apple-green); background: rgba(52, 199, 73, 0.08);"><i class="fa-solid fa-shield"></i></div>
+                            <div class="item-text">
+                                <h4>Firewall Check Passed</h4>
+                                <p>Zero structural security leaks mapped</p>
+                            </div>
+                        </div>
+                        <div class="item-status">1d ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bento Full Width Table Group -->
+            <div class="bento-box team-box">
+                <div class="box-title" style="margin-bottom: 14px;">Active Node Administrators</div>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="member-info">
+                            <div class="member-avatar">JD</div>
+                            <div class="member-name">
+                                <h4>Jessica Dan</h4>
+                                <p>Infrastructure Manager</p>
+                            </div>
+                        </div>
+                        <div class="member-tag">Active</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="member-info">
+                            <div class="member-avatar">MC</div>
+                            <div class="member-name">
+                                <h4>Marcus Chen</h4>
+                                <p>Security Engineer</p>
+                            </div>
+                        </div>
+                        <div class="member-tag" style="color: var(--apple-orange);">On Call</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="member-info">
+                            <div class="member-avatar">SW</div>
+                            <div class="member-name">
+                                <h4>Sophia Williams</h4>
+                                <p>UI Systems Architect</p>
+                            </div>
+                        </div>
+                        <div class="member-tag" style="color: var(--text-sub);">Standby</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            Mac Core Analytics Engine Engine Framework v2.6 • Designed in Alignment with Apple Human Interface
+        </footer>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const ctx = document.getElementById('macOSPremiumChart').getContext('2d');
+        
+        // Creating smooth native gradient under the main line
+        const gradientFill = ctx.createLinearGradient(0, 0, 0, 200);
+        gradientFill.addColorStop(0, 'rgba(0, 122, 255, 0.16)');
+        gradientFill.addColorStop(1, 'rgba(0, 122, 255, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    data: [410, 490, 440, 610, 530, 720, 810],
+                    borderColor: '#007aff', 
+                    borderWidth: 2.5, 
+                    pointRadius: 0, 
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: '#007aff',
+                    pointHoverBorderColor: '#ffffff',
+                    pointHoverBorderWidth: 2,
+                    tension: 0.36, 
+                    fill: true,
+                    backgroundColor: gradientFill
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#1d1d1f', 
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        padding: 10,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        font: { family: 'DM Sans', size: 13 }
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(0, 0, 0, 0.03)' },
+                        ticks: { color: '#6e6e73', font: { family: 'DM Sans', size: 11 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#6e6e73', font: { family: 'DM Sans', size: 11 } }
+                    }
+                }
+            }
+        });
+
+        // Sidebar active link visual toggle logic
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    })();
+</script>
+</body>
+</html>

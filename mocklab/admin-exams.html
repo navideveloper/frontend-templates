@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mock — Foydalanuvchilar</title>
+  <title>Mock — Imtihonlar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,6 +27,8 @@
       --amber-light:   hsl(38, 92%, 92%);
       --green:         hsl(152, 55%, 38%);
       --green-light:   hsl(152, 60%, 90%);
+      --purple:        hsl(260, 60%, 58%);
+      --purple-light:  hsl(260, 65%, 93%);
       --muted:         hsl(215, 20%, 92%);
       --muted-fg:      hsl(215, 15%, 50%);
       --radius:        0.75rem;
@@ -120,7 +122,7 @@
     /* ── Content ── */
     .content { flex: 1; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; overflow-y: auto; }
 
-    /* ── Silliq Tablar (admin.html kabi) ── */
+    /* ── ZAMONAVIY TABS (admin.html faylidagidek) ── */
     .tabs { 
       display: inline-flex; 
       gap: 2px; 
@@ -139,7 +141,9 @@
       color: var(--muted-fg); 
       transition: background .15s, color .15s;
     }
-    .tab:hover { color: var(--fg); }
+    .tab:hover {
+      color: var(--fg);
+    }
     .tab.active { 
       background: var(--bg2); 
       color: var(--fg); 
@@ -151,44 +155,31 @@
     .table-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
     .table-title { font-size: .95rem; font-weight: 700; }
     
-    .user-table { width: 100%; border-collapse: collapse; text-align: left; font-size: .85rem; }
-    .user-table th { background: var(--bg3); color: var(--muted-fg); font-family: var(--mono); font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: .75rem 1.25rem; border-bottom: 1px solid var(--border); }
-    .user-table td { padding: .85rem 1.25rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    .user-table tr:last-child td { border-bottom: none; }
-    .user-table tr:hover td { background: hsl(210, 20%, 99%); }
+    .exam-table { width: 100%; border-collapse: collapse; text-align: left; font-size: .85rem; }
+    .exam-table th { background: var(--bg3); color: var(--muted-fg); font-family: var(--mono); font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: .75rem 1.25rem; border-bottom: 1px solid var(--border); }
+    .exam-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .exam-table tr:last-child td { border-bottom: none; }
+    .exam-table tr:hover td { background: hsl(210, 20%, 99%); }
 
-    /* User details styling */
-    .user-info-cell { display: flex; align-items: center; gap: .625rem; }
-    .user-avatar { width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--bg3); color: var(--fg2); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: .85rem; border: 1px solid var(--border); }
-    .user-name { font-weight: 600; color: var(--fg); font-size: .9rem; }
-    .user-id { font-family: var(--mono); font-size: .7rem; color: var(--muted-fg); margin-top: 1px; }
+    /* Direction specific styles */
+    .exam-name { font-weight: 600; color: var(--fg); font-size: .9rem; }
+    .exam-type { font-family: var(--mono); font-size: .7rem; color: var(--muted-fg); margin-top: 2px; }
     
-    .phone-cell { font-family: var(--mono); font-weight: 500; color: var(--fg); }
-    .date-cell { font-weight: 500; }
-    .time-sub { font-family: var(--mono); font-size: .75rem; color: var(--muted-fg); margin-top: 2px; }
-    
-    /* Balance */
-    .balance-cell { font-family: var(--mono); font-weight: 600; }
-    .balance-plus { color: var(--green); }
-    .balance-zero { color: var(--muted-fg); }
+    .exam-date { font-weight: 500; }
+    .exam-time { font-family: var(--mono); font-size: .75rem; color: var(--muted-fg); margin-top: 2px; }
 
-    /* Badges */
-    .badge { display: inline-flex; align-items: center; font-family: var(--mono); font-size: .7rem; font-weight: 600; padding: 3px 8px; border-radius: 12px; }
-    .badge-active { background: var(--green-light); color: var(--green); }
-    .badge-inactive { background: var(--primary-light); color: var(--primary); }
+    /* Capacity Progress Bar */
+    .cap-info { display: flex; justify-content: space-between; font-size: .75rem; font-family: var(--mono); margin-bottom: .3rem; }
+    .cap-bar-bg { background: var(--bg3); border-radius: 4px; height: 5px; width: 140px; overflow: hidden; }
+    .cap-bar-fill { height: 100%; border-radius: 4px; }
 
-    /* Actions styling */
-    .actions-cell { display: flex; gap: .25rem; }
-    .btn-action { width: 1.85rem; height: 1.85rem; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: var(--muted-fg); transition: background .15s, color .15s; }
-    .btn-action:hover { background: var(--bg3); color: var(--fg); }
-    .btn-action.delete:hover { background: var(--primary-light); color: var(--primary); }
-    .btn-action svg { width: .95rem; height: .95rem; }
+    /* Status Badges */
+    .badge { display: inline-flex; align-items: center; font-family: var(--mono); font-size: .7rem; font-weight: 600; padding: 3px 8px; border-radius: 12px; text-transform: lowercase; }
+    .badge-waiting { background: var(--amber-light); color: var(--amber); }
+    .badge-full { background: var(--primary-light); color: var(--primary); }
 
     /* Responsive */
     .hamburger { display: none; }
-    @media (max-width: 992px) {
-      .user-table th:nth-child(3), .user-table td:nth-child(3) { display: none; } /* Ro'yxatdan o'tgan sanani yashirish */
-    }
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
@@ -196,7 +187,7 @@
       .hamburger { display: flex; }
       .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 199; }
       .sidebar-overlay.open { display: block; }
-      .user-table th:nth-child(4), .user-table td:nth-child(4) { display: none; } /* Balansni ham yashirish */
+      .exam-table th:nth-child(4), .exam-table td:nth-child(4) { display: none; }
     }
   </style>
 </head>
@@ -217,7 +208,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Umumiy ko'rinish
     </a>
-    <a href="exams.html" class="nav-item">
+    <a href="exams.html" class="nav-item active">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Imtihonlar
       <span class="nav-badge">12</span>
@@ -227,7 +218,7 @@
       Jadval
       <span class="nav-badge">3</span>
     </a>
-    <a href="users.html" class="nav-item active">
+    <a href="users.html" class="nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Foydalanuvchilar
       <span class="nav-badge">248</span>
@@ -261,14 +252,14 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <div>
-        <div class="page-title">Foydalanuvchilar</div>
-        <div class="page-sub">mock.admin · users</div>
+        <div class="page-title">Imtihonlar</div>
+        <div class="page-sub">mock.admin · exams</div>
       </div>
     </div>
     <div class="topbar-right">
       <button class="btn btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Yangi foydalanuvchi
+        Imtihon rejalash
       </button>
     </div>
   </header>
@@ -277,111 +268,100 @@
     
     <div class="tabs">
       <div class="tab active">Barchasi</div>
-      <div class="tab">Faollar</div>
-      <div class="tab">Nofaollar</div>
+      <div class="tab">IELTS</div>
+      <div class="tab">CEFR</div>
+      <div class="tab">SAT</div>
     </div>
 
     <div class="table-wrap">
       <div class="table-header">
-        <div class="table-title">Tizim a'zolari</div>
+        <div class="table-title">Yo'nalishlar bo'yicha imtihon kunlari</div>
       </div>
       
-      <table class="user-table">
+      <table class="exam-table">
         <thead>
           <tr>
-            <th>Foydalanuvchi</th>
-            <th>Telefon</th>
-            <th>Ro'yxatdan o'tgan</th>
-            <th>Balans</th>
-            <th>Holat</th>
-            <th style="width: 80px; text-align: center;">Amallar</th>
+            <th>Imtihon nomi</th>
+            <th>Sana va Kun</th>
+            <th>Vaqt</th>
+            <th>Sig'im / Ro'yxatdan o'tdi</th>
+            <th>Holati</th>
+            <th>Amallar</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <div class="user-info-cell">
-                <div class="user-avatar" style="background: hsl(200, 80%, 95%); color: hsl(200, 85%, 45%);">AN</div>
-                <div>
-                  <div class="user-name">Alisher Navoiy</div>
-                  <div class="user-id">ID: 40921</div>
-                </div>
+              <div class="exam-name">IELTS Mock</div>
+              <div class="exam-type">Academic (Paper-based)</div>
+            </td>
+            <td>
+              <div class="exam-date">09.06.2026</div>
+              <div class="exam-time">Seshanba</div>
+            </td>
+            <td><span style="font-family: var(--mono); font-weight: 600;">14:00</span></td>
+            <td>
+              <div class="cap-info">
+                <span>20 / 30 ta joy</span>
+                <span>66%</span>
+              </div>
+              <div class="cap-bar-bg">
+                <div class="cap-bar-fill" style="width: 66%; background: var(--accent);"></div>
               </div>
             </td>
-            <td><span class="phone-cell">+998 (99) 123-45-67</span></td>
+            <td><span class="badge badge-waiting">kutilmoqda</span></td>
             <td>
-              <div class="date-cell">01.06.2026</div>
-              <div class="time-sub">11:30</div>
-            </td>
-            <td><span class="balance-cell balance-plus">+250,000 UZS</span></td>
-            <td><span class="badge badge-active">faol</span></td>
-            <td>
-              <div class="actions-cell">
-                <button class="btn-action" title="Tahrirlash">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                <button class="btn-action delete" title="O'chirish">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-                </button>
-              </div>
+              <button class="btn btn-ghost" style="padding:.25rem .5rem; font-size:.75rem;">Boshqarish</button>
             </td>
           </tr>
 
           <tr>
             <td>
-              <div class="user-info-cell">
-                <div class="user-avatar" style="background: hsl(351, 70%, 95%); color: hsl(351, 71%, 60%);">RG</div>
-                <div>
-                  <div class="user-name">Rayhon G'aniyeva</div>
-                  <div class="user-id">ID: 40854</div>
-                </div>
+              <div class="exam-name">CEFR B2 Mock</div>
+              <div class="exam-type">Multi-Level English</div>
+            </td>
+            <td>
+              <div class="exam-date">11.06.2026</div>
+              <div class="exam-time">Payshanba</div>
+            </td>
+            <td><span style="font-family: var(--mono); font-weight: 600;">10:00</span></td>
+            <td>
+              <div class="cap-info">
+                <span>12 / 25 ta joy</span>
+                <span>48%</span>
+              </div>
+              <div class="cap-bar-bg">
+                <div class="cap-bar-fill" style="width: 48%; background: var(--amber);"></div>
               </div>
             </td>
-            <td><span class="phone-cell">+998 (93) 321-76-54</span></td>
+            <td><span class="badge badge-waiting">kutilmoqda</span></td>
             <td>
-              <div class="date-cell">05.06.2026</div>
-              <div class="time-sub">14:15</div>
-            </td>
-            <td><span class="balance-cell balance-zero">0 UZS</span></td>
-            <td><span class="badge badge-inactive">nofaol</span></td>
-            <td>
-              <div class="actions-cell">
-                <button class="btn-action" title="Tahrirlash">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                <button class="btn-action delete" title="O'chirish">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-                </button>
-              </div>
+              <button class="btn btn-ghost" style="padding:.25rem .5rem; font-size:.75rem;">Boshqarish</button>
             </td>
           </tr>
 
           <tr>
             <td>
-              <div class="user-info-cell">
-                <div class="user-avatar" style="background: hsl(152, 60%, 93%); color: hsl(152, 55%, 38%);">JM</div>
-                <div>
-                  <div class="user-name">Jaloliddin Manguberdi</div>
-                  <div class="user-id">ID: 40712</div>
-                </div>
+              <div class="exam-name">SAT Mathematics</div>
+              <div class="exam-type">Digital SAT Practice</div>
+            </td>
+            <td>
+              <div class="exam-date">14.06.2026</div>
+              <div class="exam-time">Yakshanba</div>
+            </td>
+            <td><span style="font-family: var(--mono); font-weight: 600;">09:00</span></td>
+            <td>
+              <div class="cap-info">
+                <span>30 / 30 ta joy</span>
+                <span>100%</span>
+              </div>
+              <div class="cap-bar-bg">
+                <div class="cap-bar-fill" style="width: 100%; background: var(--primary); integrity: none;"></div>
               </div>
             </td>
-            <td><span class="phone-cell">+998 (90) 987-65-43</span></td>
+            <td><span class="badge badge-full">to'lgan</span></td>
             <td>
-              <div class="date-cell">08.06.2026</div>
-              <div class="time-sub">09:00</div>
-            </td>
-            <td><span class="balance-cell balance-plus">+75,000 UZS</span></td>
-            <td><span class="badge badge-active">faol</span></td>
-            <td>
-              <div class="actions-cell">
-                <button class="btn-action" title="Tahrirlash">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                <button class="btn-action delete" title="O'chirish">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-                </button>
-              </div>
+              <button class="btn btn-ghost" style="padding:.25rem .5rem; font-size:.75rem;">Boshqarish</button>
             </td>
           </tr>
         </tbody>

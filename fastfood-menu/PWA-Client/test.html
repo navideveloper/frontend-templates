@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title>LesAiles - Modern Digital Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg-main: #f3f4f6; /* Kontrast uchun asosiy fon biroz to'q qilindi */
+            --bg-card: #ffffff;
+            --primary: #e82656;
+            --primary-gradient: linear-gradient(135deg, #e82656 0%, #ff4d79 100%);
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --gray-light: #f3f4f6;
+            --border-color: rgba(0, 0, 0, 0.06);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 10px 25px rgba(232, 38, 86, 0.15);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-main: #090a0f;
+                --bg-card: #14161d;
+                --text-main: #f9fafb;
+                --text-muted: #9ca3af;
+                --gray-light: #1f2937;
+                --border-color: rgba(255, 255, 255, 0.06);
+                --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        /* --- GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .ios-app-wrapper {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: var(--bg-main);
+            min-height: 100vh;
+            padding-bottom: 110px;
+            position: relative;
+        }
+
+        /* --- HEADER (IXCHAM VA DEFORMLANMAGAN) --- */
+        .ios-app-header {
+            padding: 10px 16px; /* Balandlik ixchamlashtirildi */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Aniq ajralib turishi uchun soya */
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .ios-app-header { 
+                background-color: #14161d;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px; /* Biroz kichiklashtirildi */
+            height: 38px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .brand-name {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+
+        .branch-info span {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        /* --- CART BUTTON --- */
+        .cart-button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            background: var(--primary-gradient);
+            text-decoration: none;
+            border-radius: 30px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease;
+        }
+        .cart-button:active { transform: scale(0.95); }
+        .cart-count {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 1px 6px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        /* --- SLIDER / BANNER --- */
+        .slider-wrapper {
+            margin: 16px 0;
+            padding: 0 16px;
+        }
+
+        .slider-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .slider-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+
+        .slider-header svg {
+            color: var(--text-muted);
+        }
+
+        .slider {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .slider::-webkit-scrollbar { display: none; }
+
+        .slide {
+            flex: 0 0 85%;
+            aspect-ratio: 16 / 9;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+            scroll-snap-align: start;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Chegirmalar foni va matni aniq ajralishi uchun to'q qatlam */
+        .slide::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 100%);
+        }
+
+        .slide .label {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        /* --- PRODUCT STYLES --- */
+        .product-section {
+            padding: 0 16px;
+            margin-bottom: 20px;
+        }
+
+        .ios-product-row {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 4px 4px 10px 4px;
+            scrollbar-width: none;
+        }
+        .ios-product-row::-webkit-scrollbar { display: none; }
+
+        /* Gorizontal scroll tushunarli bo'lishi uchun cheti kesilib turadi */
+        .ios-product-row .ios-product-card {
+            flex: 0 0 165px;
+            scroll-snap-align: start;
+        }
+
+        .ios-product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        /* --- PRODUCT CARD --- */
+        .ios-product-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Disabled maxsus so'ralgan chiziqli effekt */
+        .ios-product-card.disabled::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.05) 10px,
+                rgba(0,0,0,0.05) 20px
+            );
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .product-image-container {
+            height: 120px;
+            position: relative;
+            background-color: var(--gray-light);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-details {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .product-description {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            height: 30px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* --- BUTTONS --- */
+        .ios-add-button {
+            width: 100%;
+            background-color: var(--gray-light);
+            color: var(--text-main);
+            border: none;
+            padding: 8px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .ios-quantity-control {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--primary-gradient);
+            border-radius: var(--radius-md);
+            padding: 3px;
+            height: 34px;
+        }
+
+        .quantity-btn {
+            background: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-value {
+            font-weight: 700;
+            color: white;
+            font-size: 13px;
+        }
+
+        .ios-product-card.in-cart .ios-add-button { display: none; }
+        .ios-product-card.in-cart .ios-quantity-control { display: flex; }
+
+        .ios-product-card.disabled { opacity: 0.55; }
+        .ios-product-card.disabled .ios-add-button { cursor: not-allowed; }
+
+        /* --- STICKY BOTTOM CATEGORIES (MUKAMMAL VA USER-FRIENDLY) --- */
+        .category-scroller-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 500px;
+            background: #ffffff; /* Oq fonga o'tkazildi, chalkashlik yo'qoldi */
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06); /* Yuqoriga soya */
+            border-top: 1px solid var(--border-color);
+            padding: 12px 0 24px 0;
+            z-index: 100;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .category-scroller-container {
+                background: #14161d;
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        /* O'ng tomondagi "yana bor" ishorasi (Fade effect) */
+        .category-scroller-container::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            background: linear-gradient(to left, #ffffff 20%, transparent 100%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .category-scroller-container::after {
+                background: linear-gradient(to left, #14161d 20%, transparent 100%);
+            }
+        }
+
+        .category-badges {
+            display: flex;
+            gap: 8px;
+            padding: 0 40px 0 16px; /* Soya ostiga kirmasligi uchun o'ngdan joy */
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .category-badges::-webkit-scrollbar { display: none; }
+
+        /* UX silliqligi: oxirgi element yarmi kesilib scroll ishorasini beradi */
+        .category-badge {
+            background-color: var(--gray-light);
+            border: none;
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-badge.active {
+            background: var(--text-main);
+            color: var(--bg-card);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ios-app-wrapper">
+        <header class="ios-app-header">
+            <div class="header-content">
+                <div class="brand-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGcPqHMcNLmnj7fnztINLAhs1zk2lHqaUx2A&s" alt="LesAiles" class="brand-logo">
+                    <div class="branch-info">
+                        <h1 class="brand-name">LesAiles</h1>
+                        <span>Qoratosh ko'chasi, 5A</span>
+                    </div>
+                </div>
+                <a href="cart.html" class="cart-button">
+                    <ion-icon name="basket-outline" style="font-size: 16px;"></ion-icon>
+                    <span>Savat</span>
+                    <span class="cart-count" id="global-cart-count">0</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="slider-wrapper">
+            <div class="slider-header">
+                <h3>Chegirmalar</h3>
+            </div>
+            <div class="slider">
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1600&auto=format&fit=crop" alt="Promo 1" />
+                    <span class="label">Summer Sale</span>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1600&auto=format&fit=crop" alt="Promo 2" />
+                    <span class="label">New Arrivals</span>
+                </div>
+            </div>
+        </div>
+
+        <main class="product-section">
+            <div class="slider-header">
+                <h3>Combolar</h3>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"><path d="M9.583 27.182C7.867 28.354 7.009 30.293 7.009 33c0 4.06 4.991 11 9.492 11h11.515c4.405 0 7.08-3.85 7.08-6.94V24.6a3.253 3.253 0 0 0-3.243-3.253a3.235 3.235 0 0 0-3.245 3.226v.11"/><path d="M10.981 29.445V7.662a3.217 3.217 0 0 1 6.435 0v15.986"/><path stroke-linejoin="round" d="M17.416 24v-4.192a2.804 2.804 0 0 1 5.608 0v4.62"/><path stroke-linejoin="round" d="M23 24.658v-2.85a2.804 2.804 0 0 1 5.608 0v3.195"/><path d="M11 8h30"/><path stroke-linejoin="round" d="m36 12.5l1.667-1.5L41 8l-3.333-3L36 3.5"/></g></svg>
+            </div>
+            
+            <div class="ios-product-row">
+                <article class="ios-product-card" data-category="Kombo">
+                    <div class="product-image-container">
+                        <img src="https://www.portablepress.com/wp-content/uploads/2017/10/Fast-food-combo-meal.jpg" alt="Kombo" class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Kombo start</h3>
+                        <p class="product-description">Burger+Cola+Fri</p>
+                        <div class="product-footer">
+                            <span class="product-price">28,000 so'm</span>
+                            <div class="ios-quantity-control">
+                                <button class="quantity-btn decrease">−</button>
+                                <span class="quantity-value">0</span>
+                                <button class="quantity-btn increase">+</button>
+                            </div>
+                            <button class="ios-add-button">Qo'shish</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="ios-product-card disabled" data-category="Burgerlar">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500&auto=format&fit=crop" alt="Big Burger" class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Big Burger</h3>
+                        <p class="product-description">Mavjud emas</p>
+                        <div class="product-footer">
+                            <span class="product-price">32,000 so'm</span>
+                            <button class="ios-add-button" disabled>Tugagan</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+        <main class="product-section">
+            <div class="slider-header">
+                <h3>Mahsulotlar</h3>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 256 256"><path fill="currentColor" d="M128 35.31V128a8 8 0 0 1-16 0V35.31L93.66 53.66a8 8 0 0 1-11.32-11.32l32-32a8 8 0 0 1 11.32 0l32 32a8 8 0 0 1-11.32 11.32Zm64 88.31V96a16 16 0 0 0-16-16h-16a8 8 0 0 0 0 16h16v80.4a28 28 0 0 0-44.25 33.6l.24.38l22.26 34a8 8 0 0 0 13.39-8.76l-22.13-33.79A12 12 0 0 1 166.4 190c.07.13.15.26.23.38l10.68 16.31a8 8 0 0 0 14.69-4.38V144a74.84 74.84 0 0 1 24 54.69V240a8 8 0 0 0 16 0v-41.35a90.89 90.89 0 0 0-40-75.03M80 80H64a16 16 0 0 0-16 16v104a8 8 0 0 0 16 0V96h16a8 8 0 0 0 0-16"/></svg>
+            </div>
+            
+            <div class="ios-product-grid" id="product-grid">
+                <div class="ios-product-card" data-category="Burgerlar">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500&auto=format&fit=crop" alt="Burger" class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">GamBurger</h3>
+                        <p class="product-description">Mazzali gamburger</p>
+                        <div class="product-footer">
+                            <span class="product-price">28,000 so'm</span>
+                            <div class="ios-quantity-control">
+                                <button class="quantity-btn decrease">−</button>
+                                <span class="quantity-value">0</span>
+                                <button class="quantity-btn increase">+</button>
+                            </div>
+                            <button class="ios-add-button">Qo'shish</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ios-product-card" data-category="Pizza">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=500&auto=format&fit=crop" alt="Pizza" class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Milliy Pizza</h3>
+                        <p class="product-description">To'yimli oilaviy pizza</p>
+                        <div class="product-footer">
+                            <span class="product-price">40,000 so'm</span>
+                            <div class="ios-quantity-control">
+                                <button class="quantity-btn decrease">−</button>
+                                <span class="quantity-value">0</span>
+                                <button class="quantity-btn increase">+</button>
+                            </div>
+                            <button class="ios-add-button">Qo'shish</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ios-product-card" data-category="Ichimliklar">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=500&auto=format&fit=crop" alt="Cola" class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Cola 0.5</h3>
+                        <p class="product-description">Muzdek va barra ta'm</p>
+                        <div class="product-footer">
+                            <span class="product-price">7,000 so'm</span>
+                            <div class="ios-quantity-control">
+                                <button class="quantity-btn decrease">−</button>
+                                <span class="quantity-value">0</span>
+                                <button class="quantity-btn increase">+</button>
+                            </div>
+                            <button class="ios-add-button">Qo'shish</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <section class="category-scroller-container">
+            <div class="category-badges">
+                <button class="category-badge active" data-filter="Barchasi">Barchasi</button>
+                <button class="category-badge" data-filter="Burgerlar">Burgerlar</button>
+                <button class="category-badge" data-filter="Pizza">Pizza</button>
+                <button class="category-badge" data-filter="Ichimliklar">Ichimliklar</button>
+                <button class="category-badge" data-filter="Kombo">Kombo</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let totalCartCount = 0;
+            const globalCartBadge = document.getElementById('global-cart-count');
+
+            // SAVAT MANTIQIY TIZIMI
+            document.querySelectorAll('.ios-product-card:not(.disabled)').forEach(card => {
+                const addBtn = card.querySelector('.ios-add-button');
+                const decreaseBtn = card.querySelector('.decrease');
+                const increaseBtn = card.querySelector('.increase');
+                const qtyValue = card.querySelector('.quantity-value');
+
+                let count = 0;
+
+                const updateCardState = () => {
+                    qtyValue.textContent = count;
+                    if (count > 0) {
+                        card.classList.add('in-cart');
+                    } else {
+                        card.classList.remove('in-cart');
+                    }
+                    globalCartBadge.textContent = totalCartCount;
+                };
+
+                addBtn.addEventListener('click', () => {
+                    count = 1;
+                    totalCartCount += 1;
+                    updateCardState();
+                });
+
+                increaseBtn.addEventListener('click', () => {
+                    count += 1;
+                    totalCartCount += 1;
+                    updateCardState();
+                });
+
+                decreaseBtn.addEventListener('click', () => {
+                    if (count > 0) {
+                        count -= 1;
+                        totalCartCount -= 1;
+                        updateCardState();
+                    }
+                });
+            });
+
+            // FILTRLASH TIZIMI
+            const categoryButtons = document.querySelectorAll('.category-badge');
+            const productCards = document.querySelectorAll('.ios-product-card');
+
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filterValue = btn.getAttribute('data-filter');
+
+                    productCards.forEach(card => {
+                        const cardCategory = card.getAttribute('data-category');
+                        if (filterValue === 'Barchasi' || cardCategory === filterValue) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.setProperty('display', 'none');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

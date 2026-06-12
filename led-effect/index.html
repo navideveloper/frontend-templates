@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Botnet 10x2 - Optimized Performance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #040406;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* LED Ekran paneli */
+        .led-screen {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #06070a;
+            border-radius: 10px;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 1);
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px;
+            box-sizing: border-box;
+        }
+
+        /* LED PIKSEL TO'RI (z-index: 2) */
+        .led-pixel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.85) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 1px, transparent 1px);
+            background-size: 3px 3px; 
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Monitorning chiziqli effekti (z-index: 3) */
+        .led-screen::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 6px;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Bloklar joylashuvi */
+        .hacker-side, .system-side {
+            width: 150px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* 10x2 Botnet safi */
+        .botnet-side {
+            width: 380px;
+            height: 580px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            gap: 4px 20px;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Umumiy tugun tuzilishi */
+        .node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Ikonka qutisi */
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1; 
+        }
+
+        .icon-box i {
+            filter: blur(0.2px);
+        }
+
+        /* YOZUVLAR (LABEL) - MUTLOQ SILLIQ (z-index: 20) */
+        .smooth-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 6px;
+            display: block;
+            position: relative;
+            z-index: 20; 
+            opacity: 0.87; 
+            pointer-events: none;
+        }
+
+        /* RANG SOZLAMALARI */
+        
+        /* 1. Hacker (Qizil) */
+        .hacker-node .icon-box i {
+            font-size: 45px;
+            color: #ff2247;
+            text-shadow: 0 0 3px #ff2247, 0 0 8px rgba(255, 34, 71, 0.4);
+        }
+        .hacker-side .smooth-label {
+            color: #ff2247;
+        }
+
+        /* 2. System (Sariq) */
+        .system-node .icon-box i {
+            font-size: 45px;
+            color: #ffaa00;
+            text-shadow: 0 0 3px #ffaa00, 0 0 8px rgba(255, 170, 0, 0.4);
+        }
+        .system-side .smooth-label {
+            color: #ffaa00;
+        }
+
+        /* 3. PC Botnetlar (Yashil) */
+        .pc-node {
+            flex-direction: row !important;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+        .pc-node .icon-box i {
+            font-size: 26px;
+            color: #00ff55;
+            text-shadow: 0 0 2px #00ff55, 0 0 6px rgba(0, 255, 85, 0.3);
+        }
+        .botnet-side .smooth-label {
+            font-size: 11px;
+            color: #00ff55;
+            margin-top: 0;
+        }
+
+        /* SVG Tarmoq chiziqlari (z-index: 1) */
+        .svg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .line {
+            fill: none;
+            stroke-linecap: round;
+            will-change: stroke-dashoffset; /* GPU Acceleration */
+        }
+
+        /* Hacker -> System ulanishi */
+        .hacker-line {
+            stroke: #ff2247;
+            stroke-width: 3;
+            stroke-dasharray: 6 10;
+            animation: flow-left-to-right 2s linear infinite;
+            filter: drop-shadow(0 0 2px #ff2247);
+            opacity: 0.6;
+        }
+
+        /* Botnet -> System ulanishlari */
+        .botnet-line {
+            stroke: #00ff55;
+            stroke-width: 1.5;
+            stroke-dasharray: 4 8;
+            animation: flow-right-to-left 3s linear infinite;
+            filter: drop-shadow(0 0 1px #00ff55);
+            opacity: 0.35;
+        }
+
+        @keyframes flow-left-to-right {
+            to { stroke-dashoffset: -32; }
+        }
+
+        @keyframes flow-right-to-left {
+            to { stroke-dashoffset: 32; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="led-screen" id="ledScreen">
+        <div class="led-pixel-overlay"></div>
+        <svg class="svg-layer" id="attackSvg"></svg>
+
+        <div class="hacker-side">
+            <div class="node hacker-node" id="hackerNode">
+                <div class="icon-box">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <span class="smooth-label">Hacker</span>
+            </div>
+        </div>
+
+        <div class="system-side">
+            <div class="node system-node" id="systemNode">
+                <div class="icon-box">
+                    <i class="fas fa-cubes"></i>
+                </div>
+                <span class="smooth-label">System</span>
+            </div>
+        </div>
+
+        <div class="botnet-side" id="botnetSide"></div>
+    </div>
+
+    <script>
+        const botnetSide = document.getElementById('botnetSide');
+        const svg = document.getElementById('attackSvg');
+        const hackerEl = document.getElementById('hackerNode');
+        const systemEl = document.getElementById('systemNode');
+        const ledScreen = document.getElementById('ledScreen');
+
+        // 1. 20 ta botnet PCni optimallashgan usulda (DocumentFragment) generatsiya qilish
+        const fragment = document.createDocumentFragment();
+        for (let i = 1; i <= 20; i++) {
+            const pcNode = document.createElement('div');
+            pcNode.className = 'node pc-node';
+            pcNode.id = `pc_${i}`; 
+            
+            const num = String(i).padStart(2, '0');
+            pcNode.innerHTML = `
+                <div class="icon-box">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <span class="smooth-label">PC ${num}</span>
+            `;
+            fragment.appendChild(pcNode);
+        }
+        botnetSide.appendChild(fragment);
+
+        // 2. SVG chiziqlarini chizish funksiyasi
+        function drawAttackLines() {
+            // Avvalgi chiziqlarni tozalash (ekran o'lchami o'zgarganda muhim)
+            svg.innerHTML = '';
+
+            const screenRect = ledScreen.getBoundingClientRect();
+
+            const getCenter = (el) => {
+                const rect = el.querySelector('.icon-box').getBoundingClientRect();
+                return {
+                    x: rect.left - screenRect.left + rect.width / 2,
+                    y: rect.top - screenRect.top + rect.height / 2
+                };
+            };
+
+            const hackerCenter = getCenter(hackerEl);
+            const systemCenter = getCenter(systemEl);
+
+            const svgNS = "http://www.w3.org/2000/svg";
+
+            // Hacker -> System chizig'i
+            const hLine = document.createElementNS(svgNS, "path");
+            hLine.setAttribute("d", `M ${hackerCenter.x} ${hackerCenter.y} L ${systemCenter.x} ${systemCenter.y}`);
+            hLine.setAttribute("class", "line hacker-line");
+            svg.appendChild(hLine);
+
+            // 20 ta Botnet chiziqlari
+            for (let i = 1; i <= 20; i++) {
+                const pcEl = document.getElementById(`pc_${i}`);
+                if (!pcEl) continue;
+                const pcCenter = getCenter(pcEl);
+
+                const bLine = document.createElementNS(svgNS, "path");
+                bLine.setAttribute("d", `M ${pcCenter.x} ${pcCenter.y} L ${systemCenter.x} ${systemCenter.y}`);
+                bLine.setAttribute("class", "line botnet-line");
+                bLine.style.animationDelay = `${(i * 0.1).toFixed(1)}s`;
+
+                svg.appendChild(bLine);
+            }
+        }
+
+        // 3. Sahifa yuklanganda va ekran o'lchami o'zgarganda (Resize) chiziqlarni yangilash
+        window.addEventListener('load', drawAttackLines);
+
+        // Ekran o'lchami o'zgarishini kuzatish (Responsive fix)
+        const resizeObserver = new ResizeObserver(() => {
+            drawAttackLines();
+        });
+        resizeObserver.observe(ledScreen);
+    </script>
+
+</body>
+</html>

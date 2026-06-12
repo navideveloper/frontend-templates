@@ -1,741 +1,538 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-    <title>LesAiles - PWA</title>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap" rel="stylesheet">
-    
+    <title>LesAiles — Digital Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* --- THEME VARIABLES --- */
         :root {
-            --ios-system-body-background: #f5f5f7;
-            --ios-system-primary: #e82656;
-            --ios-system-gray: #8E8E93;
-            --ios-system-gray2: #AEAEB2;
-            --ios-system-gray6: #F2F2F7;
-            --ios-system-gray0: #1d1d1d;
-            --ios-system-btn-active: #34a99d;
-            --ios-label-primary: #222222;
-            --ios-label-secondary: #3C3C4399;
-            --ios-system-background: #FFFFFF;
-            --ios-card-background: rgba(255, 255, 255, 0.8);
-            --ios-blur-intensity: 10px;
+            --bg: #f5f4f0;
+            --surface: #ffffff;
+            --surface2: #f0eeea;
+            --primary: #d4451f;
+            --primary-light: #fdf0ec;
+            --text: #1c1b18;
+            --text2: #7a7872;
+            --text3: #b5b3ae;
+            --border: rgba(28,27,24,0.08);
+            --r-sm: 12px;
+            --r-md: 16px;
+            --r-lg: 22px;
+            --r-xl: 28px;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #141310;
+                --surface: #1e1d1a;
+                --surface2: #272522;
+                --primary-light: #2a1a15;
+                --text: #f0ede6;
+                --text2: #9a9790;
+                --text3: #5a5852;
+                --border: rgba(240,237,230,0.07);
+            }
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+        body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
+
+        .app { max-width:430px; margin:0 auto; min-height:100vh; padding-bottom:110px; }
+
+        /* HEADER FIX */
+        .header-wrapper {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(245,244,240,0.88);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+        }
+        @media (prefers-color-scheme:dark) { .header-wrapper { background:rgba(20,19,16,0.88); } }
+
+        .header {
+            max-width: 430px; margin: 0 auto;
+            padding: 14px 16px;
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        .darkmode {
-            --ios-system-body-background: black;
-            --ios-system-primary: #e82656;
-            --ios-system-gray: #8E8E93;
-            --ios-system-gray2: #636366;
-            --ios-system-gray6: #252525;
-            --ios-system-btn-active: #3db9d3;
-            --ios-label-primary: #9f9f9fcf;
-            --ios-label-secondary: #b4b4b4cf;
-            --ios-system-background: #121212;
-            --ios-card-background: rgba(30, 30, 30, 0.8);
+        .brand { display:flex; align-items:center; gap:10px; }
+        .logo {
+            width:40px; height:40px; border-radius:10px;
+            background:var(--primary); display:flex; align-items:center; justify-content:center;
+            font-size:18px; font-weight:800; color:#fff; letter-spacing:-1px;
+            flex-shrink:0;
+        }
+        .brand-text h1 { font-size:16px; font-weight:700; letter-spacing:-0.3px; line-height:1; }
+        .brand-text span { font-size:11px; color:var(--text2); margin-top:3px; display:block; }
+
+        .cart-btn {
+            display:flex; align-items:center; gap:6px;
+            background:var(--text); color:var(--surface);
+            border:none; cursor:pointer;
+            padding:9px 14px 9px 12px;
+            border-radius:100px;
+            font-size:13px; font-weight:600;
+            transition:opacity 0.15s;
+            text-decoration:none;
+        }
+        .cart-btn:active { opacity:0.7; }
+        .cart-btn svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.2; }
+        .badge {
+            background:var(--primary); color:#fff;
+            font-size:11px; font-weight:700;
+            min-width:18px; height:18px; border-radius:9px;
+            display:flex; align-items:center; justify-content:center;
+            padding:0 5px;
         }
 
-        /* --- GLOBAL STYLES --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+        /* HERO BANNER */
+        .hero {
+            margin:16px; border-radius:var(--r-xl);
+            background:var(--primary);
+            padding:22px 20px 20px;
+            position:relative; overflow:hidden;
+        }
+        .hero::before {
+            content:'';
+            position:absolute; right:-20px; top:-30px;
+            width:180px; height:180px;
+            background:rgba(255,255,255,0.07);
+            border-radius:50%;
+        }
+        .hero::after {
+            content:'';
+            position:absolute; right:20px; bottom:-40px;
+            width:120px; height:120px;
+            background:rgba(255,255,255,0.05);
+            border-radius:50%;
+        }
+        .hero-tag {
+            display:inline-flex; align-items:center; gap:5px;
+            background:rgba(255,255,255,0.18);
+            color:rgba(255,255,255,0.9);
+            padding:4px 10px; border-radius:100px;
+            font-size:11px; font-weight:600;
+            letter-spacing:0.3px;
+            margin-bottom:10px;
+        }
+        .hero h2 { font-size:22px; font-weight:800; color:#fff; letter-spacing:-0.5px; line-height:1.2; margin-bottom:6px; }
+        .hero p { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.5; }
+        .hero-action {
+            display:inline-flex; align-items:center; gap:5px;
+            margin-top:14px; background:#fff; color:var(--primary);
+            padding:8px 14px; border-radius:100px;
+            font-size:12px; font-weight:700; cursor:pointer;
+            border:none;
         }
 
-        body {
-            background-color: var(--ios-system-body-background);
-            color: var(--ios-label-primary);
-            -webkit-font-smoothing: antialiased;
+        /* LABEL FIX */
+        .section-label {
+            padding:0 16px; margin-bottom:12px;
+            display:flex; align-items:center; justify-content:space-between;
+        }
+        .section-label h3 { font-size:17px; font-weight:700; letter-spacing:-0.3px; }
+        .section-label span { font-size:12px; color:var(--primary); font-weight:600; cursor:pointer; }
+
+        /* PROMOS SKROL TUZATISH */
+        .promos {
+            display:flex; gap:12px;
+            padding:0 16px 4px;
+            overflow-x:auto; scrollbar-width:none;
+            scroll-snap-type:x mandatory;
+            scroll-padding:0 16px; /* Skrol to'xtaganda chekka masofa saqlaydi */
+        }
+        .promos::-webkit-scrollbar { display:none; }
+        .promos::after { content:''; padding-right:4px; } /* Oxirgi element o'ng chetga yopishmasligi uchun */
+
+        .promo-card {
+            flex:0 0 240px; scroll-snap-align:start;
+            border-radius:var(--r-lg); overflow:hidden;
+            position:relative; aspect-ratio:16/10; background:#ccc;
+        }
+        .promo-card img { width:100%; height:100%; object-fit:cover; }
+        .promo-card::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,0.55) 0%, transparent 55%); }
+        .promo-tag {
+            position:absolute; bottom:12px; left:12px;
+            background:rgba(255,255,255,0.2); backdrop-filter:blur(12px);
+            -webkit-backdrop-filter:blur(12px);
+            border:1px solid rgba(255,255,255,0.25);
+            color:#fff; padding:4px 12px; border-radius:100px;
+            font-size:11px; font-weight:700; z-index:2;
+        }
+        .promo-discount {
+            position:absolute; top:12px; right:12px;
+            background:var(--primary); color:#fff;
+            padding:4px 8px; border-radius:8px;
+            font-size:11px; font-weight:800; z-index:2;
         }
 
-        .app-container {
-            position: relative;
-            min-height: 100vh;
+        /* SECTIONS */
+        .section { margin-top:28px; }
+
+        /* COMBOLAR SKROL TUZATISH */
+        .h-row {
+            display:flex; gap:12px;
+            padding:0 16px 8px;
+            overflow-x:auto; scrollbar-width:none;
+            scroll-snap-type:x mandatory;
+            scroll-padding:0 16px; /* Birinchi va keyingi elementlar chap devorga yopishmaydi */
+        }
+        .h-row::-webkit-scrollbar { display:none; }
+        .h-row::after { content: ''; padding-right:4px; } 
+
+        /* GRID */
+        .product-grid {
+            display:grid; grid-template-columns:1fr 1fr;
+            gap:12px; padding:0 16px;
         }
 
-        .ios-app-wrapper {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: var(--ios-card-background);
-            min-height: 100vh;
+        /* PRODUCT CARD */
+        .pcard {
+            background:var(--surface);
+            border-radius:var(--r-lg);
+            border:1px solid var(--border);
+            overflow:hidden;
+            display:flex; flex-direction:column;
+            transition:transform 0.15s;
+            position:relative;
         }
+        .pcard:active { transform:scale(0.97); }
+        .pcard.disabled { opacity:0.45; pointer-events:none; }
 
-        /* --- HEADER --- */
-        .ios-app-header {
-            padding: 8px 14px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background-color: var(--ios-system-background);
+        .pcard-img {
+            width:100%; aspect-ratio:4/3;
+            object-fit:cover; background:var(--surface2);
+            display:block;
         }
+        .h-row .pcard { flex:0 0 165px; scroll-snap-align:start; }
+        .h-row .pcard .pcard-img { aspect-ratio:4/3; }
 
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .pcard-body { padding:12px; display:flex; flex-direction:column; flex:1; }
+        .pcard-title { font-size:14px; font-weight:600; line-height:1.3; margin-bottom:4px; }
+        .pcard-desc { font-size:11px; color:var(--text2); line-height:1.4; margin-bottom:12px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; flex:1; }
+        .pcard-footer { margin-top:auto; }
+        .pcard-price { font-size:14px; font-weight:700; color:var(--primary); display:block; margin-bottom:8px; }
+
+        /* ADD BUTTON */
+        .add-btn {
+            width:100%; border:none; cursor:pointer;
+            background:var(--surface2); color:var(--text);
+            padding:10px; border-radius:var(--r-sm);
+            font-size:13px; font-weight:600;
+            transition:background 0.15s, color 0.15s;
+            display:flex; align-items:center; justify-content:center; gap:4px;
         }
+        .add-btn svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.5; }
+        .add-btn:active { background:var(--primary); color:#fff; }
 
-        .brand-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        /* QTY CONTROL */
+        .qty-ctrl {
+            display:none; align-items:center; justify-content:space-between;
+            background:var(--primary); border-radius:var(--r-sm);
+            padding:3px; height:38px;
         }
+        .qty-btn {
+            background:#fff; border:none; cursor:pointer;
+            width:32px; height:32px; border-radius:8px;
+            font-size:16px; font-weight:700; color:var(--primary);
+            display:flex; align-items:center; justify-content:center;
+            line-height:1;
+        }
+        .qty-val { color:#fff; font-size:13px; font-weight:700; }
 
+        .pcard.in-cart .add-btn { display:none; }
+        .pcard.in-cart .qty-ctrl { display:flex; }
+
+        /* CATEGORY BAR */
+        .cat-bar {
+            position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+            width:100%; max-width:430px;
+            background:rgba(245,244,240,0.92);
+            backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+            border-top:1px solid var(--border);
+            padding:12px 0 24px;
+            z-index:200;
+        }
+        @media (prefers-color-scheme:dark) { .cat-bar { background:rgba(20,19,16,0.92); } }
+
+        .cat-scroll {
+            display:flex; gap:8px; padding:0 16px;
+            overflow-x:auto; scrollbar-width:none;
+            scroll-padding:0 16px;
+        }
+        .cat-scroll::-webkit-scrollbar { display:none; }
+        .cat-scroll::after { content: ''; padding-right:4px; }
+
+        .cat-btn {
+            border:none; cursor:pointer;
+            background:var(--surface2); color:var(--text2);
+            padding:8px 16px; border-radius:100px;
+            font-size:12px; font-weight:600;
+            white-space:nowrap;
+            transition:all 0.2s;
+        }
+        .cat-btn.active { background:var(--text); color:var(--surface); }
         .brand-logo {
-            width: 40px;
+            width: 40px; /* Biroz kichiklashtirildi */
             height: 40px;
             border-radius: 10px;
             object-fit: cover;
         }
-
-        .branch-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .brand-name {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .branch-info span {
-            font-size: 14px;
-            color: var(--ios-system-gray);
-        }
-
-        /* --- CART BUTTON --- */
-        .cart-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.6rem 1rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: white;
-            background-color: var(--ios-system-primary);
-            text-decoration: none;
-            border-radius: 0.5rem;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        }
-
-        .cart-button .cart-icon {
-            font-size: 1.2rem;
-            transform: rotateY(180deg);
-        }
-
-        .cart-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .cart-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        }
-
-        /* --- SLIDER / BANNER --- */
-        .slider-wrapper {
-            max-width: 1100px;
-            margin: 12px auto;
-            padding: 0 16px;
-        }
-
-        .slider-header {
-            display: flex;
-            align-items: center;
-            justify-content: start;
-            gap: 10px;
-            margin-bottom: 12px;
-            font-size: medium;
-        }
-
-        .slider-shell {
-            position: relative;
-        }
-
-        .slider {
-            display: flex;
-            align-items: stretch;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            gap: 16px;
-            padding: 2px 0 10px 2px;
-            margin: 0 -2px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .slider[data-hide-scrollbar="true"]::-webkit-scrollbar {
-            display: none;
-        }
-
-        .slide {
-            flex: 0 0 calc(50% - 8px);
-            aspect-ratio: 16 / 9;
-            border-radius: 18px;
-            background: #222;
-            overflow: hidden;
-            position: relative;
-            scroll-snap-align: start;
-        }
-
-        .slide a {
-            position: absolute;
-            inset: 0;
-            display: block;
-        }
-
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .label {
-            position: absolute;
-            left: 12px;
-            bottom: 12px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-weight: 700;
-            font-size: 13px;
-            color: white;
-            background: rgba(0,0,0,.38);
-            backdrop-filter: blur(8px);
-        }
-
-        /* --- CATEGORIES --- */
-        .category-scroller {
-            padding: 5px 0 15px 0;
-            border-radius: 12px;
-            background-color: color-mix(in srgb, var(--ios-system-gray6) 95%, transparent);
-            backdrop-filter: blur(8px) saturate(180%);
-            position: sticky;
-            bottom: -1px;
-            z-index: 10;
-        }
-
-        .category-badges {
-            display: flex;
-            gap: 8px;
-            padding: 8px 16px;
-            overflow-x: auto;
-        }
-
-        .category-badges::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .category-badges::-webkit-scrollbar-track {
-            background: #f0f0f0;
-            border-radius: 4px;
-        }
-
-        .category-badges::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 4px;
-        }
-
-        .category-badge {
-            background-color: color-mix(in srgb, var(--ios-system-background) 15%, transparent);
-            border: 1px solid var(--ios-system-gray2);
-            color: var(--ios-system-gray);
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-            flex-shrink: 0;
-            transition: all 0.2s ease;
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .category-badge.active {
-            background-color: color-mix(in srgb, var(--ios-system-primary) 15%, transparent);
-            color: var(--ios-system-primary);
-            border-color: var(--ios-system-primary);
-        }
-
-        .category-badge:not(.active):active {
-            background-color: var(--ios-system-gray6);
-        }
-
-        .category-badge.active:active {
-            background-color: color-mix(in srgb, var(--ios-system-primary) 10%, transparent);
-        }
-
-        /* --- PRODUCT CONTAINERS --- */
-        .product-row-container, .product-grid-container {
-            padding: 16px;
-        }
-
-        .ios-product-row {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            padding-right: 16px;
-        }
-
-        .ios-product-row > * {
-            flex: 0 0 calc((100% - 16px) / 2);
-            scroll-snap-align: start;
-        }
-
-        .ios-product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
-        }
-
-        /* --- PRODUCT CARD --- */
-        .ios-product-card {
-            background-color: var(--ios-card-background);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-        }
-
-        .ios-product-card.disabled::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(0,0,0,0.05) 10px,
-                rgba(0,0,0,0.05) 20px
-            );
-            pointer-events: none;
-        }
-
-        .product-image-container {
-            height: 120px;
-            overflow: hidden;
-        }
-
-        .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .product-details {
-            padding: 12px;
-        }
-
-        .product-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .product-description {
-            font-size: 13px;
-            color: var(--ios-label-secondary);
-            margin-bottom: 12px;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .product-footer {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 0.77rem;
-            margin-bottom: 12px;
-        }
-
-        .product-price {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--ios-system-primary);
-        }
-
-        /* --- QUANTITY CONTROL --- */
-        .ios-quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--ios-system-gray6);
-            border-radius: 25px;
-            padding: 0.25rem 0.4rem;
-            width: fit-content;
-            height: 2.2rem;
-            margin-bottom: 0.7rem;
-            align-self: center;
-        }
-
-        .quantity-btn {
-            background: white;
-            border: none;
-            width: 2rem;
-            height: 2rem;
-            border-radius: 50%;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1d1d1f;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-            transition: 0.15s;
-        }
-
-        .quantity-btn:hover {
-            background: #e8e8ed;
-        }
-
-        .quantity-btn:active {
-            background-color: color-mix(in srgb, var(--ios-system-primary) 10%, transparent);
-        }
-
-        .quantity-value {
-            font-weight: 650;
-            min-width: 20px;
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        /* --- ADD BUTTON --- */
-        .ios-add-button {
-            width: 100%;
-            background-color: var(--ios-system-primary);
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            transition: background-color 0.2s ease;
-        }
-
-        .ios-add-button.disabled {
-            background-color: var(--ios-system-gray);
-        }
-
-        .ios-add-button:active {
-            background-color: color-mix(in srgb, var(--ios-system-primary) 60%, transparent);
-        }
-
-        svg {
-            color: var(--ios-system-gray);
-        }
-
-        /* --- RESPONSIVE STYLES --- */
-        @media (max-width: 540px) {
-            .slide { flex-basis: calc(50% - 10px); }
-        }
-
-        @media (max-width: 400px) {
-            .ios-product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
-            .brand-name {
-                font-size: 18px;
-            }
-        }
+        .empty-state { text-align:center; padding:40px 20px; color:var(--text3); font-size:14px; }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="blur-background"></div>
-        
-        <div class="ios-app-wrapper">
-            <header class="ios-app-header">
-                <div class="header-content">
-                    <div class="brand-info">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGcPqHMcNLmnj7fnztINLAhs1zk2lHqaUx2A&s" draggable="false" alt="LesAiles" class="brand-logo">
-                        <div class="branch-info">
-                            <h1 class="brand-name">LesAiles</h1>
-                            <span>Toshkent, Qoratosh ko'chasi, 5A</span>
-                        </div>
-                    </div>
-                    <a href="cart.html" class="cart-button style-compact">
-                        <ion-icon name="cart-outline" class="cart-icon"></ion-icon>
-                        Savat
-                    </a>
-                </div>
-            </header>
+<div class="app">
 
-            <div class="slider-wrapper">
-                <div class="slider-header">
-                    <h3>Chegirmalar</h3>
+    <div class="header-wrapper">
+        <header class="header">
+            <div class="brand">
+                <div class="logo">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGcPqHMcNLmnj7fnztINLAhs1zk2lHqaUx2A&s" alt="LesAiles" class="brand-logo">
                 </div>
-                <div class="slider-shell slider-mask">
-                    <div class="slider" data-hide-scrollbar="true">
-                        <div class="slide">
-                            <a href="#banner-1" aria-label="Banner 1"></a>
-                            <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1600&auto=format&fit=crop" alt="Sneakers" />
-                            <span class="label">Summer Sale</span>
-                        </div>
-                        <div class="slide">
-                            <a href="#banner-2" aria-label="Banner 2"></a>
-                            <img src="https://images.unsplash.com/photo-1491555103944-7c647fd857e6?q=80&w=1600&auto=format&fit=crop" alt="Jacket" />
-                            <span class="label">New Arrivals</span>
-                        </div>
-                        <div class="slide">
-                            <a href="#banner-6" aria-label="Banner 6"></a>
-                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1600&auto=format&fit=crop" alt="Sneakers lifestyle" />
-                            <span class="label">Editors’ Choice</span>
-                        </div>
-                    </div>
+                <div class="brand-text">
+                    <h1>LesAiles</h1>
+                    <span>Qoratosh ko'chasi, 5A</span>
                 </div>
             </div>
-
-            <main class="product-row-container">
-                <div class="slider-header">
-                    <h3>Combolar</h3>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"><path d="M9.583 27.182C7.867 28.354 7.009 30.293 7.009 33c0 4.06 4.991 11 9.492 11h11.515c4.405 0 7.08-3.85 7.08-6.94V24.6a3.253 3.253 0 0 0-3.243-3.253a3.235 3.235 0 0 0-3.245 3.226v.11"/><path d="M10.981 29.445V7.662a3.217 3.217 0 0 1 6.435 0v15.986"/><path stroke-linejoin="round" d="M17.416 24v-4.192a2.804 2.804 0 0 1 5.608 0v4.62"/><path stroke-linejoin="round" d="M23 24.658v-2.85a2.804 2.804 0 0 1 5.608 0v3.195"/><path d="M11 8h30"/><path stroke-linejoin="round" d="m36 12.5l1.667-1.5L41 8l-3.333-3L36 3.5"/></g></svg>
-                </div>
-                <div class="ios-product-row">
-                    <article class="ios-product-card">
-                        <div class="product-image-container">
-                            <img src="https://www.portablepress.com/wp-content/uploads/2017/10/Fast-food-combo-meal.jpg" alt="GamBurger" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Kombo start</h3>
-                            <p class="product-description">Burger+Cola+Fri</p>
-                            <div class="product-footer">
-                                <span class="product-price">28,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button">Qo'shish</button>
-                        </div>
-                    </article>
-
-                    <article class="ios-product-card disabled">
-                        <div class="product-image-container">
-                            <img src="./assets/images/bigburger.avif" alt="Big Burger" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Big Burger</h3>
-                            <p class="product-description">Yoqimli ishtaxa</p>
-                            <div class="product-footer">
-                                <span class="product-price">32,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button disabled" disabled>Savatda mavjud</button>
-                        </div>
-                    </article>
-
-                    <article class="ios-product-card">
-                        <div class="product-image-container">
-                            <img src="./assets/images/pizza.jpg" alt="Milliy Pizza" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Milliy Pizza</h3>
-                            <p class="product-description">5 kishi uchun</p>
-                            <div class="product-footer">
-                                <span class="product-price">40,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button">Qo'shish</button>
-                        </div>
-                    </article>
-
-                    <article class="ios-product-card">
-                        <div class="product-image-container">
-                            <img src="./assets/images/drink.jpg" alt="Cola" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Cola 0.5</h3>
-                            <p class="product-description">Ajoyib tanlov!</p>
-                            <div class="product-footer">
-                                <span class="product-price">7,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button">Qo'shish</button>
-                        </div>
-                    </article>
-
-                    <article class="ios-product-card">
-                        <div class="product-image-container">
-                            <img src="./assets/images/chips.avif" alt="Chipslar" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Chipslar</h3>
-                            <p class="product-description">1 tarelka</p>
-                            <div class="product-footer">
-                                <span class="product-price">12,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button">Qo'shish</button>
-                        </div>
-                    </article>
-                </div>
-            </main>
-
-            <main class="product-grid-container">
-                <div class="slider-header">
-                    <h3>Mahsulotlar</h3>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 256 256"><path fill="currentColor" d="M128 35.31V128a8 8 0 0 1-16 0V35.31L93.66 53.66a8 8 0 0 1-11.32-11.32l32-32a8 8 0 0 1 11.32 0l32 32a8 8 0 0 1-11.32 11.32Zm64 88.31V96a16 16 0 0 0-16-16h-16a8 8 0 0 0 0 16h16v80.4a28 28 0 0 0-44.25 33.6l.24.38l22.26 34a8 8 0 0 0 13.39-8.76l-22.13-33.79A12 12 0 0 1 166.4 190c.07.13.15.26.23.38l10.68 16.31a8 8 0 0 0 14.69-4.38V144a74.84 74.84 0 0 1 24 54.69V240a8 8 0 0 0 16 0v-41.35a90.89 90.89 0 0 0-40-75.03M80 80H64a16 16 0 0 0-16 16v104a8 8 0 0 0 16 0V96h16a8 8 0 0 0 0-16"/></svg>
-                </div>
-                <div class="ios-product-grid">
-                    <article class="ios-product-card">
-                        <div class="product-image-container">
-                            <img src="./assets/images/burger.avif" alt="GamBurger" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">GamBurger</h3>
-                            <p class="product-description">Mazzali gamburger</p>
-                            <div class="product-footer">
-                                <span class="product-price">28,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button">Qo'shish</button>
-                        </div>
-                    </article>
-
-                    <article class="ios-product-card disabled">
-                        <div class="product-image-container">
-                            <img src="./assets/images/bigburger.avif" alt="Big Burger" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Big Burger</h3>
-                            <p class="product-description">Yoqimli ishtaxa</p>
-                            <div class="product-footer">
-                                <span class="product-price">32,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button disabled" disabled>Savatda mavjud</button>
-                        </div>
-                    </article>
-
-                    <article class="ios-product-card">
-                        <div class="product-image-container">
-                            <img src="./assets/images/pizza.jpg" alt="Milliy Pizza" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Milliy Pizza</h3>
-                            <p class="product-description">5 kishi uchun</p>
-                            <div class="product-footer">
-                                <span class="product-price">40,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button">Qo'shish</button>
-                        </div>
-                    </article>
-
-                    <article class="ios-product-card">
-                        <div class="product-image-container">
-                            <img src="./assets/images/drink.jpg" alt="Cola" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Cola 0.5</h3>
-                            <p class="product-description">Ajoyib tanlov!</p>
-                            <div class="product-footer">
-                                <span class="product-price">7,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button">Qo'shish</button>
-                        </div>
-                    </article>
-
-                    <article class="ios-product-card">
-                        <div class="product-image-container">
-                            <img src="./assets/images/chips.avif" alt="Chipslar" draggable="false" class="product-image">
-                        </div>
-                        <div class="product-details">
-                            <h3 class="product-title">Chipslar</h3>
-                            <p class="product-description">1 tarelka</p>
-                            <div class="product-footer">
-                                <span class="product-price">12,000 so'm</span>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">0</span>
-                                    <input type="hidden" name="quantity" value="0">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <button class="ios-add-button">Qo'shish</button>
-                        </div>
-                    </article>
-                </div>
-            </main>
-
-            <section class="category-scroller">
-                <div class="category-badges">
-                    <button class="category-badge active">Barchasi</button>
-                    <button class="category-badge">Burgerlar</button>
-                    <button class="category-badge">Pizza</button>
-                    <button class="category-badge">Ichimliklar</button>
-                    <button class="category-badge">Shirinliklar</button>
-                    <button class="category-badge">Salatlar</button>
-                    <button class="category-badge">Kombo</button>
-                    <button class="category-badge">Nonushta</button>
-                </div>
-            </section>
-        </div>
+            <a href="cart.html" class="cart-btn">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Savat
+                <span class="badge" id="cart-count">0</span>
+            </a>
+        </header>
     </div>
 
-    <script src="./assets/js/PWA/menu.js"></script>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <div class="hero">
+        <div class="hero-tag">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Haftalik aksiya
+        </div>
+        <h2>Tushlik combo<br>20% chegirma</h2>
+        <p>Burger + Cola + Fri — 12:00 dan 15:00 gacha</p>
+        <button class="hero-action">
+            Ko'rish
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+    </div>
+
+    <section class="section" style="margin-top:20px;">
+        <div class="section-label">
+            <h3>Chegirmalar</h3>
+            <span>Barchasi →</span>
+        </div>
+        <div class="promos">
+            <div class="promo-card">
+                <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=600&auto=format&fit=crop" alt="Promo 1">
+                <span class="promo-tag">Summer Sale</span>
+                <span class="promo-discount">−30%</span>
+            </div>
+            <div class="promo-card">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop" alt="Promo 2">
+                <span class="promo-tag">New Arrivals</span>
+                <span class="promo-discount">−15%</span>
+            </div>
+            <div class="promo-card">
+                <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?q=80&w=600&auto=format&fit=crop" alt="Promo 3">
+                <span class="promo-tag">Happy Hour</span>
+                <span class="promo-discount">−20%</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="section-Kombo">
+        <div class="section-label">
+            <h3>Combolar</h3>
+        </div>
+        <div class="h-row">
+            <article class="pcard" data-category="Kombo">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?q=80&w=400&auto=format&fit=crop" alt="Kombo Start">
+                <div class="pcard-body">
+                    <p class="pcard-title">Kombo Start</p>
+                    <p class="pcard-desc">Burger + Cola + Fri</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">28 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+            <article class="pcard" data-category="Kombo">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400&auto=format&fit=crop" alt="Kombo Max">
+                <div class="pcard-body">
+                    <p class="pcard-title">Kombo Max</p>
+                    <p class="pcard-desc">2x Burger + Cola + Fri</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">48 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+            <article class="pcard" data-category="Kombo">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=400&auto=format&fit=crop" alt="Kombo Oilaviy">
+                <div class="pcard-body">
+                    <p class="pcard-title">Oilaviy Kombo</p>
+                    <p class="pcard-desc">4 kishi uchun to'liq set</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">95 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="section" id="section-grid">
+        <div class="section-label">
+            <h3>Mahsulotlar</h3>
+        </div>
+        <div class="product-grid" id="product-grid">
+
+            <article class="pcard" data-category="Burgerlar">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400&auto=format&fit=crop" alt="GamBurger">
+                <div class="pcard-body">
+                    <p class="pcard-title">GamBurger</p>
+                    <p class="pcard-desc">Mazzali gamburger</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">28 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="pcard" data-category="Burgerlar">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1520072959219-c595dc870360?q=80&w=400&auto=format&fit=crop" alt="Big Burger">
+                <div class="pcard-body">
+                    <p class="pcard-title">Big Burger</p>
+                    <p class="pcard-desc">Ikki qatlam go'sht</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">32 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="pcard" data-category="Pizza">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400&auto=format&fit=crop" alt="Milliy Pizza">
+                <div class="pcard-body">
+                    <p class="pcard-title">Milliy Pizza</p>
+                    <p class="pcard-desc">5 kishi uchun</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">40 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="pcard" data-category="Pizza">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?q=80&w=400&auto=format&fit=crop" alt="Margherita">
+                <div class="pcard-body">
+                    <p class="pcard-title">Margherita</p>
+                    <p class="pcard-desc">Klassik italyan</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">35 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="pcard" data-category="Ichimliklar">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=400&auto=format&fit=crop" alt="Cola">
+                <div class="pcard-body">
+                    <p class="pcard-title">Cola 0.5</p>
+                    <p class="pcard-desc">Sovuq va yangilovchi</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">7 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="pcard" data-category="Ichimliklar">
+                <img class="pcard-img" src="https://images.unsplash.com/photo-1541658016709-82535e94bc69?q=80&w=400&auto=format&fit=crop" alt="Fresh Juice">
+                <div class="pcard-body">
+                    <p class="pcard-title">Fresh Juice</p>
+                    <p class="pcard-desc">Apelsin, limon</p>
+                    <div class="pcard-footer">
+                        <span class="pcard-price">12 000 so'm</span>
+                        <div class="qty-ctrl"><button class="qty-btn decrease">−</button><span class="qty-val">0</span><button class="qty-btn increase">+</button></div>
+                        <button class="add-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Qo'shish</button>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+</div>
+
+<nav class="cat-bar">
+    <div class="cat-scroll">
+        <button class="cat-btn active" data-filter="Barchasi">Barchasi</button>
+        <button class="cat-btn" data-filter="Kombo">Combo</button>
+        <button class="cat-btn" data-filter="Burgerlar">Burgerlar</button>
+        <button class="cat-btn" data-filter="Pizza">Pizza</button>
+        <button class="cat-btn" data-filter="Ichimliklar">Ichimliklar</button>
+    </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let total = 0;
+    const badge = document.getElementById('cart-count');
+
+    document.querySelectorAll('.pcard:not(.disabled)').forEach(card => {
+        let count = 0;
+        const addBtn = card.querySelector('.add-btn');
+        const qtyCtrl = card.querySelector('.qty-ctrl');
+        const dec = card.querySelector('.decrease');
+        const inc = card.querySelector('.increase');
+        const val = card.querySelector('.qty-val');
+
+        const update = () => {
+            val.textContent = count;
+            if (count > 0) { card.classList.add('in-cart'); } else { card.classList.remove('in-cart'); }
+            badge.textContent = total;
+        };
+
+        addBtn.addEventListener('click', () => { count = 1; total++; update(); });
+        inc.addEventListener('click', () => { count++; total++; update(); });
+        dec.addEventListener('click', () => { if (count > 0) { count--; total--; update(); } });
+    });
+
+    const cats = document.querySelectorAll('.cat-btn');
+    const cards = document.querySelectorAll('.pcard');
+    const comboSection = document.getElementById('section-Kombo');
+    const gridSection = document.getElementById('section-grid');
+
+    cats.forEach(btn => {
+        btn.addEventListener('click', () => {
+            cats.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const f = btn.dataset.filter;
+
+            if (f === 'Kombo') {
+                comboSection.style.display = '';
+                gridSection.style.display = 'none';
+            } else if (f === 'Barchasi') {
+                comboSection.style.display = '';
+                gridSection.style.display = '';
+                cards.forEach(c => c.style.display = '');
+            } else {
+                comboSection.style.display = 'none';
+                gridSection.style.display = '';
+                cards.forEach(c => {
+                    c.style.display = c.dataset.category === f ? '' : 'none';
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>

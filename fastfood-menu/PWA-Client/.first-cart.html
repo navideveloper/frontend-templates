@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title>Chopar Pizza - Cart</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --ios-system-body-background: #f5f5f7;
+            --ios-system-primary: #e82656;
+            --ios-system-gray: #8E8E93;
+            --ios-system-gray2: #AEAEB2;
+            --ios-system-gray6: #F2F2F7;
+            --ios-system-gray0: #1d1d1d;
+            --ios-system-btn-active: #34a99d;
+            --ios-label-primary: #222222;
+            --ios-label-secondary: #3C3C4399;
+            --ios-system-background: #FFFFFF;
+            --ios-card-background: rgba(255, 255, 255, 0.8);
+            --ios-blur-intensity: 10px;
+        }
+
+        .darkmode {
+            --ios-system-body-background: black;
+            --ios-system-primary: #e82656;
+            --ios-system-gray: #8E8E93;
+            --ios-system-gray2: #636366;
+            --ios-system-gray6: #252525;
+            --ios-system-btn-active: #3db9d3;
+            --ios-label-primary: #9f9f9fcf;
+            --ios-label-secondary: #b4b4b4cf;
+            --ios-system-background: #121212;
+            --ios-card-background: rgba(30, 30, 30, 0.8);
+        }
+
+        /* --- GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--ios-system-body-background);
+            color: var(--ios-label-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .ios-app-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--ios-card-background);
+            min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        .ios-app-header {
+            padding: 8px 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--ios-system-background);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .arrow-back {
+            color: var(--ios-label-secondary);
+            vertical-align: middle;
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- CART BUTTON --- */
+        .cart-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: white;
+            background-color: var(--ios-system-primary);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .cart-button .cart-icon {
+            font-size: 1.2rem;
+            transform: rotateY(180deg);
+        }
+
+        .cart-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- CART PAGE & ITEMS --- */
+        .cart-page {
+            padding-bottom: 180px; /* Space for fixed order summary */
+        }
+
+        .cart-items-container {
+            padding: 16px;
+        }
+
+        .cart-item {
+            display: flex;
+            background-color: var(--ios-card-background);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .cart-item-price {
+            font-size: 15px;
+            color: var(--ios-system-primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        /* --- REMOVE BUTTON --- */
+        .cart-item-remove {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: #FF3B30;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .cart-item-remove:active {
+            background-color: rgba(255, 59, 48, 0.3);
+            transform: scale(0.95);
+        }
+
+        .cart-item-remove ion-icon {
+            font-size: 16px;
+        }
+
+        /* --- QUANTITY CONTROL --- */
+        .ios-quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: var(--ios-system-gray6);
+            border-radius: 25px;
+            padding: 0.2rem 0.4rem;
+            height: 2.2rem;
+        }
+
+        .quantity-btn {
+            background: white;
+            border: none;
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            transition: 0.15s;
+        }
+
+        .quantity-btn:active {
+            background-color: color-mix(in srgb, var(--ios-system-primary) 10%, transparent);
+        }
+
+        .quantity-value {
+            font-weight: 650;
+            min-width: 18px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        /* --- ORDER SUMMARY (STICKY BOTTOM) --- */
+        .order-summary {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--ios-system-background);
+            padding: 16px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            margin: 0 auto;
+            z-index: 11;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .summary-label {
+            color: var(--ios-label-secondary);
+        }
+
+        .summary-value {
+            font-weight: 500;
+        }
+
+        .total-row {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--ios-system-gray6);
+        }
+
+        .total-label {
+            font-weight: 600;
+        }
+
+        .total-value {
+            font-weight: 600;
+            color: var(--ios-system-primary);
+            font-size: 18px;
+        }
+
+        .checkout-button {
+            width: 100%;
+            background-color: var(--ios-system-primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 16px;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .checkout-button:active {
+            background-color: var(--ios-system-btn-active);
+        }
+
+        /* --- EMPTY STATE --- */
+        .empty-cart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .empty-cart-icon {
+            font-size: 48px;
+            color: var(--ios-system-gray2);
+            margin-bottom: 16px;
+        }
+
+        .empty-cart-text {
+            color: var(--ios-label-primary);
+            margin-bottom: 20px;
+        }
+
+        .back-to-menu {
+            background-color: var(--ios-system-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="blur-background"></div>
+        <div class="ios-app-wrapper">
+            <header class="ios-app-header">
+                <div class="header-content">
+                    <div class="brand-info">
+                        <a href="index.html" style="margin-right: 12px; display: flex; align-items: center;">
+                            <ion-icon class="arrow-back" name="arrow-back" style="font-size: 24px;"></ion-icon>
+                        </a>
+                        <h1 class="brand-name">Savat</h1>
+                    </div>
+                    <a href="cart.html" class="cart-button style-compact">
+                        <ion-icon name="cart-outline" class="cart-icon"></ion-icon>
+                        Savat
+                    </a>
+                </div>
+            </header>
+
+            <main class="cart-page">
+                <div class="cart-items-container">
+                    <div class="cart-item">
+                        <img src="./assets/images/burger.avif" alt="GamBurger" class="cart-item-image" draggable="false">
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-title">GamBurger</h3>
+                            <p class="cart-item-price">28,000 so'm</p>
+                            <div class="cart-item-controls">
+                                <button class="cart-item-remove">
+                                    <ion-icon name="trash-outline"></ion-icon>O'chirish
+                                </button>
+                                <div class="ios-quantity-control">
+                                    <button class="quantity-btn decrease">−</button>
+                                    <span class="quantity-value">1</span>
+                                    <input type="hidden" name="quantity" class="quantity-hidden" value="1">
+                                    <button class="quantity-btn increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cart-item">
+                        <img src="./assets/images/drink.jpg" alt="Cola" class="cart-item-image" draggable="false">
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-title">Cola 0.5</h3>
+                            <p class="cart-item-price">7,000 so'm</p>
+                            <div class="cart-item-controls">
+                                <button class="cart-item-remove">
+                                    <ion-icon name="trash-outline"></ion-icon>O'chirish
+                                </button>
+                                <div class="ios-quantity-control">
+                                    <button class="quantity-btn decrease">−</button>
+                                    <span class="quantity-value">2</span>
+                                    <input type="hidden" name="quantity" class="quantity-hidden" value="2">
+                                    <button class="quantity-btn increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Mahsulotlar</span>
+                        <span class="summary-value">35,000 so'm</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Yetkazib berish</span>
+                        <span class="summary-value">10,000 so'm</span>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span class="summary-label total-label">Jami</span>
+                        <span class="summary-value total-value">45,000 so'm</span>
+                    </div>
+                    <button class="checkout-button">Buyurtma berish</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="./assets/js/PWA/cart.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pure LED Pixel Video Fullscreen</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        /* To'liq ekranli LED panel */
+        .led-fullscreen-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-color: #050508;
+            overflow: hidden;
+        }
+
+        /* Video elementini to'liq ekranga yoyish va piksellashtirish */
+        .pixel-video-fullscreen {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Videoni ekranga qoraytirmasdan to'ldiradi */
+            image-rendering: pixelated; 
+            image-rendering: crisp-edges;
+            filter: contrast(1.25) brightness(1.1);
+            display: block;
+        }
+
+        /* Orqa fondagi telefon rasmi (Kiber suv belgisi effekti) */
+        .bg-phone-texture {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 120px;
+            height: 120px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.18;
+            z-index: 2;
+            pointer-events: none;
+            image-rendering: pixelated;
+        }
+
+        /* LED PIKSEL TO'RI (z-index: 5) */
+        .led-pixel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.8) 1.5px, transparent 1.5px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 1.5px, transparent 1.5px);
+            background-size: 4px 4px; /* Piksellar zichligi */
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* CRT Monitor chiziqlari (z-index: 6) */
+        .led-fullscreen-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+            background-size: 100% 6px;
+            z-index: 6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="led-fullscreen-container">
+        <div class="bg-phone-texture" id="phoneBg"></div>
+        
+        <div class="led-pixel-overlay"></div>
+        
+        <video class="pixel-video-fullscreen" id="pureVideo" autoplay loop muted playsinline>
+            <source src="https://videocdn.cdnpk.net/videos/5c997cb9-ef40-5da5-825b-09ddafae98cf/horizontal/previews/clear/large.mp4?token=exp=1781283947~hmac=f004b6cd1e97656a0f3a2537c0da4ffad91813230b5ab2e6130247a2a96b46da" type="video/mp4">
+            Brauzeringiz ushbu videoni qo'llab-quvvatlamaydi.
+        </video>
+    </div>
+
+    <script>
+        // Telefon rasmini ulash
+        const phoneUrl = "https://onlinepngtools.com/images/examples-onlinepngtools/black-rotary-phone-low-quality.png";
+        document.getElementById('phoneBg').style.backgroundImage = `url('${phoneUrl}')`;
+
+        // Ba'zi brauzerlar xavfsizlik tufayli avtomatik ijroni bloklasa, ushbu kod uni majburan ishga tushiradi
+        const video = document.getElementById('pureVideo');
+        video.addEventListener('suspend', () => {
+            video.play().catch(error => console.log("Autoplay kutilmoqda...", error));
+        });
+    </script>
+
+</body>
+</html>

@@ -1,423 +1,375 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-    <title>Chopar Pizza - Cart</title>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&display=swap" rel="stylesheet">
-    
+    <title>LesAiles — Savat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* --- THEME VARIABLES --- */
         :root {
-            --ios-system-body-background: #f5f5f7;
-            --ios-system-primary: #e82656;
-            --ios-system-gray: #8E8E93;
-            --ios-system-gray2: #AEAEB2;
-            --ios-system-gray6: #F2F2F7;
-            --ios-system-gray0: #1d1d1d;
-            --ios-system-btn-active: #34a99d;
-            --ios-label-primary: #222222;
-            --ios-label-secondary: #3C3C4399;
-            --ios-system-background: #FFFFFF;
-            --ios-card-background: rgba(255, 255, 255, 0.8);
-            --ios-blur-intensity: 10px;
+            --bg: #f5f4f0;
+            --surface: #ffffff;
+            --surface2: #f0eeea;
+            --primary: #d4451f;
+            --primary-light: #fdf0ec;
+            --text: #1c1b18;
+            --text2: #7a7872;
+            --text3: #b5b3ae;
+            --border: rgba(28,27,24,0.08);
+            --danger-bg: rgba(212, 69, 31, 0.1);
+            --danger-text: #d4451f;
+            --r-sm: 12px;
+            --r-md: 16px;
+            --r-lg: 22px;
+            --r-xl: 28px;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #141310;
+                --surface: #1e1d1a;
+                --surface2: #272522;
+                --primary-light: #2a1a15;
+                --text: #f0ede6;
+                --text2: #9a9790;
+                --text3: #5a5852;
+                --border: rgba(240,237,230,0.07);
+                --danger-bg: rgba(240, 78, 39, 0.15);
+                --danger-text: #ff5c33;
+            }
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+        body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
+
+        .app { max-width:430px; margin:0 auto; min-height:100vh; padding-bottom:220px; position: relative; }
+
+        /* HEADER FIX */
+        .header-wrapper {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(245,244,240,0.88);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+        }
+        @media (prefers-color-scheme:dark) { .header-wrapper { background:rgba(20,19,16,0.88); } }
+
+        .header {
+            max-width: 430px; margin: 0 auto;
+            padding: 14px 16px;
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        .darkmode {
-            --ios-system-body-background: black;
-            --ios-system-primary: #e82656;
-            --ios-system-gray: #8E8E93;
-            --ios-system-gray2: #636366;
-            --ios-system-gray6: #252525;
-            --ios-system-btn-active: #3db9d3;
-            --ios-label-primary: #9f9f9fcf;
-            --ios-label-secondary: #b4b4b4cf;
-            --ios-system-background: #121212;
-            --ios-card-background: rgba(30, 30, 30, 0.8);
+        .brand { display:flex; align-items:center; gap:12px; }
+        .back-btn {
+            background: none; border: none; color: var(--text);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; padding: 4px; margin-left: -4px;
+            transition: transform 0.2s ease;
         }
+        /* Mobile-first: Active states rule over hover */
+        .back-btn:active { transform: scale(0.9); }
+        .back-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        .brand-text h1 { font-size:18px; font-weight:700; letter-spacing:-0.3px; line-height:1; }
 
-        /* --- GLOBAL STYLES --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+        .cart-status {
+            display:flex; align-items:center; gap:6px;
+            background:var(--surface2); color:var(--text);
+            padding:9px 14px; border-radius:100px;
+            font-size:13px; font-weight:600;
         }
+        .cart-status svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.2; }
 
-        body {
-            background-color: var(--ios-system-body-background);
-            color: var(--ios-label-primary);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .app-container {
-            position: relative;
-            min-height: 100vh;
-        }
-
-        .ios-app-wrapper {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: var(--ios-card-background);
-            min-height: 100vh;
-        }
-
-        /* --- HEADER --- */
-        .ios-app-header {
-            padding: 8px 14px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background-color: var(--ios-system-background);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .brand-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-name {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .arrow-back {
-            color: var(--ios-label-secondary);
-            vertical-align: middle;
-            display: flex;
-            align-items: center;
-        }
-
-        /* --- CART BUTTON --- */
-        .cart-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.6rem 1rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: white;
-            background-color: var(--ios-system-primary);
-            text-decoration: none;
-            border-radius: 0.5rem;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        }
-
-        .cart-button .cart-icon {
-            font-size: 1.2rem;
-            transform: rotateY(180deg);
-        }
-
-        .cart-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        }
-
-        /* --- CART PAGE & ITEMS --- */
-        .cart-page {
-            padding-bottom: 180px; /* Space for fixed order summary */
-        }
-
-        .cart-items-container {
-            padding: 16px;
-        }
+        /* CART CONTENT */
+        .cart-page { padding: 16px; }
 
         .cart-item {
-            display: flex;
-            background-color: var(--ios-card-background);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex; background: var(--surface);
+            border-radius: var(--r-lg); border: 1px solid var(--border);
+            padding: 12px; margin-bottom: 12px;
+            transition: transform 0.2s ease, opacity 0.2s ease, margin 0.2s ease;
+        }
+        
+        /* Removal Animation State */
+        .cart-item.removing {
+            transform: scale(0.9) translateX(-20px);
+            opacity: 0;
+            margin-bottom: -100px; /* Collapses the height footprint smoothly */
+            pointer-events: none;
         }
 
         .cart-item-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            margin-right: 12px;
+            width: 80px; height: 80px; border-radius: var(--r-sm);
+            object-fit: cover; background: var(--surface2);
+            margin-right: 12px; flex-shrink: 0;
         }
+        .cart-item-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .cart-item-title { font-size: 15px; font-weight: 600; line-height: 1.3; margin-bottom: 2px; }
+        .cart-item-price { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        
+        .cart-item-controls { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 
-        .cart-item-details {
-            flex: 1;
-        }
-
-        .cart-item-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .cart-item-price {
-            font-size: 15px;
-            color: var(--ios-system-primary);
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .cart-item-controls {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-        }
-
-        /* --- REMOVE BUTTON --- */
+        /* REMOVE BUTTON */
         .cart-item-remove {
-            background-color: rgba(255, 59, 48, 0.1);
-            color: #FF3B30;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.2s ease;
-            cursor: pointer;
+            background: var(--danger-bg); color: var(--danger-text);
+            border: none; cursor: pointer; padding: 8px 12px;
+            border-radius: var(--r-sm); font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 4px; 
+            transition: background-color 0.15s, transform 0.1s;
         }
+        .cart-item-remove:active { transform: scale(0.95); opacity: 0.8; }
+        .cart-item-remove svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
-        .cart-item-remove:active {
-            background-color: rgba(255, 59, 48, 0.3);
-            transform: scale(0.95);
+        /* QUANTITY CONTROL */
+        .qty-ctrl {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--primary); border-radius: var(--r-sm);
+            padding: 3px; height: 34px; gap: 8px;
         }
-
-        .cart-item-remove ion-icon {
-            font-size: 16px;
+        .qty-btn {
+            background: #fff; border: none; cursor: pointer;
+            width: 28px; height: 28px; border-radius: 8px;
+            font-size: 14px; font-weight: 700; color: var(--primary);
+            display: flex; align-items: center; justify-content: center; line-height: 1;
+            transition: transform 0.1s, background-color 0.15s;
         }
+        .qty-btn:active { transform: scale(0.9); background-color: var(--surface2); }
+        .qty-val { color: #fff; font-size: 13px; font-weight: 700; min-width: 14px; text-align: center; }
 
-        /* --- QUANTITY CONTROL --- */
-        .ios-quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            background: var(--ios-system-gray6);
-            border-radius: 25px;
-            padding: 0.2rem 0.4rem;
-            height: 2.2rem;
-        }
-
-        .quantity-btn {
-            background: white;
-            border: none;
-            width: 1.8rem;
-            height: 1.8rem;
-            border-radius: 50%;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1d1d1f;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-            transition: 0.15s;
-        }
-
-        .quantity-btn:active {
-            background-color: color-mix(in srgb, var(--ios-system-primary) 10%, transparent);
-        }
-
-        .quantity-value {
-            font-weight: 650;
-            min-width: 18px;
-            text-align: center;
-            font-size: 0.95rem;
-        }
-
-        /* --- ORDER SUMMARY (STICKY BOTTOM) --- */
+        /* STICKY ORDER SUMMARY FOOTER */
         .order-summary {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--ios-system-background);
-            padding: 16px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-            max-width: 600px;
-            margin: 0 auto;
-            z-index: 11;
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 430px;
+            background: rgba(245,244,240,0.92);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border);
+            padding: 16px 16px 28px; z-index: 200;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+        }
+        @media (prefers-color-scheme:dark) { .order-summary { background:rgba(20,19,16,0.92); } }
+
+        /* Summary slide down animation when cart goes empty */
+        .order-summary.hidden {
+            transform: translate(-50%, 100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+        .summary-label { color: var(--text2); }
+        .summary-value { font-weight: 600; color: var(--text); }
 
-        .summary-label {
-            color: var(--ios-label-secondary);
-        }
-
-        .summary-value {
-            font-weight: 500;
-        }
-
-        .total-row {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--ios-system-gray6);
-        }
-
-        .total-label {
-            font-weight: 600;
-        }
-
-        .total-value {
-            font-weight: 600;
-            color: var(--ios-system-primary);
-            font-size: 18px;
-        }
+        .total-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+        .total-label { font-weight: 700; font-size: 15px; color: var(--text); }
+        .total-value { font-weight: 800; color: var(--primary); font-size: 18px; }
 
         .checkout-button {
-            width: 100%;
-            background-color: var(--ios-system-primary);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            margin-top: 16px;
-            transition: background-color 0.2s ease;
-            cursor: pointer;
+            width: 100%; background-color: var(--text); color: var(--surface);
+            border: none; padding: 14px; border-radius: var(--r-md);
+            font-size: 15px; font-weight: 700; margin-top: 14px;
+            cursor: pointer; transition: background-color 0.15s, transform 0.1s;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
         }
+        .checkout-button:active { transform: scale(0.98); opacity: 0.9; }
 
-        .checkout-button:active {
-            background-color: var(--ios-system-btn-active);
+        /* EMPTY STATE STYLE */
+        .empty-cart { 
+            text-align: center; padding: 80px 20px; color: var(--text2);
+            display: none; animation: fadeIn 0.4s ease forwards;
         }
-
-        /* --- EMPTY STATE --- */
-        .empty-cart {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .empty-cart-icon {
-            font-size: 48px;
-            color: var(--ios-system-gray2);
-            margin-bottom: 16px;
-        }
-
-        .empty-cart-text {
-            color: var(--ios-label-primary);
-            margin-bottom: 20px;
-        }
-
+        .empty-cart svg { width: 56px; height: 56px; stroke: var(--text3); fill: none; stroke-width: 1.5; margin-bottom: 16px; }
+        .empty-cart p { font-size: 15px; margin-bottom: 24px; color: var(--text2); }
         .back-to-menu {
-            background-color: var(--ios-system-primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            text-decoration: none;
+            display: inline-flex; background: var(--primary); color: #fff;
+            padding: 12px 28px; border-radius: 100px; font-size: 14px;
+            font-weight: 600; text-decoration: none; transition: transform 0.15s, opacity 0.15s;
+        }
+        .back-to-menu:active { transform: scale(0.95); opacity: 0.9; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Desktop Hover refinements (Only triggered if pointing device supports hover) */
+        @media (hover: hover) {
+            .back-btn:hover { color: var(--primary); }
+            .cart-item-remove:hover { background-color: var(--primary); color: #fff; }
+            .qty-btn:hover { background-color: var(--primary-light); }
+            .checkout-button:hover { background-color: var(--primary); color: #fff; }
+            .back-to-menu:hover { opacity: 0.9; }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="blur-background"></div>
-        <div class="ios-app-wrapper">
-            <header class="ios-app-header">
-                <div class="header-content">
-                    <div class="brand-info">
-                        <a href="index.html" style="margin-right: 12px; display: flex; align-items: center;">
-                            <ion-icon class="arrow-back" name="arrow-back" style="font-size: 24px;"></ion-icon>
-                        </a>
-                        <h1 class="brand-name">Savat</h1>
-                    </div>
-                    <a href="cart.html" class="cart-button style-compact">
-                        <ion-icon name="cart-outline" class="cart-icon"></ion-icon>
-                        Savat
-                    </a>
-                </div>
-            </header>
+<div class="app">
 
-            <main class="cart-page">
-                <div class="cart-items-container">
-                    <div class="cart-item">
-                        <img src="./assets/images/burger.avif" alt="GamBurger" class="cart-item-image" draggable="false">
-                        <div class="cart-item-details">
-                            <h3 class="cart-item-title">GamBurger</h3>
-                            <p class="cart-item-price">28,000 so'm</p>
-                            <div class="cart-item-controls">
-                                <button class="cart-item-remove">
-                                    <ion-icon name="trash-outline"></ion-icon>O'chirish
-                                </button>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">1</span>
-                                    <input type="hidden" name="quantity" class="quantity-hidden" value="1">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="cart-item">
-                        <img src="./assets/images/drink.jpg" alt="Cola" class="cart-item-image" draggable="false">
-                        <div class="cart-item-details">
-                            <h3 class="cart-item-title">Cola 0.5</h3>
-                            <p class="cart-item-price">7,000 so'm</p>
-                            <div class="cart-item-controls">
-                                <button class="cart-item-remove">
-                                    <ion-icon name="trash-outline"></ion-icon>O'chirish
-                                </button>
-                                <div class="ios-quantity-control">
-                                    <button class="quantity-btn decrease">−</button>
-                                    <span class="quantity-value">2</span>
-                                    <input type="hidden" name="quantity" class="quantity-hidden" value="2">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="header-wrapper">
+        <header class="header">
+            <div class="brand">
+                <a href="index.html" class="back-btn">
+                    <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                </a>
+                <div class="brand-text">
+                    <h1>Savat</h1>
                 </div>
-                
-                <div class="order-summary">
-                    <div class="summary-row">
-                        <span class="summary-label">Mahsulotlar</span>
-                        <span class="summary-value">35,000 so'm</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-label">Yetkazib berish</span>
-                        <span class="summary-value">10,000 so'm</span>
-                    </div>
-                    <div class="summary-row total-row">
-                        <span class="summary-label total-label">Jami</span>
-                        <span class="summary-value total-value">45,000 so'm</span>
-                    </div>
-                    <button class="checkout-button">Buyurtma berish</button>
-                </div>
-            </main>
-        </div>
+            </div>
+            <div class="cart-status">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Buyurtma
+            </div>
+        </header>
     </div>
 
-    <script src="./assets/js/PWA/cart.js"></script>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <main class="cart-page">
+        <div class="cart-items-container" id="items-container">
+            
+            <div class="cart-item" data-price="28000">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400&auto=format&fit=crop" alt="GamBurger" class="cart-item-image">
+                <div class="cart-item-details">
+                    <div>
+                        <h3 class="cart-item-title">GamBurger</h3>
+                        <p class="cart-item-price">28 000 so'm</p>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="cart-item-remove">
+                            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                            O'chirish
+                        </button>
+                        <div class="qty-ctrl">
+                            <button class="qty-btn decrease">−</button>
+                            <span class="qty-val">1</span>
+                            <button class="qty-btn increase">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cart-item" data-price="7000">
+                <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=400&auto=format&fit=crop" alt="Cola" class="cart-item-image">
+                <div class="cart-item-details">
+                    <div>
+                        <h3 class="cart-item-title">Cola 0.5</h3>
+                        <p class="cart-item-price">7 000 so'm</p>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="cart-item-remove">
+                            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                            O'chirish
+                        </button>
+                        <div class="qty-ctrl">
+                            <button class="qty-btn decrease">−</button>
+                            <span class="qty-val">2</span>
+                            <button class="qty-btn increase">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="empty-cart" id="empty-state">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+            <p>Savatingiz hozircha bo'sh</p>
+            <a href="index.html" class="back-to-menu">Menuga qaytish</a>
+        </div> 
+        
+        <div class="order-summary" id="summary-sheet">
+            <div class="summary-row">
+                <span class="summary-label">Mahsulotlar</span>
+                <span class="summary-value" id="subtotal-val">0 so'm</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Yetkazib berish</span>
+                <span class="summary-value" id="delivery-val">10 000 so'm</span>
+            </div>
+            <div class="summary-row total-row">
+                <span class="summary-label total-label">Jami</span>
+                <span class="summary-value total-value" id="total-val">0 so'm</span>
+            </div>
+            <button class="checkout-button">Buyurtma berish</button>
+        </div>
+    </main>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const deliveryPrice = 10000;
+    const itemsContainer = document.getElementById('items-container');
+    const emptyState = document.getElementById('empty-state');
+    const summarySheet = document.getElementById('summary-sheet');
+    
+    const subtotalEl = document.getElementById('subtotal-val');
+    const totalEl = document.getElementById('total-val');
+
+    // Utility function to convert numbers into neat spaced strings: e.g. 45000 -> "45 000 so'm"
+    const formatPrice = (amount) => {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " so'm";
+    };
+
+    // Calculate totals based on active UI items
+    const calculateTotals = () => {
+        const remainingItems = document.querySelectorAll('.cart-item:not(.removing)');
+        
+        if (remainingItems.length === 0) {
+            // Trigger seamless transition adjustments for empty cart scenario
+            summarySheet.classList.add('hidden');
+            emptyState.style.display = 'block';
+            return;
+        }
+
+        let subtotal = 0;
+        remainingItems.forEach(item => {
+            const price = parseInt(item.dataset.price, 10);
+            const quantity = parseInt(item.querySelector('.qty-val').textContent, 10);
+            subtotal += price * quantity;
+        });
+
+        const total = subtotal + deliveryPrice;
+
+        subtotalEl.textContent = formatPrice(subtotal);
+        totalEl.textContent = formatPrice(total);
+    };
+
+    // Orchestrates removal step animations gracefully before destroying DOM structures
+    const animateItemRemoval = (itemNode) => {
+        itemNode.classList.add('removing');
+        // Matches the 0.2s duration of CSS configurations
+        setTimeout(() => {
+            itemNode.remove();
+            calculateTotals();
+        }, 200);
+    };
+
+    // Attach click triggers cleanly to cart actions
+    document.querySelectorAll('.cart-item').forEach(item => {
+        const decBtn = item.querySelector('.decrease');
+        const incBtn = item.querySelector('.increase');
+        const qtyVal = item.querySelector('.qty-val');
+        const removeBtn = item.querySelector('.cart-item-remove');
+
+        incBtn.addEventListener('click', () => {
+            let count = parseInt(qtyVal.textContent, 10);
+            count++;
+            qtyVal.textContent = count;
+            calculateTotals();
+        });
+
+        decBtn.addEventListener('click', () => {
+            let count = parseInt(qtyVal.textContent, 10);
+            if (count > 1) {
+                count--;
+                qtyVal.textContent = count;
+                calculateTotals();
+            } else {
+                animateItemRemoval(item);
+            }
+        });
+
+        removeBtn.addEventListener('click', () => {
+            animateItemRemoval(item);
+        });
+    });
+
+    calculateTotals();
+});
+</script>
 </body>
 </html>

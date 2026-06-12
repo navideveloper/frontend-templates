@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Pixel Phone Display</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #040406;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+        }
+
+        /* LED Ekran paneli */
+        .led-screen {
+            position: relative;
+            width: 90vw;
+            max-width: 600px;
+            height: 90vw;
+            max-height: 600px;
+            background-color: #06070a;
+            border-radius: 12px;
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 1), 0 0 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        /* Canvas joylashuvi */
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: pixelated; /* Piksellarni silliqlashtirmasdan o'tkir ko'rsatish */
+            z-index: 1;
+        }
+
+        /* LED PIKSEL TO'RI (z-index: 2) */
+        .led-pixel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.85) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 1px, transparent 1px);
+            background-size: 4px 4px; /* Piksel katakchalari kattaligi */
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Monitor chiziqlari va umumiy ekran effekti (z-index: 3) */
+        .led-screen::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+            background-size: 100% 8px;
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        /* Yuklanayotgan vaqtdagi matn */
+        .loading {
+            position: absolute;
+            color: #00ff55;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 4;
+            text-shadow: 0 0 5px #00ff55;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="led-screen" id="ledDisplay">
+        <div id="status" class="loading">Yuklanmoqda...</div>
+        <div class="led-pixel-overlay"></div>
+        <canvas id="pixelCanvas"></canvas>
+    </div>
+
+    <script>
+        const url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuwgwVo_4vvzIr9dmOj5GdHes0rWbbjKpVgw&s";
+        const canvas = document.getElementById('pixelCanvas');
+        const ctx = canvas.getContext('2d');
+        const statusEl = document.getElementById('status');
+
+        const img = new Image();
+        // CORS xatoligini oldini olish uchun (agar server ruxsat bersa)
+        img.crossOrigin = "Anonymous"; 
+        img.src = url;
+
+        img.onload = function() {
+            statusEl.style.display = 'none'; // Matnni yashirish
+
+            // LED effekti chiroyli chiqishi uchun rasm o'lchamini kichraytirib piksellashtiramiz
+            // Canvas o'lchami qanchalik kichik bo'lsa, piksellar shunchalik sezilarli bo'ladi (Masalan: 128x128)
+            const pixelSize = 128; 
+            canvas.width = pixelSize;
+            canvas.height = pixelSize;
+
+            // Rasmni proporsiyasini saqlagan holda markazga joylashtirish
+            const scale = Math.min(pixelSize / img.width, pixelSize / img.height);
+            const x = (pixelSize / 2) - (img.width / 2) * scale;
+            const y = (pixelSize / 2) - (img.height / 2) * scale;
+
+            // Canvasga rasmni chizish
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+            // Ranglarni neon/LED uslubida biroz yorqinlashtirish (ixtiyoriy kontrast)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                // Agar piksel butunlay qora bo'lmasa, uni biroz "glowing" qilish
+                if(data[i] > 10 || data[i+1] > 10 || data[i+2] > 10) {
+                    data[i] = Math.min(255, data[i] * 1.2);     // Red
+                    data[i+1] = Math.min(255, data[i+1] * 1.2); // Green
+                    data[i+2] = Math.min(255, data[i+2] * 1.5); // Blue (Telefon ko'kroq tusda porlashi uchun)
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+        };
+
+        img.onerror = function() {
+            statusEl.innerText = "Rasm yuklanmadi (CORS cheklovi)";
+            statusEl.style.color = "#ff2247";
+            statusEl.style.textShadow = "0 0 5px #ff2247";
+        };
+    </script>
+
+</body>
+</html>

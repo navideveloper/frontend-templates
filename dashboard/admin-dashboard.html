@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turon — Boshqaruv paneli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Product+Sans&display=swap" rel="stylesheet">
+  <style>
+    /* ---------------- ROOT ---------------- */
+    :root {
+      --bg: #e8ebf1;
+      --sidebar-bg: #ffffff;
+      --main-bg: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-1: #14161f;
+      --text-2: #6c7280;
+      --text-3: #9aa0ad;
+      --border: #edeff3;
+      --accent: #5b5ff0;
+      --accent-soft: #eef0ff;
+      --seg-1: #8ab4f8;
+      --seg-2: #b9a6f3;
+      --seg-3: #f6d364;
+      --seg-4: #7fd9c4;
+      --chart-blue: #9fc1fb;
+      --chart-blue-deep: #6f9cf2;
+      --chart-grey: #dde1ea;
+      --ai-bg: #cfe2fb;
+      --ai-bg-2: #bcd6f8;
+      --map-dot: #c7d8f5;
+      --map-dot-hi: #5b8def;
+      --shadow-sm: 0 2px 10px rgba(20,22,31,0.04);
+      --shadow-md: 0 10px 30px rgba(20,22,31,0.07);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+      color-scheme: light;
+    }
+    html[data-theme="dark"] {
+      --bg: #14151b;
+      --sidebar-bg: #1b1d25;
+      --main-bg: #1b1d25;
+      --card-bg: #21232c;
+      --text-1: #f1f2f5;
+      --text-2: #aaadb8;
+      --text-3: #767a87;
+      --border: #2b2e38;
+      --accent: #7b7ffb;
+      --accent-soft: #2a2b46;
+      --seg-1: #6f9cf2;
+      --seg-2: #9c87e6;
+      --seg-3: #e0bb52;
+      --seg-4: #5cc1a9;
+      --chart-blue: #6f8fd4;
+      --chart-blue-deep: #5b7fd1;
+      --chart-grey: #353945;
+      --ai-bg: #233455;
+      --ai-bg-2: #1d2c47;
+      --map-dot: #2c3552;
+      --map-dot-hi: #6f9cf2;
+      --shadow-sm: 0 2px 10px rgba(0,0,0,0.25);
+      --shadow-md: 0 14px 34px rgba(0,0,0,0.35);
+      color-scheme: dark;
+    }
+
+    /* ---------------- RESET ---------------- */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: 'Google Sans', 'Product Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+      transition: background .4s ease, color .4s ease;
+    }
+    button { font-family: inherit; }
+    ul { list-style: none; margin: 0; padding: 0; }
+    svg { display: block; }
+
+    /* ---------------- APP LAYOUT ---------------- */
+    .app {
+      display: flex;
+      gap: 18px;
+      padding: 18px;
+      min-height: 100vh;
+      align-items: flex-start;
+    }
+
+    /* ---------------- SIDEBAR ---------------- */
+    .sidebar {
+      width: 268px;
+      flex-shrink: 0;
+      background: var(--sidebar-bg);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      box-shadow: var(--shadow-sm);
+      transition: background .4s ease, transform .35s cubic-bezier(.4,0,.2,1);
+      position: sticky;
+      top: 18px;
+      max-height: calc(100vh - 36px);
+      overflow: hidden; /* sidebar itself not scrollable – nav handles overflow */
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+      padding: 0 4px;
+      flex-shrink: 0;
+    }
+    .brand-icon {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6a6ff6, #4d50e0);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 6px 14px rgba(90,95,240,0.35);
+    }
+
+    .profile-card {
+      background: var(--main-bg);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      transition: background .4s ease;
+      flex-shrink: 0;
+    }
+    .profile-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, #ffb37b, #ff8a8a);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 15px;
+      box-shadow: 0 4px 10px rgba(255,140,120,.35);
+    }
+    .theme-pill {
+      display: flex; align-items: center; gap: 2px;
+      background: var(--card-bg);
+      border-radius: 100px;
+      padding: 4px;
+      border: 1px solid var(--border);
+    }
+    .theme-pill button {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--text-3);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all .25s ease;
+    }
+    .theme-pill button.active {
+      background: var(--text-1);
+      color: var(--card-bg);
+    }
+    .theme-pill button:hover:not(.active) { color: var(--text-1); }
+
+    .profile-date {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      margin: 0 0 4px;
+    }
+    .profile-greet {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .profile-greet span { color: var(--accent); }
+
+    /* ---- NAV (scrollable, but parent sidebar has overflow hidden) ---- */
+    .nav {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0; /* flex override */
+      padding-right: 2px;
+    }
+    .nav::-webkit-scrollbar { width: 6px; }
+    .nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+
+    .nav li {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-2);
+      font-size: 14.5px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 2px;
+      transition: background .25s ease, color .25s ease, transform .15s ease;
+    }
+    .nav li svg { width: 19px; height: 19px; flex-shrink: 0; transition: transform .25s ease; }
+    .nav li:hover { background: var(--accent-soft); color: var(--text-1); transform: translateX(2px); }
+    .nav li.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(91,95,240,0.28);
+    }
+    .nav li.active svg { transform: scale(1.05); }
+
+    /* ---------------- PRO-CARD REMOVED ---------------- */
+    /* no .pro-card styles */
+
+    /* ---------------- HAMBURGER (mobile) ---------------- */
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 18px; left: 18px;
+      z-index: 50;
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      border: none;
+      background: var(--card-bg);
+      box-shadow: var(--shadow-md);
+      color: var(--text-1);
+      align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+
+    /* ---------------- MAIN ---------------- */
+    .main {
+      flex: 1;
+      min-width: 0;
+      background: var(--main-bg);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      transition: background .4s ease;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13.5px; font-weight: 600;
+      border-radius: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text-1);
+      transition: transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn svg { width: 16px; height: 16px; }
+    .btn:hover { box-shadow: var(--shadow-sm); transform: translateY(-1px); border-color: var(--text-3); }
+    .btn:active { transform: translateY(0) scale(.97); }
+    .btn-primary {
+      background: var(--text-1);
+      color: var(--main-bg);
+      border-color: var(--text-1);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 20px rgba(20,22,31,0.25); }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      position: absolute; top: calc(100% + 8px); left: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-md);
+      min-width: 160px;
+      padding: 6px;
+      z-index: 20;
+      opacity: 0; visibility: hidden;
+      transform: translateY(-6px);
+      transition: all .2s cubic-bezier(.4,0,.2,1);
+    }
+    .dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .dropdown-menu li {
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease;
+    }
+    .dropdown-menu li:hover { background: var(--accent-soft); color: var(--text-1); }
+    .dropdown-menu li.active { color: var(--accent); font-weight: 700; }
+
+    /* ---------------- GRID & CARDS ---------------- */
+    .grid { display: grid; gap: 18px; margin-bottom: 18px; }
+    .grid-3 { grid-template-columns: 1.05fr 1fr 1.25fr; }
+    .grid-2 { grid-template-columns: 1.05fr 1.55fr; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      opacity: 0;
+      transform: translateY(14px);
+      animation: cardIn .6s cubic-bezier(.16,1,.3,1) forwards;
+      transition: background .4s ease, box-shadow .3s ease, transform .3s ease;
+    }
+    .card:hover { box-shadow: var(--shadow-md); }
+    .card h3 { font-size: 16.5px; margin: 0 0 18px; letter-spacing: -0.01em; }
+    @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* ---- Donut ---- */
+    .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .donut-svg { overflow: visible; }
+    .donut-seg {
+      transition: stroke-width .25s ease, filter .25s ease, opacity .25s ease;
+      cursor: pointer;
+    }
+    .donut-svg.dim-others .donut-seg { opacity: .35; }
+    .donut-svg .donut-seg.hi { opacity: 1; stroke-width: 17; filter: drop-shadow(0 4px 8px rgba(0,0,0,.15)); }
+    .donut-center { font-size: 19px; font-weight: 700; fill: var(--text-1); }
+    .legend { width: 100%; display: flex; flex-direction: column; gap: 11px; }
+    .legend-row {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 13.5px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .2s ease, transform .15s ease;
+    }
+    .legend-row:hover { background: var(--main-bg); transform: translateX(2px); }
+    .legend-left { display: flex; align-items: center; gap: 9px; color: var(--text-2); font-weight: 500; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .legend-amt { font-weight: 700; color: var(--text-1); }
+
+    /* ---- Travel map ---- */
+    .map-wrap {
+      height: 140px;
+      border-radius: var(--radius-md);
+      background: var(--main-bg);
+      margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .map-dot { transition: fill .3s ease, r .3s ease; }
+
+    .state-list { display: flex; flex-direction: column; }
+    .state-row {
+      padding: 10px 2px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+    .state-row:last-child { border-bottom: none; }
+    .state-row:hover { background: var(--main-bg); border-radius: 8px; }
+    .state-top {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 13.5px; margin-bottom: 7px;
+    }
+    .state-top span:first-child { color: var(--text-2); font-weight: 500; }
+    .state-top span:last-child { font-weight: 700; color: var(--text-1); }
+    .state-bar { height: 4px; border-radius: 4px; background: var(--border); overflow: hidden; }
+    .state-bar i {
+      display: block; height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--seg-1), var(--accent));
+      border-radius: 4px;
+      transition: width 1s cubic-bezier(.16,1,.3,1);
+    }
+
+    /* ---- Bar charts ---- */
+    .chart-y { font-size: 11.5px; color: var(--text-3); display: flex; justify-content: space-between; }
+    .chart-area { display: flex; gap: 14px; margin-top: 6px; }
+    .chart-axis {
+      display: flex; flex-direction: column; justify-content: space-between;
+      height: 190px; font-size: 11px; color: var(--text-3); padding-bottom: 26px;
+    }
+    .chart-bars {
+      flex: 1; display: flex; justify-content: space-between; align-items: flex-end;
+      position: relative; height: 190px; padding-bottom: 26px;
+    }
+    .chart-bars::before {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 26px; height: 1px;
+      background: repeating-linear-gradient(90deg, var(--border) 0 6px, transparent 6px 12px);
+    }
+    .bar-col {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      flex: 1; position: relative; height: 100%;
+    }
+    .bar-track {
+      position: relative; width: 26px; height: 164px;
+    }
+    .bar-actual, .bar-proj {
+      position: absolute; left: 0; right: 0; height: 0%;
+      transition: height 1.1s cubic-bezier(.16,1,.3,1);
+      border-radius: 7px 7px 0 0;
+    }
+    .bar-actual { bottom: 0; background: linear-gradient(180deg, var(--chart-blue-deep), var(--chart-blue)); }
+    .bar-proj { background: var(--chart-grey); }
+    .bar-col:hover .bar-actual { filter: brightness(1.08); }
+    .bar-col:hover .bar-track { transform: scale(1.04); }
+    .bar-track { transition: transform .2s ease; }
+    .bar-label { font-size: 11.5px; color: var(--text-3); position: absolute; bottom: 0; }
+
+    /* ---- AI Insights ---- */
+    .ai-card {
+      background: linear-gradient(160deg, var(--ai-bg), var(--ai-bg-2));
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative;
+      min-height: 230px;
+      overflow: hidden;
+    }
+    .ai-card::before {
+      content: "";
+      position: absolute; width: 220px; height: 220px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.35), transparent 70%);
+      top: -80px; right: -60px;
+      animation: float 7s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(-12px,14px);} }
+    .ai-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.55);
+      backdrop-filter: blur(4px);
+      width: fit-content;
+      padding: 7px 14px 7px 10px;
+      border-radius: 100px;
+      font-size: 12.5px; font-weight: 700; color: #234;
+      margin-bottom: 30px;
+    }
+    .ai-badge svg { width: 15px; height: 15px; }
+    .ai-dots { display: flex; gap: 6px; margin-bottom: 14px; }
+    .ai-dots i {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(20,22,40,.25);
+      cursor: pointer;
+      transition: all .3s ease;
+    }
+    .ai-dots i.active { width: 18px; border-radius: 4px; background: rgba(20,22,40,.6); }
+    .ai-text {
+      font-size: 19px; font-weight: 600; line-height: 1.35; color: #172033;
+      max-width: 80%;
+      min-height: 78px;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .ai-text.switching { opacity: 0; transform: translateY(6px); }
+    .ai-arrow {
+      position: absolute; right: 22px; bottom: 22px;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #172033; color: #fff;
+      border: none; display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: transform .25s cubic-bezier(.4,0,.2,1), background .25s ease;
+    }
+    .ai-arrow:hover { transform: scale(1.08) rotate(8deg); background: #000; }
+    .ai-arrow:active { transform: scale(.95); }
+    .ai-arrow svg { width: 18px; height: 18px; }
+
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed; bottom: 26px; left: 50%;
+      transform: translate(-50%, 20px);
+      background: var(--text-1); color: var(--main-bg);
+      padding: 12px 20px; border-radius: 100px;
+      font-size: 13.5px; font-weight: 600;
+      box-shadow: var(--shadow-md);
+      opacity: 0; pointer-events: none;
+      transition: all .35s cubic-bezier(.4,0,.2,1);
+      z-index: 100;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ---------------- RESPONSIVE ---------------- */
+    @media (max-width: 1180px) {
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .grid-3 .card:nth-child(3) { grid-column: span 2; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 860px) {
+      .app { padding: 12px; gap: 0; }
+      .hamburger { display: flex; }
+      .sidebar {
+        position: fixed;
+        top: 12px; left: 12px; bottom: 12px;
+        z-index: 40;
+        transform: translateX(-120%);
+        box-shadow: var(--shadow-md);
+        max-height: calc(100vh - 24px);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main { padding: 20px 16px; padding-top: 64px; width: 100%; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-3 .card:nth-child(3) { grid-column: span 1; }
+    }
+    @media (max-width: 500px) {
+      .topbar { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+      .donut-svg { width: 160px; height: 160px; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- HAMBURGER -->
+<button class="hamburger" id="hamburger" aria-label="Menyuni ochish">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v2h18V7l-9-5Z"/><path d="M5 12v6"/><path d="M10 12v6"/><path d="M14 12v6"/><path d="M19 12v6"/><path d="M3 21h18"/></svg>
+      </div>
+      Turon
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-top">
+        <div class="avatar">G</div>
+        <div class="theme-pill" id="themePill">
+          <button id="moonBtn" class="active" aria-label="Qorong‘i rejim">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+          </button>
+          <button id="sunBtn" aria-label="Yorug‘ rejim">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="profile-date">DUSHANBA, 24 MART</p>
+      <h2 class="profile-greet">Xush kelibsiz,<br><span>George!</span></h2>
+    </div>
+
+    <!-- NAV – scrollable, sidebar overflow hidden -->
+    <nav class="nav">
+      <ul id="navList">
+        <li data-name="Boshqaruv paneli"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Boshqaruv paneli</li>
+        <li data-name="Neuro AI"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></svg>Neuro AI</li>
+        <li data-name="Hisoblar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 16h4"/></svg>Hisoblar</li>
+        <li data-name="Tranzaktsiyalar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h12l-3-3M17 17H5l3 3"/></svg>Tranzaktsiyalar</li>
+        <li class="active" data-name="Hisobotlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Hisobotlar</li>
+        <li data-name="Investitsiyalar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 6-8"/><path d="M14 6h4v4"/></svg>Investitsiyalar</li>
+        <li data-name="Kreditlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg>Kreditlar</li>
+        <li data-name="Soliqlar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l3 3v17H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>Soliqlar</li>
+      </ul>
+    </nav>
+
+    <!-- PRO-CARD REMOVED -->
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="dropdown" id="monthDropdown">
+        <button class="btn" id="monthBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+          <span id="monthLabel">Bu oy</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <ul class="dropdown-menu" id="monthMenu">
+          <li>Bugun</li>
+          <li>Bu hafta</li>
+          <li class="active">Bu oy</li>
+          <li>Bu yil</li>
+        </ul>
+      </div>
+      <button class="btn btn-primary" id="exportBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+        Hisobotni eksport qilish
+      </button>
+    </div>
+
+    <!-- GRID 3 -->
+    <section class="grid grid-3">
+      <div class="card" style="animation-delay:.05s">
+        <h3>Daromad taqsimoti</h3>
+        <div class="donut-wrap">
+          <svg class="donut-svg" id="donutSvg" width="180" height="180" viewBox="0 0 180 180"></svg>
+          <div class="legend" id="legend"></div>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.1s">
+        <h3>Sayohat xarajatlari</h3>
+        <div class="map-wrap">
+          <svg id="mapSvg" width="190" height="120" viewBox="0 0 190 120"></svg>
+        </div>
+        <div class="state-list" id="stateList"></div>
+      </div>
+
+      <div class="card" style="animation-delay:.15s">
+        <h3>Daromad prognozlari va haqiqiy</h3>
+        <div class="chart-area">
+          <div class="chart-axis" id="axis1"></div>
+          <div class="chart-bars" id="chart1"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRID 2 -->
+    <section class="grid grid-2">
+      <div class="card ai-card" style="animation-delay:.2s">
+        <div class="ai-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+          AI tahlili
+        </div>
+        <div class="ai-dots" id="aiDots"></div>
+        <div class="ai-text" id="aiText"></div>
+        <button class="ai-arrow" id="aiArrow" aria-label="Keyingi tahlil">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </button>
+      </div>
+
+      <div class="card" style="animation-delay:.25s">
+        <h3>Daromad prognozlari va haqiqiy</h3>
+        <div class="chart-area">
+          <div class="chart-axis" id="axis2"></div>
+          <div class="chart-bars" id="chart2"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  (function() {
+    // ---------------- THEME ----------------
+    const root = document.documentElement;
+    const moonBtn = document.getElementById('moonBtn');
+    const sunBtn = document.getElementById('sunBtn');
+    moonBtn.addEventListener('click', ()=>{
+      root.setAttribute('data-theme','dark');
+      moonBtn.classList.add('active'); sunBtn.classList.remove('active');
+    });
+    sunBtn.addEventListener('click', ()=>{
+      root.setAttribute('data-theme','light');
+      sunBtn.classList.add('active'); moonBtn.classList.remove('active');
+    });
+
+    // ---------------- TOAST ----------------
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 2200);
+    }
+
+    // ---------------- SIDEBAR / MOBILE ----------------
+    const sidebar = document.getElementById('sidebar');
+    const hamburger = document.getElementById('hamburger');
+    hamburger.addEventListener('click', ()=> sidebar.classList.toggle('open'));
+    document.addEventListener('click', (e)=>{
+      if(window.innerWidth <= 860 && sidebar.classList.contains('open')){
+        if(!sidebar.contains(e.target) && !hamburger.contains(e.target)){
+          sidebar.classList.remove('open');
+        }
+      }
+    });
+
+    // ---------------- NAV ----------------
+    document.querySelectorAll('#navList li').forEach(li=>{
+      li.addEventListener('click', ()=>{
+        document.querySelectorAll('#navList li').forEach(x=>x.classList.remove('active'));
+        li.classList.add('active');
+        showToast(li.dataset.name + ' ga o‘tildi');
+        if(window.innerWidth <= 860) sidebar.classList.remove('open');
+      });
+    });
+
+    // ---------------- MONTH DROPDOWN ----------------
+    const monthDropdown = document.getElementById('monthDropdown');
+    const monthBtn = document.getElementById('monthBtn');
+    const monthLabel = document.getElementById('monthLabel');
+    monthBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      monthDropdown.classList.toggle('open');
+    });
+    document.querySelectorAll('#monthMenu li').forEach(li=>{
+      li.addEventListener('click', ()=>{
+        document.querySelectorAll('#monthMenu li').forEach(x=>x.classList.remove('active'));
+        li.classList.add('active');
+        monthLabel.textContent = li.textContent;
+        monthDropdown.classList.remove('open');
+      });
+    });
+    document.addEventListener('click', ()=> monthDropdown.classList.remove('open'));
+
+    // ---------------- EXPORT ----------------
+    document.getElementById('exportBtn').addEventListener('click', ()=>{
+      showToast('Hisobot muvaffaqiyatli eksport qilindi ✓');
+    });
+
+    // ---------------- DONUT ----------------
+    const incomeData = [
+      { label:'Ish haqi', value:300.56, color:'var(--seg-1)' },
+      { label:'Investitsiyalar', value:135.18, color:'var(--seg-2)' },
+      { label:'Frilans', value:154.02, color:'var(--seg-3)' },
+      { label:'Yon biznes', value:48.96, color:'var(--seg-4)' },
+    ];
+    (function buildDonut() {
+      const svg = document.getElementById('donutSvg');
+      const legend = document.getElementById('legend');
+      const total = incomeData.reduce((s,d)=>s+d.value,0);
+      const R = 64, C = 2*Math.PI*R, cx=90, cy=90;
+      let offset = 0;
+      const ns = 'http://www.w3.org/2000/svg';
+
+      const group = document.createElementNS(ns,'g');
+      group.setAttribute('transform', `rotate(-90 ${cx} ${cy})`);
+      svg.appendChild(group);
+
+      incomeData.forEach((d,i)=>{
+        const frac = d.value/total;
+        const len = frac*C;
+        const circle = document.createElementNS(ns,'circle');
+        circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', R);
+        circle.setAttribute('fill','none');
+        circle.setAttribute('stroke', d.color);
+        circle.setAttribute('stroke-width', '15');
+        circle.setAttribute('stroke-dasharray', `0 ${C}`);
+        circle.setAttribute('stroke-dashoffset', `${-offset}`);
+        circle.classList.add('donut-seg');
+        circle.dataset.index = i;
+        group.appendChild(circle);
+        requestAnimationFrame(()=> requestAnimationFrame(()=>{
+          circle.style.transition = `stroke-dasharray 1s cubic-bezier(.16,1,.3,1) ${i*0.12}s`;
+          circle.setAttribute('stroke-dasharray', `${len-2} ${C-len+2}`);
+        }));
+        offset += len;
+      });
+
+      const text = document.createElementNS(ns,'text');
+      text.setAttribute('x', cx); text.setAttribute('y', cy+7);
+      text.setAttribute('text-anchor','middle');
+      text.setAttribute('class','donut-center');
+      text.textContent = '38.6%';
+      svg.appendChild(text);
+
+      function highlight(i) {
+        svg.classList.toggle('dim-others', i !== null);
+        svg.querySelectorAll('.donut-seg').forEach(c=> c.classList.toggle('hi', Number(c.dataset.index)===i));
+      }
+
+      incomeData.forEach((d,i)=>{
+        const row = document.createElement('div');
+        row.className = 'legend-row';
+        row.innerHTML = `<div class="legend-left"><span class="legend-dot" style="background:${d.color}"></span>${d.label}</div><span class="legend-amt">$${d.value.toFixed(2)}</span>`;
+        row.addEventListener('mouseenter', ()=> highlight(i));
+        row.addEventListener('mouseleave', ()=> highlight(null));
+        legend.appendChild(row);
+      });
+    })();
+
+    // ---------------- MAP ----------------
+    (function buildMap() {
+      const svg = document.getElementById('mapSvg');
+      const ns = 'http://www.w3.org/2000/svg';
+      const w = 190, h = 120;
+      const cols = 22, rows = 13;
+      const spacing = 7.4;
+      const offsetX = (w - cols*spacing)/2 + 6;
+      const offsetY = (h - rows*spacing)/2;
+      const cx = cols/2, cy = rows/2;
+      const highlights = [ {c:17,r:4}, {c:8,r:8}, {c:13,r:7}, {c:18,r:10} ];
+
+      for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+          const nx = (c-cx)/cx, ny = (r-cy)/cy;
+          let dist = Math.pow(Math.abs(nx),2.3) + Math.pow(Math.abs(ny),2.3);
+          const inside = dist < 0.92 && !(c < 2 && (r<3 || r>9)) && !(c>cols-3 && r<3);
+          if(!inside) continue;
+          const isHi = highlights.some(p=> Math.abs(p.c-c)<=1 && Math.abs(p.r-r)<=1 && (Math.abs(p.c-c)+Math.abs(p.r-r))<2);
+          const circle = document.createElementNS(ns,'circle');
+          circle.setAttribute('cx', offsetX + c*spacing);
+          circle.setAttribute('cy', offsetY + r*spacing);
+          circle.setAttribute('r', isHi ? 2.6 : 1.6);
+          circle.setAttribute('fill', isHi ? 'var(--map-dot-hi)' : 'var(--map-dot)');
+          circle.classList.add('map-dot');
+          svg.appendChild(circle);
+        }
+      }
+    })();
+
+    // ---------------- STATE LIST ----------------
+    const travelData = [
+      { name:'Nyu-York', value:'2k', pct: 100 },
+      { name:'Texas', value:'1.4k', pct: 70 },
+      { name:'Tennessi', value:'1.3k', pct: 65 },
+      { name:'Florida', value:'1.1k', pct: 55 },
+    ];
+    (function buildStates() {
+      const list = document.getElementById('stateList');
+      travelData.forEach((s,i)=>{
+        const row = document.createElement('div');
+        row.className = 'state-row';
+        row.innerHTML = `<div class="state-top"><span>${s.name}</span><span>${s.value}</span></div><div class="state-bar"><i></i></div>`;
+        list.appendChild(row);
+        const bar = row.querySelector('.state-bar i');
+        setTimeout(()=> bar.style.width = s.pct + '%', 200 + i*120);
+      });
+    })();
+
+    // ---------------- BAR CHARTS ----------------
+    function buildChart(axisId, chartId, data, maxVal, yLabels) {
+      const axis = document.getElementById(axisId);
+      const chart = document.getElementById(chartId);
+      yLabels.forEach(l=>{
+        const span = document.createElement('span');
+        span.textContent = l;
+        axis.appendChild(span);
+      });
+      data.forEach((d,i)=>{
+        const col = document.createElement('div');
+        col.className = 'bar-col';
+        col.innerHTML = `
+          <div class="bar-track">
+            <div class="bar-proj"></div>
+            <div class="bar-actual"></div>
+          </div>
+          <span class="bar-label">${d.label}</span>
+        `;
+        chart.appendChild(col);
+        const actualEl = col.querySelector('.bar-actual');
+        const projEl = col.querySelector('.bar-proj');
+        const actualPct = (d.actual/maxVal)*100;
+        const totalPct = (d.total/maxVal)*100;
+        requestAnimationFrame(()=> requestAnimationFrame(()=>{
+          actualEl.style.transitionDelay = (i*0.08)+'s';
+          projEl.style.transitionDelay = (i*0.08)+'s';
+          actualEl.style.height = actualPct + '%';
+          projEl.style.height = (totalPct-actualPct) + '%';
+          projEl.style.bottom = actualPct + '%';
+        }));
+        col.addEventListener('mouseenter', ()=> col.title = `Haqiqiy: ${d.actual} • Jami: ${d.total}`);
+      });
+    }
+    buildChart('axis1','chart1', [
+      {label:'1-3', actual:3600, total:4100},
+      {label:'4-7', actual:4000, total:4350},
+      {label:'8-11', actual:3500, total:4000},
+      {label:'12-15', actual:4450, total:4900},
+      {label:'18-19', actual:3300, total:3900},
+      {label:'20-23', actual:3550, total:4050},
+    ], 5000, ['5k','4k','3k','0']);
+
+    buildChart('axis2','chart2', [
+      {label:'1-3', actual:3450, total:3950},
+      {label:'4-7', actual:3950, total:4300},
+      {label:'8-11', actual:3450, total:4050},
+      {label:'12-15', actual:4200, total:4750},
+      {label:'16-19', actual:3100, total:3700},
+      {label:'20-23', actual:3300, total:3850},
+    ], 5000, ['5k','4k','3k','0']);
+
+    // ---------------- AI INSIGHTS ----------------
+    const insights = [
+      'Tejamkorlik xarajatlari kamaygani hisobiga oshdi.',
+      'Frilans daromadi o‘tgan oyga nisbatan 18% ga oshdi.',
+      'Texasda sayohat xarajatlari odatdagidan yuqori.',
+      'Investitsiyalar umumiy daromadning beshdan biridan ko‘prog‘ini tashkil etdi.',
+    ];
+    let aiIndex = 0;
+    const aiText = document.getElementById('aiText');
+    const aiDots = document.getElementById('aiDots');
+    insights.forEach((_,i)=>{
+      const dot = document.createElement('i');
+      if(i===0) dot.classList.add('active');
+      dot.addEventListener('click', ()=> setInsight(i));
+      aiDots.appendChild(dot);
+    });
+    function setInsight(i) {
+      aiIndex = i;
+      aiText.classList.add('switching');
+      setTimeout(()=>{
+        aiText.textContent = insights[aiIndex];
+        aiText.classList.remove('switching');
+      }, 200);
+      document.querySelectorAll('#aiDots i').forEach((d,idx)=> d.classList.toggle('active', idx===aiIndex));
+    }
+    setInsight(0);
+    document.getElementById('aiArrow').addEventListener('click', ()=>{
+      setInsight((aiIndex+1) % insights.length);
+    });
+
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Narxlar — Mock</title>
+  <meta name="description" content="Mock markazida IELTS, CEFR va At-tanal al-arobi imtihonlarini topshirish narxlari. Kompyuterda test muhiti va jonli imtihon oluvchi bilan Speaking qismi." />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            hsl(210, 20%, 98%);
+      --fg:            hsl(215, 35%, 12%);
+      --card:          hsl(0, 0%, 100%);
+      --primary:       hsl(351, 71%, 60%);
+      --primary-light: hsl(351, 60%, 93%);
+      --primary-fg:    hsl(0, 0%, 100%);
+      --accent:        hsl(200, 90%, 46%);
+      --accent-light:  hsl(200, 80%, 93%);
+      --secondary:     hsl(38, 92%, 50%);
+      --muted:         hsl(215, 20%, 94%);
+      --muted-fg:      hsl(215, 15%, 48%);
+      --border:        hsl(215, 20%, 88%);
+      --radius:        0.875rem;
+      --font:          'DM Sans', sans-serif;
+      --mono:          'JetBrains Mono', monospace;
+      --shadow-sm:     0 2px 8px -2px hsla(215,35%,12%,0.08);
+      --shadow-md:     0 8px 28px -6px hsla(215,35%,12%,0.12);
+      --shadow-glow:   0 0 40px hsla(351,71%,60%,0.2);
+      --price-accent:  hsl(40, 90%, 55%);
+    }
+
+    .dark {
+      --bg:            hsl(220, 25%, 8%);
+      --fg:            hsl(45, 20%, 95%);
+      --card:          hsl(220, 25%, 12%);
+      --primary-light: hsl(351, 45%, 22%);
+      --muted:         hsl(220, 20%, 18%);
+      --muted-fg:      hsl(45, 15%, 60%);
+      --border:        hsl(220, 20%, 20%);
+      --accent-light:  hsl(200, 50%, 18%);
+      --shadow-sm:     0 2px 8px -2px rgba(0,0,0,0.3);
+      --shadow-md:     0 8px 28px -6px rgba(0,0,0,0.4);
+      --shadow-glow:   0 0 40px hsla(351,65%,55%,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    img, svg { display: block; max-width: 100%; }
+
+    .container { width: 100%; max-width: 1160px; margin-inline: auto; padding-inline: 1.25rem; }
+    @media (min-width: 640px) { .container { padding-inline: 2rem; } }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: hsla(210,20%,98%,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background-color 0.3s;
+    }
+    .dark .navbar { background: hsla(220,25%,8%,0.92); }
+
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 4rem; gap: 1rem;
+    }
+    .logo { display: flex; align-items: center; gap: 0.625rem; }
+    .logo-mark {
+      width: 2.4rem; height: 2.4rem;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), hsl(351,71%,72%));
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-mark span { font-size: 1.1rem; font-weight: 800; color: #fff; }
+    .logo-name { font-size: 1.125rem; font-weight: 700; letter-spacing: -.02em; }
+    .nav-right { display: flex; align-items: center; gap: 0.5rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      font-size: 0.875rem; font-weight: 500; border-radius: calc(var(--radius) - 2px);
+      transition: background .15s, color .15s, transform .1s, box-shadow .15s;
+      white-space: nowrap; cursor: pointer;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-ghost { padding: .45rem .75rem; color: var(--muted-fg); }
+    .btn-ghost:hover { background: var(--muted); color: var(--fg); }
+    .btn-outline {
+      padding: .45rem .9rem;
+      border: 1px solid var(--border);
+      background: var(--card); color: var(--fg);
+    }
+    .btn-outline:hover { background: var(--muted); }
+    .btn-icon { width: 2.25rem; height: 2.25rem; padding: 0; border-radius: calc(var(--radius) - 2px); }
+    .btn-icon:hover { background: var(--muted); }
+
+    .btn-primary {
+      padding: .7rem 1.1rem;
+      background: var(--primary); color: var(--primary-fg);
+      font-weight: 600; box-shadow: var(--shadow-sm);
+    }
+    .btn-primary:hover { box-shadow: var(--shadow-glow), var(--shadow-sm); }
+    .btn-block { width: 100%; }
+
+    .nav-label { display: none; }
+    @media (min-width: 540px) { .nav-label { display: inline; } }
+
+    .price-link .btn-ghost { color: var(--price-accent); }
+    .price-link .btn-ghost:hover { background: rgba(255,185,55,.12); color: hsl(40,95%,48%); }
+    .price-link.is-active .btn-ghost { background: rgba(255,185,55,.14); }
+
+    /* ── Page hero ── */
+    .page-hero {
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, hsla(351,71%,60%,0.1) 0%, transparent 70%),
+                  var(--bg);
+    }
+    .page-hero-inner { padding-block: 4rem 1rem; text-align: center; }
+    @media (min-width: 768px) { .page-hero-inner { padding-block: 5rem 1.5rem; } }
+
+    .page-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-family: var(--mono); font-weight: 600;
+      background: var(--primary-light); color: var(--primary);
+      border: 1px solid hsl(351,55%,78%);
+      padding: 5px 12px; border-radius: 20px;
+      margin-bottom: 1.5rem; animation: fadeDown .5s ease-out forwards;
+    }
+    .dark .page-badge { border-color: hsl(351,45%,35%); }
+    .badge-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
+
+    .page-hero h1 {
+      font-size: clamp(2rem, 4.5vw, 3.1rem);
+      font-weight: 800; line-height: 1.15;
+      letter-spacing: -.035em; margin-bottom: 1rem;
+      animation: fadeDown .5s .08s ease-out both;
+    }
+    .highlight {
+      background: linear-gradient(120deg, var(--primary) 20%, hsl(351,71%,72%));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .page-hero p.lead {
+      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      color: var(--muted-fg); max-width: 36rem; margin-inline: auto; line-height: 1.7;
+      animation: fadeDown .5s .14s ease-out both;
+      margin-bottom: 3rem;
+    }
+
+    /* ── Pricing grid ── */
+    .pricing-section { padding-block: 0 4.5rem; }
+    .pricing-grid {
+      display: grid; gap: 1.5rem;
+      max-width: 76rem; margin-inline: auto;
+    }
+    @media (min-width: 860px) { .pricing-grid { grid-template-columns: repeat(3,1fr); align-items: stretch; } }
+
+    .price-card {
+      position: relative;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: calc(var(--radius) + 6px);
+      padding: 2.1rem 1.75rem 1.85rem;
+      display: flex; flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      opacity: 0; animation: slideUp .5s ease-out forwards;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .price-card:nth-child(1) { animation-delay: .1s; }
+    .price-card:nth-child(2) { animation-delay: .2s; }
+    .price-card:nth-child(3) { animation-delay: .3s; }
+    .price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+
+    .plan-icon {
+      width: 3.25rem; height: 3.25rem; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.1rem;
+    }
+    .plan-icon svg { width: 1.7rem; height: 1.7rem; }
+    .icon-red    { background: var(--primary-light); color: var(--primary); }
+    .icon-blue   { background: var(--accent-light);  color: var(--accent); }
+    .icon-amber  { background: hsl(38,92%,92%);      color: hsl(38,85%,38%); }
+    .dark .icon-amber { background: hsl(38,70%,20%); color: hsl(38,92%,65%); }
+
+    .plan-name { font-size: 1.2rem; font-weight: 800; letter-spacing: -.015em; margin-bottom: .35rem; }
+    .plan-desc { font-size: .85rem; color: var(--muted-fg); line-height: 1.55; min-height: 2.6em; }
+
+    .plan-tag {
+      display: inline-block; align-self: flex-start;
+      font-size: .7rem; font-family: var(--mono); font-weight: 500;
+      background: var(--muted); color: var(--muted-fg);
+      padding: 2px 9px; border-radius: 20px; margin-top: .6rem;
+    }
+
+    .price-amount-wrap {
+      display: flex; align-items: baseline; gap: .4rem;
+      margin-block: 1.5rem .15rem;
+      font-family: var(--mono);
+    }
+    .price-amount { font-size: 2.35rem; font-weight: 800; letter-spacing: -.02em; }
+    .price-currency { font-size: 1.1rem; font-weight: 700; color: var(--muted-fg); }
+    .price-note { font-size: .78rem; color: var(--muted-fg); margin-bottom: 1.6rem; }
+
+    .plan-features {
+      list-style: none; display: flex; flex-direction: column; gap: .75rem;
+      margin-bottom: 1.75rem; flex: 1;
+    }
+    .plan-features li { display: flex; align-items: flex-start; gap: .6rem; font-size: .85rem; line-height: 1.5; }
+    .plan-features li svg { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; color: var(--primary); }
+
+    /* ── Includes strip ── */
+    .includes-section { padding-block: 0 4.5rem; }
+    .includes-row {
+      display: grid; gap: 1.5rem; text-align: center;
+      max-width: 56rem; margin-inline: auto;
+    }
+    @media (min-width: 640px) { .includes-row { grid-template-columns: repeat(4,1fr); } }
+
+    .feat { opacity: 0; animation: slideUp .5s ease-out forwards; }
+    .feat:nth-child(1){animation-delay:.1s}
+    .feat:nth-child(2){animation-delay:.18s}
+    .feat:nth-child(3){animation-delay:.26s}
+    .feat:nth-child(4){animation-delay:.34s}
+
+    .feat-icon {
+      width: 3.25rem; height: 3.25rem; border-radius: 14px;
+      margin-inline: auto; margin-bottom: .875rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feat-icon svg { width: 1.5rem; height: 1.5rem; }
+    .fi-red    { background: var(--primary-light); color: var(--primary); }
+    .fi-blue   { background: var(--accent-light);  color: var(--accent); }
+    .fi-yellow { background: hsl(38,92%,90%);       color: hsl(38,80%,38%); }
+    .fi-purple { background: hsl(260,60%,92%);      color: hsl(260,65%,50%); }
+    .dark .fi-yellow { background: hsl(38,70%,20%); color: hsl(38,92%,65%); }
+    .dark .fi-purple { background: hsl(260,45%,20%); color: hsl(260,65%,72%); }
+
+    .feat h3 { font-size: .95rem; font-weight: 700; margin-bottom: .35rem; }
+    .feat p  { font-size: .82rem; color: var(--muted-fg); line-height: 1.6; }
+
+    .section-label {
+      text-align: center; margin-bottom: 2rem;
+      font-size: 1rem; font-family: var(--mono); font-weight: 600;
+      letter-spacing: .1em; color: var(--muted-fg);
+      text-transform: uppercase;
+    }
+
+    /* ── How it works ── */
+    .steps-section { padding-block: 0 4.5rem; }
+    .steps-row {
+      display: grid; gap: 1.75rem;
+      max-width: 60rem; margin-inline: auto;
+      counter-reset: step;
+    }
+    @media (min-width: 720px) { .steps-row { grid-template-columns: repeat(4,1fr); } }
+
+    .step { position: relative; opacity: 0; animation: slideUp .5s ease-out forwards; }
+    .step:nth-child(1){animation-delay:.1s}
+    .step:nth-child(2){animation-delay:.18s}
+    .step:nth-child(3){animation-delay:.26s}
+    .step:nth-child(4){animation-delay:.34s}
+
+    .step-num {
+      width: 2.25rem; height: 2.25rem; border-radius: 50%;
+      background: var(--card); border: 1.5px solid var(--primary); color: var(--primary);
+      font-family: var(--mono); font-weight: 700; font-size: .9rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: .9rem;
+    }
+    .step h3 { font-size: .92rem; font-weight: 700; margin-bottom: .3rem; }
+    .step p { font-size: .8rem; color: var(--muted-fg); line-height: 1.6; }
+
+    /* ── FAQ ── */
+    .faq-section { padding-block: 0 4.5rem; }
+    .faq-list { max-width: 42rem; margin-inline: auto; display: flex; flex-direction: column; gap: .75rem; }
+    .faq-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      transition: border-color .2s;
+    }
+    .faq-item[open] { border-color: var(--primary); }
+    .faq-item summary {
+      list-style: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.1rem 1.35rem; font-weight: 600; font-size: .92rem;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-chevron { flex-shrink: 0; width: 18px; height: 18px; color: var(--muted-fg); transition: transform .25s; }
+    .faq-item[open] .faq-chevron { transform: rotate(180deg); color: var(--primary); }
+    .faq-answer { padding: 0 1.35rem 1.25rem; font-size: .87rem; color: var(--muted-fg); line-height: 1.65; }
+
+    /* ── Final CTA ── */
+    .cta-band {
+      max-width: 56rem; margin-inline: auto 5rem;
+      background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 8px);
+      padding: 2.75rem 2rem;
+      text-align: center;
+    }
+    .cta-band h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: .6rem; }
+    .cta-band p { color: var(--muted-fg); max-width: 30rem; margin-inline: auto; line-height: 1.6; }
+    .cta-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 1.75rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--card); padding-block: 1.75rem;
+    }
+    .footer-inner {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 1rem;
+    }
+    .footer-brand { display: flex; align-items: center; gap: .5rem; }
+    .footer-brand svg { width: 1rem; height: 1rem; color: var(--primary); }
+    .footer-brand span { font-size: .875rem; color: var(--muted-fg); }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar" aria-label="Asosiy navigatsiya">
+  <div class="container navbar-inner">
+    <a class="logo" href="../index.html" aria-label="Mock bosh sahifasi">
+      <div class="logo-mark"><span>M</span></div>
+      <span class="logo-name">Mock</span>
+    </a>
+
+    <div class="nav-right">
+      <!-- Narxlar (joriy sahifa) -->
+      <a href="./pricing.html" class="price-link is-active">
+        <button class="btn btn-ghost" type="button" style="color: var(--price-accent);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/>
+            <path d="M5 21h14"/>
+          </svg>
+          <span class="nav-label">Narxlar</span>
+        </button>
+      </a>
+
+      <!-- Dark mode toggle -->
+      <button class="btn btn-icon" id="theme-toggle" type="button" aria-label="Tungi rejimga o'tish">
+        <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
+      <!-- Kirish -->
+      <a href="../auth.html">
+        <button class="btn btn-outline" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Kirish
+        </button>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<main>
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <div class="page-badge">
+        <div class="badge-dot"></div>
+        Imtihon narxlari
+      </div>
+      <h1>Mock imtihonni <span class="highlight">markazimizda</span> topshiring</h1>
+      <p class="lead">Kompyuterda tashkil etilgan real test muhiti va Speaking qismini jonli baholaydigan tajribali imtihon oluvchi — har bir narx bir martalik to'lov.</p>
+    </div>
+  </section>
+
+  <!-- ═══ PRICING CARDS ═══ -->
+  <section class="pricing-section">
+    <div class="container">
+      <div class="pricing-grid">
+
+        <!-- IELTS -->
+        <div class="price-card">
+          <div class="plan-icon icon-red">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <div class="plan-name">IELTS Mock</div>
+          <p class="plan-desc">Xalqaro ingliz tili malaka testi — to'liq format, kompyuterda.</p>
+          <span class="plan-tag">Computer Based</span>
+          <div class="price-amount-wrap">
+            <span class="price-amount">90 000</span>
+            <span class="price-currency">so'm</span>
+          </div>
+          <p class="price-note">Bir martalik to'lov, 4 ko'nikma to'liq</p>
+          <ul class="plan-features">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Listening, Reading, Writing — kompyuterda
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Speaking — tajribali imtihon oluvchi bilan jonli
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Band ball va ko'nikmalar bo'yicha tahlil
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Natija 24–48 soat ichida
+            </li>
+          </ul>
+          <a href="../auth.html">
+            <button class="btn btn-primary btn-block" type="button">Joy band qilish</button>
+          </a>
+        </div>
+
+        <!-- CEFR -->
+        <div class="price-card">
+          <div class="plan-icon icon-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+              <path d="M22 10v6"/>
+              <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+            </svg>
+          </div>
+          <div class="plan-name">CEFR Mock</div>
+          <p class="plan-desc">Davlat standarti bo'yicha til darajasini aniqlash testi.</p>
+          <span class="plan-tag">A1 · B2 · C1</span>
+          <div class="price-amount-wrap">
+            <span class="price-amount">70 000</span>
+            <span class="price-currency">so'm</span>
+          </div>
+          <p class="price-note">Bir martalik to'lov, 4 ko'nikma to'liq</p>
+          <ul class="plan-features">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Listening, Reading, Writing — kompyuterda
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Speaking — tajribali imtihon oluvchi bilan jonli
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Daraja (A1–C2) va ko'nikmalar tahlili
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Natija 24–48 soat ichida
+            </li>
+          </ul>
+          <a href="../auth.html">
+            <button class="btn btn-primary btn-block" type="button">Joy band qilish</button>
+          </a>
+        </div>
+
+        <!-- At-tanal al-arobi -->
+        <div class="price-card">
+          <div class="plan-icon icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+          </div>
+          <div class="plan-name">At-tanal al-arobi Mock</div>
+          <p class="plan-desc">Xalqaro arab tili standarti bo'yicha baholash testi.</p>
+          <span class="plan-tag">arab tili · standart</span>
+          <div class="price-amount-wrap">
+            <span class="price-amount">70 000</span>
+            <span class="price-currency">so'm</span>
+          </div>
+          <p class="price-note">Bir martalik to'lov, 4 ko'nikma to'liq</p>
+          <ul class="plan-features">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Listening, Reading, Writing — kompyuterda
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Speaking — tajribali imtihon oluvchi bilan jonli
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Standart bo'yicha ball va tahlil
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Natija 24–48 soat ichida
+            </li>
+          </ul>
+          <a href="../auth.html">
+            <button class="btn btn-primary btn-block" type="button">Joy band qilish</button>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HAR BIR NARXGA KIRADI ═══ -->
+  <section class="includes-section">
+    <div class="container">
+      <p class="section-label">Har bir narxga kiradi</p>
+      <div class="includes-row">
+        <div class="feat">
+          <div class="feat-icon fi-red">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="18" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <h3>Kompyuter va muhit</h3>
+          <p>Markazimizda tayyor kompyuter va xalqaro standartga mos test muhiti taqdim etiladi</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon fi-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 11a7 7 0 0 1-14 0"/><line x1="12" y1="18" x2="12" y2="22"/>
+              <rect x="9" y="2" width="6" height="11" rx="3"/>
+            </svg>
+          </div>
+          <h3>Jonli Speaking</h3>
+          <p>Og'zaki qism tajribali, sertifikatlangan imtihon oluvchi tomonidan yuzma-yuz olinadi</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon fi-yellow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3>Batafsil tahlil</h3>
+          <p>Har bir ko'nikma bo'yicha aniq ball va kuchli/zaif tomonlar ko'rsatiladi</p>
+        </div>
+        <div class="feat">
+          <div class="feat-icon fi-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3>Tez natija</h3>
+          <p>Natijangiz imtihondan keyin 24–48 soat ichida tayyor bo'ladi</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ QANDAY ISHLAYDI ═══ -->
+  <section class="steps-section">
+    <div class="container">
+      <p class="section-label">Qanday ishlaydi</p>
+      <div class="steps-row">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Test turini tanlang</h3>
+          <p>IELTS, CEFR yoki At-tanal al-arobi — kerakli yo'nalishni tanlab joy band qiling</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Markazga keling</h3>
+          <p>Belgilangan kun va soatda markazimizga tashrif buyuring, kompyuteringiz tayyor turadi</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Testni topshiring</h3>
+          <p>Listening, Reading, Writing — kompyuterda; Speaking — imtihon oluvchi bilan jonli</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h3>Natijangizni oling</h3>
+          <p>24–48 soat ichida batafsil ball va tahlilingiz profilingizda tayyor bo'ladi</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="faq-section">
+    <div class="container">
+      <p class="section-label">Savol-javob</p>
+      <div class="faq-list">
+
+        <details class="faq-item" open>
+          <summary>
+            Narxga nimalar kiradi?
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <p class="faq-answer">Narxga kompyuterda tashkil etilgan to'liq test muhiti, tajribali imtihon oluvchi tomonidan jonli o'tkaziladigan Speaking qismi va imtihondan keyin beriladigan batafsil natija tahlili kiradi. Qo'shimcha to'lov talab qilinmaydi.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            To'lovni qanday amalga oshiraman?
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <p class="faq-answer">To'lovni joy band qilishda Click, Payme yoki bank kartasi orqali onlayn, shuningdek markazga kelganingizda naqd pul bilan ham amalga oshirishingiz mumkin.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            Speaking qismini kim oladi?
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <p class="faq-answer">Og'zaki qism markazimizning tajribali imtihon oluvchisi tomonidan yuzma-yuz, real imtihon formatiga mos tarzda o'tkaziladi.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            Belgilangan kuni kela olmasam-chi?
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <p class="faq-answer">Kamida 24 soat oldin xabar bersangiz, joyingizni boshqa kun yoki soatga bepul ko'chirib qo'yamiz. Murojaat uchun markaz bilan bog'laning.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            Bir nechta test turini birga topshira olamanmi?
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <p class="faq-answer">Ha, IELTS, CEFR va At-tanal al-arobi testlarini istalgan kombinatsiyada, alohida-alohida joy band qilib topshirishingiz mumkin.</p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL CTA ═══ -->
+  <section class="container">
+    <div class="cta-band">
+      <h2>Joyingizni hoziroq band qiling</h2>
+      <p>Kerakli test turini tanlang va kompyuterda, jonli imtihon oluvchi bilan o'z darajangizni sinab ko'ring.</p>
+      <div class="cta-actions">
+        <a href="../auth.html"><button class="btn btn-primary" type="button">Joy band qilish</button></a>
+        <a href="../index.html#scan"><button class="btn btn-outline" type="button">Test turlarini ko'rish</button></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer aria-label="Sayt haqida">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9c0-1.042-.133-2.052-.382-3.016z"/>
+      </svg>
+      <span>© Salokhiddinov 2026 · Barcha huquqlar himoyalangan</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    const html = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('icon-sun');
+    const moonIcon = document.getElementById('icon-moon');
+
+    const setTheme = (theme) => {
+      if (theme === 'dark') {
+        html.classList.add('dark');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+        toggle.setAttribute('aria-label', "Kunduzgi rejimga o'tish");
+      } else {
+        html.classList.remove('dark');
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+        toggle.setAttribute('aria-label', "Tungi rejimga o'tish");
+      }
+    };
+
+    const stored = localStorage.getItem('theme');
+    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+
+    toggle.addEventListener('click', () => {
+      const isDark = html.classList.contains('dark');
+      setTheme(isDark ? 'light' : 'dark');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    });
+  })();
+</script>
+</body>
+</html>

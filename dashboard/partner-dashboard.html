@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confidence — Boshqaruv paneli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Product+Sans&display=swap" rel="stylesheet">
+  <style>
+    /* ---------------- ROOT ---------------- */
+    :root {
+      --bg: #e8ebf1;
+      --sidebar-bg: #ffffff;
+      --main-bg: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-1: #14161f;
+      --text-2: #6c7280;
+      --text-3: #9aa0ad;
+      --border: #edeff3;
+      --accent: #2596be;
+      --accent-2: #5cb8db;
+      --accent-soft: #e2f2f8;
+      --seg-1: #5cb8db;
+      --seg-2: #2596be;
+      --seg-3: #f6c453;
+      --seg-4: #3fcdb8;
+      --seg-5: #9c6fe0;
+      --chart-blue: #7cc9e6;
+      --chart-blue-deep: #2596be;
+      --chart-grey: #dde1ea;
+      --chart-line-2: #f0836a;
+      --chart-line-3: #3fcdb8;
+      --ai-bg: #d7edf6;
+      --ai-bg-2: #b9dfef;
+      --map-dot: #c9e4ee;
+      --map-dot-hi: #2596be;
+      --good: #2fb37c;
+      --warn: #e0a72e;
+      --shadow-sm: 0 2px 10px rgba(20,22,31,0.04);
+      --shadow-md: 0 10px 30px rgba(20,22,31,0.07);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+      color-scheme: light;
+    }
+    html[data-theme="dark"] {
+      --bg: #14151b;
+      --sidebar-bg: #1b1d25;
+      --main-bg: #1b1d25;
+      --card-bg: #21232c;
+      --text-1: #f1f2f5;
+      --text-2: #aaadb8;
+      --text-3: #767a87;
+      --border: #2b2e38;
+      --accent: #4db8dd;
+      --accent-2: #6ec8e6;
+      --accent-soft: #1d3742;
+      --seg-1: #4db8dd;
+      --seg-2: #2f95bd;
+      --seg-3: #e0bb52;
+      --seg-4: #4ecdc0;
+      --seg-5: #b18bec;
+      --chart-blue: #4a93b3;
+      --chart-blue-deep: #2f95bd;
+      --chart-grey: #353945;
+      --chart-line-2: #e88a6c;
+      --chart-line-3: #4ecdc0;
+      --ai-bg: #1c3946;
+      --ai-bg-2: #16303c;
+      --map-dot: #253944;
+      --map-dot-hi: #4db8dd;
+      --good: #3ecb96;
+      --warn: #e6b94a;
+      --shadow-sm: 0 2px 10px rgba(0,0,0,0.25);
+      --shadow-md: 0 14px 34px rgba(0,0,0,0.35);
+      color-scheme: dark;
+    }
+
+    /* ---------------- RESET ---------------- */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: 'Google Sans', 'Product Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+      transition: background .4s ease, color .4s ease;
+    }
+    button { font-family: inherit; }
+    ul { list-style: none; margin: 0; padding: 0; }
+    svg { display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ---------------- APP LAYOUT ---------------- */
+    .app {
+      display: flex;
+      gap: 18px;
+      padding: 18px;
+      min-height: 100vh;
+      align-items: flex-start;
+    }
+
+    /* ---------------- SIDEBAR ---------------- */
+    .sidebar {
+      width: 268px;
+      flex-shrink: 0;
+      background: var(--sidebar-bg);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      box-shadow: var(--shadow-sm);
+      transition: background .4s ease, transform .35s cubic-bezier(.4,0,.2,1);
+      position: sticky;
+      top: 18px;
+      max-height: calc(100vh - 36px);
+      overflow: hidden;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+      padding: 0 4px;
+      flex-shrink: 0;
+    }
+    .brand-icon {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2ea8cf, #1d7695);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 6px 14px rgba(37,150,190,0.35);
+    }
+
+    .profile-card {
+      background: var(--main-bg);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      transition: background .4s ease;
+      flex-shrink: 0;
+    }
+    .profile-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, #ffb37b, #ff8a8a);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 15px;
+      box-shadow: 0 4px 10px rgba(255,140,120,.35);
+    }
+    .theme-pill {
+      display: flex; align-items: center; gap: 2px;
+      background: var(--card-bg);
+      border-radius: 100px;
+      padding: 4px;
+      border: 1px solid var(--border);
+    }
+    .theme-pill button {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--text-3);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all .25s ease;
+    }
+    .theme-pill button.active {
+      background: var(--text-1);
+      color: var(--card-bg);
+    }
+    .theme-pill button:hover:not(.active) { color: var(--text-1); }
+
+    .profile-date {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      margin: 0 0 4px;
+    }
+    .profile-greet {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .profile-greet span { color: var(--accent); }
+    .profile-role {
+      font-size: 12px;
+      color: var(--text-2);
+      margin: 4px 0 0;
+      font-weight: 500;
+    }
+
+    /* ---- NAV ---- */
+    .nav {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+      padding-right: 2px;
+    }
+    .nav::-webkit-scrollbar { width: 6px; }
+    .nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+
+    .nav-group-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 14px 12px 6px;
+    }
+    .nav-group-label:first-child { padding-top: 2px; }
+
+    .nav li {
+      display: flex; align-items: center;
+      gap: 12px;
+      padding: 11px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-2);
+      font-size: 14.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .25s ease, color .25s ease, transform .15s ease;
+    }
+    .nav li svg { width: 19px; height: 19px; flex-shrink: 0; }
+    .nav li .nav-badge {
+      margin-left: auto;
+      font-size: 10.5px;
+      font-weight: 700;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+    .nav li.active .nav-badge {
+      background: rgba(255,255,255,.25);
+      color: #fff;
+    }
+    .nav li:hover { background: var(--accent-soft); color: var(--text-1); transform: translateX(2px); }
+    .nav li.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(37,150,190,0.28);
+    }
+    .nav li.logout { margin-top: 4px; }
+    .nav li.logout:hover { background: rgba(217,83,79,0.1); color: #d9534f; }
+
+    /* ---------------- HAMBURGER (mobile) ---------------- */
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 25px; left: 25px;
+      z-index: 50;
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      border: none;
+      background: var(--card-bg);
+      box-shadow: var(--shadow-md);
+      color: var(--text-1);
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: opacity .2s ease, visibility .2s ease;
+    }
+    .hamburger.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    /* ---------------- MAIN ---------------- */
+    .main {
+      flex: 1;
+      min-width: 0;
+      background: var(--main-bg);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      transition: background .4s ease;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .topbar h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+    .topbar p { margin: 0; color: var(--text-2); font-size: 13.5px; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13.5px; font-weight: 600;
+      border-radius: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text-1);
+      transition: transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s ease;
+    }
+    .btn svg { width: 16px; height: 16px; }
+    .btn:hover { box-shadow: var(--shadow-sm); transform: translateY(-1px); border-color: var(--text-3); }
+    .btn-primary {
+      background: var(--text-1);
+      color: var(--main-bg);
+      border-color: var(--text-1);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 20px rgba(20,22,31,0.25); }
+
+    /* ---------------- VIEWS ---------------- */
+    .view { display: none; }
+    .view.active { display: block; animation: viewIn .35s ease; }
+    @keyframes viewIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ---------------- STAT ROW ---------------- */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .stat-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      transition: background .4s ease, box-shadow .3s ease;
+    }
+    .stat-card:hover { box-shadow: var(--shadow-md); }
+    .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .stat-icon {
+      width: 34px; height: 34px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+    }
+    .stat-icon svg { width: 17px; height: 17px; }
+    .stat-delta {
+      font-size: 11px; font-weight: 700;
+      padding: 3px 8px; border-radius: 100px;
+      background: rgba(47,179,124,0.12);
+      color: var(--good);
+    }
+    .stat-delta.warn { background: rgba(224,167,46,0.14); color: var(--warn); }
+    .stat-value { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+    .stat-value small { font-size: 14px; font-weight: 600; color: var(--text-3); }
+    .stat-label { font-size: 12.5px; color: var(--text-2); margin-top: 6px; font-weight: 500; }
+
+    /* ---------------- GRID & CARDS ---------------- */
+    .grid { display: grid; gap: 18px; margin-bottom: 18px; }
+    .grid-3 { grid-template-columns: 1.05fr 1fr 1.25fr; }
+    .grid-2 { grid-template-columns: 1fr 1.35fr; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      transition: background .4s ease, box-shadow .3s ease;
+    }
+    .card:hover { box-shadow: var(--shadow-md); }
+    .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 10px; }
+    .card h3 { font-size: 16.5px; margin: 0; letter-spacing: -0.01em; }
+    .card .sub { font-size: 12px; color: var(--text-3); margin: 2px 0 0; }
+
+    .seg-toggle { display: flex; gap: 4px; background: var(--main-bg); border-radius: 100px; padding: 3px; }
+    .seg-toggle button {
+      border: none; background: transparent; font-size: 12px; font-weight: 600;
+      color: var(--text-2); padding: 6px 12px; border-radius: 100px; cursor: pointer;
+      transition: all .2s ease;
+    }
+    .seg-toggle button.active { background: var(--card-bg); color: var(--text-1); box-shadow: var(--shadow-sm); }
+
+    /* ---- Donut ---- */
+    .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .donut-svg { overflow: visible; }
+    .donut-seg { transition: stroke-width .25s ease, filter .25s ease, opacity .25s ease; cursor: pointer; }
+    .donut-svg.dim-others .donut-seg { opacity: .35; }
+    .donut-svg .donut-seg.hi { opacity: 1; stroke-width: 17; filter: drop-shadow(0 4px 8px rgba(0,0,0,.15)); }
+    .donut-center { font-size: 19px; font-weight: 700; fill: var(--text-1); }
+    .donut-center-sub { font-size: 10.5px; fill: var(--text-3); font-weight: 600; }
+    .legend { width: 100%; display: flex; flex-direction: column; gap: 11px; }
+    .legend-row {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 13.5px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+    .legend-row:hover { background: var(--main-bg); }
+    .legend-left { display: flex; align-items: center; gap: 9px; color: var(--text-2); font-weight: 500; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .legend-amt { font-weight: 700; color: var(--text-1); }
+    .legend-pct { font-size: 11.5px; color: var(--text-3); font-weight: 600; margin-left: 8px; }
+
+    /* ---- Branches (clickable list, replaces map) ---- */
+    .branch-list { display: flex; flex-direction: column; gap: 10px; }
+    .branch-card {
+      display: flex; align-items: center; gap: 13px;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      background: var(--main-bg);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .branch-card:hover {
+      border-color: var(--accent);
+      transform: translateX(3px);
+      box-shadow: var(--shadow-sm);
+    }
+    .branch-avatar {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 14px;
+      flex-shrink: 0;
+    }
+    .branch-info { flex: 1; min-width: 0; }
+    .branch-name { font-size: 14px; font-weight: 700; color: var(--text-1); margin-bottom: 2px; }
+    .branch-addr { font-size: 11.5px; color: var(--text-3); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .branch-bar { height: 4px; border-radius: 4px; background: var(--border); overflow: hidden; margin-top: 7px; }
+    .branch-bar i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--seg-1), var(--accent)); transition: width 1s cubic-bezier(.16,1,.3,1); }
+    .branch-count { text-align: right; flex-shrink: 0; padding-left: 6px; }
+    .branch-count b { display: block; font-size: 16px; font-weight: 700; color: var(--text-1); }
+    .branch-count span { font-size: 10.5px; color: var(--text-3); font-weight: 600; }
+    .branch-chevron {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--card-bg); color: var(--text-3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+    .branch-card:hover .branch-chevron { background: var(--accent); color: #fff; transform: translateX(2px); }
+    .branch-chevron svg { width: 13px; height: 13px; }
+
+    /* ---- Branch modal ---- */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(15,17,23,.45);
+      display: none; align-items: center; justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(2px);
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      width: 100%; max-width: 420px;
+      padding: 26px;
+      box-shadow: var(--shadow-md);
+      animation: modalIn .3s cubic-bezier(.16,1,.3,1);
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+    .modal-avatar { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 17px; }
+    .modal-close {
+      width: 30px; height: 30px; border-radius: 50%; border: none;
+      background: var(--main-bg); color: var(--text-2); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s ease, color .2s ease;
+    }
+    .modal-close:hover { background: #d9534f; color: #fff; }
+    .modal-close svg { width: 15px; height: 15px; }
+    .modal-card h3 { font-size: 18px; margin: 12px 0 2px; }
+    .modal-card .modal-addr { font-size: 12.5px; color: var(--text-3); font-weight: 500; margin: 0 0 18px; }
+    .modal-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+    .modal-stat { background: var(--main-bg); border-radius: 12px; padding: 12px 10px; text-align: center; }
+    .modal-stat b { display: block; font-size: 17px; font-weight: 700; }
+    .modal-stat span { font-size: 10.5px; color: var(--text-3); font-weight: 600; }
+    .modal-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); font-weight: 600; margin-bottom: 6px; }
+    .modal-bar { height: 6px; border-radius: 4px; background: var(--border); overflow: hidden; margin-bottom: 20px; }
+    .modal-bar i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--seg-1), var(--accent)); }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-actions .btn { flex: 1; justify-content: center; }
+
+    /* ---- Line chart ---- */
+    .line-chart-wrap {
+      width: 100%;
+      height: 190px;
+      margin-top: 4px;
+    }
+    .line-chart-wrap svg { width: 100%; height: 100%; overflow: visible; }
+    .grid-line { stroke: var(--border); stroke-width: 1; stroke-dasharray: 3 5; }
+    .axis-label { font-size: 9.5px; fill: var(--text-3); font-weight: 600; }
+    .y-label { font-size: 9px; fill: var(--text-3); font-weight: 600; text-anchor: end; }
+    .area-path { opacity: .16; transition: opacity .25s ease; }
+    .line-path {
+      fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+      filter: drop-shadow(0 2px 4px rgba(20,22,31,0.08));
+    }
+    .line-dot {
+      fill: var(--card-bg); stroke-width: 2.2; r: 3;
+      transition: r .2s ease; cursor: pointer;
+    }
+    .line-dot:hover { r: 5; }
+    .series-dim .line-path:not(.hi) { opacity: .18; }
+    .series-dim .line-dot:not(.hi) { opacity: .18; }
+    .line-legend {
+      display: flex; flex-wrap: wrap; gap: 18px;
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .line-legend-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12.5px; font-weight: 600; color: var(--text-2);
+      cursor: pointer; transition: color .2s ease;
+    }
+    .line-legend-item:hover { color: var(--text-1); }
+    .line-legend-dash { width: 16px; height: 3px; border-radius: 3px; flex-shrink: 0; }
+
+    /* ---- Referral table ---- */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    th { text-align: left; color: var(--text-3); font-weight: 600; font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; padding: 0 10px 10px; }
+    td { padding: 12px 10px; border-top: 1px solid var(--border); color: var(--text-1); }
+    tr:hover td { background: var(--main-bg); }
+    .pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; display: inline-block; }
+    .pill-active { background: rgba(47,179,124,0.12); color: var(--good); }
+    .pill-trial { background: rgba(224,167,46,0.14); color: var(--warn); }
+    .pill-out { background: rgba(224,90,90,0.12); color: #d9534f; }
+    .src-cell { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    .src-icon {
+      width: 30px; height: 30px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; flex-shrink: 0;
+    }
+    .src-icon svg { width: 15px; height: 15px; }
+    .mini-bar { width: 100px; height: 6px; border-radius: 4px; background: var(--border); overflow: hidden; }
+    .mini-bar i { display: block; height: 100%; border-radius: 4px; }
+    .trend-up { color: var(--good); font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 3px; }
+    .trend-up svg { width: 12px; height: 12px; }
+
+    /* ---------------- RESPONSIVE ---------------- */
+    @media (max-width: 1320px) {
+      .stat-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1180px) {
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .grid-3 .card:nth-child(3) { grid-column: span 2; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 860px) {
+      .app { padding: 12px; gap: 0; }
+      .hamburger { display: flex; }
+      .sidebar {
+        position: fixed; top: 12px; left: 12px; bottom: 12px; z-index: 40;
+        transform: translateX(-120%); box-shadow: var(--shadow-md);
+        max-height: calc(100vh - 24px);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main { padding: 20px 16px; padding-top: 64px; width: 100%; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-3 .card:nth-child(3) { grid-column: span 1; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-grid.cols-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      .topbar { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+      .donut-svg { width: 160px; height: 160px; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .modal-stats { grid-template-columns: 1fr 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- HAMBURGER -->
+<button class="hamburger" id="hamburger" aria-label="Menyuni ochish">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v2h18V7l-9-5Z"/><path d="M5 12v6"/><path d="M10 12v6"/><path d="M14 12v6"/><path d="M19 12v6"/><path d="M3 21h18"/></svg>
+      </div>
+      Confidence
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-top">
+        <div class="avatar">Q</div>
+        <div class="theme-pill" id="themePill">
+          <button id="moonBtn" aria-label="Qorong'i rejim">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+          </button>
+          <button id="sunBtn" class="active" aria-label="Yorug' rejim">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="profile-date">Qudratillo</p>
+      <h2 class="profile-greet">Xush kelibsiz</h2>
+      <p class="profile-role">O'quv markaz hamkori</p>
+    </div>
+
+    <!-- NAV -->
+    <nav class="nav">
+      <p class="nav-group-label">Menyu</p>
+      <ul id="navList">
+        <li class="active" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          Asosiy Panel
+        </li>
+        <li data-view="referral">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
+          Referal manbalar
+          <span class="nav-badge">Yangi</span>
+        </li>
+      </ul>
+      <ul>
+        <li class="logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          Chiqish
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ================= VIEW: DASHBOARD ================= -->
+    <div class="view active" id="view-dashboard">
+      <div class="topbar">
+        <div>
+          <h1>Boshqaruv paneli</h1>
+          <p>Confidence o'quv markazi statistikasi</p>
+        </div>
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+          Hisobotni yuklab olish
+        </button>
+      </div>
+
+      <!-- STAT ROW -->
+      <section class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#2596be">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3Z"/><path d="M8 11c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Z"/><path d="M8 13c-2.67 0-8 1.34-8 4v2h11"/><path d="M14.5 13.1c2.9.4 6.5 1.7 6.5 3.9v2h-8"/></svg>
+            </div>
+            <span class="stat-delta">+12%</span>
+          </div>
+          <div class="stat-value">304</div>
+          <div class="stat-label">Faol o'quvchilar</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#e0679e">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.1 2.69 2 6 2s6-.9 6-2v-5"/></svg>
+            </div>
+            <span class="stat-delta">+8%</span>
+          </div>
+          <div class="stat-value">330</div>
+          <div class="stat-label">Kursga yozilgan</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#f0836a">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <span class="stat-delta warn">Sinov</span>
+          </div>
+          <div class="stat-value">7 <small>/304</small></div>
+          <div class="stat-label">Sinovdagi o'quvchilar</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#2fb37c">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">0</div>
+          <div class="stat-label">Jami xodimlar</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#e0a72e">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.1 2.69 2 6 2s6-.9 6-2v-5"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">14 <small>/27</small></div>
+          <div class="stat-label">Faol o'qituvchilar</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#9c6fe0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">32 <small>/134</small></div>
+          <div class="stat-label">Faol guruhlar</div>
+        </div>
+      </section>
+
+      <!-- GRID 3 -->
+      <section class="grid grid-3">
+        <!-- Branches (clickable, replaces old map) -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Filiallar bo'yicha o'quvchilar</h3>
+              <p class="sub">Batafsil ma'lumot uchun filialni bosing</p>
+            </div>
+          </div>
+          <div class="branch-list" id="branchList"></div>
+        </div>
+
+        <!-- Line chart -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Yillik dinamika</h3>
+              <p class="sub">O'quvchilar sonining o'zgarishi</p>
+            </div>
+            <div class="seg-toggle" id="rangeToggle">
+              <button>3 oylik</button>
+              <button>6 oylik</button>
+              <button class="active">1 yillik</button>
+            </div>
+          </div>
+          <div class="line-chart-wrap">
+            <svg id="lineSvg" viewBox="0 0 320 190" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="line-legend" id="lineLegend"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= VIEW: REFERRAL ================= -->
+    <div class="view" id="view-referral">
+      <div class="topbar">
+        <div>
+          <h1>Referal manbalar</h1>
+          <p>O'quvchilar qaysi manba orqali kelganini kuzating</p>
+        </div>
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+          Hisobotni yuklab olish
+        </button>
+      </div>
+
+      <section class="stat-grid cols-3">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#2596be">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span class="stat-delta">+18%</span>
+          </div>
+          <div class="stat-value">330</div>
+          <div class="stat-label">Jami kelgan o'quvchilar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#3fcdb8">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">Telegram</div>
+          <div class="stat-label">Eng samarali manba — 148 ta (45%)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background:#9c6fe0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">24 <small>ta</small></div>
+          <div class="stat-label">Bloger (@dilnoza_edu) orqali</div>
+        </div>
+      </section>
+
+      <section class="grid grid-2">
+        <!-- Donut -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Manbalar taqsimoti</h3>
+              <p class="sub">Umumiy 330 o'quvchidan</p>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <svg id="donutSvg" class="donut-svg" width="190" height="190" viewBox="0 0 190 190"></svg>
+            <div class="legend" id="donutLegend"></div>
+          </div>
+        </div>
+
+        <!-- Referral table -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Manbalar bo'yicha batafsil</h3>
+              <p class="sub">Oxirgi 30 kunlik ko'rsatkich</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Manba</th>
+                  <th>O'quvchilar</th>
+                  <th>Ulush</th>
+                  <th>O'sish</th>
+                </tr>
+              </thead>
+              <tbody id="referralTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+</div>
+
+<!-- BRANCH DETAIL MODAL -->
+<div class="modal-backdrop" id="branchModal">
+  <div class="modal-card">
+    <div class="modal-top">
+      <div class="modal-avatar" id="modalAvatar">E</div>
+      <button class="modal-close" id="modalClose" aria-label="Yopish">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <h3 id="modalName">Eski shahar</h3>
+    <p class="modal-addr" id="modalAddr">Navoi ko'chasi, 12</p>
+    <div class="modal-stats">
+      <div class="modal-stat"><b id="modalTeachers">6</b><span>O'qituvchi</span></div>
+      <div class="modal-stat"><b id="modalGroups">9</b><span>Guruh</span></div>
+      <div class="modal-stat"><b id="modalStudents">304</b><span>O'quvchi</span></div>
+    </div>
+    <div class="modal-bar-label"><span>Filial yuklanishi</span><span id="modalPercentLabel">100%</span></div>
+    <div class="modal-bar"><i id="modalBar" style="width:0%"></i></div>
+    <div class="modal-actions">
+      <button class="btn" id="modalCloseBtn">Yopish</button>
+      <button class="btn btn-primary">Filialni ochish</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------------- THEME ----------------
+    const root = document.documentElement;
+    const moonBtn = document.getElementById('moonBtn');
+    const sunBtn = document.getElementById('sunBtn');
+    moonBtn.addEventListener('click', ()=>{
+      root.setAttribute('data-theme','dark');
+      moonBtn.classList.add('active'); sunBtn.classList.remove('active');
+    });
+    sunBtn.addEventListener('click', ()=>{
+      root.setAttribute('data-theme','light');
+      sunBtn.classList.add('active'); moonBtn.classList.remove('active');
+    });
+
+    // ---------------- SIDEBAR / MOBILE ----------------
+    const sidebar = document.getElementById('sidebar');
+    const hamburger = document.getElementById('hamburger');
+    hamburger.addEventListener('click', ()=>{
+      sidebar.classList.toggle('open');
+      hamburger.classList.toggle('hidden', sidebar.classList.contains('open'));
+    });
+    document.addEventListener('click', (e)=>{
+      if(window.innerWidth <= 860 && sidebar.classList.contains('open')){
+        if(!sidebar.contains(e.target) && !hamburger.contains(e.target)){
+          sidebar.classList.remove('open');
+          hamburger.classList.remove('hidden');
+        }
+      }
+    });
+
+    // ---------------- NAV / VIEW SWITCH ----------------
+    document.querySelectorAll('#navList li[data-view]').forEach(li=>{
+      li.addEventListener('click', ()=>{
+        document.querySelectorAll('#navList li[data-view]').forEach(x=>x.classList.remove('active'));
+        li.classList.add('active');
+        const target = li.dataset.view;
+        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+        document.getElementById('view-' + target).classList.add('active');
+        if(window.innerWidth <= 860){ sidebar.classList.remove('open'); hamburger.classList.remove('hidden'); }
+      });
+    });
+
+    // ---------------- LINE CHART ----------------
+    const months = ['Iyul','Avg','Sen','Okt','Noy','Dek','Yan','Fev','Mar','Apr','May','Iyun'];
+    const series = [
+      { key:'qoshilish', label:'Qo\'shilish', color:'var(--accent)', values:[40,22,32,20,17,15,19,24,20,28,45,62] },
+      { key:'chiqish', label:'Chiqish', color:'var(--chart-line-2)', values:[8,14,10,6,5,4,4,5,6,5,7,6] },
+      { key:'saqlangan', label:'Saqlangan', color:'var(--chart-line-3)', values:[28,15,30,18,13,12,15,17,15,22,34,58] },
+    ];
+
+    function smoothPath(points) {
+      if (points.length < 2) return '';
+      let d = `M ${points[0][0]} ${points[0][1]}`;
+      for (let i = 0; i < points.length - 1; i++) {
+        const [x0, y0] = points[i];
+        const [x1, y1] = points[i + 1];
+        const mx = (x0 + x1) / 2;
+        d += ` C ${mx} ${y0}, ${mx} ${y1}, ${x1} ${y1}`;
+      }
+      return d;
+    }
+
+    function buildLineChart(svgId, legendId, monthsData, seriesData) {
+      const ns = 'http://www.w3.org/2000/svg';
+      const svg = document.getElementById(svgId);
+      const legend = document.getElementById(legendId);
+      svg.innerHTML = '';
+      legend.innerHTML = '';
+
+      const W = 320, H = 190, padL = 22, padR = 4, padT = 8, padB = 20;
+      const innerW = W - padL - padR, innerH = H - padT - padB;
+      const maxVal = Math.max(...seriesData.flatMap(s=>s.values)) * 1.15;
+      const stepX = innerW / (monthsData.length - 1);
+
+      const xy = (values, i) => [
+        padL + i * stepX,
+        padT + innerH - (values[i] / maxVal) * innerH
+      ];
+
+      const gridSteps = 4;
+      for (let g = 0; g <= gridSteps; g++) {
+        const y = padT + (innerH / gridSteps) * g;
+        const line = document.createElementNS(ns, 'line');
+        line.setAttribute('x1', padL); line.setAttribute('x2', W - padR);
+        line.setAttribute('y1', y); line.setAttribute('y2', y);
+        line.classList.add('grid-line');
+        svg.appendChild(line);
+        const val = Math.round(maxVal * (1 - g / gridSteps));
+        const label = document.createElementNS(ns, 'text');
+        label.setAttribute('x', padL - 6); label.setAttribute('y', y + 3);
+        label.classList.add('y-label');
+        label.textContent = val;
+        svg.appendChild(label);
+      }
+
+      monthsData.forEach((m, i) => {
+        if (i % 2 !== 0 && i !== monthsData.length - 1) return;
+        const label = document.createElementNS(ns, 'text');
+        label.setAttribute('x', padL + i * stepX);
+        label.setAttribute('y', H - 4);
+        label.setAttribute('text-anchor', i === 0 ? 'start' : (i === monthsData.length - 1 ? 'end' : 'middle'));
+        label.classList.add('axis-label');
+        label.textContent = m;
+        svg.appendChild(label);
+      });
+
+      const defs = document.createElementNS(ns, 'defs');
+      svg.appendChild(defs);
+
+      seriesData.forEach((s, si) => {
+        const pts = s.values.map((_, i) => xy(s.values, i));
+
+        const gradId = `grad-${svgId}-${si}`;
+        const grad = document.createElementNS(ns, 'linearGradient');
+        grad.setAttribute('id', gradId);
+        grad.setAttribute('x1', '0'); grad.setAttribute('y1', '0');
+        grad.setAttribute('x2', '0'); grad.setAttribute('y2', '1');
+        const varName = s.color.match(/--[\w-]+/)[0];
+        const resolvedColor = getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || '#2596be';
+        grad.innerHTML = `<stop offset="0%" stop-color="${resolvedColor}" stop-opacity=".5"/><stop offset="100%" stop-color="${resolvedColor}" stop-opacity="0"/>`;
+        defs.appendChild(grad);
+
+        const areaPath = document.createElementNS(ns, 'path');
+        const areaD = smoothPath(pts) + ` L ${pts[pts.length-1][0]} ${padT+innerH} L ${pts[0][0]} ${padT+innerH} Z`;
+        areaPath.setAttribute('d', areaD);
+        areaPath.setAttribute('fill', `url(#${gradId})`);
+        areaPath.classList.add('area-path');
+        areaPath.dataset.series = s.key;
+        svg.appendChild(areaPath);
+
+        const linePath = document.createElementNS(ns, 'path');
+        linePath.setAttribute('d', smoothPath(pts));
+        linePath.setAttribute('stroke', s.color);
+        linePath.classList.add('line-path');
+        linePath.dataset.series = s.key;
+        svg.appendChild(linePath);
+
+        pts.forEach(([x, y]) => {
+          const dot = document.createElementNS(ns, 'circle');
+          dot.setAttribute('cx', x); dot.setAttribute('cy', y);
+          dot.setAttribute('stroke', s.color);
+          dot.classList.add('line-dot');
+          dot.dataset.series = s.key;
+          svg.appendChild(dot);
+        });
+      });
+
+      seriesData.forEach(s => {
+        const item = document.createElement('div');
+        item.className = 'line-legend-item';
+        item.innerHTML = `<span class="line-legend-dash" style="background:${s.color}"></span>${s.label}`;
+        item.addEventListener('mouseenter', () => {
+          svg.classList.add('series-dim');
+          svg.querySelectorAll('[data-series]').forEach(el => {
+            el.classList.toggle('hi', el.dataset.series === s.key);
+          });
+        });
+        item.addEventListener('mouseleave', () => {
+          svg.classList.remove('series-dim');
+          svg.querySelectorAll('[data-series]').forEach(el => el.classList.remove('hi'));
+        });
+        legend.appendChild(item);
+      });
+    }
+
+    let currentRange = 12;
+    function drawChart() {
+      const m = months.slice(-currentRange);
+      const s = series.map(s => ({ ...s, values: s.values.slice(-currentRange) }));
+      buildLineChart('lineSvg', 'lineLegend', m, s);
+    }
+    drawChart();
+
+    document.querySelectorAll('#rangeToggle button').forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#rangeToggle button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const ranges = [3, 6, 12];
+        currentRange = ranges[idx];
+        drawChart();
+      });
+    });
+
+    // ---------------- BRANCHES (clickable list + modal) ----------------
+    const branches = [
+      { name:"Eski shahar", addr:"Navoi ko'chasi, 12", students:304, percent:100, teachers:6, groups:9, color:'#2596be' },
+      { name:"Yunusobod", addr:"Amir Temur shoh ko'chasi, 45", students:268, percent:85, teachers:5, groups:8, color:'#5cb8db' },
+      { name:"Chilonzor", addr:"Bunyodkor shoh ko'chasi, 21", students:221, percent:70, teachers:4, groups:7, color:'#3fcdb8' },
+      { name:"Sergeli", addr:"Sergeli tumani, 3-mavze", students:176, percent:55, teachers:3, groups:6, color:'#9c6fe0' },
+    ];
+
+    function initials(name){ return name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+
+    const branchList = document.getElementById('branchList');
+    branches.forEach((b, idx) => {
+      const a = document.createElement('a');
+      a.href = '#filial-' + idx;
+      a.className = 'branch-card';
+      a.dataset.idx = idx;
+      a.innerHTML = `
+        <div class="branch-avatar" style="background:${b.color}">${initials(b.name)}</div>
+        <div class="branch-info">
+          <div class="branch-name">${b.name}</div>
+          <div class="branch-addr">${b.addr}</div>
+          <div class="branch-bar"><i style="width:0%"></i></div>
+        </div>
+        <div class="branch-count"><b>${b.students}</b><span>o'quvchi</span></div>
+        <div class="branch-chevron">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>`;
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        openBranchModal(idx);
+      });
+      branchList.appendChild(a);
+      requestAnimationFrame(()=>{
+        setTimeout(()=>{ a.querySelector('.branch-bar i').style.width = b.percent + '%'; }, 60 + idx*70);
+      });
+    });
+
+    const branchModal = document.getElementById('branchModal');
+    function openBranchModal(idx){
+      const b = branches[idx];
+      document.getElementById('modalAvatar').textContent = initials(b.name);
+      document.getElementById('modalAvatar').style.background = b.color;
+      document.getElementById('modalName').textContent = b.name;
+      document.getElementById('modalAddr').textContent = b.addr;
+      document.getElementById('modalTeachers').textContent = b.teachers;
+      document.getElementById('modalGroups').textContent = b.groups;
+      document.getElementById('modalStudents').textContent = b.students;
+      document.getElementById('modalPercentLabel').textContent = b.percent + '%';
+      const bar = document.getElementById('modalBar');
+      bar.style.width = '0%';
+      branchModal.classList.add('open');
+      requestAnimationFrame(()=> setTimeout(()=>{ bar.style.width = b.percent + '%'; }, 50));
+    }
+    function closeBranchModal(){ branchModal.classList.remove('open'); }
+    document.getElementById('modalClose').addEventListener('click', closeBranchModal);
+    document.getElementById('modalCloseBtn').addEventListener('click', closeBranchModal);
+    branchModal.addEventListener('click', (e)=>{ if(e.target === branchModal) closeBranchModal(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeBranchModal(); });
+
+    // ---------------- REFERRAL DONUT + TABLE ----------------
+    const referrals = [
+      { label:"Telegram", value:148, color:'var(--seg-1)', icon:'send' },
+      { label:"Instagram", value:92, color:'var(--seg-2)', icon:'camera' },
+      { label:"YouTube", value:51, color:'var(--seg-3)', icon:'play' },
+      { label:"Bloger (@dilnoza_edu)", value:24, color:'var(--seg-5)', icon:'star' },
+      { label:"Do'stlar / boshqa", value:15, color:'var(--seg-4)', icon:'users' },
+    ];
+
+    function resolveVar(v){
+      const m = v.match(/--[\w-]+/);
+      if(!m) return v;
+      return getComputedStyle(document.documentElement).getPropertyValue(m[0]).trim();
+    }
+
+    function buildDonut(svgId, legendId, data) {
+      const ns = 'http://www.w3.org/2000/svg';
+      const svg = document.getElementById(svgId);
+      const legend = document.getElementById(legendId);
+      svg.innerHTML = '';
+      legend.innerHTML = '';
+
+      const total = data.reduce((a,d)=>a+d.value, 0);
+      const size = 190, cx = size/2, cy = size/2, r = 74, circumference = 2*Math.PI*r;
+      let offsetAcc = 0;
+
+      data.forEach((d, i) => {
+        const frac = d.value / total;
+        const dash = frac * circumference;
+        const circle = document.createElementNS(ns, 'circle');
+        circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', r);
+        circle.setAttribute('fill', 'none');
+        circle.setAttribute('stroke', resolveVar(d.color));
+        circle.setAttribute('stroke-width', '15');
+        circle.setAttribute('stroke-dasharray', `${dash} ${circumference-dash}`);
+        circle.setAttribute('stroke-dashoffset', `${-offsetAcc}`);
+        circle.setAttribute('transform', `rotate(-90 ${cx} ${cy})`);
+        circle.setAttribute('stroke-linecap', i === data.length-1 && data.length===1 ? 'round' : 'butt');
+        circle.classList.add('donut-seg');
+        circle.dataset.idx = i;
+        svg.appendChild(circle);
+        offsetAcc += dash;
+      });
+
+      const centerVal = document.createElementNS(ns, 'text');
+      centerVal.setAttribute('x', cx); centerVal.setAttribute('y', cy - 2);
+      centerVal.setAttribute('text-anchor', 'middle');
+      centerVal.classList.add('donut-center');
+      centerVal.textContent = total;
+      svg.appendChild(centerVal);
+
+      const centerSub = document.createElementNS(ns, 'text');
+      centerSub.setAttribute('x', cx); centerSub.setAttribute('y', cy + 16);
+      centerSub.setAttribute('text-anchor', 'middle');
+      centerSub.classList.add('donut-center-sub');
+      centerSub.textContent = "JAMI O'QUVCHI";
+      svg.appendChild(centerSub);
+
+      data.forEach((d, i) => {
+        const pct = Math.round((d.value/total)*100);
+        const row = document.createElement('div');
+        row.className = 'legend-row';
+        row.dataset.idx = i;
+        row.innerHTML = `
+          <div class="legend-left">
+            <span class="legend-dot" style="background:${resolveVar(d.color)}"></span>
+            ${d.label}
+          </div>
+          <div>
+            <span class="legend-amt">${d.value}</span>
+            <span class="legend-pct">${pct}%</span>
+          </div>`;
+        legend.appendChild(row);
+      });
+
+      function highlight(idx){
+        svg.classList.add('dim-others');
+        svg.querySelectorAll('.donut-seg').forEach(seg=>{
+          seg.classList.toggle('hi', Number(seg.dataset.idx) === idx);
+        });
+      }
+      function clearHighlight(){
+        svg.classList.remove('dim-others');
+        svg.querySelectorAll('.donut-seg').forEach(seg=>seg.classList.remove('hi'));
+      }
+      svg.querySelectorAll('.donut-seg').forEach(seg=>{
+        seg.addEventListener('mouseenter', ()=> highlight(Number(seg.dataset.idx)));
+        seg.addEventListener('mouseleave', clearHighlight);
+      });
+      legend.querySelectorAll('.legend-row').forEach(row=>{
+        row.addEventListener('mouseenter', ()=> highlight(Number(row.dataset.idx)));
+        row.addEventListener('mouseleave', clearHighlight);
+      });
+    }
+    buildDonut('donutSvg', 'donutLegend', referrals);
+
+    // referral table
+    const icons = {
+      send: '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+      camera: '<rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>',
+      play: '<path d="m6 3 14 9-14 9V3Z"/>',
+      star: '<path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z"/>',
+      users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'
+    };
+    const trends = ['+22%','+9%','+31%','+14%','+4%'];
+    const tbody = document.getElementById('referralTableBody');
+    const totalRef = referrals.reduce((a,d)=>a+d.value,0);
+    referrals.forEach((d, i)=>{
+      const pct = Math.round((d.value/totalRef)*100);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+          <div class="src-cell">
+            <div class="src-icon" style="background:${resolveVar(d.color)}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${icons[d.icon]}</svg>
+            </div>
+            ${d.label}
+          </div>
+        </td>
+        <td>${d.value}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="mini-bar"><i style="width:${pct}%;background:${resolveVar(d.color)}"></i></div>
+            <span style="font-size:11.5px;color:var(--text-3);font-weight:600;">${pct}%</span>
+          </div>
+        </td>
+        <td>
+          <span class="trend-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
+            ${trends[i]}
+          </span>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+
+  })();
+</script>
+</body>
+</html>

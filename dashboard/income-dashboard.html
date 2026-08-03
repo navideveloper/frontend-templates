@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments Dashboard</title>
+    <!-- Inter Roman (Normal) font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-body: #eef2f5;
+            --bg-surface: #ffffff;
+            --text-main: #1a1a1a;
+            --text-muted: #6b7280;
+            --border-color: #f0f0f0;
+            --primary: #1a1a1a;
+            --primary-light: #fef3c7;
+            --radius-lg: 16px;
+            --radius-md: 8px;
+            --radius-pill: 99px;
+            --font-main: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            font-style: normal; /* Inter Roman */
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* App Container Layout */
+        .app-container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            height: 90vh;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 80px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            background: var(--bg-surface);
+            z-index: 50;
+            flex-shrink: 0; /* Sidebar qisqarib ketmasligi uchun */
+        }
+
+        .sidebar.expanded {
+            width: 200px;
+            align-items: flex-start;
+            padding-left: 20px;
+        }
+
+        .logo {
+            background-color: #1a1a1a;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .sidebar.expanded .nav-menu {
+            align-items: flex-start;
+        }
+
+        .nav-item {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: #f9fafb;
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-light);
+            color: #b45309;
+        }
+
+        .nav-label {
+            display: none;
+            margin-left: 12px;
+            font-weight: 500;
+        }
+
+        .sidebar.expanded .nav-label {
+            display: inline-block;
+        }
+        
+        .sidebar.expanded .nav-item {
+            width: 90%;
+            justify-content: flex-start;
+            padding-left: 12px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            right: -14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+            min-width: 0; /* Flexbox ichida to'g'ri ishlashi uchun */
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 10px 16px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 320px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            margin-left: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: var(--radius-md);
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+        
+        .btn-outline:hover {
+            background: #f9fafb;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        /* Table Styling */
+        .table-container {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            min-width: 800px;
+        }
+
+        th {
+            padding: 16px 20px;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #fafafa; }
+
+        /* Custom Checkbox */
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid #d1d5db;
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+        input[type="checkbox"]:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        input[type="checkbox"]:checked::after {
+            content: '✔';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Table Client Cells */
+        .client-cell { display: flex; align-items: center; gap: 16px; }
+        .client-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 12px; color: white;
+        }
+        .bg-zara { background: #e5cda7; color: #111; }
+        .bg-etsy { background: #f1641e; }
+        .bg-goodnotes { background: #000; font-size: 20px;}
+        .client-details { display: flex; flex-direction: column; gap: 4px; }
+        .client-name { font-weight: 600; font-size: 15px; }
+        .client-email { font-size: 13px; color: var(--text-muted); }
+        .amount { font-weight: 500; }
+        .date { color: var(--text-main); font-size: 14px; }
+        
+        /* Pills */
+        .deliverables { display: flex; gap: 8px; flex-wrap: wrap; }
+        .pill {
+            background: #f3f4f6;
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Modal Styling */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 { font-size: 20px; font-weight: 600; }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--text-main);
+        }
+
+        .modal-footer {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Responsive Design / Media Queries */
+        @media (max-width: 900px) {
+            .app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            body { padding: 0; }
+        }
+
+        @media (max-width: 768px) {
+            /* Sidebar mobil qurilmalarda faqat kichik holatda qoladi */
+            .sidebar {
+                width: 60px;
+                padding: 16px 0;
+            }
+            .sidebar.expanded {
+                width: 60px; /* Mobil qurilmada kengayishni bloklash */
+                padding-left: 0;
+            }
+            .sidebar.expanded .nav-label {
+                display: none;
+            }
+            .sidebar.expanded .nav-item {
+                width: 40px;
+                padding-left: 0;
+                justify-content: center;
+            }
+            .logo {
+                width: 32px; height: 32px; font-size: 14px; margin-bottom: 24px;
+            }
+            .nav-item {
+                width: 40px; height: 40px;
+            }
+            /* Kengaytirish tugmasini mobilda yashirish */
+            .toggle-btn { 
+                display: none; 
+            }
+
+            .main-content { 
+                padding: 20px 16px; 
+            }
+            .page-title {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            .toolbar { 
+                flex-direction: column; 
+            }
+            .search-box { 
+                max-width: 100%; 
+                width: 100%; 
+            }
+            .action-buttons { 
+                width: 100%; 
+                justify-content: space-between; 
+            }
+            .btn { 
+                flex: 1; 
+                justify-content: center; 
+            }
+            
+            .modal-content {
+                width: 90%;
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">In</div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item"><span class="material-symbols-outlined">home</span> <span class="nav-label">Home</span></a>
+                <a href="#" class="nav-item active"><span class="material-symbols-outlined">work</span> <span class="nav-label">Payments</span></a>
+                <a href="#" class="nav-item"><span class="material-symbols-outlined">calendar_month</span> <span class="nav-label">Calendar</span></a>
+                <a href="#" class="nav-item"><span class="material-symbols-outlined">receipt_long</span> <span class="nav-label">Invoices</span></a>
+                <a href="#" class="nav-item"><span class="material-symbols-outlined">account_balance_wallet</span> <span class="nav-label">Wallet</span></a>
+            </nav>
+
+            <div class="sidebar-bottom nav-menu">
+                <a href="#" class="nav-item"><span class="material-symbols-outlined">notifications</span> <span class="nav-label">Alerts</span></a>
+            </div>
+
+            <!-- Toggle Button for Desktop -->
+            <div class="toggle-btn" id="toggle-sidebar">
+                <span class="material-symbols-outlined" id="toggle-icon">keyboard_double_arrow_right</span>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+
+            <h1 class="page-title">Payments</h1>
+
+            <div class="toolbar">
+                <div class="search-box">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" placeholder="Search client or invoice...">
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-outline">
+                        <span class="material-symbols-outlined" style="font-size:18px;">filter_alt</span> Filter
+                    </button>
+                    <!-- Qo'shish Tugmasi -->
+                    <button class="btn btn-primary" id="openModalBtn">
+                        <span class="material-symbols-outlined" style="font-size:18px;">add</span> Qo'shish
+                    </button>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;"><input type="checkbox" id="selectAll"></th>
+                            <th>Client</th>
+                            <th>Amount</th>
+                            <th>Due date</th>
+                            <th>Deliverables</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox"></td>
+                            <td>
+                                <div class="client-cell">
+                                    <div class="client-avatar bg-zara">ZARA</div>
+                                    <div class="client-details">
+                                        <span class="client-name">Zara PR Team</span>
+                                        <span class="client-email">financial-team@zara.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount">$525</td>
+                            <td class="date">May 7, 2025</td>
+                            <td>
+                                <div class="deliverables">
+                                    <span class="pill">1 Reels</span>
+                                    <span class="pill">2 Stories</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox"></td>
+                            <td>
+                                <div class="client-cell">
+                                    <div class="client-avatar bg-etsy">Etsy</div>
+                                    <div class="client-details">
+                                        <span class="client-name">Etsy</span>
+                                        <span class="client-email">info-support@etsy.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount">$1,250</td>
+                            <td class="date">May 11, 2025</td>
+                            <td>
+                                <div class="deliverables">
+                                    <span class="pill">Full monthly Invoice</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="row-checkbox"></td>
+                            <td>
+                                <div class="client-cell">
+                                    <div class="client-avatar bg-goodnotes"><span class="material-symbols-outlined">edit_document</span></div>
+                                    <div class="client-details">
+                                        <span class="client-name">Goodnotes</span>
+                                        <span class="client-email">financial@goodnotes.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount">$385</td>
+                            <td class="date">May 2, 2025</td>
+                            <td>
+                                <div class="deliverables">
+                                    <span class="pill">3 Feed Photos</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Yangi to'lov qo'shish modali -->
+    <div class="modal" id="addPaymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Yangi to'lov qo'shish</h2>
+                <button class="close-modal" id="closeModalBtn">&times;</button>
+            </div>
+            
+            <form id="addForm">
+                <div class="form-group">
+                    <label for="clientName">Mijoz nomi (Client Name)</label>
+                    <input type="text" id="clientName" placeholder="Masalan: Zara PR Team" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="amount">Miqdor (Amount)</label>
+                    <input type="number" id="amount" placeholder="$0.00" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dueDate">Muddati (Due Date)</label>
+                    <input type="date" id="dueDate" required>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelModalBtn">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Interaktiv Skriptlar -->
+    <script>
+        // Desktop Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-sidebar');
+        const toggleIcon = document.getElementById('toggle-icon');
+
+        toggleBtn.addEventListener('click', () => {
+            // Agar ekran o'lchami 768px dan kichik bo'lsa, tugma ishlamaydi (har ehtimolga qarshi)
+            if(window.innerWidth <= 768) return;
+            
+            sidebar.classList.toggle('expanded');
+            toggleIcon.textContent = sidebar.classList.contains('expanded') ? 'keyboard_double_arrow_left' : 'keyboard_double_arrow_right';
+        });
+
+        // Select All Checkbox
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+
+        selectAllCheckbox.addEventListener('change', (e) => {
+            rowCheckboxes.forEach(checkbox => checkbox.checked = e.target.checked);
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('addPaymentModal');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
+
+        function openModal() {
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        openModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelModalBtn.addEventListener('click', closeModal);
+
+        // Modal tashqarisiga bosilganda yopish
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Form yuborilishini to'xtatish (hozircha shunchaki yopadi)
+        document.getElementById('addForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("Ma'lumot saqlandi!");
+            closeModal();
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

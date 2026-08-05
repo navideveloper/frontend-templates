@@ -351,17 +351,30 @@
     }
     .toast.show { opacity: 1; transform: translateY(0); }
 
-    /* ---------------- RESPONSIVE ---------------- */
+    /* ---------------- RESPONSIVE & MOBILE OVERRIDES ---------------- */
     @media (max-width: 1180px) {
       .stat-grid { grid-template-columns: repeat(2, 1fr); }
     }
-    @media (max-width: 640px) {
-      .filter-bar { flex-direction: column; align-items: stretch; }
-      .filter-toggle { justify-content: space-between; }
-      .filter-actions { margin-left: 0; }
-      .filter-actions .btn { flex: 1; justify-content: center; }
-    }
+    
     @media (max-width: 900px) {
+      /* Mobile bo'yicha backdrop-filter (blur) lar o'chirildi */
+      .sidebar,
+      .main,
+      .hamburger,
+      .modal-backdrop,
+      .modal-card,
+      .toast {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+      
+      /* Blur o'chgani sababli orqa fon shaffofligini aniq ranglarga o'zgartiramiz */
+      .sidebar { background: var(--bg); }
+      .main { background: var(--bg); }
+      .modal-card { background: var(--bg); }
+      html[data-theme="dark"] .modal-card { background: #2a2a2a; }
+      .hamburger { background: var(--bg); }
+
       .app { padding: 10px; gap: 0; }
       .hamburger { display: flex; }
       .sidebar {
@@ -370,12 +383,60 @@
         width: 260px;
       }
       .sidebar.open { transform: translateX(0); }
+    
       .main { padding: 18px 14px; padding-top: 60px; width: 100%; }
       .topbar h1 { font-size: 18px; }
     }
+
+    @media (max-width: 640px) {
+      /* Filter qismini responsive qilish */
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .search-field {
+        width: 100%;
+        flex: 1 1 auto;
+      }
+      .filter-toggle {
+        justify-content: space-between;
+        width: 100%;
+        padding: 8px 14px;
+      }
+      .filter-actions {
+        margin-left: 0;
+        width: 100%;
+        display: flex;
+        gap: 8px;
+      }
+      .filter-actions .btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+
     @media (max-width: 520px) {
-      .topbar { flex-direction: column; align-items: stretch; }
-      .topbar-actions .btn { flex: 1; justify-content: center; }
+      /* Action buttonlar (Yangilash va Qo'shish) va topbar responsive qilish */
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+      }
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+      }
+      .topbar-actions .btn-primary {
+        flex: 1;
+        justify-content: center;
+      }
+      .topbar-actions .btn-icon {
+        flex-shrink: 0;
+      }
+
       .stat-grid { grid-template-columns: 1fr 1fr; }
       .modal-card { padding: 16px; }
       .form-grid { grid-template-columns: 1fr; }
@@ -535,8 +596,6 @@
   </div>
 </div>
 
-<!-- edit / delete modals injected by JS -->
-
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -562,10 +621,23 @@
     // ---------------- SIDEBAR / MOBILE ----------------
     const sidebar = document.getElementById('sidebar');
     const hamburger = document.getElementById('hamburger');
-    hamburger.addEventListener('click', ()=> sidebar.classList.toggle('open'));
+    hamburger.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    
+        if (sidebar.classList.contains('open')) {
+            hamburger.style.display = 'none';
+        } else {
+            hamburger.style.display = 'flex';
+        }
+    });
     document.addEventListener('click', (e)=>{
       if(window.innerWidth <= 900 && sidebar.classList.contains('open')){
         if(!sidebar.contains(e.target) && !hamburger.contains(e.target)) sidebar.classList.remove('open');
+        if (sidebar.classList.contains('open')) {
+            hamburger.style.display = 'none';
+        } else {
+            hamburger.style.display = 'flex';
+        }
       }
     });
 

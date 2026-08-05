@@ -1,679 +1,719 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>macOS Premium Bento Dashboard</title>
-    <!-- Google Fonts: DM Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 Stable -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        /* macOS Native System Colors */
-        :root {
-            --mac-window-bg: rgba(255, 255, 255, 0.65);
-            --mac-sidebar-bg: rgba(246, 246, 246, 0.6);
-            --mac-card-bg: rgba(255, 255, 255, 0.75);
-            --mac-border: rgba(0, 0, 0, 0.08);
-            --mac-inner-border: rgba(255, 255, 255, 0.5);
-            
-            --text-main: #1d1d1f;
-            --text-sub: #6e6e73;
-            
-            /* Apple Semantic Palette */
-            --apple-blue: #007aff;
-            --apple-green: #34c759;
-            --apple-orange: #ff9500;
-            --apple-red: #ff3b30;
-            --apple-graph-grad: rgba(0, 122, 255, 0.1);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confidence — O'qituvchilar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ---------------- macOS THEME VARIABLES ---------------- */
+    :root {
+      --bg: #f5f5f7;
+      --sidebar-bg: rgba(255, 255, 255, 0.65);
+      --main-bg: rgba(255, 255, 255, 0.4);
+      --card-bg: rgba(255, 255, 255, 0.75);
+      --card-border: rgba(255, 255, 255, 0.8);
+      --text-1: #1d1d1f;
+      --text-2: #86868b;
+      --text-3: #a1a1a6;
+      --border: rgba(0, 0, 0, 0.08);
+      --accent: #448edf;
+      --accent-soft: rgba(0, 122, 255, 0.12);
+      --good: #34c759;
+      --warn: #ff9500;
+      --bad: #ff3b30;
+      --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --blur: blur(20px);
+      color-scheme: light;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            letter-spacing: -0.015em;
-        }
+    html[data-theme="dark"] {
+      --bg: #1e1e1e;
+      --sidebar-bg: rgba(36, 36, 36, 0.65);
+      --main-bg: rgba(30, 30, 30, 0.4);
+      --card-bg: rgba(45, 45, 45, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-1: #f5f5f7;
+      --text-2: #a1a1a6;
+      --text-3: #6e6e73;
+      --border: rgba(255, 255, 255, 0.1);
+      --accent: #448edf;
+      --accent-soft: rgba(10, 132, 255, 0.2);
+      --good: #30d158;
+      --warn: #ffd60a;
+      --bad: #ff453a;
+      --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 14px 36px rgba(0, 0, 0, 0.45);
+      color-scheme: dark;
+    }
 
-        body {
-            /* Premium macOS Abstract Mesh Background */
-            background: radial-gradient(circle at 10% 20%, rgba(239, 243, 248, 1) 0%, rgba(220, 231, 247, 1) 90%);
-            background-attachment: fixed;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            overflow: hidden;
-        }
+    /* ---------------- RESET ---------------- */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(circle at 10% 20%, rgba(0, 122, 255, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(52, 199, 89, 0.05) 0%, transparent 40%);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+      transition: background .3s ease, color .3s ease;
+    }
+    button { font-family: inherit; }
+    ul { list-style: none; margin: 0; padding: 0; }
+    svg { display: block; }
+    a { text-decoration: none; color: inherit; }
 
-        /* Main macOS App Window Container */
-        .mac-app-window {
-            width: 100%;
-            max-width: 1440px;
-            height: 90vh;
-            background: var(--mac-window-bg);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border: 1px solid var(--mac-inner-border);
-            border-radius: 20px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.2);
-            display: flex;
-            overflow: hidden;
-        }
+    /* ---------------- APP CONTAINER ---------------- */
+    .app { display: flex; gap: 16px; padding: 16px; min-height: 100vh; align-items: flex-start; }
 
-        /* ========= SIDEBAR (macOS Finder Style) ========= */
-        .sidebar {
-            width: 250px;
-            background: var(--mac-sidebar-bg);
-            border-right: 1px solid var(--mac-border);
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
-        }
+    /* ---------------- SIDEBAR ---------------- */
+    .sidebar {
+      width: 268px; flex-shrink: 0;
+      background: var(--sidebar-bg);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 16px;
+      box-shadow: var(--shadow-sm);
+      position: sticky; top: 16px;
+      max-height: calc(100vh - 32px);
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+    }
 
-        /* macOS Window Traffic Lights Control */
-        .traffic-lights {
-            display: flex;
-            gap: 8px;
-            padding-left: 8px;
-            margin-bottom: 4px;
-        }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; letter-spacing: -0.01em; padding: 0 4px; flex-shrink: 0; }
+    .brand-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: #ffffff;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 122, 255, 0.15);
+      border: 1px solid var(--border);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .brand-icon img { width: 22px; height: 22px; object-fit: contain; }
 
-        .traffic-lights span {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-            position: relative;
-        }
+    .profile-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 12px 14px; flex-shrink: 0;
+    }
+    .profile-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #ff9500, #ff2d55);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 14px;
+    }
+    .theme-pill { display: flex; background: rgba(0,0,0,0.05); border-radius: 20px; padding: 2px; }
+    html[data-theme="dark"] .theme-pill { background: rgba(255,255,255,0.1); }
+    .theme-pill button {
+      width: 24px; height: 24px; border-radius: 50%; border: none; background: transparent; color: var(--text-2);
+      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s;
+    }
+    .theme-pill button.active { background: var(--card-bg); color: var(--text-1); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
 
-        .traffic-lights .close { background: var(--apple-red); border: 0.5px solid rgba(0,0,0,0.1); }
-        .traffic-lights .minimize { background: var(--apple-orange); border: 0.5px solid rgba(0,0,0,0.1); }
-        .traffic-lights .zoom { background: var(--apple-green); border: 0.5px solid rgba(0,0,0,0.1); }
+    .profile-date { font-size: 10px; font-weight: 600; letter-spacing: 0.05em; color: var(--text-3); margin: 0 0 2px; }
+    .profile-greet { font-size: 15px; font-weight: 700; margin: 0; }
+    .profile-greet span { color: var(--accent); }
+    .profile-role { font-size: 11px; color: var(--text-2); margin: 2px 0 0; }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-left: 8px;
-        }
+    /* ---- NAV ---- */
+    .nav { flex: 1; overflow-y: auto; min-height: 0; }
+    .nav::-webkit-scrollbar { width: 4px; }
+    .nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .nav li {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 10px; border-radius: var(--radius-sm); color: var(--text-1);
+      font-size: 13px; font-weight: 500; cursor: pointer; margin-bottom: 2px;
+      transition: background .15s ease, transform .1s ease;
+    }
+    .nav li .nav-left { display: flex; align-items: center; gap: 10px; }
+    .nav li svg { width: 16px; height: 16px; color: var(--accent); opacity: 0.8; flex-shrink: 0; }
+    .nav li:hover { background: rgba(0, 0, 0, 0.04); }
+    html[data-theme="dark"] .nav li:hover { background: rgba(255, 255, 255, 0.05); }
+    .nav li.active { background: var(--accent); color: #fff; }
+    .nav li.active svg { color: #fff; opacity: 1; }
+    .nav li.logout:hover { background: rgba(255,59,48,0.1); color: var(--bad); }
+    .nav-badge { font-size: 10px; font-weight: 600; background: var(--accent-soft); color: var(--accent); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+    .nav li.active .nav-badge { background: rgba(255,255,255,0.25); color: #fff; }
 
-        .logo-icon {
-            font-size: 20px;
-            color: var(--apple-blue);
-        }
+    /* ---------------- HAMBURGER ---------------- */
+    .hamburger {
+      display: none; position: fixed; top: 22px; left: 22px; z-index: 50;
+      width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--card-border);
+      background: var(--card-bg); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      box-shadow: var(--shadow-md); color: var(--text-1);
+      align-items: center; justify-content: center; cursor: pointer;
+    }
+    .hamburger svg { width: 17px; height: 17px; }
 
-        .logo-text {
-            font-weight: 700;
-            font-size: 18px;
-            color: var(--text-main);
-        }
+    /* ---------------- MAIN CONTAINER ---------------- */
+    .main {
+      flex: 1; min-width: 0;
+      background: var(--main-bg); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--card-border); border-radius: var(--radius-lg);
+      padding: 24px; box-shadow: var(--shadow-sm);
+    }
 
-        .nav-items {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+    .topbar { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+    .topbar h1 { font-size: 22px; margin: 0; font-weight: 700; letter-spacing: -0.02em; display: inline; }
+    .topbar p { margin: 4px 0 0; color: var(--text-2); font-size: 13px; }
+    .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .title-badge {
+      display: inline-block; margin-left: 10px; vertical-align: middle;
+      background: var(--accent); color: #fff; padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600;
+    }
 
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 500;
-            color: #4a4a4c;
-            transition: all 0.15s ease-in-out;
-            cursor: pointer;
-        }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500;
+      border-radius: var(--radius-sm); padding: 7px 14px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--card-bg); color: var(--text-1);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all .15s ease;
+    }
+    .btn svg { width: 14px; height: 14px; }
+    .btn:hover { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.15); }
+    html[data-theme="dark"] .btn:hover { background: rgba(255,255,255,0.08); }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-primary:hover { background: #3085e0; }
+    .btn-danger { background: var(--bad); color: #fff; border-color: var(--bad); }
+    .btn-danger:hover { background: #e0291f; }
+    .btn-icon { width: 34px; height: 34px; padding: 0; justify-content: center; }
 
-        .nav-item i {
-            font-size: 15px;
-            width: 20px;
-            text-align: center;
-            color: var(--apple-blue);
-        }
+    /* ---------------- STAT GRID ---------------- */
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .stat-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 14px; box-shadow: var(--shadow-sm);
+    }
+    .stat-top { display: flex; align-items: center; justify-content: flex-end; margin-bottom: 6px; min-height: 10px; }
+    .stat-value { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+    .stat-value small { font-size: 12px; font-weight: 500; color: var(--text-2); }
+    .stat-label { font-size: 12px; color: var(--text-2); margin-top: 3px; }
+    .stat-delta { font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 100px; background: rgba(52,199,89,0.12); color: var(--good); }
 
-        .nav-item.active {
-            background: rgba(0, 122, 255, 0.12);
-            color: var(--apple-blue);
-            font-weight: 600;
-        }
+    /* ---------------- CARD ---------------- */
+    .card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-sm); margin-bottom: 16px;
+    }
+    .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .card-head .ic { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+    .card-head .ic svg { width: 14px; height: 14px; }
+    .card-head h3 { font-size: 14px; margin: 0; font-weight: 600; }
 
-        .nav-item:not(.active):hover {
-            background: rgba(0, 0, 0, 0.04);
-            color: var(--text-main);
-        }
+    /* Filter bar — macOS toolbar style */
+    .filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .search-field {
+      position: relative; flex: 1 1 260px; min-width: 200px;
+    }
+    .search-field svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text-3); pointer-events: none; }
+    .search-field input {
+      width: 100%; font-family: inherit; font-size: 13px; color: var(--text-1);
+      background: rgba(0,0,0,0.045); border: 1px solid transparent; border-radius: 20px;
+      padding: 8px 14px 8px 32px; outline: none; transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+    html[data-theme="dark"] .search-field input { background: rgba(255,255,255,0.06); }
+    .search-field input::placeholder { color: var(--text-3); }
+    .search-field input:focus { background: var(--card-bg); border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 
-        .bottom-links {
-            margin-top: auto;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding-top: 16px;
-        }
+    .filter-toggle {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: rgba(0,0,0,0.045); border: 1px solid transparent; border-radius: 20px;
+      padding: 7px 14px 7px 10px; cursor: pointer; user-select: none; transition: background .15s ease;
+    }
+    html[data-theme="dark"] .filter-toggle { background: rgba(255,255,255,0.06); }
+    .filter-toggle:hover { background: rgba(0,0,0,0.07); }
+    html[data-theme="dark"] .filter-toggle:hover { background: rgba(255,255,255,0.1); }
+    .filter-toggle span { font-size: 12.5px; color: var(--text-1); font-weight: 500; white-space: nowrap; }
 
-        /* ========= MAIN CANVAS ========= */
-        .main-content {
-            flex: 1;
-            padding: 32px 40px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
+    .form-checkbox {
+      appearance: none; -webkit-appearance: none;
+      width: 20px; height: 20px; flex-shrink: 0;
+      border-radius: 6px; border: 1.5px solid var(--text-3);
+      background: rgba(0,0,0,0.03);
+      cursor: pointer; position: relative;
+      transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+    html[data-theme="dark"] .form-checkbox { background: rgba(255,255,255,0.06); }
+    .form-checkbox:hover { border-color: var(--accent); }
+    .form-checkbox:checked {
+      background: var(--accent); border-color: var(--accent);
+    }
+    .form-checkbox:checked::after {
+      content: ""; position: absolute; left: 6px; top: 2px;
+      width: 5px; height: 10px;
+      border: solid #fff; border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    .form-checkbox:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
 
-        /* Header Style */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-        }
+    .filter-actions { display: flex; gap: 8px; margin-left: auto; }
 
-        .page-title h1 {
-            font-size: 34px;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: -0.03em;
-        }
+    /* ---------------- TABLE ---------------- */
+    .table-card { padding: 18px 0; }
+    .table-card .card-head { padding: 0 18px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th { color: var(--text-2); font-weight: 600; font-size: 11px; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    th:first-child, td:first-child { padding-left: 18px; }
+    th:last-child, td:last-child { padding-right: 18px; }
+    td { padding: 10px; border-bottom: 1px solid var(--border); color: var(--text-1); white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(0,0,0,0.02); }
+    html[data-theme="dark"] tr:hover td { background: rgba(255,255,255,0.02); }
 
-        .page-title p {
-            font-size: 15px;
-            color: var(--text-sub);
-            margin-top: 2px;
-        }
+    .pill { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 12px; display: inline-block; }
+    .pill-active { background: rgba(52, 199, 89, 0.15); color: var(--good); }
+    .pill-out { background: rgba(255, 59, 48, 0.15); color: var(--bad); }
+    .pill-pct { background: var(--accent-soft); color: var(--accent); }
+    .pill-muted { background: rgba(0,0,0,0.04); color: var(--text-1); font-weight: 600; border-radius: 20px; padding: 4px 10px; }
+    html[data-theme="dark"] .pill-muted { background: rgba(255,255,255,0.06); }
 
-        .mac-search {
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-            padding: 8px 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid var(--mac-border);
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
-        }
+    .row-teacher { display: flex; align-items: center; gap: 10px; }
+    .row-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-        .mac-search input {
-            background: transparent;
-            border: none;
-            outline: none;
-            font-size: 14px;
-            width: 200px;
-            color: var(--text-main);
-        }
+    .action-btns { display: flex; gap: 4px; }
+    .icon-btn { width: 26px; height: 26px; border-radius: 6px; border: none; background: transparent; color: var(--text-2); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .icon-btn svg { width: 12px; height: 12px; }
+    .icon-btn:hover { background: var(--border); color: var(--text-1); }
+    .icon-btn.del:hover { background: rgba(255,59,48,0.15); color: var(--bad); }
 
-        .mac-search i {
-            color: var(--text-sub);
-            font-size: 14px;
-        }
+    /* ---------------- MODALS ---------------- */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.3);
+      display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+      padding: 16px; overflow-y: auto;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-card {
+      background: rgba(255, 255, 255, 0.94); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); width: 100%; max-width: 420px; padding: 20px;
+      box-shadow: var(--shadow-md); animation: popIn .2s ease-out; margin: auto;
+      backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+    }
+    html[data-theme="dark"] .modal-card { background: rgba(45, 45, 45, 0.92); }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        /* ========= BENTO GRID LAYOUT ========= */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-        }
+    .modal-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+    .modal-card h3 { font-size: 15px; margin: 0; font-weight: 700; }
+    .modal-sub { font-size: 11.5px; color: var(--text-2); margin: 3px 0 0; }
+    .modal-close { width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(0,0,0,0.05); color: var(--text-2); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    html[data-theme="dark"] .modal-close { background: rgba(255,255,255,0.08); }
+    .modal-close:hover { background: var(--bad); color: #fff; }
+    .modal-close svg { width: 13px; height: 13px; }
 
-        .bento-box {
-            background: var(--mac-card-bg);
-            border: 1px solid var(--mac-border);
-            border-radius: 18px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
-            backdrop-filter: blur(10px);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    .field-mb { margin-bottom: 12px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label { font-size: 11px; font-weight: 600; color: var(--text-2); }
+    .field input {
+      width: 100%; font-family: inherit; font-size: 13px; color: var(--text-1);
+      background: rgba(0,0,0,0.045); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; outline: none; transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    html[data-theme="dark"] .field input { background: rgba(255,255,255,0.06); }
+    .field input::placeholder { color: var(--text-3); }
+    .field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); background: var(--card-bg); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-grid .field, .field-mb { margin-bottom: 0; }
+    .modal-form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+    .toggle-box { background: rgba(0,0,0,0.03); border-radius: var(--radius-sm); padding: 0px 12px; margin-top: 10px; }
+    html[data-theme="dark"] .toggle-box { background: rgba(255,255,255,0.04); }
+    .switch-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding-top: 9px; cursor: pointer; user-select: none;
+    }
+    .switch-row span { font-size: 13px; color: var(--text-1); font-weight: 500; }
 
-        .bento-box:hover {
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
-        }
+    .modal-warn-icon {
+      width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 59, 48, 0.12);
+      color: var(--bad); display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .modal-warn-icon svg { width: 22px; height: 22px; }
+    .modal-card.confirm-card { text-align: center; }
+    .modal-body-text { font-size: 13px; color: var(--text-2); margin: 0 0 4px; line-height: 1.5; }
+    .modal-body-text b { color: var(--text-1); }
 
-        /* Stat Grid Elements */
-        .stat-card { grid-column: span 1; }
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 20px; right: 20px; background: var(--card-bg); border: 1px solid var(--border);
+      color: var(--text-1); padding: 10px 16px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500;
+      box-shadow: var(--shadow-md); backdrop-filter: var(--blur); opacity: 0; transform: translateY(10px); transition: all .2s ease;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
 
-        .stat-header {
-            color: var(--text-sub);
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 10px;
-        }
+    /* ---------------- RESPONSIVE ---------------- */
+    @media (max-width: 1180px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .filter-toggle { justify-content: space-between; }
+      .filter-actions { margin-left: 0; }
+      .filter-actions .btn { flex: 1; justify-content: center; }
+    }
+    @media (max-width: 900px) {
+      .app { padding: 10px; gap: 0; }
+      .hamburger { display: flex; }
+      .sidebar {
+        position: fixed; top: 10px; left: 10px; bottom: 10px; z-index: 40;
+        transform: translateX(-120%); box-shadow: var(--shadow-md); max-height: calc(100vh - 20px);
+        width: 260px;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main { padding: 18px 14px; padding-top: 60px; width: 100%; }
+      .topbar h1 { font-size: 18px; }
+    }
+    @media (max-width: 520px) {
+      .topbar { flex-direction: column; align-items: stretch; }
+      .topbar-actions .btn { flex: 1; justify-content: center; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .modal-card { padding: 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
 
-        .stat-number {
-            font-size: 42px;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1;
-        }
-
-        .stat-footer {
-            font-size: 13px;
-            margin-top: 10px;
-            font-weight: 600;
-            color: var(--apple-green);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Chart Canvas Area */
-        .chart-box {
-            grid-column: span 2;
-            grid-row: span 2;
-        }
-
-        .box-title {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: var(--text-main);
-        }
-
-        .time-badge {
-            font-size: 12px;
-            background: rgba(0, 0, 0, 0.04);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 600;
-            color: var(--text-sub);
-        }
-
-        /* List Layout Elements */
-        .activity-box {
-            grid-column: span 2;
-            grid-row: span 2;
-        }
-
-        .activity-list {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-        }
-
-        .activity-item:last-child { border: none; }
-
-        .item-details {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .item-icon-wrap {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .item-text h4 {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .item-text p {
-            font-size: 13px;
-            color: var(--text-sub);
-            margin-top: 1px;
-        }
-
-        .item-status {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-sub);
-            background: rgba(0,0,0,0.04);
-            padding: 3px 8px;
-            border-radius: 6px;
-        }
-
-        /* Operators Panel */
-        .team-box { grid-column: span 4; }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 14px;
-            margin-top: 6px;
-        }
-
-        .team-card {
-            background: rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(0,0,0,0.02);
-            border-radius: 12px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .member-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .member-avatar {
-            width: 36px;
-            height: 36px;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 700;
-            border: 1px solid var(--mac-border);
-            color: var(--text-main);
-        }
-
-        .member-name h4 {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .member-name p {
-            font-size: 12px;
-            color: var(--text-sub);
-        }
-
-        .member-tag {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--apple-blue);
-            background: #ffffff;
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        footer {
-            margin-top: auto;
-            padding-top: 24px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-sub);
-        }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 1150px) {
-            .bento-grid { grid-template-columns: repeat(2, 1fr); }
-            .chart-box, .activity-box, .team-box { grid-column: span 2; }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .bento-grid { grid-template-columns: 1fr; }
-            .stat-card, .chart-box, .activity-box, .team-box { grid-column: span 1; }
-            .mac-app-window { height: 95vh; }
-        }
-    </style>
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+  </style>
 </head>
 <body>
 
-<div class="mac-app-window">
-    
-    <!-- macOS Sidebar Pane -->
-    <div class="sidebar">
-        <!-- Traffic Control Buttons -->
-        <div class="traffic-lights">
-            <span class="close"></span>
-            <span class="minimize"></span>
-            <span class="zoom"></span>
-        </div>
-        
-        <div class="logo-area">
-            <i class="fa-solid fa-compass logo-icon"></i>
-            <span class="logo-text">Nexus Analytics</span>
-        </div>
-        
-        <div class="nav-items">
-            <div class="nav-item active">
-                <i class="fa-solid fa-house"></i>
-                <span>Overview</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Metrics</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-solid fa-shield-halved"></i>
-                <span>Security</span>
-            </div>
-            <div class="nav-item">
-                <i class="fa-solid fa-sliders"></i>
-                <span>Settings</span>
-            </div>
-        </div>
-        
-        <div class="bottom-links">
-            <div class="nav-item">
-                <i class="fa-solid fa-user-gear" style="color: var(--text-sub);"></i>
-                <span style="color: var(--text-sub);">Developer Desk</span>
-            </div>
-        </div>
+<!-- HAMBURGER -->
+<button class="hamburger" id="hamburger" aria-label="Menyuni ochish">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="https://confidence.uz/media/logo_small.png" alt="Confidence logo">
+      </div>
+      Confidence
     </div>
 
-    <!-- Main Workspace Canvas -->
-    <div class="main-content">
-        <!-- Dashboard Sub-Header -->
-        <div class="top-bar">
-            <div class="page-title">
-                <h1>Overview</h1>
-                <p>Environment health metrics are fully operational</p>
-            </div>
-            <div class="mac-search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search components...">
-            </div>
+    <div class="profile-card">
+      <div class="profile-top">
+        <div class="avatar">G</div>
+        <div class="theme-pill">
+          <button id="sunBtn" class="active"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg></button>
+          <button id="moonBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg></button>
         </div>
-
-        <!-- Bento Layout Structure -->
-        <div class="bento-grid">
-            
-            <!-- Bento Mini Boxes -->
-            <div class="bento-box stat-card">
-                <div class="stat-header">Revenue</div>
-                <div class="stat-number">$48.2k</div>
-                <div class="stat-footer"><i class="fa-solid fa-chevron-up"></i> 12.4%</div>
-            </div>
-
-            <div class="bento-box stat-card">
-                <div class="stat-header">Active Sessions</div>
-                <div class="stat-number">2,847</div>
-                <div class="stat-footer"><i class="fa-solid fa-chevron-up"></i> 8.4%</div>
-            </div>
-
-            <div class="bento-box stat-card">
-                <div class="stat-header">Core Latency</div>
-                <div class="stat-number">24ms</div>
-                <div class="stat-footer" style="color: var(--apple-red);"><i class="fa-solid fa-chevron-down"></i> 1.2%</div>
-            </div>
-
-            <div class="bento-box stat-card">
-                <div class="stat-header">Cluster Load</div>
-                <div class="stat-number">14%</div>
-                <div class="stat-footer" style="color: var(--apple-orange);"><i class="fa-solid fa-circle-check"></i> Stable</div>
-            </div>
-
-            <!-- Bento Premium Graph Box -->
-            <div class="bento-box chart-box">
-                <div class="box-title">
-                    <span>Performance Dynamics</span>
-                    <span class="time-badge">Realtime Stream</span>
-                </div>
-                <div style="height: 200px; width:100%;">
-                    <canvas id="macOSPremiumChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Bento Events Logs Box -->
-            <div class="bento-box activity-box">
-                <div class="box-title">System Activity Logs</div>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="item-details">
-                            <div class="item-icon-wrap" style="color: var(--apple-blue); background: rgba(0, 122, 255, 0.08);"><i class="fa-solid fa-server"></i></div>
-                            <div class="item-text">
-                                <h4>Main Environment Deployed</h4>
-                                <p>Build sequence v4.0.2 successful</p>
-                            </div>
-                        </div>
-                        <div class="item-status">12m ago</div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="item-details">
-                            <div class="item-icon-wrap" style="color: var(--apple-orange); background: rgba(255, 149, 0, 0.08);"><i class="fa-solid fa-key"></i></div>
-                            <div class="item-text">
-                                <h4>API Certificates Rotated</h4>
-                                <p>System encryption security keys refreshed</p>
-                            </div>
-                        </div>
-                        <div class="item-status">3h ago</div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="item-details">
-                            <div class="item-icon-wrap" style="color: var(--apple-green); background: rgba(52, 199, 73, 0.08);"><i class="fa-solid fa-shield"></i></div>
-                            <div class="item-text">
-                                <h4>Firewall Check Passed</h4>
-                                <p>Zero structural security leaks mapped</p>
-                            </div>
-                        </div>
-                        <div class="item-status">1d ago</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bento Full Width Table Group -->
-            <div class="bento-box team-box">
-                <div class="box-title" style="margin-bottom: 14px;">Active Node Administrators</div>
-                <div class="team-grid">
-                    <div class="team-card">
-                        <div class="member-info">
-                            <div class="member-avatar">JD</div>
-                            <div class="member-name">
-                                <h4>Jessica Dan</h4>
-                                <p>Infrastructure Manager</p>
-                            </div>
-                        </div>
-                        <div class="member-tag">Active</div>
-                    </div>
-                    <div class="team-card">
-                        <div class="member-info">
-                            <div class="member-avatar">MC</div>
-                            <div class="member-name">
-                                <h4>Marcus Chen</h4>
-                                <p>Security Engineer</p>
-                            </div>
-                        </div>
-                        <div class="member-tag" style="color: var(--apple-orange);">On Call</div>
-                    </div>
-                    <div class="team-card">
-                        <div class="member-info">
-                            <div class="member-avatar">SW</div>
-                            <div class="member-name">
-                                <h4>Sophia Williams</h4>
-                                <p>UI Systems Architect</p>
-                            </div>
-                        </div>
-                        <div class="member-tag" style="color: var(--text-sub);">Standby</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <footer>
-            Mac Core Analytics Engine Engine Framework v2.6 • Designed in Alignment with Apple Human Interface
-        </footer>
+      </div>
+      <p class="profile-date">ESKI SHAHAR FILIALI</p>
+      <h2 class="profile-greet">George</h2>
+      <p class="profile-role">Administrator</p>
     </div>
+
+    <nav class="nav">
+      <ul id="navList">
+        <li data-name="Boshqaruv paneli"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Boshqaruv paneli</span></li>
+        <li data-name="O'quvchilar"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3Z"/><path d="M8 11c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Z"/><path d="M8 13c-2.67 0-8 1.34-8 4v2h11"/><path d="M14.5 13.1c2.9.4 6.5 1.7 6.5 3.9v2h-8"/></svg>O'quvchilar</span><span class="nav-badge">304</span></li>
+        <li class="active" data-name="O'qituvchilar"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.1 2.69 2 6 2s6-.9 6-2v-5"/></svg>O'qituvchilar</span><span class="nav-badge">27</span></li>
+        <li data-name="Kurslar"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>Kurslar</span></li>
+        <li data-name="Kursga a'zoliklar"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Kursga a'zoliklar</span></li>
+        <li data-name="To'lovlar"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 16h4"/></svg>To'lovlar</span></li>
+        <li data-name="Imtihon"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Imtihon</span><span class="nav-badge">7</span></li>
+        <li data-name="Xodimlar"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>Xodimlar</span></li>
+        <li data-name="Xodimlar oyliklari"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Xodimlar oyliklari</span></li>
+        <li data-name="Registrator"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"/></svg>Registrator</span></li>
+        <li data-name="Oylik avans"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Oylik avans</span></li>
+        <li data-name="Oyliklar"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2.5"/><circle cx="12" cy="13" r="3"/></svg>Oyliklar</span></li>
+        <li data-name="Karta orqali oyliklar"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg>Karta orqali oyliklar</span></li>
+        <li class="logout" data-name="Avtorizatsiya"><span class="nav-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Avtorizatsiya</span></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1>O'qituvchilar<span class="title-badge" id="totalBadge">14 ta o'qituvchi</span></h1>
+        <p>Eski shahar filiali — o'qituvchilar ro'yxati va boshqaruvi</p>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-icon" id="refreshBtn" aria-label="Yangilash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.6-6.36L21 8"/><path d="M21 3v5h-5"/></svg>
+        </button>
+        <button class="btn btn-primary" data-modal-open="modal-new">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Yangi qo'shish
+        </button>
+      </div>
+    </div>
+
+    <!-- STAT GRID -->
+    <section class="stat-grid" id="statGrid"></section>
+
+    <!-- FILTER CARD -->
+    <div class="card">
+      <div class="card-head">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></div>
+        <h3>Qidiruv va filter</h3>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('Qidiruv natijalari yangilandi ✓');">
+        <div class="filter-bar">
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" placeholder="Ism yoki familiya bo'yicha qidirish">
+          </div>
+          <label class="filter-toggle">
+            <input type="checkbox" class="form-checkbox">
+            <span>Chiqib ketganlar</span>
+          </label>
+          <div class="filter-actions">
+            <button class="btn" type="reset">Bekor qilish</button>
+            <button class="btn btn-primary" type="submit">Qidirish</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- TABLE CARD -->
+    <div class="card table-card">
+      <div class="card-head">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.1 2.69 2 6 2s6-.9 6-2v-5"/></svg></div>
+        <h3>O'qituvchilar ro'yxati</h3>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>O'qituvchi</th>
+              <th>Username</th>
+              <th>Telefon</th>
+              <th>Fan / Kurs</th>
+              <th>Faol guruhlar</th>
+              <th>Oylik foizi</th>
+              <th>Holati</th>
+              <th>Amallar</th>
+            </tr>
+          </thead>
+          <tbody id="teachersBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
 </div>
 
+<!-- MODAL: Yangi o'qituvchi qo'shish -->
+<div class="modal-backdrop" id="modal-new">
+  <div class="modal-card">
+    <div class="modal-top">
+      <div>
+        <h3>Yangi o'qituvchi qo'shish</h3>
+        <p class="modal-sub">Login va shaxsiy ma'lumotlarni kiriting</p>
+      </div>
+      <button class="modal-close" data-modal-close aria-label="Yopish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form onsubmit="event.preventDefault(); closeModal('modal-new'); showToast('O\'qituvchi qo\'shildi ✓'); this.reset();">
+      <div class="form-grid">
+        <div class="field"><label>Username</label><input type="text" placeholder="username" required></div>
+        <div class="field"><label>Parol</label><input type="text" placeholder="parol" required></div>
+      </div>
+      <div class="field field-mb" style="margin-top:12px;"><label>Telefon raqami</label><input type="text" placeholder="+998 90 123-45-67"></div>
+      <div class="form-grid" style="margin-top:12px;">
+        <div class="field"><label>Ism</label><input type="text" placeholder="Ism"></div>
+        <div class="field"><label>Familiya</label><input type="text" placeholder="Familiya"></div>
+      </div>
+      <div class="modal-form-actions">
+        <button class="btn" type="button" data-modal-close>Bekor qilish</button>
+        <button class="btn btn-primary" type="submit">Qo'shish</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- edit / delete modals injected by JS -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
-    (function() {
-        const ctx = document.getElementById('macOSPremiumChart').getContext('2d');
-        
-        // Creating smooth native gradient under the main line
-        const gradientFill = ctx.createLinearGradient(0, 0, 0, 200);
-        gradientFill.addColorStop(0, 'rgba(0, 122, 255, 0.16)');
-        gradientFill.addColorStop(1, 'rgba(0, 122, 255, 0.0)');
+  (function() {
+    // ---------------- THEME ----------------
+    const root = document.documentElement;
+    const moonBtn = document.getElementById('moonBtn');
+    const sunBtn = document.getElementById('sunBtn');
+    moonBtn.addEventListener('click', ()=>{ root.setAttribute('data-theme','dark'); moonBtn.classList.add('active'); sunBtn.classList.remove('active'); });
+    sunBtn.addEventListener('click', ()=>{ root.setAttribute('data-theme','light'); sunBtn.classList.add('active'); moonBtn.classList.remove('active'); });
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    data: [410, 490, 440, 610, 530, 720, 810],
-                    borderColor: '#007aff', 
-                    borderWidth: 2.5, 
-                    pointRadius: 0, 
-                    pointHoverRadius: 6,
-                    pointHoverBackgroundColor: '#007aff',
-                    pointHoverBorderColor: '#ffffff',
-                    pointHoverBorderWidth: 2,
-                    tension: 0.36, 
-                    fill: true,
-                    backgroundColor: gradientFill
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: '#1d1d1f', 
-                        titleColor: '#ffffff',
-                        bodyColor: '#ffffff',
-                        padding: 10,
-                        cornerRadius: 8,
-                        displayColors: false,
-                        font: { family: 'DM Sans', size: 13 }
-                    }
-                },
-                scales: {
-                    y: {
-                        grid: { color: 'rgba(0, 0, 0, 0.03)' },
-                        ticks: { color: '#6e6e73', font: { family: 'DM Sans', size: 11 } }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#6e6e73', font: { family: 'DM Sans', size: 11 } }
-                    }
-                }
-            }
-        });
+    // ---------------- TOAST ----------------
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    window.showToast = function(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 2200);
+    };
 
-        // Sidebar active link visual toggle logic
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', function() {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    })();
+    // ---------------- SIDEBAR / MOBILE ----------------
+    const sidebar = document.getElementById('sidebar');
+    const hamburger = document.getElementById('hamburger');
+    hamburger.addEventListener('click', ()=> sidebar.classList.toggle('open'));
+    document.addEventListener('click', (e)=>{
+      if(window.innerWidth <= 900 && sidebar.classList.contains('open')){
+        if(!sidebar.contains(e.target) && !hamburger.contains(e.target)) sidebar.classList.remove('open');
+      }
+    });
+
+    // ---------------- NAV ----------------
+    document.querySelectorAll('#navList li').forEach(li=>{
+      li.addEventListener('click', ()=>{
+        document.querySelectorAll('#navList li').forEach(x=>x.classList.remove('active'));
+        li.classList.add('active');
+        if(window.innerWidth <= 900) sidebar.classList.remove('open');
+      });
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', ()=> showToast('Ro\'yxat yangilandi ✓'));
+
+    // ---------------- MODAL OPEN/CLOSE ----------------
+    window.openModal = function(id){ document.getElementById(id).classList.add('open'); };
+    window.closeModal = function(id){ document.getElementById(id).classList.remove('open'); };
+    document.addEventListener('click', (e)=>{
+      const openEl = e.target.closest('[data-modal-open]');
+      if(openEl){ openModal(openEl.dataset.modalOpen); return; }
+      const closeEl = e.target.closest('[data-modal-close]');
+      if(closeEl){ closeModal(closeEl.closest('.modal-backdrop').id); return; }
+    });
+    document.querySelectorAll('.modal-backdrop').forEach(bd=>
+      bd.addEventListener('click', e=>{ if(e.target===bd) bd.classList.remove('open'); }));
+
+    // ---------------- STAT CARDS ----------------
+    const stats = [
+      { label:"Faol o'qituvchilar", value:'14', suffix:'/27' },
+      { label:"Faol guruhlar (dars)", value:'32', suffix:'/134' },
+      { label:"O'rtacha oylik foiz", value:'38', suffix:'%', delta:'+2%' },
+      { label:"Chiqib ketganlar", value:'1', suffix:'/15' },
+    ];
+    const statGrid = document.getElementById('statGrid');
+    stats.forEach(s=>{
+      const card = document.createElement('div');
+      card.className = 'stat-card';
+      card.innerHTML = `
+        <div class="stat-top">
+          ${s.delta ? `<span class="stat-delta">${s.delta}</span>` : ''}
+        </div>
+        <div class="stat-value">${s.value}<small>${s.suffix}</small></div>
+        <div class="stat-label">${s.label}</div>`;
+      statGrid.appendChild(card);
+    });
+
+    // ---------------- TEACHERS DATA ----------------
+    const teachers = [
+      { username:'sardor.yoldashev', name:'Sardor Yoldashev', phone:'+998 90 111-22-33', course:'IELTS 7.0+', groups:4, pct:42, left:false },
+      { username:'kamola.ismoilova', name:'Kamola Ismoilova', phone:'+998 91 222-33-44', course:'Ingliz tili A2/B1', groups:3, pct:35, left:false },
+      { username:'farrukh.abdullayev', name:'Farrukh Abdullayev', phone:'+998 93 333-44-55', course:'Matematika (abituriyent)', groups:5, pct:40, left:false },
+      { username:'nilufar.aliyeva', name:'Nilufar Aliyeva', phone:'+998 94 444-55-66', course:'Frontend dasturlash', groups:2, pct:45, left:false },
+      { username:'sherzod.ergashev', name:'Sherzod Ergashev', phone:'+998 95 555-66-77', course:'Rus tili', groups:3, pct:33, left:false },
+      { username:'ozoda.nematova', name:'Ozoda Nematova', phone:'+998 97 666-77-88', course:'Kompyuter savodxonligi', groups:2, pct:30, left:false },
+      { username:'bekzod.rahimov', name:'Bekzod Rahimov', phone:'+998 98 777-88-99', course:'SAT', groups:1, pct:44, left:false },
+      { username:'madina.yusupova', name:'Madina Yusupova', phone:'+998 90 888-99-00', course:'Fizika', groups:2, pct:36, left:false },
+      { username:'javlon.toshev', name:'Javlon Toshev', phone:'+998 91 999-00-11', course:'IELTS 6.5+', groups:3, pct:41, left:false },
+      { username:'dilnoza.karimova', name:'Dilnoza Karimova', phone:'+998 93 000-11-22', course:'Ingliz tili B1/B2', groups:2, pct:34, left:false },
+      { username:'aziz.qodirov', name:'Aziz Qodirov', phone:'+998 94 121-23-34', course:'Matematika (abituriyent)', groups:2, pct:37, left:false },
+      { username:'shoxrux.mirzayev', name:'Shoxrux Mirzayev', phone:'+998 95 232-34-45', course:'Frontend dasturlash', groups:2, pct:43, left:false },
+      { username:'zarina.xolmatova', name:'Zarina Xolmatova', phone:'+998 97 343-45-56', course:'Kompyuter savodxonligi', groups:1, pct:32, left:false },
+      { username:'gulnoza.sattorova', name:'Gulnoza Sattorova', phone:'+998 98 454-56-67', course:'Rus tili (boshlang\'ich)', groups:0, pct:28, left:true },
+    ];
+
+    function initials(name){ return name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+
+    const tbody = document.getElementById('teachersBody');
+    const modalsRoot = document.body;
+
+    teachers.forEach((t, idx)=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+          <div class="row-teacher">
+            <span class="row-avatar">${initials(t.name)}</span>
+            <b>${t.name}</b>
+          </div>
+        </td>
+        <td><span class="pill-muted">${t.username}</span></td>
+        <td>${t.phone}</td>
+        <td>${t.course}</td>
+        <td>${t.groups}</td>
+        <td><span class="pill pill-pct">${t.pct}%</span></td>
+        <td>${t.left ? `<span class="pill pill-out">Chiqib ketgan</span>` : `<span class="pill pill-active">Faol</span>`}</td>
+        <td>
+          <div class="action-btns">
+            <button class="icon-btn" data-modal-open="modal-edit-${idx}" aria-label="Tahrirlash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
+            <button class="icon-btn del" data-modal-open="modal-delete-${idx}" aria-label="O'chirish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+          </div>
+        </td>`;
+      tbody.appendChild(tr);
+
+      // edit modal
+      const editModal = document.createElement('div');
+      editModal.className = 'modal-backdrop';
+      editModal.id = `modal-edit-${idx}`;
+      editModal.innerHTML = `
+        <div class="modal-card">
+          <div class="modal-top">
+            <div><h3>O'qituvchini tahrirlash</h3><p class="modal-sub">${t.name} — ${t.course}</p></div>
+            <button class="modal-close" data-modal-close aria-label="Yopish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <form onsubmit="event.preventDefault(); closeModal('modal-edit-${idx}'); showToast('Saqlandi ✓');">
+            <div class="form-grid">
+              <div class="field"><label>Username</label><input type="text" value="${t.username}" required></div>
+              <div class="field"><label>Telefon raqami</label><input type="text" value="${t.phone}"></div>
+            </div>
+            <div class="form-grid" style="margin-top:12px;">
+              <div class="field"><label>Ismi</label><input type="text" value="${t.name.split(' ')[0]}"></div>
+              <div class="field"><label>Familiyasi</label><input type="text" value="${t.name.split(' ').slice(1).join(' ')}"></div>
+            </div>
+            <div class="field field-mb" style="margin-top:12px;"><label>Oylik uchun foiz</label><input type="text" value="${t.pct}"></div>
+            <div class="toggle-box">
+              <label class="switch-row" style="padding-top:9px;padding-bottom:9px;"><span>Chiqib ketganligi</span><input type="checkbox" class="form-checkbox" ${t.left?'checked':''}></label>
+            </div>
+            <div class="toggle-box">
+              <label class="switch-row"><span>Yangi parol o'rnatish</span><input type="checkbox" class="form-checkbox"></label>
+              <input type="text" placeholder="Yangi parolni kiriting" style="width:100%;font-family:inherit;font-size:13px;color:var(--text-1);background:rgba(0,0,0,0.03);border:1px solid var(--border);border-radius:6px;padding:7px 10px;margin-top:8px;margin-bottom:12px;">
+            </div>
+            <div class="modal-form-actions">
+              <button class="btn" type="button" data-modal-close>Bekor qilish</button>
+              <button class="btn btn-primary" type="submit">Saqlash</button>
+            </div>
+          </form>
+        </div>`;
+      modalsRoot.appendChild(editModal);
+
+      // delete modal
+      const delModal = document.createElement('div');
+      delModal.className = 'modal-backdrop';
+      delModal.id = `modal-delete-${idx}`;
+      delModal.innerHTML = `
+        <div class="modal-card confirm-card">
+          <div class="modal-warn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></div>
+          <h3>O'chirishni tasdiqlash</h3>
+          <p class="modal-body-text" style="margin:8px 0 4px;">Rostan ham <b>${t.name}</b> ni ro'yxatdan o'chirib yubormoqchimisiz? Bu amalni ortga qaytarib bo'lmaydi.</p>
+          <div class="modal-form-actions" style="justify-content:center;">
+            <button class="btn" type="button" data-modal-close>Yo'q</button>
+            <button class="btn btn-danger" type="button" onclick="closeModal('modal-delete-${idx}'); showToast('O\\'qituvchi o\\'chirildi ✓');">Ha, o'chirish</button>
+          </div>
+        </div>`;
+      modalsRoot.appendChild(delModal);
+    });
+
+    document.querySelectorAll('.modal-backdrop').forEach(bd=>
+      bd.addEventListener('click', e=>{ if(e.target===bd) bd.classList.remove('open'); }));
+
+  })();
 </script>
 </body>
 </html>

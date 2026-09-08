@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Computer-Delivered Reading Practice Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-main: #eef1f5;
+  --header-bg: #1c3664;
+  --panel-bg: #ffffff;
+  --border-color: #bdc3c7;
+  --text-color: #2c3e50;
+  --accent-blue: #0056b3;
+  --selected-blue: #d0e1f9;
+  --dock-bg: #dce1e8;
+  --btn-bg: #ffffff;
+  --btn-hover: #e2e8f0;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: 'Arial', sans-serif; background: var(--bg-main); color: var(--text-color); }
+
+body { display: flex; flex-direction: column; }
+
+/* ══ HEADER ══ */
+header {
+  height: 50px;
+  background: var(--header-bg);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.part-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.instructions-head {
+  font-size: 0.9rem;
+  color: #d0e1f9;
+}
+
+.timer {
+  font-size: 1rem;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+/* ══ MAIN SPLIT PANE ══ */
+main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  padding: 10px;
+  gap: 10px;
+}
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Left Panel: Passage */
+.passage-panel {
+  width: 50%;
+  flex-shrink: 0;
+}
+
+.passage-panel-inner {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 25px;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.passage-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #111;
+}
+
+.passage-body p {
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.passage-body h3 {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+/* Right Panel: Questions */
+.questions-panel {
+  flex: 1;
+}
+
+.questions-panel-inner {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* Section visibility */
+.test-part-section {
+  display: none;
+}
+
+.test-part-section.active {
+  display: block;
+}
+
+/* Question Sections */
+.q-block {
+  margin-bottom: 25px;
+  background: #f9fafb;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.q-instruction {
+  font-weight: bold;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  color: #333;
+  background: #eef3fa;
+  padding: 10px;
+  border-left: 4px solid var(--accent-blue);
+  border-radius: 2px;
+}
+
+.q-item {
+  margin-bottom: 15px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.q-item:last-child {
+  margin-bottom: 0;
+}
+
+.q-text {
+  font-size: 0.92rem;
+  font-weight: 600;
+  display: flex;
+  gap: 10px;
+  line-height: 1.4;
+}
+
+.q-num {
+  font-weight: bold;
+  min-width: 24px;
+  color: var(--accent-blue);
+}
+
+/* Options / Inputs */
+.options-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 34px;
+}
+
+.opt-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 3px 0;
+}
+
+.opt-label input[type="radio"] {
+  accent-color: var(--accent-blue);
+  cursor: pointer;
+}
+
+.q-input {
+  border: 1px solid var(--border-color);
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  outline: none;
+  width: 140px;
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.q-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 3px rgba(0,86,179,0.3);
+}
+
+.matching-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+  background: #fff;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.matching-box {
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.88rem;
+}
+
+/* ══ FOOTER ══ */
+footer {
+  height: 55px;
+  background: var(--dock-bg);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  flex-shrink: 0;
+}
+
+.part-nav {
+  display: flex;
+  gap: 5px;
+}
+
+.part-btn {
+  background: var(--btn-bg);
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.part-btn:hover {
+  background: var(--btn-hover);
+}
+
+.part-btn.active {
+  background: var(--header-bg);
+  color: #fff;
+  border-color: var(--header-bg);
+}
+
+.q-dock {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  max-width: 55%;
+  padding: 4px;
+}
+
+.q-btn {
+  background: var(--btn-bg);
+  border: 1px solid var(--border-color);
+  min-width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.q-btn:hover {
+  background: var(--btn-hover);
+}
+
+.q-btn.answered {
+  background: #a8d5e2;
+  border-color: #72b2c4;
+}
+
+.q-btn.current {
+  outline: 2px solid var(--accent-blue);
+  font-weight: 900;
+}
+
+.nav-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.nav-arrow {
+  background: var(--btn-bg);
+  border: 1px solid var(--border-color);
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.nav-arrow:hover {
+  background: var(--btn-hover);
+}
+
+/* Scrollbar Style */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="part-title" id="header-part-title">Part 1</div>
+  <div class="instructions-head" id="header-instructions">Read the text below and answer questions 1 – 13</div>
+  <div class="timer" id="timer">60:00</div>
+</header>
+
+<main>
+  <!-- Left Panel: Reading Text (Passages) -->
+  <section class="panel passage-panel">
+    <!-- PASSAGE 1 -->
+    <div class="passage-panel-inner test-part-section active" id="passage-part-1">
+      <h1 class="passage-title">The Life and Work of Marie Curie</h1>
+      <div class="passage-body">
+        <p>Marie Curie is probably the most famous woman scientist who has ever lived. Born Maria Sklodowska in Poland in 1867, she is famous for her work on radioactivity, and was twice a winner of the Nobel Prize. With her husband, Pierre Curie, and Henri Becquerel, she was awarded the 1903 Nobel Prize for Physics, and was then sole winner of the 1911 Nobel Prize for Chemistry. She was the first woman to win a Nobel Prize.</p>
+        <p>From childhood, Marie was remarkable for her prodigious memory, and at the age of 16 won a gold medal on completion of her secondary education. Because her father lost his savings through bad investment, she then had to take work as a teacher. From her earnings she was able to finance her sister Bronia's medical studies in Paris, on the understanding that Bronia would, in turn, later help her to get an education.</p>
+        <p>In 1891 this promise was fulfilled and Marie went to Paris and began to study at the Sorbonne (the University of Paris). She often worked far into the night and lived on little more than bread and butter and tea. She came first in the examination in the physical sciences in 1893, and in 1894 was placed second in the examination in mathematical sciences. It was not until the spring of that year that she was introduced to Pierre Curie.</p>
+        <p>Their marriage in 1895 marked the start of a partnership that was soon to achieve results of world significance. Following Henri Becquerel's discovery in 1896 of a new phenomenon, which Marie later called 'radioactivity', Marie Curie decided to find out if the radioactivity discovered in uranium was to be found in other elements. She discovered that this was true for thorium.</p>
+        <p>Turning her attention to minerals, she found her interest drawn to pitchblende, a mineral whose radioactivity, superior to that of pure uranium, could be explained only by the presence in the ore of small quantities of an unknown substance of very high activity. Pierre Curie joined her in the work that she had undertaken to resolve this problem, and that led to the discovery of the new elements, polonium and radium.</p>
+        <p>On 19 April 1906, Pierre Curie was killed in a street accident. Marie was left to raise her two young daughters and to continue their scientific work. On May 13, 1906, she was appointed to the professorship that had been left vacant on her husband's death, becoming the first woman to teach at the Sorbonne. In 1911 she was awarded the Nobel Prize for Chemistry for isolating radium.</p>
+      </div>
+    </div>
+
+    <!-- PASSAGE 2 -->
+    <div class="passage-panel-inner test-part-section" id="passage-part-2">
+      <h1 class="passage-title">The Development of the Modern Computer</h1>
+      <div class="passage-body">
+        <p><strong>A.</strong> The history of the modern computer is a fascinating journey through centuries of mathematical innovation, engineering triumphs, and technological breakthroughs. Long before electronic computers were developed, humans relied on mechanical devices to assist with calculation. The abacus, used in ancient civilizations, was one of the earliest tools created for arithmetic operations.</p>
+        <p><strong>B.</strong> In the 19th century, Charles Babbage, an English mathematician and mechanical engineer, originated the concept of a programmable computer. Considered the "father of the computer", he conceptualized and invented the first mechanical computer, the Difference Engine, in the early 1820s. Later, he proposed the Analytical Engine, a device that contained an arithmetic logic unit, control flow in the form of conditional branching and loops, and integrated memory.</p>
+        <p><strong>C.</strong> During the first half of the 20th century, many scientific computing needs were met by increasingly sophisticated analog computers. However, these were non-programmable and lacked the versatility of modern digital devices. The transition from analog to digital computing began in the late 1930s. John Atanasoff and Clifford Berry designed the Atanasoff-Berry Computer (ABC) in 1937, which was the first electronic digital computing device.</p>
+        <p><strong>D.</strong> The ENIAC (Electronic Numerical Integrator and Computer) was built during World War II in the United States and completed in 1945. It was the first programmable, electronic, general-purpose digital computer. ENIAC was enormous, weighing over 27 tons and taking up 1,800 square feet. It was capable of calculating complex trajectories for artillery shells, demonstrating the incredible power of electronic computation.</p>
+        <p><strong>E.</strong> The invention of the transistor in 1947 by Bell Labs revolutionized computing. Transistors replaced vacuum tubes, allowing computers to become smaller, faster, more reliable, and more energy-efficient. By the 1970s, the development of microprocessors allowed entire central processing units (CPUs) to fit on a single microchip, laying the groundwork for the personal computer (PC) revolution.</p>
+      </div>
+    </div>
+
+    <!-- PASSAGE 3 -->
+    <div class="passage-panel-inner test-part-section" id="passage-part-3">
+      <h1 class="passage-title">Artificial Intelligence and the Future of Work</h1>
+      <div class="passage-body">
+        <p>Artificial Intelligence (AI) has rapidly transitioned from theoretical science fiction to a dominant force driving modern global industry. Powered by advanced machine learning algorithms and massive computing infrastructure, AI systems are now capable of performing complex analytical tasks, pattern recognition, and creative generation that were once thought to be exclusive domain of human intelligence.</p>
+        <p>Economists and technology analysts hold diverse opinions regarding the impact of automation on the global workforce. Optimists argue that AI will primarily serve as a powerful tool to augment human capabilities rather than replace them outright. According to this perspective, routine and repetitive manual tasks will be automated, freeing human workers to concentrate on higher-level strategic thinking, creative problem-solving, and interpersonal communication.</p>
+        <p>Conversely, skeptics warn that the pace of current technological transformation differs fundamentally from historical industrial revolutions. Previous technological shifts primarily automated physical labor while creating new service sector positions. In contrast, modern generative AI and neural networks directly target cognitive and knowledge-based professions, potentially leading to widespread displacement across legal, administrative, software development, and analytical fields.</p>
+        <p>To successfully navigate this transitional era, educational institutions and corporate training programs must shift focus toward lifelong learning and continuous skill development. Emphasis must be placed on developing uniquely human attributes—such as emotional intelligence, critical thinking, ethical judgment, and complex cross-disciplinary problem solving—that remain difficult for algorithmic architectures to replicate.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right Panel: Questions -->
+  <section class="panel questions-panel">
+    <!-- QUESTIONS FOR PART 1 (Q1 - Q13) -->
+    <div class="questions-panel-inner test-part-section active" id="questions-part-1">
+      
+      <!-- Block 1: True / False / Not Given (1-6) -->
+      <div class="q-block">
+        <div class="q-instruction">
+          <strong>Questions 1 – 6</strong><br>
+          Do the following statements agree with the information given in Reading Passage 1?<br>
+          Select <strong>TRUE</strong> if the statement agrees with the information, <strong>FALSE</strong> if the statement contradicts the information, or <strong>NOT GIVEN</strong> if there is no information on this.
+        </div>
+
+        <div class="q-item" id="q-1">
+          <div class="q-text">
+            <span class="q-num">1</span>
+            <span>Marie Curie's husband was a joint winner of both of Marie's Nobel Prizes.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q1" value="TRUE" onclick="markAnswered(1)"> TRUE</label>
+            <label class="opt-label"><input type="radio" name="q1" value="FALSE" onclick="markAnswered(1)"> FALSE</label>
+            <label class="opt-label"><input type="radio" name="q1" value="NOT GIVEN" onclick="markAnswered(1)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-2">
+          <div class="q-text">
+            <span class="q-num">2</span>
+            <span>Marie became interested in science when she was a child.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q2" value="TRUE" onclick="markAnswered(2)"> TRUE</label>
+            <label class="opt-label"><input type="radio" name="q2" value="FALSE" onclick="markAnswered(2)"> FALSE</label>
+            <label class="opt-label"><input type="radio" name="q2" value="NOT GIVEN" onclick="markAnswered(2)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-3">
+          <div class="q-text">
+            <span class="q-num">3</span>
+            <span>Marie was able to attend university immediately after leaving secondary school.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q3" value="TRUE" onclick="markAnswered(3)"> TRUE</label>
+            <label class="opt-label"><input type="radio" name="q3" value="FALSE" onclick="markAnswered(3)"> FALSE</label>
+            <label class="opt-label"><input type="radio" name="q3" value="NOT GIVEN" onclick="markAnswered(3)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-4">
+          <div class="q-text">
+            <span class="q-num">4</span>
+            <span>Marie and her sister made a financial agreement regarding their education.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q4" value="TRUE" onclick="markAnswered(4)"> TRUE</label>
+            <label class="opt-label"><input type="radio" name="q4" value="FALSE" onclick="markAnswered(4)"> FALSE</label>
+            <label class="opt-label"><input type="radio" name="q4" value="NOT GIVEN" onclick="markAnswered(4)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-5">
+          <div class="q-text">
+            <span class="q-num">5</span>
+            <span>Marie Curie had a comfortable financial lifestyle during her university studies in Paris.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q5" value="TRUE" onclick="markAnswered(5)"> TRUE</label>
+            <label class="opt-label"><input type="radio" name="q5" value="FALSE" onclick="markAnswered(5)"> FALSE</label>
+            <label class="opt-label"><input type="radio" name="q5" value="NOT GIVEN" onclick="markAnswered(5)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-6">
+          <div class="q-text">
+            <span class="q-num">6</span>
+            <span>Marie Curie took over Pierre's teaching position at the Sorbonne after his death.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q6" value="TRUE" onclick="markAnswered(6)"> TRUE</label>
+            <label class="opt-label"><input type="radio" name="q6" value="FALSE" onclick="markAnswered(6)"> FALSE</label>
+            <label class="opt-label"><input type="radio" name="q6" value="NOT GIVEN" onclick="markAnswered(6)"> NOT GIVEN</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 2: Note Completion (7-13) -->
+      <div class="q-block">
+        <div class="q-instruction">
+          <strong>Questions 7 – 13</strong><br>
+          Complete the notes below. Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.
+        </div>
+
+        <div class="q-item" id="q-7">
+          <div class="q-text">
+            <span class="q-num">7</span>
+            <span>When uranium was discovered to be radioactive, Marie Curie found that the element called <input type="text" class="q-input" oninput="checkInput(this, 7)"> had the same property.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-8">
+          <div class="q-text">
+            <span class="q-num">8</span>
+            <span>Marie Curie examined pitchblende because its radioactivity was higher than pure <input type="text" class="q-input" oninput="checkInput(this, 8)">.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-9">
+          <div class="q-text">
+            <span class="q-num">9</span>
+            <span>The joint research of Pierre and Marie Curie led to the discovery of polonium and <input type="text" class="q-input" oninput="checkInput(this, 9)">.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-10">
+          <div class="q-text">
+            <span class="q-num">10</span>
+            <span>Pierre Curie died as a result of a street <input type="text" class="q-input" oninput="checkInput(this, 10)"> in 1906.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-11">
+          <div class="q-text">
+            <span class="q-num">11</span>
+            <span>Marie Curie became the first woman to hold a <input type="text" class="q-input" oninput="checkInput(this, 11)"> at the Sorbonne.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-12">
+          <div class="q-text">
+            <span class="q-num">12</span>
+            <span>In 1911, Marie received her second Nobel Prize for isolating <input type="text" class="q-input" oninput="checkInput(this, 12)">.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-13">
+          <div class="q-text">
+            <span class="q-num">13</span>
+            <span>At sixteen years old, Marie was awarded a gold <input type="text" class="q-input" oninput="checkInput(this, 13)"> for academic excellence.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- QUESTIONS FOR PART 2 (Q14 - Q26) -->
+    <div class="questions-panel-inner test-part-section" id="questions-part-2">
+      
+      <!-- Block 1: Paragraph Matching (14-18) -->
+      <div class="q-block">
+        <div class="q-instruction">
+          <strong>Questions 14 – 18</strong><br>
+          Reading Passage 2 has five paragraphs, <strong>A – E</strong>.<br>
+          Which paragraph contains the following information? Choose the correct letter <strong>A – E</strong>.
+        </div>
+
+        <div class="q-item" id="q-14">
+          <div class="q-text">
+            <span class="q-num">14</span>
+            <span>The physical size and heavy mass of early digital computing machines.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q14" value="A" onclick="markAnswered(14)"> A</label>
+            <label class="opt-label"><input type="radio" name="q14" value="B" onclick="markAnswered(14)"> B</label>
+            <label class="opt-label"><input type="radio" name="q14" value="C" onclick="markAnswered(14)"> C</label>
+            <label class="opt-label"><input type="radio" name="q14" value="D" onclick="markAnswered(14)"> D</label>
+            <label class="opt-label"><input type="radio" name="q14" value="E" onclick="markAnswered(14)"> E</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-15">
+          <div class="q-text">
+            <span class="q-num">15</span>
+            <span>An ancient device used by humans prior to electronic computational systems.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q15" value="A" onclick="markAnswered(15)"> A</label>
+            <label class="opt-label"><input type="radio" name="q15" value="B" onclick="markAnswered(15)"> B</label>
+            <label class="opt-label"><input type="radio" name="q15" value="C" onclick="markAnswered(15)"> C</label>
+            <label class="opt-label"><input type="radio" name="q15" value="D" onclick="markAnswered(15)"> D</label>
+            <label class="opt-label"><input type="radio" name="q15" value="E" onclick="markAnswered(15)"> E</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-16">
+          <div class="q-text">
+            <span class="q-num">16</span>
+            <span>The invention that made vacuum tubes obsolete and enabled microprocessors.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q16" value="A" onclick="markAnswered(16)"> A</label>
+            <label class="opt-label"><input type="radio" name="q16" value="B" onclick="markAnswered(16)"> B</label>
+            <label class="opt-label"><input type="radio" name="q16" value="C" onclick="markAnswered(16)"> C</label>
+            <label class="opt-label"><input type="radio" name="q16" value="D" onclick="markAnswered(16)"> D</label>
+            <label class="opt-label"><input type="radio" name="q16" value="E" onclick="markAnswered(16)"> E</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-17">
+          <div class="q-text">
+            <span class="q-num">17</span>
+            <span>The individual widely recognized as the father of modern computing.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q17" value="A" onclick="markAnswered(17)"> A</label>
+            <label class="opt-label"><input type="radio" name="q17" value="B" onclick="markAnswered(17)"> B</label>
+            <label class="opt-label"><input type="radio" name="q17" value="C" onclick="markAnswered(17)"> C</label>
+            <label class="opt-label"><input type="radio" name="q17" value="D" onclick="markAnswered(17)"> D</label>
+            <label class="opt-label"><input type="radio" name="q17" value="E" onclick="markAnswered(17)"> E</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-18">
+          <div class="q-text">
+            <span class="q-num">18</span>
+            <span>The development of the first electronic digital computer in the late 1930s.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q18" value="A" onclick="markAnswered(18)"> A</label>
+            <label class="opt-label"><input type="radio" name="q18" value="B" onclick="markAnswered(18)"> B</label>
+            <label class="opt-label"><input type="radio" name="q18" value="C" onclick="markAnswered(18)"> C</label>
+            <label class="opt-label"><input type="radio" name="q18" value="D" onclick="markAnswered(18)"> D</label>
+            <label class="opt-label"><input type="radio" name="q18" value="E" onclick="markAnswered(18)"> E</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 2: Sentence Completion (19-26) -->
+      <div class="q-block">
+        <div class="q-instruction">
+          <strong>Questions 19 – 26</strong><br>
+          Complete the sentences below. Choose <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.
+        </div>
+
+        <div class="q-item" id="q-19">
+          <div class="q-text">
+            <span class="q-num">19</span>
+            <span>Charles Babbage proposed the <input type="text" class="q-input" oninput="checkInput(this, 19)">, which had memory and control flow features.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-20">
+          <div class="q-text">
+            <span class="q-num">20</span>
+            <span>Early analog computers were non-programmable and lacked <input type="text" class="q-input" oninput="checkInput(this, 20)">.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-21">
+          <div class="q-text">
+            <span class="q-num">21</span>
+            <span>The Atanasoff-Berry Computer was created in the year <input type="text" class="q-input" oninput="checkInput(this, 21)">.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-22">
+          <div class="q-text">
+            <span class="q-num">22</span>
+            <span>ENIAC was built in the United States during <input type="text" class="q-input" oninput="checkInput(this, 22)">.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-23">
+          <div class="q-text">
+            <span class="q-num">23</span>
+            <span>ENIAC was capable of calculating complex trajectories for <input type="text" class="q-input" oninput="checkInput(this, 23)"> shell paths.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-24">
+          <div class="q-text">
+            <span class="q-num">24</span>
+            <span>The transistor was invented in 1947 by <input type="text" class="q-input" oninput="checkInput(this, 24)">.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-25">
+          <div class="q-text">
+            <span class="q-num">25</span>
+            <span>Transistors allowed computing hardware to become smaller, faster, and more <input type="text" class="q-input" oninput="checkInput(this, 25)">.</span>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-26">
+          <div class="q-text">
+            <span class="q-num">26</span>
+            <span>Microprocessors enabled complete CPUs to fit on a single <input type="text" class="q-input" oninput="checkInput(this, 26)">.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- QUESTIONS FOR PART 3 (Q27 - Q40) -->
+    <div class="questions-panel-inner test-part-section" id="questions-part-3">
+      
+      <!-- Block 1: Multiple Choice (27-32) -->
+      <div class="q-block">
+        <div class="q-instruction">
+          <strong>Questions 27 – 32</strong><br>
+          Choose the correct letter, <strong>A, B, C, or D</strong>.
+        </div>
+
+        <div class="q-item" id="q-27">
+          <div class="q-text">
+            <span class="q-num">27</span>
+            <span>According to the passage, AI systems are now capable of:</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q27" value="A" onclick="markAnswered(27)"> A) Replacing all human jobs within five years.</label>
+            <label class="opt-label"><input type="radio" name="q27" value="B" onclick="markAnswered(27)"> B) Performing complex analytical and creative tasks.</label>
+            <label class="opt-label"><input type="radio" name="q27" value="C" onclick="markAnswered(27)"> C) Operating completely without human programming.</label>
+            <label class="opt-label"><input type="radio" name="q27" value="D" onclick="markAnswered(27)"> D) Eliminating the need for data centers.</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-28">
+          <div class="q-text">
+            <span class="q-num">28</span>
+            <span>What do optimistic economists believe about AI?</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q28" value="A" onclick="markAnswered(28)"> A) It will increase manual repetitive labor.</label>
+            <label class="opt-label"><input type="radio" name="q28" value="B" onclick="markAnswered(28)"> B) It will augment human abilities rather than replace them.</label>
+            <label class="opt-label"><input type="radio" name="q28" value="C" onclick="markAnswered(28)"> C) It will render all educational institutions obsolete.</label>
+            <label class="opt-label"><input type="radio" name="q28" value="D" onclick="markAnswered(28)"> D) It will only affect physical manufacturing jobs.</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-29">
+          <div class="q-text">
+            <span class="q-num">29</span>
+            <span>How does the current AI transformation differ from past industrial revolutions?</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q29" value="A" onclick="markAnswered(29)"> A) It targets cognitive and knowledge-based professions.</label>
+            <label class="opt-label"><input type="radio" name="q29" value="B" onclick="markAnswered(29)"> B) It only affects manual physical work.</label>
+            <label class="opt-label"><input type="radio" name="q29" value="C" onclick="markAnswered(29)"> C) It progresses much slower than previous shifts.</label>
+            <label class="opt-label"><input type="radio" name="q29" value="D" onclick="markAnswered(29)"> D) It has no impact on high-skill sectors.</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-30">
+          <div class="q-text">
+            <span class="q-num">30</span>
+            <span>Which human skill is explicitly mentioned as difficult for AI to replicate?</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q30" value="A" onclick="markAnswered(30)"> A) Speed of calculation</label>
+            <label class="opt-label"><input type="radio" name="q30" value="B" onclick="markAnswered(30)"> B) Emotional intelligence</label>
+            <label class="opt-label"><input type="radio" name="q30" value="C" onclick="markAnswered(30)"> C) Storing large databases</label>
+            <label class="opt-label"><input type="radio" name="q30" value="D" onclick="markAnswered(30)"> D) Executing repetitive tasks</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-31">
+          <div class="q-text">
+            <span class="q-num">31</span>
+            <span>What should educational institutions focus on during the AI transition?</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q31" value="A" onclick="markAnswered(31)"> A) Lifelong learning and continuous development</label>
+            <label class="opt-label"><input type="radio" name="q31" value="B" onclick="markAnswered(31)"> B) Traditional mechanical skills only</label>
+            <label class="opt-label"><input type="radio" name="q31" value="C" onclick="markAnswered(31)"> C) Decreasing training duration</label>
+            <label class="opt-label"><input type="radio" name="q31" value="D" onclick="markAnswered(31)"> D) Avoiding technology in classrooms</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-32">
+          <div class="q-text">
+            <span class="q-num">32</span>
+            <span>Skeptics are concerned that generative AI will displace workers in:</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q32" value="A" onclick="markAnswered(32)"> A) Agricultural harvesting</label>
+            <label class="opt-label"><input type="radio" name="q32" value="B" onclick="markAnswered(32)"> B) Software development and legal fields</label>
+            <label class="opt-label"><input type="radio" name="q32" value="C" onclick="markAnswered(32)"> C) Traditional handicrafts</label>
+            <label class="opt-label"><input type="radio" name="q32" value="D" onclick="markAnswered(32)"> D) Heavy construction operations</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 2: Yes / No / Not Given (33-40) -->
+      <div class="q-block">
+        <div class="q-instruction">
+          <strong>Questions 33 – 40</strong><br>
+          Do the following statements agree with the claims of the writer in Reading Passage 3?<br>
+          Select <strong>YES</strong> if the statement agrees with the claims, <strong>NO</strong> if the statement contradicts the claims, or <strong>NOT GIVEN</strong> if it is impossible to say.
+        </div>
+
+        <div class="q-item" id="q-33">
+          <div class="q-text">
+            <span class="q-num">33</span>
+            <span>AI algorithms are now capable of performing tasks once limited to humans.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q33" value="YES" onclick="markAnswered(33)"> YES</label>
+            <label class="opt-label"><input type="radio" name="q33" value="NO" onclick="markAnswered(33)"> NO</label>
+            <label class="opt-label"><input type="radio" name="q33" value="NOT GIVEN" onclick="markAnswered(33)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-34">
+          <div class="q-text">
+            <span class="q-num">34</span>
+            <span>All economists agree completely on how AI will impact future workforce numbers.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q34" value="YES" onclick="markAnswered(34)"> YES</label>
+            <label class="opt-label"><input type="radio" name="q34" value="NO" onclick="markAnswered(34)"> NO</label>
+            <label class="opt-label"><input type="radio" name="q34" value="NOT GIVEN" onclick="markAnswered(34)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-35">
+          <div class="q-text">
+            <span class="q-num">35</span>
+            <span>Optimists think AI will free workers to focus on creative problem-solving.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q35" value="YES" onclick="markAnswered(35)"> YES</label>
+            <label class="opt-label"><input type="radio" name="q35" value="NO" onclick="markAnswered(35)"> NO</label>
+            <label class="opt-label"><input type="radio" name="q35" value="NOT GIVEN" onclick="markAnswered(35)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-36">
+          <div class="q-text">
+            <span class="q-num">36</span>
+            <span>Past industrial revolutions caused massive long-term economic collapse.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q36" value="YES" onclick="markAnswered(36)"> YES</label>
+            <label class="opt-label"><input type="radio" name="q36" value="NO" onclick="markAnswered(36)"> NO</label>
+            <label class="opt-label"><input type="radio" name="q36" value="NOT GIVEN" onclick="markAnswered(36)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-37">
+          <div class="q-text">
+            <span class="q-num">37</span>
+            <span>Generative AI targets knowledge-based and cognitive fields.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q37" value="YES" onclick="markAnswered(37)"> YES</label>
+            <label class="opt-label"><input type="radio" name="q37" value="NO" onclick="markAnswered(37)"> NO</label>
+            <label class="opt-label"><input type="radio" name="q37" value="NOT GIVEN" onclick="markAnswered(37)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-38">
+          <div class="q-text">
+            <span class="q-num">38</span>
+            <span>Critical thinking is easily replicated by modern neural network models.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q38" value="YES" onclick="markAnswered(38)"> YES</label>
+            <label class="opt-label"><input type="radio" name="q38" value="NO" onclick="markAnswered(38)"> NO</label>
+            <label class="opt-label"><input type="radio" name="q38" value="NOT GIVEN" onclick="markAnswered(38)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-39">
+          <div class="q-text">
+            <span class="q-num">39</span>
+            <span>Corporate training programs should encourage continuous skill building.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q39" value="YES" onclick="markAnswered(39)"> YES</label>
+            <label class="opt-label"><input type="radio" name="q39" value="NO" onclick="markAnswered(39)"> NO</label>
+            <label class="opt-label"><input type="radio" name="q39" value="NOT GIVEN" onclick="markAnswered(39)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <div class="q-item" id="q-40">
+          <div class="q-text">
+            <span class="q-num">40</span>
+            <span>Governments will ban AI models in legal sectors within the decade.</span>
+          </div>
+          <div class="options-group">
+            <label class="opt-label"><input type="radio" name="q40" value="YES" onclick="markAnswered(40)"> YES</label>
+            <label class="opt-label"><input type="radio" name="q40" value="NO" onclick="markAnswered(40)"> NO</label>
+            <label class="opt-label"><input type="radio" name="q40" value="NOT GIVEN" onclick="markAnswered(40)"> NOT GIVEN</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="part-nav">
+    <button class="part-btn active" id="part-btn-1" onclick="switchPart(1)">Part 1</button>
+    <button class="part-btn" id="part-btn-2" onclick="switchPart(2)">Part 2</button>
+    <button class="part-btn" id="part-btn-3" onclick="switchPart(3)">Part 3</button>
+  </div>
+
+  <div class="q-dock" id="q-dock">
+    <!-- Question buttons generated dynamically -->
+  </div>
+
+  <div class="nav-controls">
+    <button class="nav-arrow" onclick="navigatePrev()">&lt;</button>
+    <button class="nav-arrow" onclick="navigateNext()">&gt;</button>
+  </div>
+</footer>
+
+<script>
+  let currentPart = 1;
+  let currentQNum = 1;
+
+  // Timer logic
+  let timeLeft = 3600;
+  const timerEl = document.getElementById('timer');
+  setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+      const s = String(timeLeft % 60).padStart(2, '0');
+      timerEl.textContent = `${m}:${s}`;
+    }
+  }, 1000);
+
+  // Generate bottom dock buttons (1-40)
+  const dock = document.getElementById('q-dock');
+  for (let i = 1; i <= 40; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'q-btn';
+    btn.id = `dock-q-${i}`;
+    btn.textContent = i;
+    btn.onclick = () => scrollToQuestion(i);
+    dock.appendChild(btn);
+  }
+
+  function getPartForQuestion(qNum) {
+    if (qNum <= 13) return 1;
+    if (qNum <= 26) return 2;
+    return 3;
+  }
+
+  function switchPart(partNum) {
+    currentPart = partNum;
+
+    // Update buttons
+    document.querySelectorAll('.part-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', idx + 1 === partNum);
+    });
+
+    // Update Header Text
+    document.getElementById('header-part-title').textContent = `Part ${partNum}`;
+    if (partNum === 1) document.getElementById('header-instructions').textContent = 'Read the text below and answer questions 1 – 13';
+    else if (partNum === 2) document.getElementById('header-instructions').textContent = 'Read the text below and answer questions 14 – 26';
+    else document.getElementById('header-instructions').textContent = 'Read the text below and answer questions 27 – 40';
+
+    // Update Section Visibility
+    document.querySelectorAll('.passage-panel-inner').forEach((el, idx) => {
+      el.classList.toggle('active', idx + 1 === partNum);
+    });
+    document.querySelectorAll('.questions-panel-inner').forEach((el, idx) => {
+      el.classList.toggle('active', idx + 1 === partNum);
+    });
+  }
+
+  function scrollToQuestion(qNum) {
+    const targetPart = getPartForQuestion(qNum);
+    if (targetPart !== currentPart) {
+      switchPart(targetPart);
+    }
+
+    currentQNum = qNum;
+
+    // Highlight current dock button
+    document.querySelectorAll('.q-btn').forEach(btn => btn.classList.remove('current'));
+    const currentDockBtn = document.getElementById(`dock-q-${qNum}`);
+    if (currentDockBtn) {
+      currentDockBtn.classList.add('current');
+      currentDockBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    // Scroll question into view
+    setTimeout(() => {
+      const target = document.getElementById(`q-${qNum}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 50);
+  }
+
+  function markAnswered(qNum) {
+    const dockBtn = document.getElementById(`dock-q-${qNum}`);
+    if (dockBtn) dockBtn.classList.add('answered');
+  }
+
+  function checkInput(input, qNum) {
+    const dockBtn = document.getElementById(`dock-q-${qNum}`);
+    if (dockBtn) {
+      if (input.value.trim() !== '') {
+        dockBtn.classList.add('answered');
+      } else {
+        dockBtn.classList.remove('answered');
+      }
+    }
+  }
+
+  function navigatePrev() {
+    if (currentQNum > 1) {
+      scrollToQuestion(currentQNum - 1);
+    }
+  }
+
+  function navigateNext() {
+    if (currentQNum < 40) {
+      scrollToQuestion(currentQNum + 1);
+    }
+  }
+
+  // Initialize first selection
+  scrollToQuestion(1);
+</script>
+</body>
+</html>

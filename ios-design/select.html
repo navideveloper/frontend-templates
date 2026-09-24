@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iOS Dropdown & Multi-Select Controls</title>
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --card-bg: rgba(255, 255, 255, 0.78);
+      --card-border: rgba(255, 255, 255, 0.5);
+      --text: #000000;
+      --text-sub: #8e8e93;
+      --accent: #007aff;
+      --chip-bg: rgba(0, 122, 255, 0.12);
+      --separator: rgba(60, 60, 67, 0.12);
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --card-bg: rgba(28, 28, 30, 0.78);
+        --card-border: rgba(255, 255, 255, 0.12);
+        --text: #ffffff;
+        --text-sub: #8e8e93;
+        --chip-bg: rgba(10, 132, 255, 0.25);
+        --separator: rgba(84, 84, 88, 0.35);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 24px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      letter-spacing: -0.08px;
+      margin-left: 4px;
+      margin-bottom: -16px;
+    }
+
+    .select-card {
+      width: 100%;
+      position: relative;
+    }
+
+    .select-trigger {
+      width: 100%;
+      padding: 12px 16px;
+      min-height: 48px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 0.5px solid var(--card-border);
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s ease;
+    }
+
+    .select-trigger:active {
+      transform: scale(0.98);
+    }
+
+    .label {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .value-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-size: 16px;
+      max-width: 65%;
+      justify-content: flex-end;
+    }
+
+    /* Badges / Chips container for Multi-Select */
+    .chips-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      background: var(--chip-bg);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .chevron {
+      width: 12px;
+      height: 8px;
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .select-card.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Dropdown Menu Base */
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      backdrop-filter: blur(25px) saturate(200%);
+      -webkit-backdrop-filter: blur(25px) saturate(200%);
+      border: 0.5px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+      padding: 6px;
+      list-style: none;
+      z-index: 99;
+      
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-20px) scale(0.93);
+      transform-origin: top center;
+      transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.3s;
+      pointer-events: none;
+    }
+
+    .select-card.open .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0px) scale(1);
+      pointer-events: auto;
+    }
+
+    /* Menu Actions Header for Multi Select */
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 12px;
+      font-size: 13px;
+      border-bottom: 0.5px solid var(--separator);
+      margin-bottom: 4px;
+    }
+
+    .action-btn {
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .action-btn:hover {
+      opacity: 0.8;
+    }
+
+    /* Option Items & Cascading Animation */
+    .option-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.15s ease;
+    }
+
+    .select-card.open .option-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .select-card.open .option-item:nth-child(1) { transition-delay: 0.03s; }
+    .select-card.open .option-item:nth-child(2) { transition-delay: 0.06s; }
+    .select-card.open .option-item:nth-child(3) { transition-delay: 0.09s; }
+    .select-card.open .option-item:nth-child(4) { transition-delay: 0.12s; }
+    .select-card.open .option-item:nth-child(5) { transition-delay: 0.15s; }
+
+    .option-item:hover {
+      background: rgba(0, 122, 255, 0.08);
+    }
+
+    .option-item.selected {
+      font-weight: 600;
+    }
+
+    .checkmark {
+      width: 14px;
+      height: 10px;
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.2s ease;
+    }
+
+    .option-item.selected .checkmark {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Ripple Click Effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(0, 122, 255, 0.2);
+      transform: scale(0);
+      animation: ripple-anim 0.4s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-anim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- 1. SINGLE SELECT DROPDOWN -->
+    <span class="section-title">Single Select</span>
+    <div class="select-card" id="singleCard">
+      <div class="select-trigger" onclick="toggleCard('singleCard', event)">
+        <span class="label">Sound Preset</span>
+        <div class="value-group">
+          <span id="singleSelectedLabel">Marimba</span>
+          <svg class="chevron" viewBox="0 0 12 8"><polyline points="1 1 6 6 11 1"/></svg>
+        </div>
+      </div>
+
+      <ul class="dropdown-menu">
+        <li class="option-item selected" onclick="selectSingle(this, 'Marimba', event)">
+          <span>Marimba</span>
+          <svg class="checkmark" viewBox="0 0 14 10"><polyline points="1 5 5 9 13 1"/></svg>
+        </li>
+        <li class="option-item" onclick="selectSingle(this, 'Radial', event)">
+          <span>Radial</span>
+          <svg class="checkmark" viewBox="0 0 14 10"><polyline points="1 5 5 9 13 1"/></svg>
+        </li>
+        <li class="option-item" onclick="selectSingle(this, 'Chime', event)">
+          <span>Chime</span>
+          <svg class="checkmark" viewBox="0 0 14 10"><polyline points="1 5 5 9 13 1"/></svg>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 2. MULTI SELECT DROPDOWN -->
+    <span class="section-title">Multi Select</span>
+    <div class="select-card" id="multiCard">
+      <div class="select-trigger" onclick="toggleCard('multiCard', event)">
+        <span class="label">Tags</span>
+        <div class="value-group">
+          <div class="chips-container" id="chipsContainer">
+            <!-- Dynamically populated chips -->
+          </div>
+          <svg class="chevron" viewBox="0 0 12 8"><polyline points="1 1 6 6 11 1"/></svg>
+        </div>
+      </div>
+
+      <ul class="dropdown-menu">
+        <div class="menu-header">
+          <span class="action-btn" onclick="selectAllMulti(true)">Select All</span>
+          <span class="action-btn" onclick="selectAllMulti(false)">Clear</span>
+        </div>
+        <li class="option-item selected" onclick="toggleMulti(this, 'Design', event)">
+          <span>Design</span>
+          <svg class="checkmark" viewBox="0 0 14 10"><polyline points="1 5 5 9 13 1"/></svg>
+        </li>
+        <li class="option-item selected" onclick="toggleMulti(this, 'Code', event)">
+          <span>Code</span>
+          <svg class="checkmark" viewBox="0 0 14 10"><polyline points="1 5 5 9 13 1"/></svg>
+        </li>
+        <li class="option-item" onclick="toggleMulti(this, 'UI/UX', event)">
+          <span>UI/UX</span>
+          <svg class="checkmark" viewBox="0 0 14 10"><polyline points="1 5 5 9 13 1"/></svg>
+        </li>
+        <li class="option-item" onclick="toggleMulti(this, 'Animation', event)">
+          <span>Animation</span>
+          <svg class="checkmark" viewBox="0 0 14 10"><polyline points="1 5 5 9 13 1"/></svg>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script>
+    // State management for Multi-Select
+    let selectedTags = new Set(['Design', 'Code']);
+
+    // Initialize initial multi-select state UI
+    renderChips();
+
+    // Toggle Dropdown Visibility
+    function toggleCard(cardId, event) {
+      createRipple(event, event.currentTarget);
+      const card = document.getElementById(cardId);
+      const isOpen = card.classList.contains('open');
+      
+      // Close all cards first
+      document.querySelectorAll('.select-card').forEach(c => c.classList.remove('open'));
+      
+      if (!isOpen) {
+        card.classList.add('open');
+      }
+    }
+
+    // Single Select Logic
+    function selectSingle(element, value, event) {
+      createRipple(event, element);
+      const parentMenu = element.closest('.dropdown-menu');
+      parentMenu.querySelectorAll('.option-item').forEach(opt => opt.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      document.getElementById('singleSelectedLabel').textContent = value;
+
+      setTimeout(() => {
+        document.getElementById('singleCard').classList.remove('open');
+      }, 120);
+    }
+
+    // Multi Select Toggle Logic
+    function toggleMulti(element, value, event) {
+      createRipple(event, element);
+      
+      if (selectedTags.has(value)) {
+        selectedTags.delete(value);
+        element.classList.remove('selected');
+      } else {
+        selectedTags.add(value);
+        element.classList.add('selected');
+      }
+      renderChips();
+    }
+
+    // Multi Select Header Actions
+    function selectAllMulti(select) {
+      const multiCard = document.getElementById('multiCard');
+      const items = multiCard.querySelectorAll('.option-item');
+      
+      selectedTags.clear();
+      items.forEach(item => {
+        const val = item.querySelector('span').textContent;
+        if (select) {
+          selectedTags.add(val);
+          item.classList.add('selected');
+        } else {
+          item.classList.remove('selected');
+        }
+      });
+      renderChips();
+    }
+
+    // Update Chips UI Container
+    function renderChips() {
+      const container = document.getElementById('chipsContainer');
+      container.innerHTML = '';
+
+      if (selectedTags.size === 0) {
+        container.innerHTML = '<span style="color: var(--text-sub);">None</span>';
+        return;
+      }
+
+      selectedTags.forEach(tag => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.textContent = tag;
+        container.appendChild(chip);
+      });
+    }
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.select-card')) {
+        document.querySelectorAll('.select-card').forEach(c => c.classList.remove('open'));
+      }
+    });
+
+    // Ripple Effect Helper
+    function createRipple(event, element) {
+      const rect = element.getBoundingClientRect();
+      const circle = document.createElement('span');
+      const diameter = Math.max(rect.width, rect.height);
+      const radius = diameter / 2;
+
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${event.clientX - rect.left - radius}px`;
+      circle.style.top = `${event.clientY - rect.top - radius}px`;
+      circle.classList.add('ripple');
+
+      const existingRipple = element.querySelector('.ripple');
+      if (existingRipple) existingRipple.remove();
+
+      element.appendChild(circle);
+    }
+  </script>
+
+</body>
+</html>

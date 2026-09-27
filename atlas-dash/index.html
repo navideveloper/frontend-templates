@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ATLAS DASH</title>
+<style>
+/* ===== SF Pro -- mahalliy fayllar (fonts\ papkasi), internet kerak emas ===== */
+@font-face{font-family:'SFDisplay';src:url('fonts/sf-pro-display_medium.woff2') format('woff2');
+           font-weight:400 700;font-style:normal;font-display:swap}
+@font-face{font-family:'SFText';src:url('fonts/sf-pro-text_regular.woff2') format('woff2');
+           font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'SFText';src:url('fonts/sf-pro-text_bold.woff2') format('woff2');
+           font-weight:700;font-style:normal;font-display:swap}
+
+/* ===== Apple iOS Minimalist Design System ===== */
+:root {
+  --bg: #F2F2F7;
+  --bg-glass: rgba(255, 255, 255, 0.72);
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --ink: #1C1C1E;
+  --ink-secondary: #636366;
+  --ink-tertiary: #8E8E93;
+  --line: rgba(60, 60, 67, 0.12);
+  --line-strong: rgba(60, 60, 67, 0.18);
+
+  --ios-green: #34C759;
+  --ios-blue: #007AFF;
+  --ios-purple: #AF52DE;
+  --ios-indigo: #5856D6;
+  --ios-orange: #FF9500;
+  --ios-red: #FF3B30;
+
+  /* Premium Apple Mesh Blur Gradient */
+  --grad-apple:
+    radial-gradient(circle at 12% 15%, rgba(52, 199, 89, 0.35) 0%, rgba(52, 199, 89, 0) 45%),
+    radial-gradient(circle at 85% 20%, rgba(0, 122, 255, 0.3) 0%, rgba(0, 122, 255, 0) 50%),
+    radial-gradient(circle at 50% 80%, rgba(88, 86, 214, 0.25) 0%, rgba(88, 86, 214, 0) 55%),
+    radial-gradient(circle at 80% 85%, rgba(175, 82, 222, 0.2) 0%, rgba(175, 82, 222, 0) 45%),
+    linear-gradient(135deg, #E5E5EA 0%, #F2F2F7 100%);
+
+  /* Avatar gradient halo */
+  --halo: linear-gradient(135deg, #034b35 0%, #124a4a 40%, #1c5b7d 65%, #0d3822 100%);
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
+
+  --ease-ios: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'SFText', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 15.5px;
+  line-height: 1.47059;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wrap { margin: 0 auto }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; color: inherit; }
+
+/* ---------- Hero ---------- */
+.stage { padding: 0; }
+.hero {
+  background: var(--grad-apple);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+  animation: fadeUp 0.6s var(--ease-ios) both;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Panel ---------- */
+.panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+}
+
+.split { display: grid; grid-template-columns: 260px minmax(0, 1fr); flex: 1; }
+/* Sidebar sahifa bilan birga aylanmaydi -- yopishqoq */
+.side {
+  position: sticky; top: 0; align-self: start; height: 100vh;
+  border-right: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; overflow: hidden;
+}
+.main { padding: 28px 32px 32px; min-width: 0; }
+
+/* ---------- Brand ---------- */
+.brand { display: flex; align-items: center; gap: 8px; padding: 2px 4px 12px; flex-shrink: 0; }
+.logo {
+  width: 32px; height: 32px; border-radius:22.37%; flex: none;
+  background: var(--halo); color: #FFF; display: grid; place-items: center;
+  font-size: 13px; font-weight: 700;
+}
+.brand-title { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; display: flex; align-items: center; gap: 4px; }
+.brand-title b { font-weight: 700; color: var(--ink); }
+.brand-title span { color: var(--ink-tertiary); font-weight: 400; }
+
+/* ---------- Qidiruv ---------- */
+.langpill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.6); font-size: 13.5px; font-weight: 600; margin-bottom: 12px; flex-shrink: 0;
+}
+.langpill svg { width: 12px; height: 12px; color: var(--ink-tertiary); flex: none; }
+.langpill input { border: 0; outline: 0; background: transparent; padding: 0; width: 100%; font-size: 13.5px; font-weight: 500; }
+.langpill input::placeholder { color: var(--ink-tertiary); }
+
+/* ---------- Sidebar navigatsiya ---------- */
+.nav { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; min-height: 0; padding-right: 2px; }
+.nav::-webkit-scrollbar { width: 5px; }
+.nav::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 10px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 12px;
+  font-size: 14.5px; font-weight: 500; color: var(--ink-secondary);
+  transition: background 0.18s var(--ease-ios), color 0.18s var(--ease-ios);
+}
+.nav-item svg { width: 17px; height: 17px; flex: none; color: var(--ink-tertiary); }
+.nav-item:hover { background: rgba(0, 0, 0, 0.035); color: var(--ink); }
+.nav-item.active { background: rgba(0, 0, 0, 0.06); color: var(--ink); font-weight: 600; }
+.nav-item.active svg { color: var(--ios-blue); }
+
+/* ---------- Foydalanuvchi (sidebar pasti) ---------- */
+.me { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px; border-top: 1px solid var(--line); flex-shrink: 0; }
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex: none; padding: 2px; background: var(--halo);
+}
+.avatar span {
+  width: 100%; height: 100%; border-radius: 50%; border: 2px solid #FFF; background: #E5E5EA;
+  display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--ink-secondary);
+}
+.me-meta { display: flex; flex-direction: column; min-width: 0; }
+.me-name { font-size: 14px; font-weight: 600; line-height: 1.2; }
+.me-sub { font-size: 12.5px; color: var(--ink-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Sahifa sarlavhasi ---------- */
+.head { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.head-text { min-width: 0; margin-right: auto; }
+.h1 { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+.head-actions { display: flex; align-items: center; gap: 8px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border: 0; border-radius: var(--r-pill); cursor: pointer;
+  font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em;
+  transition: all 0.2s var(--ease-ios);
+}
+.btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.btn-primary { background: var(--ios-blue); color: #FFF; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25); }
+.btn-primary:hover { background: #0062D6; box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35); }
+
+/* ---------- Karta ---------- */
+.card {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  padding: 22px;
+  min-width: 0;
+  animation: fadeUp 0.45s var(--ease-ios) both;
+}
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.card-title { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.015em; }
+.card-sub { font-size: 12.5px; color: var(--ink-tertiary); }
+.card-head .morelink { margin-left: auto; }
+.morelink { font-size: 13.5px; font-weight: 600; color: var(--ios-blue); transition: opacity 0.2s; }
+.morelink:hover { opacity: 0.8; }
+
+.grid { display: grid; gap: 18px; margin-bottom: 18px; }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid-2-1 { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+
+/* ---------- Statistika kartasi ---------- */
+.stat-label { font-size: 14px; font-weight: 500; color: var(--ink-tertiary); }
+.stat-value { font-size: 30px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; margin: 8px 0 10px; font-variant-numeric: tabular-nums; }
+.stat-foot { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-tertiary); }
+.delta { display: inline-flex; align-items: center; gap: 2px; flex: none; white-space: nowrap; padding: 1px 7px; border-radius: var(--r-pill); font-size: 12px; font-weight: 600; }
+.delta.up   { background: rgba(52, 199, 89, 0.12); color: #248A3D; }
+.delta.down { background: rgba(255, 59, 48, 0.1);  color: #D70015; }
+
+/* ---------- Segment (statik) ---------- */
+.tabs {
+  display: inline-flex; gap: 2px; margin-left: auto; flex: none;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px; border-radius: var(--r-pill);
+  backdrop-filter: blur(10px);
+}
+.tab {
+  padding: 6px 18px; border-radius: var(--r-pill);
+  font-weight: 500; color: black;
+  transition: all 0.25s var(--ease-ios);
+}
+.tab:hover { color: var(--ink); }
+.tab.active {
+  background: #FFFFFF; color: var(--ink); font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- Ustunli diagramma (faqat CSS, hover tooltip bilan) ---------- */
+.chart { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; }
+.chart-y { display: flex; flex-direction: column; justify-content: space-between; height: 240px; font-size: 12px; color: var(--ink-tertiary); text-align: right; font-variant-numeric: tabular-nums; }
+.chart-y span { line-height: 0; }
+.chart-plot {
+  position: relative; height: 240px;
+  display: flex; align-items: flex-end; gap: 6px;
+  background: repeating-linear-gradient(to top, var(--line) 0 1px, transparent 1px 25%);
+  border-bottom: 1px solid var(--line-strong);
+  box-shadow: inset 0 1px 0 var(--line);
+}
+.bar {
+  position: relative; flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center;
+  cursor: default;
+}
+.bar::before {
+  content: ""; width: min(28px, 70%); height: var(--h);
+  background: var(--ios-blue); border-radius: 4px 4px 0 0;
+  transition: opacity 0.18s var(--ease-ios);
+}
+.chart-plot:hover .bar::before { opacity: 0.45; }
+.chart-plot .bar:hover::before { opacity: 1; }
+.bar::after {
+  content: attr(data-label) " · " attr(data-v);
+  position: absolute; bottom: calc(var(--h) + 8px); left: 50%; transform: translate(-50%, 4px);
+  padding: 4px 8px; border-radius: 8px; white-space: nowrap;
+  background: var(--ink); color: #FFF; font-size: 12px; font-weight: 600;
+  opacity: 0; pointer-events: none; transition: all 0.18s var(--ease-ios); z-index: 2;
+}
+.bar:hover::after { opacity: 1; transform: translate(-50%, 0); }
+.chart-x { grid-column: 2; display: flex; gap: 6px; font-size: 12px; color: var(--ink-tertiary); }
+.chart-x span { flex: 1; text-align: center; }
+
+/* ---------- Progress ro'yxati ---------- */
+.goals { display: flex; flex-direction: column; gap: 24px; }
+.goal-row { display: flex; align-items: baseline; gap: 8px; font-size: 14.5px; margin-bottom: 10px; }
+.goal-row b { font-weight: 600; }
+.goal-row span { margin-left: auto; font-size: 13px; color: var(--ink-tertiary); font-variant-numeric: tabular-nums; }
+.track { height: 8px; border-radius: var(--r-pill); background: rgba(0, 0, 0, 0.06); overflow: hidden; }
+.fill { display: block; height: 100%; width: var(--p); border-radius: var(--r-pill); background: var(--ios-blue); }
+
+/* ---------- Jadval ---------- */
+.table-wrap { overflow-x: auto; margin: 0 -22px -22px; }
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+th { text-align: left; font-size: 12px; font-weight: 600; color: var(--ink-tertiary); padding: 10px 22px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 14px 22px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+tbody tr { transition: background 0.18s var(--ease-ios); }
+tbody tr:hover { background: rgba(0, 0, 0, 0.025); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.muted { color: var(--ink-tertiary); }
+
+/* ---------- Status belgisi (rang + nuqta + matn) ---------- */
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: var(--r-pill); font-size: 12.5px; font-weight: 600; }
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill.ok   { background: rgba(52, 199, 89, 0.12); color: #248A3D; }
+.pill.wait { background: rgba(255, 149, 0, 0.12); color: #C93400; }
+.pill.bad  { background: rgba(255, 59, 48, 0.1);  color: #D70015; }
+
+/* ---------- Mobil ---------- */
+@media (max-width: 1100px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-2-1 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 768px) {
+  .stage { padding: 12px 0; }
+  .wrap { padding: 0 12px; }
+  .hero { min-height: calc(100vh - 24px); padding: 10px; }
+  .split { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+  .side { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 12px 12px 8px; }
+  .nav { flex-direction: row; overflow-x: auto; overflow-y: hidden; gap: 4px; padding: 0 0 4px; }
+  .me { display: none; }
+  .nav-item { flex: none; padding: 6px 12px; }
+  .main { padding: 20px 14px; }
+  .tab { padding: 5px 13px; font-size: 15px; }
+  .h1 { font-size: 21px; }
+  .btn span { display: none; }
+  .btn { padding: 8px 12px; }
+}
+@media (max-width: 480px) {
+  .grid-4 { gap: 12px; }
+  .grid-4 .card { padding: 16px; }
+  .stat-value { font-size: 24px; }
+}
+
+/* Sarlavha va urg'uli elementlar -- SFDisplay */
+.brand-title, .h1, .card-title, .stat-value, .btn, .tab, .me-name {
+  font-family: 'SFDisplay', 'SFText', sans-serif;
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="wrap">
+    <div class="hero">
+      <div class="panel">
+        <div class="split">
+
+          <!-- ============ Sidebar navigatsiya ============ -->
+          <aside class="side">
+            <div class="brand">
+              <div class="logo">A</div>
+              <div class="brand-title"><b>ATLAS</b><span>DASH</span></div>
+            </div>
+
+            <label class="langpill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+              <input type="search" placeholder="Qidirish…" autocomplete="off">
+            </label>
+
+            <nav class="nav">
+              <a class="nav-item active" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+                Boshqaruv paneli
+              </a>
+              <a class="nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+                Analitika
+              </a>
+              <a class="nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+                Buyurtmalar
+              </a>
+              <a class="nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 9M22 21a7 7 0 0 0-4-6.3"/></svg>
+                Mijozlar
+              </a>
+              <a class="nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>
+                Mahsulotlar
+              </a>
+              <a class="nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>
+                Sozlamalar
+              </a>
+            </nav>
+
+            <div class="me">
+              <div class="avatar"><span>A</span></div>
+              <div class="me-meta">
+                <div class="me-name">Admin</div>
+                <div class="me-sub">admin@atlas.uz</div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- ============ Kontent: komponentlar ============ -->
+          <main class="main">
+
+            <!-- Sarlavha -->
+            <div class="head">
+              <div class="head-text">
+                <h1 class="h1">Xush kelibsiz, Admin</h1>
+              </div>
+              <a class="btn btn-primary" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+                <span>Hisobot</span>
+              </a>
+            </div>
+
+            <!-- Statistika kartalari -->
+            <section class="grid grid-4">
+              <div class="card">
+                <div class="stat-label">Daromad</div>
+                <div class="stat-value">$48 290</div>
+                <span class="delta up">↑ 12,4%</span>
+              </div>
+              <div class="card">
+                <div class="stat-label">Buyurtmalar</div>
+                <div class="stat-value">1 284</div>
+                <span class="delta up">↑ 8,1%</span>
+              </div>
+              <div class="card">
+                <div class="stat-label">Yangi mijozlar</div>
+                <div class="stat-value">326</div>
+                <span class="delta down">↓ 3,2%</span>
+              </div>
+              <div class="card">
+                <div class="stat-label">Konversiya</div>
+                <div class="stat-value">3,84%</div>
+                <span class="delta up">↑ 0,6%</span>
+              </div>
+            </section>
+
+            <!-- Diagramma + maqsadlar -->
+            <section class="grid grid-2-1">
+              <div class="card">
+                <div class="card-head">
+                  <h2 class="card-title">Daromad, ming $</h2>
+                  <div class="tabs">
+                    <a class="tab" href="#">Kun</a>
+                    <a class="tab active" href="#" aria-current="page">Oy</a>
+                    <a class="tab" href="#">Yil</a>
+                  </div>
+                </div>
+                <div class="chart">
+                  <div class="chart-y"><span>60</span><span>45</span><span>30</span><span>15</span><span>0</span></div>
+                  <div class="chart-plot">
+                    <div class="bar" style="--h:53%" data-label="Yanvar" data-v="$32k"></div>
+                    <div class="bar" style="--h:47%" data-label="Fevral" data-v="$28k"></div>
+                    <div class="bar" style="--h:60%" data-label="Mart" data-v="$36k"></div>
+                    <div class="bar" style="--h:57%" data-label="Aprel" data-v="$34k"></div>
+                    <div class="bar" style="--h:68%" data-label="May" data-v="$41k"></div>
+                    <div class="bar" style="--h:63%" data-label="Iyun" data-v="$38k"></div>
+                    <div class="bar" style="--h:72%" data-label="Iyul" data-v="$43k"></div>
+                    <div class="bar" style="--h:70%" data-label="Avgust" data-v="$42k"></div>
+                    <div class="bar" style="--h:80%" data-label="Sentabr" data-v="$48k"></div>
+                  </div>
+                  <div class="chart-x"><span>Yan</span><span>Fev</span><span>Mar</span><span>Apr</span><span>May</span><span>Iyn</span><span>Iyl</span><span>Avg</span><span>Sen</span></div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head">
+                  <h2 class="card-title">Oylik maqsadlar</h2>
+                </div>
+                <div class="goals">
+                  <div>
+                    <div class="goal-row"><b>Daromad</b><span>$48k / $60k</span></div>
+                    <div class="track"><span class="fill" style="--p:80%"></span></div>
+                  </div>
+                  <div>
+                    <div class="goal-row"><b>Buyurtmalar</b><span>1 284 / 1 500</span></div>
+                    <div class="track"><span class="fill" style="--p:86%"></span></div>
+                  </div>
+                  <div>
+                    <div class="goal-row"><b>Yangi mijozlar</b><span>326 / 500</span></div>
+                    <div class="track"><span class="fill" style="--p:65%"></span></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Jadval -->
+            <section class="card">
+              <div class="card-head">
+                <h2 class="card-title">So'nggi buyurtmalar</h2>
+                <a class="morelink" href="#">Barchasi</a>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Mijoz</th><th>Holat</th><th class="num">Summa</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Dilnoza Karimova</td>
+                      <td><span class="pill ok">To'langan</span></td>
+                      <td class="num">$1 240</td>
+                    </tr>
+                    <tr>
+                      <td>Jasur Toshmatov</td>
+                      <td><span class="pill wait">Kutilmoqda</span></td>
+                      <td class="num">$860</td>
+                    </tr>
+                    <tr>
+                      <td>Madina Yusupova</td>
+                      <td><span class="pill ok">To'langan</span></td>
+                      <td class="num">$2 115</td>
+                    </tr>
+                    <tr>
+                      <td>Sardor Rahimov</td>
+                      <td><span class="pill bad">Bekor qilingan</span></td>
+                      <td class="num">$430</td>
+                    </tr>
+                    <tr>
+                      <td>Nodira Aliyeva</td>
+                      <td><span class="pill ok">To'langan</span></td>
+                      <td class="num">$975</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+          </main>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

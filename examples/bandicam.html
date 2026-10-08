@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Screen Recorder</title>
+  <style>
+    /* ============ TOKENS ============ */
+    :root {
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+
+      --bg:            #ffffff;
+      --canvas:        #ffffff;
+
+      --text:          #32323a;
+      --text-strong:   #1f1f26;
+      --text-muted:    #74747c;
+      --text-faint:    #9b9ba3;
+
+      --border:        #ebebe9;
+      --border-strong: #e0e0dd;
+      --hover:         #f3f3f1;
+      --active:        #ededea;
+
+      --primary:       #7a5af8;
+      --red:           #e2574c;
+
+      --r-md: 8px;
+      --r-lg: 10px;
+      --r-xl: 12px;
+
+      --shadow-md: 0 4px 10px -2px rgba(23,23,28,.10), 0 0 0 1px rgba(23,23,28,.06);
+      --shadow-dropdown: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font);
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { background: none; border: 0; cursor: pointer; font: inherit; color: inherit; }
+    svg { display: block; flex: none; }
+
+    /* ============ LAYOUT ============ */
+    .app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--canvas); }
+
+    .topbar { height: 54px; flex: none; display: flex; align-items: center; gap: 10px; padding: 0 24px; border-bottom: 1px solid var(--border); }
+    .brand-title { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: var(--text-strong); }
+    .brand-title img { width: 24px; height: 24px; border-radius: 50%; }
+
+    .spacer { flex: 1; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px;
+      border-radius: var(--r-md); font-weight: 500; font-size: 13px; color: var(--text);
+      transition: all .14s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg,#3a3a44,#212127); color: #fff;
+      box-shadow: 0 1px 2px rgba(23,23,28,.24), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .btn-primary:hover { background: linear-gradient(180deg,#45454f,#2a2a31); }
+    .btn-danger {
+      background: linear-gradient(180deg,#e8635a,#d5463b); color: #fff;
+      box-shadow: 0 1px 2px rgba(180,50,40,.28), inset 0 1px 0 rgba(255,255,255,.16);
+    }
+    .btn-danger:hover { background: linear-gradient(180deg,#ec6f66,#c93e34); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none !important; background: #e0e0dd; color: var(--text-faint); }
+
+    /* CONTENT VIEWPORT */
+    .content-viewport {
+      flex: 1; min-height: 0; overflow: auto; padding: 28px;
+      background-color: var(--canvas);
+      background-image: radial-gradient(circle at 1px 1px, #e1e1dd 1.15px, transparent 0);
+      background-size: 15px 15px;
+      display: flex; justify-content: center;
+    }
+
+    .recorder-wrap {
+      width: 100%; max-width: 860px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border); border-radius: var(--r-xl);
+      box-shadow: 0 1px 2px rgba(23,23,28,.04); overflow: visible;
+    }
+
+    /* PREVIEW CANVAS */
+    .preview-card {
+      position: relative; width: 100%; aspect-ratio: 16/9;
+      background: #19191e; border-radius: var(--r-xl); overflow: hidden;
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+    video { width: 100%; height: 100%; object-fit: contain; display: block; }
+    
+    .placeholder-box {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px; color: #9a9aa2;
+    }
+    .placeholder-icon {
+      width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,.06);
+      display: grid; place-items: center; color: #c5c5ce; border: 1px solid rgba(255,255,255,.08);
+    }
+
+    /* STATUS BADGE */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 99px;
+      background: #f4f4f2; border: 1px solid var(--border);
+      font-size: 12px; font-weight: 500; color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #b4b4bb;
+    }
+    .status-dot.recording {
+      background: var(--red);
+      animation: pulse 1.4s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* CONTROLS GRID */
+    .controls-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px; padding: 16px;
+    }
+    .control-group {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .control-group label {
+      font-size: 11.5px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.02em;
+    }
+
+    /* ============ ANIMATED CUSTOM SELECT ============ */
+    .custom-select-wrapper {
+      position: relative;
+      user-select: none;
+    }
+
+    .select-trigger {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; height: 36px; padding: 0 12px;
+      background: #fff; border: 1px solid var(--border-strong);
+      border-radius: var(--r-md); font-size: 13px; color: var(--text-strong);
+      box-shadow: 0 1px 1px rgba(23,23,28,.03); transition: border-color .14s ease, box-shadow .14s ease;
+    }
+
+    .select-trigger:hover { border-color: #c5c5c2; }
+
+    .arrow-icon {
+      width: 16px; height: 16px; color: var(--text-muted);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .custom-select-wrapper.is-open .arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    .select-options {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: #fff; border: 1px solid var(--border-strong);
+      border-radius: var(--r-md); box-shadow: var(--shadow-dropdown);
+      padding: 5px; list-style: none; z-index: 100;
+
+      opacity: 0; visibility: hidden;
+      transform: translateY(-8px) scale(0.98);
+      pointer-events: none;
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  visibility 0.2s ease;
+    }
+
+    .custom-select-wrapper.is-open .select-options {
+      opacity: 1; visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .option-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 10px; font-size: 13px; color: var(--text);
+      border-radius: 6px; cursor: pointer; transition: background 0.15s ease;
+    }
+
+    .option-item:hover { background: var(--hover); }
+
+    .option-item.selected {
+      background: #f0ebff; color: var(--primary); font-weight: 500;
+    }
+
+    .check-icon {
+      display: none; width: 14px; height: 14px; color: var(--primary);
+    }
+
+    .option-item.selected .check-icon { display: block; }
+
+    /* ACTION BAR */
+    .action-bar {
+      display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+      background: #fbfbfa; border-top: 1px solid var(--border);
+      border-bottom-left-radius: var(--r-xl); border-bottom-right-radius: var(--r-xl);
+    }
+
+    @media (max-width: 768px){
+      .controls-grid { grid-template-columns: 1fr; }
+      .topbar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <main class="main">
+
+    <header class="topbar">
+      <div class="brand-title">
+        <img src="https://avatars.githubusercontent.com/u/248320714" alt="avatar">
+        Screen Recorder
+      </div>
+      <div class="spacer"></div>
+      <div class="status-badge">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="timerText">00:00:00</span>
+      </div>
+    </header>
+
+    <div class="content-viewport">
+      <div class="recorder-wrap">
+        
+        <!-- VIDEO PREVIEW -->
+        <div class="preview-card">
+          <div class="placeholder-box" id="placeholder">
+            <div class="placeholder-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <span>Yozishni boshlash uchun "Yozishni boshlash" tugmasini bosing</span>
+          </div>
+          <video id="preview" autoplay muted playsinline></video>
+        </div>
+
+        <!-- CONTROLS PANEL WITH ANIMATED CUSTOM SELECTS -->
+        <div class="panel">
+          <div class="controls-grid">
+            
+            <!-- Custom Select 1: Quality -->
+            <div class="control-group">
+              <label>Sifat / Hajm</label>
+              <div class="custom-select-wrapper" id="qualitySelectWrapper">
+                <button type="button" class="select-trigger">
+                  <span class="selected-value">Yuqori (2.5 Mbps)</span>
+                  <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <ul class="select-options">
+                  <li class="option-item selected" data-value="2500000">
+                    <span>Yuqori (2.5 Mbps)</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                  <li class="option-item" data-value="1500000">
+                    <span>Ultra kichik (1.5 Mbps)</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                  <li class="option-item" data-value="5000000">
+                    <span>Maksimal (5.0 Mbps)</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Custom Select 2: FPS -->
+            <div class="control-group">
+              <label>FPS (Kadrlar chastotasi)</label>
+              <div class="custom-select-wrapper" id="fpsSelectWrapper">
+                <button type="button" class="select-trigger">
+                  <span class="selected-value">30 FPS (Tavsiya etiladi)</span>
+                  <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <ul class="select-options">
+                  <li class="option-item selected" data-value="30">
+                    <span>30 FPS (Tavsiya etiladi)</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                  <li class="option-item" data-value="60">
+                    <span>60 FPS (Silliq harakat)</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Custom Select 3: Audio Source -->
+            <div class="control-group">
+              <label>Ovoz manbai</label>
+              <div class="custom-select-wrapper" id="audioSelectWrapper">
+                <button type="button" class="select-trigger">
+                  <span class="selected-value">Faqat tizim ovozi</span>
+                  <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <ul class="select-options">
+                  <li class="option-item selected" data-value="system">
+                    <span>Faqat tizim ovozi</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                  <li class="option-item" data-value="mic">
+                    <span>Faqat mikrofon</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                  <li class="option-item" data-value="both">
+                    <span>Tizim + Mikrofon</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                  <li class="option-item" data-value="none">
+                    <span>Ovozsiz</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="action-bar">
+            <div class="spacer"></div>
+            <button class="btn btn-primary" id="startBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              Yozishni boshlash
+            </button>
+            <button class="btn btn-danger" id="stopBtn" disabled>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+              To'xtatish va Saqlash
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Selected values state
+  let selectedQuality = 2500000;
+  let selectedFps = 30;
+  let selectedAudio = 'system';
+
+  // Setup Animated Custom Selects
+  function setupCustomSelect(wrapperId, onChange) {
+    const wrapper = document.getElementById(wrapperId);
+    const trigger = wrapper.querySelector('.select-trigger');
+    const labelSpan = wrapper.querySelector('.selected-value');
+    const options = wrapper.querySelectorAll('.option-item');
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.custom-select-wrapper').forEach(w => {
+        if (w !== wrapper) w.classList.remove('is-open');
+      });
+      wrapper.classList.toggle('is-open');
+    });
+
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        options.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        labelSpan.textContent = opt.querySelector('span').textContent;
+        const val = opt.getAttribute('data-value');
+        onChange(val);
+        wrapper.classList.remove('is-open');
+      });
+    });
+  }
+
+  setupCustomSelect('qualitySelectWrapper', (val) => selectedQuality = parseInt(val, 10));
+  setupCustomSelect('fpsSelectWrapper', (val) => selectedFps = parseInt(val, 10));
+  setupCustomSelect('audioSelectWrapper', (val) => selectedAudio = val);
+
+  // Global click to close dropdowns
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('is-open'));
+  });
+
+  // RECORDING LOGIC
+  let mediaRecorder;
+  let recordedChunks = [];
+  let stream;
+  let timerInterval;
+  let secondsElapsed = 0;
+
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const preview = document.getElementById('preview');
+  const placeholder = document.getElementById('placeholder');
+  const statusDot = document.getElementById('statusDot');
+  const timerText = document.getElementById('timerText');
+
+  function getSupportedMimeType() {
+    const types = [
+      'video/webm;codecs=vp9,opus',
+      'video/webm;codecs=vp8,opus',
+      'video/webm',
+      'video/mp4'
+    ];
+    for (const type of types) {
+      if (MediaRecorder.isTypeSupported(type)) return type;
+    }
+    return '';
+  }
+
+  async function startRecording() {
+    try {
+      // Prompt user to select entire screen or window
+      const displayStream = await navigator.mediaDevices.getDisplayMedia({
+        video: { frameRate: { ideal: selectedFps, max: selectedFps } },
+        audio: selectedAudio === 'system' || selectedAudio === 'both'
+      });
+
+      let finalTracks = [...displayStream.getVideoTracks()];
+
+      // Audio handling
+      if (selectedAudio === 'mic' || selectedAudio === 'both') {
+        const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        if (selectedAudio === 'both' && displayStream.getAudioTracks().length > 0) {
+          const audioCtx = new AudioContext();
+          const dest = audioCtx.createMediaStreamDestination();
+          
+          const sysSource = audioCtx.createMediaStreamSource(new MediaStream([displayStream.getAudioTracks()[0]]));
+          const micSource = audioCtx.createMediaStreamSource(micStream);
+          
+          sysSource.connect(dest);
+          micSource.connect(dest);
+          
+          finalTracks.push(...dest.stream.getAudioTracks());
+        } else {
+          finalTracks.push(...micStream.getAudioTracks());
+        }
+      } else if (selectedAudio === 'system' && displayStream.getAudioTracks().length > 0) {
+        finalTracks.push(...displayStream.getAudioTracks());
+      }
+
+      stream = new MediaStream(finalTracks);
+      preview.srcObject = stream;
+      placeholder.style.display = 'none';
+
+      const mimeType = getSupportedMimeType();
+      recordedChunks = [];
+
+      mediaRecorder = new MediaRecorder(stream, {
+        mimeType: mimeType,
+        videoBitsPerSecond: selectedQuality
+      });
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = saveFile;
+
+      displayStream.getVideoTracks()[0].onended = () => {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+          stopRecording();
+        }
+      };
+
+      mediaRecorder.start(1000);
+
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      statusDot.classList.add('recording');
+      startTimer();
+
+    } catch (err) {
+      console.error('Recording start error:', err);
+    }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+    stopTimer();
+    statusDot.classList.remove('recording');
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
+
+  function saveFile() {
+    const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const extension = mediaRecorder.mimeType.includes('mp4') ? 'mp4' : 'webm';
+    a.download = `screen-recording-${timestamp}.${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+  }
+
+  function startTimer() {
+    secondsElapsed = 0;
+    timerText.textContent = '00:00:00';
+    timerInterval = setInterval(() => {
+      secondsElapsed++;
+      const hrs = String(Math.floor(secondsElapsed / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((secondsElapsed % 3600) / 60)).padStart(2, '0');
+      const secs = String(secondsElapsed % 60).padStart(2, '0');
+      timerText.textContent = `${hrs}:${mins}:${secs}`;
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+  }
+
+  startBtn.addEventListener('click', startRecording);
+  stopBtn.addEventListener('click', stopRecording);
+</script>
+
+</body>
+</html>

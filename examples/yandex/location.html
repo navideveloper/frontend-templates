@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Chinor - yetkazib berish hududi</title>
+    <!-- Yandex Maps API -->
+    <script src="https://api-maps.yandex.ru/2.1/?lang=uz_UZ" type="text/javascript"></script>
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        /* "Chinor" nuqtasi: qizil doira + pastda nomi */
+        .shop-marker {
+            position: relative;
+            width: 34px;
+            height: 40px;
+            transform: translate(-50%, -100%);
+        }
+
+        .shop-marker .shop-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 34px;
+            height: 34px;
+            box-sizing: border-box;
+            border-radius: 50%;
+            background: #E53935;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shop-marker .shop-badge svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
+        /* Doira ostidagi uchburchak - aniq joyni ko'rsatadi */
+        .shop-marker .shop-tip {
+            position: absolute;
+            top: 31px;
+            left: 50%;
+            margin-left: -6px;
+            width: 0;
+            height: 0;
+            border: 6px solid transparent;
+            border-top-color: #fff;
+        }
+
+        .shop-marker .shop-name {
+            position: absolute;
+            top: 44px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #111;
+            font: bold 11px/1 Arial, sans-serif;
+            padding: 4px 7px;
+            border-radius: 5px;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script type="text/javascript">
+        ymaps.ready(init);
+
+        function init() {
+            // Doimiy nuqta: "Chinor" Milliy Taomlari (Andijon tumani)
+            var fixedCoordinates = [40.842009, 72.324268];
+
+            // Buyurtma qabul qilish chegarasi (km). URL bilan almashtirish mumkin: location.html?radius=2
+            // 0 qilinsa yoki ?radius=0 berilsa - chegara umuman chizilmaydi.
+            var DEFAULT_RADIUS_KM = 1;
+
+            var myMap = new ymaps.Map("map", {
+                center: fixedCoordinates,
+                zoom: 15,
+                controls: ['zoomControl']
+            }, {
+                suppressMapOpenBlock: true
+            });
+
+            // Doimiy nuqta belgisi: qizil doira ichida qoshiq-vilka, ostida nomi
+            var ShopLayout = ymaps.templateLayoutFactory.createClass(
+                '<div class="shop-marker">' +
+                    '<div class="shop-badge">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" ' +
+                             'stroke-linecap="round" stroke-linejoin="round">' +
+                            '<path d="M7 3v7a2 2 0 0 0 4 0V3"/>' +
+                            '<path d="M9 12v9"/>' +
+                            '<path d="M17 3c-1.6 1.3-2.4 3.1-2.4 5.2 0 1.6.8 2.6 2.4 2.6v10.2"/>' +
+                        '</svg>' +
+                    '</div>' +
+                    '<div class="shop-tip"></div>' +
+                    '<div class="shop-name">Chinor</div>' +
+                '</div>'
+            );
+
+            var fixedPlacemark = new ymaps.Placemark(fixedCoordinates, {
+                hintContent: '"Chinor" Milliy Taomlari'
+            }, {
+                iconLayout: ShopLayout,
+                iconShape: { type: 'Circle', coordinates: [0, -23], radius: 17 },
+                zIndex: 800
+            });
+            myMap.geoObjects.add(fixedPlacemark);
+
+            // Radiusni URL dan o'qish
+            function getRadiusKm() {
+                var m = /[?&]radius=([^&]*)/.exec(location.search);
+                if (!m) return null; // URL da berilmagan - standart qiymat ishlatiladi
+                var km = parseFloat(decodeURIComponent(m[1]).replace(',', '.'));
+                return (isFinite(km) && km > 0) ? km : 0;
+            }
+
+            var urlRadius = getRadiusKm();
+            var radiusKm = (urlRadius === null) ? DEFAULT_RADIUS_KM : urlRadius;
+
+            if (radiusKm > 0) {
+                var deliveryZone = new ymaps.Circle([fixedCoordinates, radiusKm * 1000], {}, {
+                    fillColor: '#4CAF5033',
+                    strokeColor: '#4CAF50',
+                    strokeOpacity: 0.9,
+                    strokeWidth: 3,
+                    strokeStyle: 'shortdash',
+                    // Doira xaritani bosishga xalaqit bermasin
+                    interactivityModel: 'default#transparent',
+                    zIndex: 100
+                });
+                myMap.geoObjects.add(deliveryZone);
+
+                // Butun chegara ekranga sig'sin (markaz Chinorda qoladi)
+                myMap.setBounds(deliveryZone.geometry.getBounds(), { checkZoomRange: true });
+            }
+        }
+    </script>
+</body>
+</html>

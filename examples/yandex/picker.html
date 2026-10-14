@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Yetkazish manzilini tanlash</title>
+    <!-- Yandex Maps API -->
+    <script src="https://api-maps.yandex.ru/2.1/?lang=uz_UZ" type="text/javascript"></script>
+    <style>
+        html, body, #map-container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Markazdagi belgi (PNG). Igna uchi aynan xarita markaziga tushadi */
+        .center-pin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 44px;
+            height: auto;
+            /* Rasmda igna uchi: gorizontal 49%, vertikal 97% */
+            transform: translate(-49%, -97%);
+            z-index: 1000;
+            pointer-events: none;
+            transition: transform 0.18s ease-out;
+        }
+
+        /* Xarita siljitilayotganda belgi biroz ko'tariladi */
+        .center-pin.lifted {
+            transform: translate(-49%, calc(-97% - 12px));
+        }
+
+        /* Igna uchidagi kichik nuqta (aniq joyni ko'rsatadi) */
+        .center-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            margin: -3px 0 0 -3px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        /* Yuqoridagi kordinata paneli */
+        .coords-box {
+            position: absolute;
+            top: calc(12px + env(safe-area-inset-top, 0px));
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.78);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            pointer-events: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .coords-box span {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        /* "Chinor" doimiy nuqtasi: qizil doira + pastda nomi */
+        .shop-marker {
+            position: relative;
+            width: 34px;
+            height: 40px;
+            transform: translate(-50%, -100%);
+        }
+
+        .shop-marker .shop-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 34px;
+            height: 34px;
+            box-sizing: border-box;
+            border-radius: 50%;
+            background: #E53935;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shop-marker .shop-badge svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
+        /* Doira ostidagi uchburchak - aniq joyni ko'rsatadi */
+        .shop-marker .shop-tip {
+            position: absolute;
+            top: 31px;
+            left: 50%;
+            margin-left: -6px;
+            width: 0;
+            height: 0;
+            border: 6px solid transparent;
+            border-top-color: #fff;
+        }
+
+        .shop-marker .shop-name {
+            position: absolute;
+            top: 44px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #111;
+            font: bold 11px/1 Arial, sans-serif;
+            padding: 4px 7px;
+            border-radius: 5px;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Joriy joylashuvga qaytish tugmasi */
+        .locate-btn {
+            position: absolute;
+            right: 12px;
+            bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .locate-btn:focus-visible {
+            outline: 3px solid #2196F3;
+            outline-offset: 2px;
+        }
+
+        .locate-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Foydalanuvchining o'zi turgan joy belgisi: oq hoshiyali, nafas olayotgan ko'k doira */
+        .me-marker {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+        }
+
+        .me-marker .me-core {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: #2196F3;
+            border: 3px solid #fff;
+            box-sizing: border-box;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            animation: me-breathe 3s ease-in-out infinite;
+        }
+
+        /* Nafas: sekin kattalashadi va sekin kichrayadi */
+        @keyframes me-breathe {
+            0%, 100% { transform: scale(0.85); }
+            50%      { transform: scale(1.2); }
+        }
+
+        /* Doira tepasidagi "SIZ" yozuvi (nafas bilan birga o'zgarmaydi) */
+        .me-marker .me-label {
+            position: absolute;
+            left: 50%;
+            bottom: 100%;
+            margin-bottom: 7px;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #111;
+            font: bold 11px/1 Arial, sans-serif;
+            letter-spacing: 0.5px;
+            padding: 4px 7px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+
+        /* Yozuv ostidagi kichik uchburchak (doiraga ishora) */
+        .me-marker .me-label::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            margin-left: -4px;
+            border: 4px solid transparent;
+            border-top-color: #fff;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .me-marker .me-core { animation: none; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="map-container">
+        <div class="coords-box">
+            Yetkazish manzili: <span id="coords-text">Joylashuv aniqlanmoqda...</span>
+        </div>
+
+        <!-- Markazdagi belgi (siz yuborgan PNG) -->
+        <div class="center-dot"></div>
+        <img id="center-pin" class="center-pin" alt=""
+             src="data:image/png;base64,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">
+
+        <button class="locate-btn" id="locate-btn" type="button" aria-label="Mening joylashuvim">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+            </svg>
+        </button>
+
+        <div id="map"></div>
+    </div>
+
+    <script type="text/javascript">
+        ymaps.ready(init);
+
+        function init() {
+            // Doimiy nuqta: "Chinor" Milliy Taomlari (Andijon tumani)
+            var fixedCoordinates = [40.842009, 72.324268];
+
+            // Buyurtma qabul qilish chegarasi (km). URL bilan almashtirish mumkin: picker.html?radius=2
+            // 0 qilinsa yoki ?radius=0 berilsa - chegara umuman chizilmaydi.
+            var DEFAULT_RADIUS_KM = 1;
+
+            var myMap = new ymaps.Map("map", {
+                center: fixedCoordinates,
+                zoom: 15,
+                controls: ['zoomControl']
+            }, {
+                suppressMapOpenBlock: true
+            });
+
+            // Doimiy nuqta belgisi: qizil doira ichida qoshiq-vilka, ostida nomi
+            var ShopLayout = ymaps.templateLayoutFactory.createClass(
+                '<div class="shop-marker">' +
+                    '<div class="shop-badge">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" ' +
+                             'stroke-linecap="round" stroke-linejoin="round">' +
+                            '<path d="M7 3v7a2 2 0 0 0 4 0V3"/>' +
+                            '<path d="M9 12v9"/>' +
+                            '<path d="M17 3c-1.6 1.3-2.4 3.1-2.4 5.2 0 1.6.8 2.6 2.4 2.6v10.2"/>' +
+                        '</svg>' +
+                    '</div>' +
+                    '<div class="shop-tip"></div>' +
+                    '<div class="shop-name">Chinor</div>' +
+                '</div>'
+            );
+
+            var fixedPlacemark = new ymaps.Placemark(fixedCoordinates, {
+                hintContent: '"Chinor" Milliy Taomlari'
+            }, {
+                iconLayout: ShopLayout,
+                iconShape: { type: 'Circle', coordinates: [0, -23], radius: 17 },
+                zIndex: 800
+            });
+            myMap.geoObjects.add(fixedPlacemark);
+
+            // Buyurtma qabul qilish chegarasi. Radius URL orqali beriladi: picker.html?radius=1 (km)
+            function getRadiusKm() {
+                var m = /[?&]radius=([^&]*)/.exec(location.search);
+                if (!m) return null; // URL da berilmagan - standart qiymat ishlatiladi
+                var km = parseFloat(decodeURIComponent(m[1]).replace(',', '.'));
+                return (isFinite(km) && km > 0) ? km : 0;
+            }
+
+            var urlRadius = getRadiusKm();
+            var radiusKm = (urlRadius === null) ? DEFAULT_RADIUS_KM : urlRadius;
+
+            if (radiusKm > 0) {
+                var deliveryZone = new ymaps.Circle([fixedCoordinates, radiusKm * 1000], {}, {
+                    fillColor: '#4CAF5033',
+                    strokeColor: '#4CAF50',
+                    strokeOpacity: 0.9,
+                    strokeWidth: 3,
+                    strokeStyle: 'shortdash',
+                    // Doira xaritani surish va bosishga xalaqit bermasin
+                    interactivityModel: 'default#transparent',
+                    zIndex: 100
+                });
+                myMap.geoObjects.add(deliveryZone);
+
+                // Butun chegara ekranga sig'sin (markaz baribir Chinorda qoladi)
+                myMap.setBounds(deliveryZone.geometry.getBounds(), { checkZoomRange: true });
+            }
+
+            var pin = document.getElementById('center-pin');
+            var coordsText = document.getElementById('coords-text');
+
+            // Markazdagi kordinatani yangilash (tashqi so'rovsiz)
+            function updateCenter() {
+                var centerCoords = myMap.getCenter();
+                coordsText.innerText = centerCoords[0].toFixed(6) + ', ' + centerCoords[1].toFixed(6);
+            }
+
+            // Siljitish boshlanganda belgini ko'tarish
+            myMap.events.add('actionbegin', function () {
+                pin.classList.add('lifted');
+            });
+
+            // Siljitish tugaganda belgini tushirish va kordinatani yangilash
+            myMap.events.add('actionend', function () {
+                pin.classList.remove('lifted');
+                updateCenter();
+            });
+
+            // ---- Foydalanuvchining o'zi turgan joy belgisi (nafas olayotgan doira) ----
+            var MeLayout = ymaps.templateLayoutFactory.createClass(
+                '<div class="me-marker"><div class="me-label">SIZ</div><div class="me-core"></div></div>'
+            );
+            var userPlacemark = null;
+            var lastUserCoords = null;
+            var watchId = null;
+
+            // Belgini chizish yoki joyini yangilash (xaritani siljitmaydi)
+            function showMe(coords) {
+                lastUserCoords = coords;
+                if (!userPlacemark) {
+                    userPlacemark = new ymaps.Placemark(coords, {
+                        hintContent: 'Siz shu yerdasiz'
+                    }, {
+                        iconLayout: MeLayout,
+                        iconShape: { type: 'Circle', coordinates: [0, 0], radius: 12 },
+                        zIndex: 900
+                    });
+                    myMap.geoObjects.add(userPlacemark);
+                } else {
+                    userPlacemark.geometry.setCoordinates(coords);
+                }
+            }
+
+            // Joylashuvni doimiy kuzatib borish (yurganda ko'k nuqta ham siljiydi)
+            function startWatching() {
+                if (watchId !== null || !navigator.geolocation) return;
+                watchId = navigator.geolocation.watchPosition(
+                    function (pos) {
+                        showMe([pos.coords.latitude, pos.coords.longitude]);
+                    },
+                    function () { /* kuzatishdagi xatoni e'tiborsiz qoldiramiz */ },
+                    { enableHighAccuracy: true, maximumAge: 10000 }
+                );
+            }
+
+            // Joriy joylashuvni so'rash. Ruxsat berilmasa — doimiy nuqtada qoladi
+            function goToMyLocation(isFirstLoad) {
+                if (!navigator.geolocation) {
+                    if (isFirstLoad) updateCenter();
+                    return;
+                }
+                // Joylashuv allaqachon ma'lum bo'lsa — darhol o'sha yerga qaytamiz
+                if (!isFirstLoad && lastUserCoords) {
+                    myMap.setCenter(lastUserCoords, 17, { duration: 300 });
+                    return;
+                }
+                coordsText.innerText = 'Joylashuv aniqlanmoqda...';
+                navigator.geolocation.getCurrentPosition(
+                    function (pos) {
+                        var userCoords = [pos.coords.latitude, pos.coords.longitude];
+                        showMe(userCoords);
+                        startWatching();
+                        // setCenter dan keyin actionend ishlaydi va kordinata yangilanadi
+                        myMap.setCenter(userCoords, 17, { duration: 300 });
+                    },
+                    function () {
+                        // Ruxsat berilmadi yoki aniqlab bo'lmadi
+                        if (isFirstLoad) {
+                            updateCenter();
+                        } else {
+                            coordsText.innerText = 'Joylashuvga ruxsat berilmagan';
+                        }
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+                );
+            }
+
+            document.getElementById('locate-btn').addEventListener('click', function () {
+                goToMyLocation(false);
+            });
+
+            // Dastlabki ishga tushish
+            goToMyLocation(true);
+        }
+    </script>
+</body>
+</html>
